@@ -3,13 +3,16 @@ package uz.devsuhbat.ui.session
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlin.random.Random
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import uz.devsuhbat.content.Question
 import uz.devsuhbat.content.QuestionType
 import uz.devsuhbat.engine.PracticeSession
+import uz.devsuhbat.engine.QuestionOutcome
 import uz.devsuhbat.engine.SessionResult
 import uz.devsuhbat.engine.Verdict
 
@@ -40,15 +43,22 @@ data class SessionUiState(
     val result: SessionResult? = null,
 )
 
+/**
+ * [onOutcome] is called once per distinct question, as soon as its first presentation is solved, so answers
+ * survive the app being killed mid-session. [onFinished] is called once, when a non-empty session ends.
+ */
 class SessionViewModel(
     private val loadQuestions: suspend () -> List<Question>,
     private val random: Random,
+    private val onOutcome: suspend (QuestionOutcome) -> Unit = {},
+    private val onFinished: suspend (SessionResult) -> Unit = {},
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(SessionUiState())
     val state: StateFlow<SessionUiState> = _state.asStateFlow()
 
     private var session: PracticeSession? = null
+    private var reportedOutcomes = 0
 
     init {
         viewModelScope.launch {
@@ -78,7 +88,10 @@ class SessionViewModel(
         if (!current.canCheck) return
 
         when (val verdict = session.submit(current.selected)) {
-            Verdict.Correct -> publish(current.selected, Feedback.Correct(question.explanation))
+            Verdict.Correct -> {
+                reportNewOutcomes(session)
+                publish(current.selected, Feedback.Correct(question.explanation))
+            }
             is Verdict.Wrong -> {
                 val multi = question.type == QuestionType.MULTI
                 val feedback = Feedback.Wrong(
@@ -97,6 +110,21 @@ class SessionViewModel(
         if (!_state.value.solved) return
         session.next()
         publish(selected = emptySet(), feedback = null)
+        if (session.finished && session.total > 0) {
+            val result = session.result()
+            persist { onFinished(result) }
+        }
+    }
+
+    private fun reportNewOutcomes(session: PracticeSession) {
+        val fresh = session.outcomes.drop(reportedOutcomes)
+        reportedOutcomes += fresh.size
+        fresh.forEach { outcome -> persist { onOutcome(outcome) } }
+    }
+
+    /** Leaving the screen right after answering must not cancel a write that has started. */
+    private fun persist(block: suspend () -> Unit) {
+        viewModelScope.launch { withContext(NonCancellable) { block() } }
     }
 
     private fun publish(selected: Set<String>, feedback: Feedback?) {

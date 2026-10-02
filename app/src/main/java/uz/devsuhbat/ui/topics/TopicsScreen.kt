@@ -43,7 +43,9 @@ import uz.devsuhbat.ui.Routes
 fun TopicsScreen(container: AppContainer, onBack: () -> Unit, onOpen: (topicId: String) -> Unit) {
     val viewModel: TopicsViewModel = viewModel(
         factory = viewModelFactory {
-            initializer { TopicsViewModel(container.content, container.settings, container.io) }
+            initializer {
+                TopicsViewModel(container.content, container.settings.settings, container.progress.states, container.io)
+            }
         }
     )
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -87,6 +89,7 @@ fun TopicsScreen(container: AppContainer, onBack: () -> Unit, onOpen: (topicId: 
                         title = stringResource(R.string.topics_mixed),
                         subtitle = stringResource(R.string.topics_mixed_desc),
                         questionCount = state.mixedCount,
+                        percent = null,
                         highlighted = true,
                         onClick = { onOpen(Routes.MIXED) },
                     )
@@ -96,6 +99,7 @@ fun TopicsScreen(container: AppContainer, onBack: () -> Unit, onOpen: (topicId: 
                         title = row.topic.title,
                         subtitle = null,
                         questionCount = row.questionCount,
+                        percent = row.progress.percent,
                         highlighted = false,
                         onClick = { onOpen(row.topic.id) },
                     )
@@ -106,7 +110,14 @@ fun TopicsScreen(container: AppContainer, onBack: () -> Unit, onOpen: (topicId: 
 }
 
 @Composable
-private fun TopicCard(title: String, subtitle: String?, questionCount: Int, highlighted: Boolean, onClick: () -> Unit) {
+private fun TopicCard(
+    title: String,
+    subtitle: String?,
+    questionCount: Int,
+    percent: Int?,
+    highlighted: Boolean,
+    onClick: () -> Unit,
+) {
     val colors = MaterialTheme.colorScheme
     val available = questionCount > 0
     Surface(
@@ -123,6 +134,7 @@ private fun TopicCard(title: String, subtitle: String?, questionCount: Int, high
                 val caption = when {
                     !available -> stringResource(R.string.coming_soon)
                     subtitle != null -> subtitle + " · " + stringResource(R.string.topics_count, questionCount)
+                    percent != null -> stringResource(R.string.topics_count_progress, questionCount, percent)
                     else -> stringResource(R.string.topics_count, questionCount)
                 }
                 Text(
