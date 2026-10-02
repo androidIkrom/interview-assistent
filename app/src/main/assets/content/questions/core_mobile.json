@@ -1,0 +1,363 @@
+{
+  "topic": "core.mobile",
+  "questions": [
+    {
+      "id": "core.mobile.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Native va cross-platform ishlab chiqish o'rtasidagi asosiy farq nima?",
+      "options": [
+        { "id": "a", "text": "Native ilova har platforma uchun uning o'z tili va SDK'sida alohida yoziladi; cross-platform'da bitta kod bazasi bir nechta platformada ishlaydi", "correct": true },
+        { "id": "b", "text": "Native ilovalar faqat Android'da, cross-platform ilovalar faqat iOS'da ishlaydi", "hint": "Ikkala yondashuv ham har ikki platformaga tegishli." },
+        { "id": "c", "text": "Cross-platform ilovalar brauzerda ochiladigan veb-saytlar", "hint": "Flutter yoki React Native ilovalari do'kondan o'rnatiladi va qurilmada ishlaydi." },
+        { "id": "d", "text": "Native ilovalar internetga ulana olmaydi", "hint": "Tarmoq imkoniyati yondashuvga bog'liq emas." }
+      ],
+      "explanation": "Native: Android uchun Kotlin, iOS uchun Swift — platformaning barcha imkoniyatlari va eng yaxshi mosligi, lekin ikki kod bazasi. Cross-platform (Flutter, React Native, KMP): kodning katta qismi umumiy, rivojlantirish arzonroq, lekin platformaga xos qismlar uchun baribir native kod kerak bo'lishi mumkin.",
+      "reviewed": false
+    },
+    {
+      "id": "core.mobile.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Kamera kabi \"xavfli\" ruxsatni foydalanuvchidan qachon so'rash to'g'ri?",
+      "options": [
+        { "id": "a", "text": "Foydalanuvchi shu imkoniyatni ishlatmoqchi bo'lgan paytda, sababi tushunarli bo'lganda", "correct": true },
+        { "id": "b", "text": "Ilova birinchi ochilganda, barcha ruxsatlarni birdaniga", "hint": "Kontekstsiz so'rov ko'pincha rad etiladi va foydalanuvchini cho'chitadi." },
+        { "id": "c", "text": "So'rash shart emas: manifestda (yoki Info.plist'da) yozish kifoya", "hint": "E'lon qilish zarur, lekin xavfli ruxsatlar uchun foydalanuvchining roziligi ham kerak." },
+        { "id": "d", "text": "Faqat ilova yangilanganda", "hint": "Yangilanish ruxsat so'rash vaqtiga aloqador emas." }
+      ],
+      "explanation": "Ruxsat kontekstda so'raladi: foydalanuvchi \"Rasmga olish\" tugmasini bosganda kamera ruxsati mantiqiy ko'rinadi. Rad etilsa, ilova ishlashda davom etishi va imkoniyat nega kerakligini tushuntirishi kerak.",
+      "reviewed": false
+    },
+    {
+      "id": "core.mobile.003",
+      "level": "junior",
+      "type": "single",
+      "kind": "true_false",
+      "prompt": "Quyidagi fikr to'g'rimi?\n\nMobil ilovada uzoq davom etadigan ishni (masalan, tarmoq so'rovini) asosiy (UI) oqimda bajarish interfeysni qotirib qo'yadi.",
+      "options": [
+        { "id": "a", "text": "Ha", "correct": true },
+        { "id": "b", "text": "Yo'q", "hint": "UI oqimi chizish va bosishlarni qayta ishlaydi. U band bo'lsa, ekran yangilanmaydi: Android'da bu ANR oynasiga, iOS'da ilovaning tizim tomonidan yopilishiga olib keladi." }
+      ],
+      "explanation": "Barcha platformalarda UI bitta asosiy oqimda chiziladi. Tarmoq, disk va og'ir hisob-kitoblar fon oqimida (coroutine, async/await, isolate) bajarilishi, natija esa UI oqimiga qaytarilishi kerak.",
+      "reviewed": false
+    },
+    {
+      "id": "core.mobile.004",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Foydalanuvchi boshqa ilovaga o'tdi. Sizning ilovangiz bilan nima bo'lishi mumkin?",
+      "options": [
+        { "id": "a", "text": "U fonga o'tadi va tizim xotira kerak bo'lsa, uni ogohlantirmasdan to'xtatishi mumkin", "correct": true },
+        { "id": "b", "text": "U darhol yopiladi va barcha ma'lumot yo'qoladi", "hint": "Darhol emas: ilova bir muddat xotirada qoladi va foydalanuvchi qaytishi mumkin." },
+        { "id": "c", "text": "U to'liq quvvat bilan ishlashda davom etadi", "hint": "Tizim batareya va xotirani tejash uchun fondagi ilovalarni cheklaydi." },
+        { "id": "d", "text": "U faqat foydalanuvchi o'zi yopganda to'xtaydi", "hint": "Tizim ham ilovani to'xtata oladi; shuning uchun muhim holat oldindan saqlanadi." }
+      ],
+      "explanation": "Mobil tizimlarda ilova hayot siklini tizim boshqaradi. Fonga o'tgan ilova muzlatilishi yoki xotiradan chiqarilishi mumkin, shuning uchun fonga o'tish paytida muhim holat saqlanadi va qaytganda tiklanadi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.mobile.005",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Ilovaning yangi versiyasini do'konga chiqarishda versiya raqami haqida qaysi fikr to'g'ri?",
+      "options": [
+        { "id": "a", "text": "Ichki build raqami (Android'da `versionCode`, iOS'da build number) har yuklashda oshishi shart", "correct": true },
+        { "id": "b", "text": "Raqamni o'zgartirmasdan ham yangi build yuklash mumkin", "hint": "Do'kon bir xil raqamli buildni rad etadi." },
+        { "id": "c", "text": "Versiya raqami faqat foydalanuvchiga ko'rinadigan matn, texnik ahamiyati yo'q", "hint": "Ko'rinadigan nom bilan ichki raqam boshqa-boshqa narsalar; ikkinchisini tizim solishtiradi." },
+        { "id": "d", "text": "Raqamni kamaytirish orqali eski versiyaga qaytarish mumkin", "hint": "Do'kon va tizim pastroq raqamli buildni yangilanish sifatida qabul qilmaydi." }
+      ],
+      "explanation": "Ikki xil raqam bor: foydalanuvchiga ko'rinadigan versiya nomi (masalan, 2.3.1) va tizim solishtiradigan ichki raqam. Ichki raqam har yangi build uchun kattaroq bo'lishi kerak, aks holda do'kon uni qabul qilmaydi va qurilma yangilanish deb bilmaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.mobile.006",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Ilova turli ekran o'lchamlarida to'g'ri ko'rinishi uchun o'lchamlar qanday beriladi?",
+      "options": [
+        { "id": "a", "text": "Zichlikka bog'liq bo'lmagan birliklarda (Android'da dp, iOS'da pt, Flutter'da logical pixel) va moslashuvchan layout bilan", "correct": true },
+        { "id": "b", "text": "Piksellarda, eng mashhur telefon o'lchamiga moslab", "hint": "Piksel zichligi qurilmadan qurilmaga farq qiladi: bir xil pikselli element har xil kattalikda ko'rinadi." },
+        { "id": "c", "text": "Faqat foizlarda, ekran kengligiga nisbatan", "hint": "Faqat foiz planshet va kichik telefonlarda yomon natija beradi: matn va tugmalar jismoniy o'lchamini saqlashi kerak." },
+        { "id": "d", "text": "Har bir qurilma modeli uchun alohida layout yozib", "hint": "Minglab modellar bor; buning o'rniga o'lcham sinflari va moslashuvchan layout ishlatiladi." }
+      ],
+      "explanation": "dp, pt va logical pixel jismoniy o'lchamga yaqin birliklar: 48 dp tugma har qanday zichlikdagi ekranda taxminan bir xil kattalikda bo'ladi. Qolganini moslashuvchan layout (weight, constraint, breakpoint'lar) hal qiladi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.mobile.007",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Push bildirishnoma qurilmaga qanday yetib keladi?",
+      "options": [
+        { "id": "a", "text": "Server xabarni platforma xizmatiga (FCM yoki APNs) yuboradi, u esa qurilmaga yetkazadi; ilova bu vaqtda ishlamayotgan bo'lishi mumkin", "correct": true },
+        { "id": "b", "text": "Ilova fonda serverni doimiy so'rab (polling) turadi", "hint": "Doimiy so'rov batareyani tugatadi va tizim fondagi ilovani baribir to'xtatadi." },
+        { "id": "c", "text": "Server to'g'ridan-to'g'ri qurilmaning IP manziliga ulanadi", "hint": "Mobil qurilmaning manzili doim o'zgaradi va tashqaridan ko'rinmaydi." },
+        { "id": "d", "text": "Xabar SMS orqali keladi va ilova uni o'qiydi", "hint": "Push internet orqali, platformaning doimiy ulanishi bo'ylab keladi." }
+      ],
+      "explanation": "Qurilma platforma xizmati bilan bitta doimiy ulanishni ushlab turadi. Ilova ro'yxatdan o'tganda token oladi va uni serverga yuboradi; server xabarni shu token bilan FCM yoki APNs'ga beradi. Yetkazish kafolatlanmagan, shuning uchun muhim ma'lumot faqat push'ga tayanmasligi kerak.",
+      "reviewed": false
+    },
+    {
+      "id": "core.mobile.008",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Deep link nima?",
+      "options": [
+        { "id": "a", "text": "Ilovaning aniq bir ekranini (masalan, mahsulot sahifasini) to'g'ridan-to'g'ri ochadigan havola", "correct": true },
+        { "id": "b", "text": "Ilovani do'kondan yuklab olish havolasi", "hint": "Bu oddiy do'kon havolasi; u ilova ichidagi ekranga olib bormaydi." },
+        { "id": "c", "text": "Ilova ichidagi ikki ekran orasidagi animatsiya", "hint": "Navigatsiya animatsiyasiga aloqasi yo'q; gap tashqaridan kirish haqida." },
+        { "id": "d", "text": "Serverga yuboriladigan shifrlangan so'rov", "hint": "Havola tarmoq so'rovi emas; uni tizim ilovaga uzatadi." }
+      ],
+      "explanation": "Deep link bildirishnoma, xat yoki veb-sahifadan ilovaning ichki ekraniga olib kiradi. Tasdiqlangan variantlari (Android App Links, iOS Universal Links) oddiy `https` havola bo'lib, domen egaligi tekshiriladi va ilova o'rnatilmagan bo'lsa, sayt ochiladi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.mobile.009",
+      "level": "middle",
+      "type": "multi",
+      "kind": "concept",
+      "prompt": "Qaysi ma'lumotlarni qurilmada oddiy (shifrlanmagan) sozlamalar faylida saqlash xavfsiz emas?",
+      "options": [
+        { "id": "a", "text": "Kirish tokeni (access token)", "correct": true },
+        { "id": "b", "text": "Foydalanuvchi paroli", "correct": true },
+        { "id": "c", "text": "Tanlangan mavzu (yorug' yoki qorong'i)", "hint": "Bu maxfiy ma'lumot emas; oddiy sozlamalar aynan shunday qiymatlar uchun." },
+        { "id": "d", "text": "Ilova tili", "hint": "Bu ham maxfiy emas va oddiy sozlamalarda saqlanadi." }
+      ],
+      "explanation": "Oddiy sozlamalar (SharedPreferences, UserDefaults) shifrlanmagan fayl: root qilingan qurilmada yoki zaxira nusxadan o'qilishi mumkin. Token kabi sirlar tizimning himoyalangan saqlagichida (Keystore, Keychain) turadi; parolni esa qurilmada umuman saqlamaslik kerak.",
+      "reviewed": false
+    },
+    {
+      "id": "core.mobile.010",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Mobil ilovada tarmoq so'rovi muvaffaqiyatsiz bo'lganda qaysi yondashuv to'g'ri?",
+      "options": [
+        { "id": "a", "text": "Xato turini ajratish (tarmoq yo'q, server xatosi, timeout), tushunarli xabar ko'rsatish va qayta urinish imkonini berish", "correct": true },
+        { "id": "b", "text": "So'rovni muvaffaqiyatli bo'lguncha to'xtovsiz takrorlash", "hint": "To'xtovsiz takrorlash batareya va trafikni yeydi, serverga ham ortiqcha yuk; urinishlar orasida o'sib boruvchi tanaffus kerak." },
+        { "id": "c", "text": "Xatoni jimgina yutib, bo'sh ekran ko'rsatish", "hint": "Foydalanuvchi nima bo'lganini bilmaydi va ilova buzilgan deb o'ylaydi." },
+        { "id": "d", "text": "Ilovani yopish", "hint": "Tarmoq xatosi mobil ilova uchun odatiy holat, halokat emas." }
+      ],
+      "explanation": "Mobil tarmoq beqaror: tunnel, lift, kuchsiz signal. Ilova xatoni kutilgan holat deb bilishi kerak: sababini ajratish, keshlangan ma'lumotni ko'rsatish, foydalanuvchiga \"Qayta urinish\" berish, avtomatik takrorlashda esa exponential backoff ishlatish.",
+      "reviewed": false
+    },
+    {
+      "id": "core.mobile.011",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Uzun ro'yxat scroll paytida qotyapti. Eng ehtimolli sabab qaysi?",
+      "options": [
+        { "id": "a", "text": "Har bir element chizilganda og'ir ish (rasmni dekodlash, murakkab hisob) UI oqimida bajarilmoqda", "correct": true },
+        { "id": "b", "text": "Ro'yxatda 50 tadan ortiq element bor", "hint": "Virtualizatsiya qilingan ro'yxat minglab elementni ham bemalol ko'rsatadi." },
+        { "id": "c", "text": "Qurilmada internet sekin", "hint": "Ish to'g'ri oqimda bajarilsa, tarmoq tezligi kadr chizishga ta'sir qilmaydi." },
+        { "id": "d", "text": "Ilova release rejimida yig'ilgan", "hint": "Release build aksincha tezroq; qotish debug'da ko'proq seziladi." }
+      ],
+      "explanation": "Silliq scroll uchun har bir kadr taxminan 16 millisekundga (120 Hz ekranda 8 ms) sig'ishi kerak. Element yaratilganda UI oqimida rasm dekodlash, sana formatlash yoki baza so'rovi bajarilsa, kadrlar tushib qoladi. Og'ir ishlar fonga chiqariladi, natijalar esa keshlanadi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.mobile.012",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Rasm yuklaydigan kutubxonalar (Coil, Glide, Kingfisher, cached_network_image) nega ikki darajali kesh ishlatadi?",
+      "options": [
+        { "id": "a", "text": "Xotira keshi rasmni darhol beradi; disk keshi esa ilova qayta ochilganda tarmoqqa bormaslik imkonini beradi", "correct": true },
+        { "id": "b", "text": "Disk keshi xotira keshidan tezroq", "hint": "Aksincha: diskdan o'qish sekinroq, shuning uchun u ikkinchi daraja." },
+        { "id": "c", "text": "Ikkinchi kesh birinchisining zaxira nusxasi", "hint": "Ular bir-birini takrorlamaydi: yashash muddati va tezligi har xil." },
+        { "id": "d", "text": "Operatsion tizim shuni talab qiladi", "hint": "Bu tizim talabi emas, kutubxonalarning performance bo'yicha qarori." }
+      ],
+      "explanation": "Xotira keshi dekodlangan rasmni saqlaydi va eng tez, lekin hajmi kichik va jarayon bilan birga yo'qoladi. Disk keshi yuklab olingan faylni saqlaydi: sekinroq, lekin katta va doimiy. Avval xotira, keyin disk, oxirida tarmoq tekshiriladi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.mobile.013",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Zamonaviy Android va iOS fondagi ilovalar ishini nega cheklaydi?",
+      "options": [
+        { "id": "a", "text": "Batareya va xotirani tejash uchun; uzoq fon ishi uchun tizim rejalashtiruvchisidan (WorkManager, BGTaskScheduler) foydalanish kerak", "correct": true },
+        { "id": "b", "text": "Fon ishi xavfsizlik sababli butunlay taqiqlangan", "hint": "Taqiqlanmagan; u tizim nazorati ostida, ma'lum shartlar bilan bajariladi." },
+        { "id": "c", "text": "Fonda protsessor ishlamaydi", "hint": "Protsessor ishlaydi; tizim qaysi ilovaga qancha vaqt berishni hal qiladi." },
+        { "id": "d", "text": "Cheklov faqat eski qurilmalarga tegishli", "hint": "Aksincha, har yangi OS versiyasida cheklovlar kuchaygan." }
+      ],
+      "explanation": "Har bir ilova fonda erkin ishlasa, batareya bir necha soatda tugaydi. Shuning uchun tizim fon ishlarini guruhlaydi va qulay paytda (quvvat, Wi-Fi) bajaradi. Ilova \"qachon bo'lsa ham bajarilsin\" degan vazifani rejalashtiruvchiga topshiradi, aniq vaqtni esa talab qila olmaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.mobile.014",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Production'dagi crash'larni tahlil qilish uchun nima kerak?",
+      "options": [
+        { "id": "a", "text": "Crash reporting xizmati (masalan, Crashlytics yoki Sentry) va obfuskatsiya qilingan stack trace'ni ochish uchun mapping yoki dSYM fayllari", "correct": true },
+        { "id": "b", "text": "Foydalanuvchilardan skrinshot so'rash yetarli", "hint": "Skrinshotda stack trace yo'q va aksar foydalanuvchi hech narsa yubormaydi." },
+        { "id": "c", "text": "Debug build'ni do'konga chiqarish", "hint": "Debug build sekin, katta va himoyasiz; do'kon uni qabul qilmasligi ham mumkin." },
+        { "id": "d", "text": "Barcha kodni `try/catch` ga o'rash", "hint": "Bu xatolarni yashiradi, tuzatmaydi; sababini bilish uchun hisobot kerak." }
+      ],
+      "explanation": "Release build'da nomlar qisqartiriladi (R8) yoki simvollar olib tashlanadi, shuning uchun xom stack trace o'qib bo'lmaydi. Crash xizmati hisobotlarni yig'adi, mapping/dSYM fayllari esa ularni asl klass va qator raqamlariga qaytaradi. Bu fayllar har reliz uchun saqlanishi kerak.",
+      "reviewed": false
+    },
+    {
+      "id": "core.mobile.015",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Oflayn rejimda foydalanuvchi bajargan amallarni (masalan, izoh yozish) serverga yetkazishning ishonchli usuli qaysi?",
+      "options": [
+        { "id": "a", "text": "Amallarni lokal navbatga (outbox) yozish va tarmoq paydo bo'lganda idempotent so'rovlar bilan ketma-ket yuborish", "correct": true },
+        { "id": "b", "text": "Amalni xotirada ushlab turib, tarmoq paydo bo'lishini kutish", "hint": "Ilova yopilsa yoki tizim uni to'xtatsa, xotiradagi amallar yo'qoladi." },
+        { "id": "c", "text": "Tarmoq yo'q bo'lsa, tugmalarni o'chirib qo'yish", "hint": "Bu oflayn ishlash emas: foydalanuvchi ishlay olmay qoladi." },
+        { "id": "d", "text": "Har bir amalni tarmoq paydo bo'lganda bir necha marta yuborish", "hint": "Takroriy yuborish serverda dublikat yaratadi, agar so'rovlar takrorga chidamli qilinmagan bo'lsa." }
+      ],
+      "explanation": "Outbox yondashuvida amal avval lokal bazaga yoziladi (UI darhol yangilanadi), keyin fon vazifasi navbatni tartib bilan yuboradi. Har bir amalga yagona kalit beriladi, shunda server takroriy so'rovni tanib, ikkinchi marta bajarmaydi. Navbat diskda bo'lgani uchun ilova yopilishi ham xavfli emas.",
+      "reviewed": false
+    },
+    {
+      "id": "core.mobile.016",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Ilova katta rasmlar bilan ishlaganda xotira yetishmasligidan yiqilyapti. Birinchi qadam qaysi?",
+      "options": [
+        { "id": "a", "text": "Rasmlarni ko'rsatiladigan o'lchamga kichraytirib dekodlash", "correct": true },
+        { "id": "b", "text": "Tizimdan ko'proq xotira so'rash", "hint": "Ilovaga beriladigan xotira cheklangan va uni cheksiz oshirib bo'lmaydi." },
+        { "id": "c", "text": "Barcha rasmlarni xotira keshida doimiy saqlash", "hint": "Bu muammoni kuchaytiradi: kesh cheklangan va tozalanadigan bo'lishi kerak." },
+        { "id": "d", "text": "Rasmlarni PNG formatiga o'tkazish", "hint": "Xotiradagi hajm fayl formatiga emas, piksellar soniga bog'liq." }
+      ],
+      "explanation": "4000×3000 pikselli rasm xotirada taxminan 48 MB joy oladi, fayl hajmi qancha bo'lishidan qat'i nazar. 200 dp kvadratga chiqariladigan rasm uchun buning keragi yo'q. Rasm kutubxonalari maqsad o'lchamiga qarab kichraytirib dekodlaydi; qo'lda yuklanganda ham shuni qilish kerak.",
+      "reviewed": false
+    },
+    {
+      "id": "core.mobile.017",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Ilova hajmini kamaytirishning eng samarali yo'li qaysi?",
+      "options": [
+        { "id": "a", "text": "Hajmni tahlil qilib, eng katta qismlarni (ishlatilmaydigan kutubxonalar, resurslar, native kutubxonalar) olib tashlash va kodni siqish (R8, tree shaking)", "correct": true },
+        { "id": "b", "text": "Kod izohlarini o'chirish", "hint": "Izohlar kompilyatsiya qilingan ilovaga umuman tushmaydi." },
+        { "id": "c", "text": "O'zgaruvchi nomlarini qo'lda qisqartirish", "hint": "Buni build vositasi avtomatik bajaradi; qo'lda qilish kodni buzadi, foydasi esa arzimas." },
+        { "id": "d", "text": "Barcha funksiyalarni bitta faylga yig'ish", "hint": "Fayllar soni yakuniy hajmga ta'sir qilmaydi." }
+      ],
+      "explanation": "Avval o'lchash kerak: APK Analyzer yoki Xcode'ning hajm hisoboti nimaning ko'p joy olayotganini ko'rsatadi. Odatda bu native kutubxonalar (har arxitektura uchun alohida), rasmlar va katta SDK'lar. App Bundle yoki App Thinning qurilmaga faqat keraklisini yetkazadi, R8 va tree shaking esa ishlatilmagan kodni olib tashlaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.mobile.018",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Foydalanuvchilar \"ilova javob bermayapti\" oynasini (ANR) ko'rmoqda. Sababni qanday topasiz?",
+      "options": [
+        { "id": "a", "text": "ANR hisobotidagi asosiy oqim stack trace'idan u nima bilan band bo'lganini (disk, tarmoq, lock) aniqlayman", "correct": true },
+        { "id": "b", "text": "Crash loglarini qidiraman", "hint": "ANR crash emas: ilova yiqilmaydi, shuning uchun crash logida ko'rinmasligi mumkin." },
+        { "id": "c", "text": "Foydalanuvchilarga qurilma xotirasini bo'shatishni maslahat beraman", "hint": "Sabab deyarli har doim ilova kodida: UI oqimi bloklangan." },
+        { "id": "d", "text": "Barcha animatsiyalarni o'chiraman", "hint": "Animatsiyalar kamdan-kam sabab bo'ladi; avval nima bloklayotganini bilish kerak." }
+      ],
+      "explanation": "ANR asosiy oqim bir necha soniya javob bermaganda yuzaga keladi. Play Console va crash xizmatlari ANR paytidagi barcha oqimlarning stack trace'ini beradi: asosiy oqim qaysi chaqiruvda turgani (fayl o'qish, sinxron so'rov, boshqa oqim ushlab turgan lock) sababni ko'rsatadi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.mobile.019",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Refresh token'ni qurilmada qayerda saqlash to'g'ri?",
+      "options": [
+        { "id": "a", "text": "Tizimning himoyalangan saqlagichida: Android Keystore bilan shifrlangan saqlagich yoki iOS Keychain", "correct": true },
+        { "id": "b", "text": "Oddiy sozlamalar faylida (SharedPreferences, UserDefaults)", "hint": "Bu fayllar shifrlanmagan; root qilingan qurilmada yoki zaxira nusxadan o'qilishi mumkin." },
+        { "id": "c", "text": "Ilova kodida konstanta sifatida", "hint": "Token har foydalanuvchi uchun alohida va o'zgarib turadi; kodga yozilgan sirni esa ilova faylidan chiqarib olish oson." },
+        { "id": "d", "text": "Tashqi xotiradagi faylda", "hint": "Tashqi xotirani boshqa ilovalar ham o'qiy oladi." }
+      ],
+      "explanation": "Keystore va Keychain kalitlarni apparat darajasida himoyalaydi: kalit qurilmadan chiqmaydi va boshqa ilovalar unga yeta olmaydi. Token shu kalit bilan shifrlangan holda saqlanadi. Bundan tashqari token muddati qisqa bo'lishi va serverda bekor qilinishi mumkin bo'lishi kerak.",
+      "reviewed": false
+    },
+    {
+      "id": "core.mobile.020",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Mobil ilovaning eski versiyalari yillab ishlatiladi. Bu backend API'ga qanday talab qo'yadi?",
+      "options": [
+        { "id": "a", "text": "API orqaga mos (backward compatible) bo'lishi kerak: maydonlarni o'chirish yoki ma'nosini o'zgartirish o'rniga yangilarini qo'shish va versiyalash", "correct": true },
+        { "id": "b", "text": "Hech qanday: foydalanuvchilar ilovani darhol yangilaydi", "hint": "Yangilanish majburiy emas; ko'p foydalanuvchi oylab eski versiyada qoladi." },
+        { "id": "c", "text": "Har relizda eski API'ni o'chirish kerak", "hint": "Unda eski versiyadagi ilovalar bir zumda ishlamay qoladi." },
+        { "id": "d", "text": "API javoblarini ilova ichida keshlash kifoya", "hint": "Kesh eski javobni saqlaydi, lekin o'zgargan API bilan muloqotni tuzatmaydi." }
+      ],
+      "explanation": "Veb-saytdan farqli o'laroq, mobil klientni bir zumda yangilab bo'lmaydi. Shuning uchun API o'zgarishlari qo'shimcha bo'lishi, klient esa notanish maydonlarga chidamli bo'lishi kerak. Juda eski versiyalarni o'chirish uchun \"majburiy yangilash\" mexanizmi oldindan qurib qo'yiladi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.mobile.021",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Yangi versiyani chiqarishda staged rollout (bosqichma-bosqich tarqatish) nima beradi?",
+      "options": [
+        { "id": "a", "text": "Versiya avval foydalanuvchilarning kichik qismiga chiqadi; crash va metrikalar yomonlashsa, tarqatish to'xtatiladi va zarar cheklanadi", "correct": true },
+        { "id": "b", "text": "Versiya do'kon tekshiruvidan tezroq o'tadi", "hint": "Tekshiruv tezligiga ta'siri yo'q." },
+        { "id": "c", "text": "O'rnatilgan versiyani avtomatik eski versiyaga qaytarish imkonini beradi", "hint": "Mobil'da o'rnatilgan versiyani qaytarib bo'lmaydi; faqat tarqatishni to'xtatish va tuzatilgan build chiqarish mumkin." },
+        { "id": "d", "text": "Foydalanuvchilarni yangilashga majbur qiladi", "hint": "Bu majburiy yangilash mexanizmi; rollout esa versiya kimga taklif qilinishini boshqaradi." }
+      ],
+      "explanation": "Mobil relizni ortga qaytarib bo'lmaydi, shuning uchun xatoning ta'sir doirasini kichraytirish muhim. Rollout 1%, 5%, 20% kabi bosqichlarda boradi; har bosqichda crash-free ko'rsatkichi va biznes metrikalari tekshiriladi. Muammo chiqsa, tarqatish to'xtatiladi va hotfix tayyorlanadi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.mobile.022",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Mobil ilovada masofadan boshqariladigan feature flag'larning eng muhim foydasi nima?",
+      "options": [
+        { "id": "a", "text": "Funksiyani yangi reliz chiqarmasdan yoqish yoki o'chirish mumkin, chunki do'kon orqali tuzatish kunlab vaqt oladi", "correct": true },
+        { "id": "b", "text": "Ilova hajmi kamayadi", "hint": "Aksincha: o'chirilgan funksiya kodi ham ilova ichida bo'ladi." },
+        { "id": "c", "text": "Kod tezroq kompilyatsiya bo'ladi", "hint": "Build vaqtiga aloqasi yo'q; qaror runtime'da qabul qilinadi." },
+        { "id": "d", "text": "Testlash keraksiz bo'lib qoladi", "hint": "Aksincha: har bayroqning ikkala holati ham test qilinishi kerak." }
+      ],
+      "explanation": "Feature flag kodni chiqarish (release) bilan funksiyani yoqishni (launch) ajratadi. Nosoz funksiya serverdan bir zumda o'chiriladi, yangi funksiya esa foydalanuvchilarning bir qismida sinab ko'riladi. Narxi: bayroqlar texnik qarzga aylanadi, shuning uchun ularni vaqtida olib tashlash intizomi kerak.",
+      "reviewed": false
+    },
+    {
+      "id": "core.mobile.023",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Katta mobil ilovani feature modullarga bo'lishda modullar orasidagi bog'liqlik qanday bo'lishi kerak?",
+      "options": [
+        { "id": "a", "text": "Feature'lar bir-birini bilmaydi; ular umumiy interfeys yoki navigatsiya qatlami orqali bog'lanadi", "correct": true },
+        { "id": "b", "text": "Har bir feature qolgan barcha feature'larga bog'lanadi", "hint": "Unda bitta o'zgarish hammasini qayta yig'adi va modullashtirishdan foyda qolmaydi." },
+        { "id": "c", "text": "Barcha feature'lar bitta umumiy \"utils\" modulida yashaydi", "hint": "Bu modullashtirish emas, boshqa nomdagi monolit." },
+        { "id": "d", "text": "Modullar faqat UI va data qatlamiga bo'linadi", "hint": "Faqat qatlamlar bo'yicha bo'lish jamoalarni va feature'larni ajratmaydi." }
+      ],
+      "explanation": "Mustaqil feature modullar parallel yig'iladi, alohida test qilinadi va turli jamoalarga tegishli bo'la oladi. Ular orasidagi aloqa tor shartnoma orqali quriladi: navigatsiya interfeysi yoki kichik API moduli. Bog'liqlik yo'nalishi har doim feature'dan umumiy (core) modullarga qarab bo'ladi, aksincha emas.",
+      "reviewed": false
+    },
+    {
+      "id": "core.mobile.024",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Jamoa Android va iOS o'rtasida kodni ulashishni (KMP yoki cross-platform freymvork) ko'rib chiqmoqda. Qarorda eng muhim omil qaysi?",
+      "options": [
+        { "id": "a", "text": "Mahsulot talablari va jamoa: qancha mantiq umumiy, platformaga xos UI qanchalik muhim, jamoaning tajribasi va uzoq muddatli qo'llab-quvvatlash narxi", "correct": true },
+        { "id": "b", "text": "Qaysi texnologiya hozir eng mashhur ekani", "hint": "Mashhurlik o'zgaradi; qaror loyihaning o'z ehtiyojidan chiqishi kerak." },
+        { "id": "c", "text": "Kod satrlari sonini maksimal kamaytirish", "hint": "Kam kod har doim ham arzon emas: platforma bilan integratsiya va nosozliklarni tuzatish qiyinlashishi mumkin." },
+        { "id": "d", "text": "Faqat birinchi relizgacha bo'lgan tezlik", "hint": "Boshlang'ich tezlik muhim, lekin loyiha yillab qo'llab-quvvatlanadi." }
+      ],
+      "explanation": "Yagona to'g'ri javob yo'q. Biznes mantig'i og'ir, UI esa platformaga xos bo'lishi kerak bo'lsa, mantiqni ulashish (KMP) mos keladi. UI ikkala platformada bir xil va jamoa kichik bo'lsa, to'liq cross-platform arzonroq. Kamera, to'lov, AR kabi platforma bilan chuqur integratsiya ko'p bo'lsa, native ustun keladi.",
+      "reviewed": false
+    }
+  ]
+}

@@ -168,6 +168,6 @@
     { "id": "core.testing", "title": "Testlash asoslari" },
     { "id": "core.sysdesign", "title": "System design" },
     { "id": "core.aicode", "title": "AI yordamida kod va code review" },
-    { "id": "core.mobile", "title": "Mobile umumiy" }
+    { "id": "core.mobile", "title": "Mobile umumiy", "file": "core_mobile.json" }
   ]
 }

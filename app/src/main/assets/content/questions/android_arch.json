@@ -91,6 +91,36 @@
       ],
       "explanation": "Feature modullar o'zaro mustaqil bo'lsa, ular parallel build qilinadi, bir moduldagi o'zgarish boshqalarni qayta kompilyatsiya qildirmaydi va jamoalar bir-birining kodiga tegmaydi. Aloqa kichik `api` modullari yoki navigatsiya shartnomalari orqali quriladi, implementatsiya esa `internal` qoladi.",
       "reviewed": false
+    },
+    {
+      "id": "android.arch.007",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Ekran holati uchun bir nechta mustaqil `StateFlow` (loading, error, data) o'rniga bitta `UiState` klassini ishlatishning asosiy foydasi nima?",
+      "options": [
+        { "id": "a", "text": "Holat har doim izchil bo'ladi: UI bir vaqtda \"loading\" va \"error\" kabi imkonsiz kombinatsiyani ko'rmaydi", "correct": true },
+        { "id": "b", "text": "Recomposition'lar soni kamayadi", "hint": "Aksincha bo'lishi mumkin: bitta obyekt o'zgarsa, uni o'qiydigan hamma narsa xabardor bo'ladi." },
+        { "id": "c", "text": "Xotira kamroq sarflanadi", "hint": "Farq sezilmas darajada; maqsad xotira emas." },
+        { "id": "d", "text": "ViewModel'ni test qilish shart bo'lmay qoladi", "hint": "Test qilish osonlashadi, lekin keraksiz bo'lib qolmaydi." }
+      ],
+      "explanation": "Alohida oqimlar alohida yangilanadi, shuning uchun UI oraliq, mantiqsiz holatlarni ko'rishi mumkin. Bitta o'zgarmas `UiState` (yoki `sealed interface`) atomik almashtiriladi: har bir emissiya to'liq va izchil holat. Bu bir yo'nalishli ma'lumot oqimi (UDF) va MVI'ning asosiy g'oyasi.",
+      "reviewed": false
+    },
+    {
+      "id": "android.arch.008",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Ilovaning sovuq ishga tushishi (cold start) 3 soniya. Birinchi navbatda nimani tekshirasiz?",
+      "options": [
+        { "id": "a", "text": "`Application.onCreate` va birinchi ekrandagi sinxron ishlarni (SDK'larni ishga tushirish, disk va tarmoq chaqiruvlari): ularni kechiktirish yoki fonga o'tkazish kerak", "correct": true },
+        { "id": "b", "text": "APK hajmini kamaytirish", "hint": "Hajm yuklab olishga ta'sir qiladi; ishga tushish vaqti asosan startda bajariladigan kodga bog'liq." },
+        { "id": "c", "text": "Barcha rasmlarni WebP formatiga o'tkazish", "hint": "Bu hajmni kamaytiradi, lekin startdagi asosiy kechikish odatda kod bajarilishida." },
+        { "id": "d", "text": "`minSdk` ni oshirish", "hint": "SDK versiyasi ishga tushish vaqtini sezilarli o'zgartirmaydi." }
+      ],
+      "explanation": "Sovuq startda jarayon yaratiladi, `Application.onCreate`, keyin birinchi Activity va birinchi kadr bajariladi. Shu yo'lda main thread'da turgan har bir ish (analitika, DI grafi, baza ochish) vaqtni uzaytiradi. Macrobenchmark bilan o'lchab, keraksiz ishlarni App Startup yoki lazy initsializatsiya bilan kechiktirish va baseline profile qo'shish eng katta foyda beradi.",
+      "reviewed": false
     }
   ]
 }

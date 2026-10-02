@@ -89,6 +89,97 @@
       ],
       "explanation": "Jarayon o'limidan faqat ikki narsa omon qoladi: saqlangan holat (`Bundle`, ya'ni `SavedStateHandle` va `rememberSaveable`) va disk. `Bundle` hajmi cheklangan, shuning uchun unga faqat kichik holat (kiritilgan matn, tanlangan id) yoziladi; katta ma'lumot Room yoki faylga saqlanadi va id orqali qayta yuklanadi.",
       "reviewed": false
+    },
+    {
+      "id": "android.components.007",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Quyidagilardan qaysi biri Android'ning to'rtta asosiy komponentiga kirmaydi?",
+      "options": [
+        { "id": "a", "text": "Fragment", "correct": true },
+        { "id": "b", "text": "Service", "hint": "U fonda uzoq ishlaydigan vazifalar uchun asosiy komponent va manifestda e'lon qilinadi." },
+        { "id": "c", "text": "BroadcastReceiver", "hint": "U tizim yoki ilova xabarlarini qabul qiladi va asosiy komponentlardan biri." },
+        { "id": "d", "text": "ContentProvider", "hint": "U ma'lumotni boshqa ilovalar bilan ulashish uchun asosiy komponent." }
+      ],
+      "explanation": "To'rtta asosiy komponent: Activity, Service, BroadcastReceiver, ContentProvider. Ularni tizim o'zi ishga tushira oladi va ular manifestda e'lon qilinadi. Fragment esa Activity ichida yashaydigan UI bo'lagi; u AndroidX kutubxonasiga tegishli, tizim komponenti emas.",
+      "reviewed": false
+    },
+    {
+      "id": "android.components.008",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Explicit va implicit Intent o'rtasidagi farq nima?",
+      "options": [
+        { "id": "a", "text": "Explicit Intent aniq komponentni (klassni) ko'rsatadi; implicit Intent bajarilishi kerak bo'lgan amalni tasvirlaydi va mos ilovani tizim topadi", "correct": true },
+        { "id": "b", "text": "Explicit Intent faqat boshqa ilovalarni ochadi, implicit esa faqat o'z ilovangiz ichida ishlaydi", "hint": "Ko'pincha aksincha: o'z ekranlaringizni klass nomi bilan ochasiz, begona ilovalarni esa amal orqali." },
+        { "id": "c", "text": "Implicit Intent ma'lumot (extras) olib yura olmaydi", "hint": "Har ikki tur ham extras, data va flag'larni olib yuradi." },
+        { "id": "d", "text": "Explicit Intent manifestda e'lon qilinmagan Activity'ni ham ocha oladi", "hint": "Manifestda yo'q Activity'ni hech qanday Intent ocha olmaydi: `ActivityNotFoundException` chiqadi." }
+      ],
+      "explanation": "`Intent(this, DetailActivity::class.java)` — explicit: qaysi klass ochilishi aniq. `Intent(Intent.ACTION_VIEW, uri)` — implicit: tizim shu amalni bajara oladigan ilovalarni `intent-filter` bo'yicha qidiradi va bir nechta bo'lsa, tanlash oynasini ko'rsatadi.",
+      "reviewed": false
+    },
+    {
+      "id": "android.components.009",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Foydalanuvchi Home tugmasini bosib ilovadan chiqdi. Activity'da qaysi callback'lar chaqiriladi?",
+      "options": [
+        { "id": "a", "text": "`onPause()`, keyin `onStop()`", "correct": true },
+        { "id": "b", "text": "Faqat `onPause()`", "hint": "Activity endi umuman ko'rinmaydi; bu holat uchun yana bir callback bor." },
+        { "id": "c", "text": "`onStop()`, keyin `onDestroy()`", "hint": "Activity yo'q qilinmaydi: u xotirada qoladi va foydalanuvchi qaytishi mumkin." },
+        { "id": "d", "text": "Uchta callback: pause, stop va destroy", "hint": "Home tugmasi Activity'ni tugatmaydi; `onDestroy()` faqat `finish()` chaqirilganda yoki tizim tozalaganda keladi." }
+      ],
+      "explanation": "Activity fokusni yo'qotganda `onPause()`, ekranda umuman ko'rinmay qolganda `onStop()` chaqiriladi. U yo'q qilinmaydi: foydalanuvchi qaytsa, `onRestart()` → `onStart()` → `onResume()` bajariladi.",
+      "reviewed": false
+    },
+    {
+      "id": "android.components.010",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`launchMode=\"singleTop\"` bo'lgan Activity stack tepasida turibdi va unga yana Intent yuborildi. Nima bo'ladi?",
+      "options": [
+        { "id": "a", "text": "Yangi nusxa yaratilmaydi; mavjud nusxada `onNewIntent()` chaqiriladi", "correct": true },
+        { "id": "b", "text": "Har doim yangi nusxa yaratiladi", "hint": "Bu `standard` rejimining xatti-harakati." },
+        { "id": "c", "text": "Mavjud nusxa yo'q qilinib, yangisi yaratiladi", "hint": "Hech narsa yo'q qilinmaydi; Activity yangi Intent'ni maxsus callback orqali oladi." },
+        { "id": "d", "text": "Intent e'tiborga olinmaydi", "hint": "Intent yetkaziladi, faqat `onCreate()` orqali emas." }
+      ],
+      "explanation": "`singleTop` da Activity allaqachon stack tepasida bo'lsa, tizim uni qayta ishlatadi va yangi Intent'ni `onNewIntent()` ga beradi. Agar u tepada bo'lmasa, yangi nusxa yaratiladi. Bu bildirishnomadan bir xil ekranni qayta-qayta ochishda takroriy ekranlarning oldini oladi.",
+      "reviewed": false
+    },
+    {
+      "id": "android.components.011",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Bu kodda nima yetishmaydi?",
+      "code": "class CompassActivity : AppCompatActivity(), SensorEventListener {\n\n    override fun onResume() {\n        super.onResume()\n        sensorManager.registerListener(\n            this, sensor, SensorManager.SENSOR_DELAY_UI\n        )\n    }\n}",
+      "options": [
+        { "id": "a", "text": "`onPause()` da `unregisterListener` chaqirilmagan: sensor ekran yopilgandan keyin ham ishlab, batareyani sarflaydi", "correct": true },
+        { "id": "b", "text": "Listener `onCreate()` da ro'yxatdan o'tishi shart", "hint": "`onResume`/`onPause` juftligi sensor uchun to'g'ri joy; muhimi juftlikning ikkinchi yarmi." },
+        { "id": "c", "text": "Sensor manifestda `intent-filter` bilan e'lon qilinishi kerak", "hint": "Sensor listener'lari manifestda e'lon qilinmaydi; ular kodda ro'yxatdan o'tadi." },
+        { "id": "d", "text": "`SENSOR_DELAY_UI` o'rniga `SENSOR_DELAY_FASTEST` ishlatish kerak", "hint": "Tezroq chastota batareyani ko'proq sarflaydi; muammo chastotada emas." }
+      ],
+      "explanation": "Lifecycle callback'larida olingan har bir resurs juft callback'da qaytarilishi kerak: `onResume` da ro'yxatdan o'tgan listener `onPause` da olib tashlanadi. Aks holda sensor fonda ham ishlayveradi, Activity esa listener orqali ushlab turiladi.",
+      "reviewed": false
+    },
+    {
+      "id": "android.components.012",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Fragment'da `Flow` ni kuzatishda nega `viewLifecycleOwner` ishlatiladi, Fragment'ning o'zi (`this`) emas?",
+      "options": [
+        { "id": "a", "text": "Fragment view'si Fragment'dan oldin yo'q qilinishi mumkin; Fragment lifecycle'i bilan kuzatilsa, eski view'ga murojaat va takroriy obuna paydo bo'ladi", "correct": true },
+        { "id": "b", "text": "Fragment `LifecycleOwner` emas, shuning uchun `this` ni berib bo'lmaydi", "hint": "Fragment ham `LifecycleOwner`; kod kompilyatsiya bo'ladi, muammo runtime'dagi xatti-harakatda." },
+        { "id": "c", "text": "`viewLifecycleOwner` bilan kuzatish tezroq ishlaydi", "hint": "Gap tezlikda emas, ikki lifecycle'ning qachon tugashida." },
+        { "id": "d", "text": "`this` ishlatilsa, kuzatish fon oqimida bajariladi", "hint": "Lifecycle egasi oqimni belgilamaydi; uni dispatcher belgilaydi." }
+      ],
+      "explanation": "Fragment back stack'ka tushganda uning view'si yo'q qilinadi (`onDestroyView`), Fragment'ning o'zi esa tirik qoladi. Fragment lifecycle'i bilan boshlangan kuzatuv davom etadi va qaytganda yana bittasi qo'shiladi. `viewLifecycleOwner` view bilan birga tugaydi, shuning uchun kuzatuv ham o'z vaqtida to'xtaydi.",
+      "reviewed": false
     }
   ]
 }
