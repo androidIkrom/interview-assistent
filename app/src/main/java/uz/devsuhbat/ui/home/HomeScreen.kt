@@ -32,11 +32,19 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import uz.devsuhbat.AppContainer
 import uz.devsuhbat.R
+import uz.devsuhbat.data.MockSummary
+import uz.devsuhbat.engine.QuestionPicker
 import uz.devsuhbat.ui.common.titleRes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(container: AppContainer, onPractice: () -> Unit, onMistakes: () -> Unit, onSettings: () -> Unit) {
+fun HomeScreen(
+    container: AppContainer,
+    onPractice: () -> Unit,
+    onMistakes: () -> Unit,
+    onMock: () -> Unit,
+    onSettings: () -> Unit,
+) {
     val viewModel: HomeViewModel = viewModel(
         factory = viewModelFactory {
             initializer {
@@ -46,6 +54,7 @@ fun HomeScreen(container: AppContainer, onPractice: () -> Unit, onMistakes: () -
                     states = container.progress.states,
                     today = container.progress::today,
                     io = container.io,
+                    lastMock = container.progress::lastMock,
                 )
             }
         }
@@ -71,6 +80,35 @@ fun HomeScreen(container: AppContainer, onPractice: () -> Unit, onMistakes: () -
             ReadinessCard(state)
             MistakesCard(state.dueCount, onMistakes)
             PracticeCard(onPractice)
+            MockCard(state.mockQuestionCount, state.lastMock, onMock)
+        }
+    }
+}
+
+@Composable
+private fun MockCard(questionCount: Int, lastMock: MockSummary?, onMock: () -> Unit) {
+    val available = questionCount >= QuestionPicker.MOCK_MIN
+    Card(modifier = Modifier.fillMaxWidth()) {
+        Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            Text(stringResource(R.string.home_mock), style = MaterialTheme.typography.titleLarge)
+            Text(
+                text = if (available) {
+                    stringResource(R.string.home_mock_desc, questionCount)
+                } else {
+                    stringResource(R.string.home_mock_unavailable)
+                },
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            if (lastMock != null) {
+                Text(
+                    text = stringResource(R.string.home_mock_last, lastMock.correct, lastMock.total),
+                    style = MaterialTheme.typography.titleMedium,
+                )
+            }
+            Button(onClick = onMock, enabled = available, modifier = Modifier.fillMaxWidth()) {
+                Text(stringResource(R.string.action_start))
+            }
         }
     }
 }

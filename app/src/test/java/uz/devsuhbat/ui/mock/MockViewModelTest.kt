@@ -154,6 +154,19 @@ class MockViewModelTest {
     }
 
     @Test
+    fun resultIsMarkedStoredOnlyAfterItWasReported() = runTest(dispatcher) {
+        val viewModel = viewModel()
+
+        viewModel.finish()
+        assertNotNull(viewModel.state.value.result)
+        assertFalse(viewModel.state.value.stored)
+        runCurrent()
+
+        assertEquals(1, finished.size)
+        assertEquals(true, viewModel.state.value.stored)
+    }
+
+    @Test
     fun finishIsReportedOnce() = runTest(dispatcher) {
         val viewModel = viewModel()
 

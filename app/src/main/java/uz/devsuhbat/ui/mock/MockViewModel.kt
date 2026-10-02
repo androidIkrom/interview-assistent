@@ -31,6 +31,8 @@ data class MockUiState(
     val remainingSeconds: Int = 0,
     /** Non-null once the mock is finished. */
     val result: MockResult? = null,
+    /** True once [MockViewModel]'s onFinished has returned, i.e. the missed questions are in the mistakes session. */
+    val stored: Boolean = false,
     val topicTitles: Map<String, String> = emptyMap(),
 )
 
@@ -101,7 +103,10 @@ class MockViewModel(
         val session = activeSession() ?: return
         val result = session.finish()
         _state.update { it.copy(result = result, remainingSeconds = remainingSeconds()) }
-        viewModelScope.launch { withContext(NonCancellable) { onFinished(result) } }
+        viewModelScope.launch {
+            withContext(NonCancellable) { onFinished(result) }
+            _state.update { it.copy(stored = true) }
+        }
     }
 
     /** The session while the mock is still running; null before loading and after finishing. */

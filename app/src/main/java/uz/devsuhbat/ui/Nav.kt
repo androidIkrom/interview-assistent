@@ -8,6 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import uz.devsuhbat.AppContainer
 import uz.devsuhbat.ui.home.HomeScreen
+import uz.devsuhbat.ui.mock.MockScreen
 import uz.devsuhbat.ui.onboarding.OnboardingScreen
 import uz.devsuhbat.ui.session.SessionScreen
 import uz.devsuhbat.ui.settings.SettingsScreen
@@ -18,6 +19,7 @@ object Routes {
     const val HOME = "home"
     const val TOPICS = "topics"
     const val SETTINGS = "settings"
+    const val MOCK = "mock"
 
     /** The onboarding picker opened from Settings to change field and level. */
     const val PROFILE = "profile"
@@ -58,6 +60,7 @@ fun DevSuhbatNavHost(container: AppContainer, startDestination: String) {
                 container = container,
                 onPractice = { nav.navigate(Routes.TOPICS) },
                 onMistakes = { nav.navigate(Routes.session(Routes.MISTAKES)) },
+                onMock = { nav.navigate(Routes.MOCK) },
                 onSettings = { nav.navigate(Routes.SETTINGS) },
             )
         }
@@ -66,6 +69,15 @@ fun DevSuhbatNavHost(container: AppContainer, startDestination: String) {
                 container = container,
                 onBack = { nav.popBackStack() },
                 onOpen = { topicId -> nav.navigate(Routes.session(topicId)) },
+            )
+        }
+        composable(Routes.MOCK) {
+            MockScreen(
+                container = container,
+                onExit = { nav.popBackStack() },
+                // The mock leaves the back stack, so "back" from the mistakes session lands on Home.
+                onMistakes = { nav.navigate(Routes.session(Routes.MISTAKES)) { popUpTo(Routes.HOME) } },
+                onHome = { nav.popBackStack(Routes.HOME, inclusive = false) },
             )
         }
         composable(Routes.SETTINGS) {
