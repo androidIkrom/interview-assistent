@@ -1,0 +1,173 @@
+{
+  "version": 1,
+  "fields": [
+    {
+      "id": "android", "title": "Android (Kotlin)", "group": "mobile",
+      "topics": ["android.kotlin", "android.components", "android.compose", "android.async", "android.data", "android.arch",
+        "core.mobile", "core.dsa", "core.oop", "core.git", "core.http", "core.security", "core.testing", "core.sysdesign", "core.aicode"]
+    },
+    {
+      "id": "ios", "title": "iOS (Swift)", "group": "mobile",
+      "topics": ["ios.swift", "ios.ui", "ios.swiftui", "ios.concurrency", "ios.data", "ios.arch",
+        "core.mobile", "core.dsa", "core.oop", "core.git", "core.http", "core.security", "core.testing", "core.sysdesign", "core.aicode"]
+    },
+    {
+      "id": "flutter", "title": "Flutter", "group": "mobile",
+      "topics": ["flutter.dart", "flutter.widgets", "flutter.state", "flutter.async", "flutter.data", "flutter.arch",
+        "core.mobile", "core.dsa", "core.oop", "core.git", "core.http", "core.security", "core.testing", "core.sysdesign", "core.aicode"]
+    },
+    {
+      "id": "frontend", "title": "Frontend (JS/TS, React)", "group": "frontend",
+      "topics": ["fe.js", "fe.htmlcss", "fe.react", "fe.ts", "fe.browser", "fe.arch",
+        "core.dsa", "core.git", "core.http", "core.security", "core.testing", "core.sysdesign", "core.aicode"]
+    },
+    {
+      "id": "python", "title": "Python (Django/FastAPI)", "group": "backend",
+      "topics": ["py.lang", "py.idioms", "py.web", "py.async", "py.db", "py.arch",
+        "core.dsa", "core.oop", "core.sql", "core.git", "core.http", "core.security", "core.testing", "core.sysdesign", "core.aicode"]
+    },
+    {
+      "id": "node", "title": "Node.js (Express/NestJS)", "group": "backend",
+      "topics": ["node.js", "node.runtime", "node.web", "node.async", "node.db", "node.arch",
+        "core.dsa", "core.oop", "core.sql", "core.git", "core.http", "core.security", "core.testing", "core.sysdesign", "core.aicode"]
+    },
+    {
+      "id": "java", "title": "Java (Spring)", "group": "backend",
+      "topics": ["java.lang", "java.collections", "java.spring", "java.concurrency", "java.data", "java.arch",
+        "core.dsa", "core.oop", "core.sql", "core.git", "core.http", "core.security", "core.testing", "core.sysdesign", "core.aicode"]
+    },
+    {
+      "id": "go", "title": "Go", "group": "backend",
+      "topics": ["go.lang", "go.types", "go.concurrency", "go.web", "go.data", "go.arch",
+        "core.dsa", "core.oop", "core.sql", "core.git", "core.http", "core.security", "core.testing", "core.sysdesign", "core.aicode"]
+    },
+    {
+      "id": "php", "title": "PHP (Laravel)", "group": "backend",
+      "topics": ["php.lang", "php.oop", "php.laravel", "php.eloquent", "php.async", "php.arch",
+        "core.dsa", "core.oop", "core.sql", "core.git", "core.http", "core.security", "core.testing", "core.sysdesign", "core.aicode"]
+    },
+    {
+      "id": "dotnet", "title": ".NET (C#)", "group": "backend",
+      "topics": ["net.csharp", "net.types", "net.aspnet", "net.async", "net.data", "net.arch",
+        "core.dsa", "core.oop", "core.sql", "core.git", "core.http", "core.security", "core.testing", "core.sysdesign", "core.aicode"]
+    },
+    {
+      "id": "qa", "title": "QA", "group": "other",
+      "topics": ["qa.theory", "qa.docs", "qa.design", "qa.api", "qa.auto", "qa.process",
+        "core.sql", "core.git", "core.http", "core.security", "core.testing", "core.aicode"]
+    },
+    {
+      "id": "devops", "title": "DevOps", "group": "other",
+      "topics": ["ops.linux", "ops.docker", "ops.cicd", "ops.k8s", "ops.iac", "ops.observability",
+        "core.git", "core.http", "core.security", "core.sysdesign", "core.aicode"]
+    },
+    {
+      "id": "ml", "title": "Data/ML", "group": "other",
+      "topics": ["ml.python", "ml.stats", "ml.classic", "ml.eval", "ml.dl", "ml.ops",
+        "core.dsa", "core.sql", "core.git", "core.sysdesign", "core.aicode"]
+    }
+  ],
+  "topics": [
+    { "id": "android.kotlin", "title": "Kotlin tili", "file": "android_kotlin.json" },
+    { "id": "android.components", "title": "Komponentlar va lifecycle", "file": "android_components.json" },
+    { "id": "android.compose", "title": "Jetpack Compose", "file": "android_compose.json" },
+    { "id": "android.async", "title": "Coroutines va Flow", "file": "android_async.json" },
+    { "id": "android.data", "title": "Ma'lumot qatlami", "file": "android_data.json" },
+    { "id": "android.arch", "title": "Arxitektura, DI, performance", "file": "android_arch.json" },
+
+    { "id": "ios.swift", "title": "Swift tili" },
+    { "id": "ios.ui", "title": "UIKit va view lifecycle" },
+    { "id": "ios.swiftui", "title": "SwiftUI" },
+    { "id": "ios.concurrency", "title": "GCD, async/await, actors" },
+    { "id": "ios.data", "title": "Tarmoq va saqlash" },
+    { "id": "ios.arch", "title": "Xotira, arxitektura, performance" },
+
+    { "id": "flutter.dart", "title": "Dart tili" },
+    { "id": "flutter.widgets", "title": "Widgetlar va lifecycle" },
+    { "id": "flutter.state", "title": "State management" },
+    { "id": "flutter.async", "title": "Future, Stream, isolate" },
+    { "id": "flutter.data", "title": "Tarmoq, saqlash, platform channels" },
+    { "id": "flutter.arch", "title": "Rendering, arxitektura, performance" },
+
+    { "id": "fe.js", "title": "JavaScript" },
+    { "id": "fe.htmlcss", "title": "HTML va CSS" },
+    { "id": "fe.react", "title": "React" },
+    { "id": "fe.ts", "title": "TypeScript" },
+    { "id": "fe.browser", "title": "Brauzer, tarmoq, Next.js" },
+    { "id": "fe.arch", "title": "Performance, arxitektura, accessibility" },
+
+    { "id": "py.lang", "title": "Python tili" },
+    { "id": "py.idioms", "title": "Ma'lumot tuzilmalari va idiomalar" },
+    { "id": "py.web", "title": "Django va FastAPI" },
+    { "id": "py.async", "title": "Konkurentlik: GIL, asyncio" },
+    { "id": "py.db", "title": "ORM va DB" },
+    { "id": "py.arch", "title": "Arxitektura, caching, queue" },
+
+    { "id": "node.js", "title": "JavaScript/TypeScript asoslari" },
+    { "id": "node.runtime", "title": "Event loop va runtime" },
+    { "id": "node.web", "title": "Express va NestJS" },
+    { "id": "node.async", "title": "Promise, stream, worker" },
+    { "id": "node.db", "title": "DB, ORM, caching" },
+    { "id": "node.arch", "title": "Arxitektura va masshtab" },
+
+    { "id": "java.lang", "title": "Java tili va OOP" },
+    { "id": "java.collections", "title": "Collections va Stream API" },
+    { "id": "java.spring", "title": "Spring Core va Boot" },
+    { "id": "java.concurrency", "title": "Ko'p oqimlilik, virtual threads" },
+    { "id": "java.data", "title": "JPA/Hibernate, tranzaksiyalar" },
+    { "id": "java.arch", "title": "JVM, GC, mikroservislar" },
+
+    { "id": "go.lang", "title": "Go tili" },
+    { "id": "go.types", "title": "Slice, map, interface" },
+    { "id": "go.concurrency", "title": "Goroutine va channel" },
+    { "id": "go.web", "title": "net/http, context, middleware" },
+    { "id": "go.data", "title": "DB va tranzaksiya" },
+    { "id": "go.arch", "title": "Profiling va arxitektura" },
+
+    { "id": "php.lang", "title": "PHP tili" },
+    { "id": "php.oop", "title": "OOP va Composer" },
+    { "id": "php.laravel", "title": "Laravel asoslari" },
+    { "id": "php.eloquent", "title": "Eloquent va DB" },
+    { "id": "php.async", "title": "Queue, cache, events" },
+    { "id": "php.arch", "title": "Arxitektura va performance" },
+
+    { "id": "net.csharp", "title": "C# tili" },
+    { "id": "net.types", "title": "Tiplar, LINQ, collections" },
+    { "id": "net.aspnet", "title": "ASP.NET Core" },
+    { "id": "net.async", "title": "async/await va TPL" },
+    { "id": "net.data", "title": "EF Core" },
+    { "id": "net.arch", "title": "GC, performance, arxitektura" },
+
+    { "id": "qa.theory", "title": "Testlash nazariyasi" },
+    { "id": "qa.docs", "title": "Test hujjatlari va bug report" },
+    { "id": "qa.design", "title": "Test dizayn texnikalari" },
+    { "id": "qa.api", "title": "API va DB testlash" },
+    { "id": "qa.auto", "title": "Avtomatlashtirish" },
+    { "id": "qa.process", "title": "Strategiya, CI, jarayon" },
+
+    { "id": "ops.linux", "title": "Linux va shell" },
+    { "id": "ops.docker", "title": "Docker va konteynerlar" },
+    { "id": "ops.cicd", "title": "CI/CD" },
+    { "id": "ops.k8s", "title": "Kubernetes" },
+    { "id": "ops.iac", "title": "Terraform, IaC, cloud" },
+    { "id": "ops.observability", "title": "Monitoring, SRE, xavfsizlik" },
+
+    { "id": "ml.python", "title": "Python, pandas, numpy" },
+    { "id": "ml.stats", "title": "Statistika va ehtimollik" },
+    { "id": "ml.classic", "title": "Klassik ML" },
+    { "id": "ml.eval", "title": "Metrikalar va validatsiya" },
+    { "id": "ml.dl", "title": "Deep learning va LLM" },
+    { "id": "ml.ops", "title": "MLOps va tizim dizayni" },
+
+    { "id": "core.dsa", "title": "Algoritmlar va ma'lumot tuzilmalari" },
+    { "id": "core.oop", "title": "OOP, SOLID, dizayn patternlari" },
+    { "id": "core.sql", "title": "SQL va ma'lumotlar bazasi" },
+    { "id": "core.git", "title": "Git va jamoaviy ish" },
+    { "id": "core.http", "title": "HTTP, REST, tarmoq" },
+    { "id": "core.security", "title": "Xavfsizlik asoslari" },
+    { "id": "core.testing", "title": "Testlash asoslari" },
+    { "id": "core.sysdesign", "title": "System design" },
+    { "id": "core.aicode", "title": "AI yordamida kod va code review" },
+    { "id": "core.mobile", "title": "Mobile umumiy" }
+  ]
+}

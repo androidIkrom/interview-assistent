@@ -1,0 +1,96 @@
+{
+  "topic": "android.arch",
+  "questions": [
+    {
+      "id": "android.arch.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "MVVM arxitekturasida ViewModel'ning vazifasi nima?",
+      "options": [
+        { "id": "a", "text": "UI holatini saqlash va UI hodisalarini biznes mantiqqa uzatish", "correct": true },
+        { "id": "b", "text": "View'larni chizish va animatsiyalarni boshqarish", "hint": "Chizish — View (yoki composable) qatlamining ishi. ViewModel UI klasslarini bilmasligi kerak." },
+        { "id": "c", "text": "Tarmoq so'rovlarini to'g'ridan-to'g'ri yuborish va JSON'ni tahlil qilish", "hint": "Bu ma'lumot qatlamining (repository, data source) vazifasi; ViewModel undan faqat foydalanadi." },
+        { "id": "d", "text": "Ekranlar orasidagi navigatsiyani bajarish", "hint": "Navigatsiya UI qatlamida bajariladi. ViewModel ko'pi bilan \"qayerga o'tish kerak\" degan hodisani bildiradi." }
+      ],
+      "explanation": "ViewModel UI va ma'lumot qatlami o'rtasida turadi: repository'dan ma'lumot oladi, uni UI holatiga aylantiradi va kuzatiladigan oqim (`StateFlow`) orqali beradi. UI hodisalari (bosish, kiritish) ViewModel funksiyalarini chaqiradi. ViewModel View yoki Activity'ga havola saqlamaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "android.arch.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Dependency Injection nima uchun kerak?",
+      "options": [
+        { "id": "a", "text": "Klass o'z bog'liqliklarini o'zi yaratmaydi, ularni tashqaridan oladi; shu sabab ularni almashtirish va test qilish oson bo'ladi", "correct": true },
+        { "id": "b", "text": "Ilovani tezroq ishga tushirish uchun", "hint": "DI ishga tushishni tezlashtirmaydi; ba'zi freymvorklar uni hatto biroz sekinlashtiradi." },
+        { "id": "c", "text": "Kod hajmini kamaytirish uchun", "hint": "DI ko'pincha qo'shimcha kod (modullar, konstruktor parametrlari) talab qiladi. Maqsad boshqa." },
+        { "id": "d", "text": "Klass maydonlarini `private` qilish uchun", "hint": "Ko'rinish modifikatorlari DI'ga bog'liq emas." }
+      ],
+      "explanation": "DI'da bog'liqliklar klassga tashqaridan (odatda konstruktor orqali) beriladi. Natijada klass aniq implementatsiyaga bog'lanmaydi: testda haqiqiy API o'rniga soxta nusxa berish, production'da esa implementatsiyani almashtirish mumkin.",
+      "reviewed": false
+    },
+    {
+      "id": "android.arch.003",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Bu klassni unit test qilish nega qiyin?",
+      "code": "class UserRepository {\n    private val api = Retrofit.Builder()\n        .baseUrl(\"https://example.com/\")\n        .build()\n        .create(UserApi::class.java)\n\n    suspend fun user(id: String) = api.user(id)\n}",
+      "options": [
+        { "id": "a", "text": "`UserApi` klass ichida yaratilgan, shuning uchun testda uni soxta (fake) nusxa bilan almashtirib bo'lmaydi", "correct": true },
+        { "id": "b", "text": "`suspend` funksiyalarni test qilib bo'lmaydi", "hint": "`runTest` yordamida `suspend` funksiyalar bemalol test qilinadi." },
+        { "id": "c", "text": "Repository klassi `open` emas", "hint": "Repository'ning o'zidan meros olish shart emas. Muammo uning ichidagi bog'liqlikda." },
+        { "id": "d", "text": "`baseUrl` konstantaga chiqarilmagan", "hint": "Bu uslub masalasi; testlashga to'sqinlik qilmaydi." }
+      ],
+      "explanation": "Klass o'z bog'liqligini o'zi yaratgani uchun test haqiqiy tarmoqqa murojaat qilishga majbur. To'g'ri variant: `class UserRepository(private val api: UserApi)`. Shunda testda `UserApi` ning soxta implementatsiyasi beriladi va repository tarmoqsiz tekshiriladi.",
+      "reviewed": false
+    },
+    {
+      "id": "android.arch.004",
+      "level": "middle",
+      "type": "multi",
+      "kind": "concept",
+      "prompt": "Qaysi holatlar Android'da memory leak'ga olib keladi?",
+      "options": [
+        { "id": "a", "text": "Singleton ichida Activity `Context` ini saqlash", "correct": true },
+        { "id": "b", "text": "Activity yopilgandan keyin ham ishlayotgan uzoq vazifaning Activity'ga havola ushlab turishi", "correct": true },
+        { "id": "c", "text": "ViewModel ichida `applicationContext` ni saqlash", "hint": "Application konteksti butun jarayon davomida yashaydi; unga havola hech narsani ortiqcha ushlab turmaydi." },
+        { "id": "d", "text": "Composable ichida `remember` bilan obyekt saqlash", "hint": "`remember` qilingan qiymat composable composition'dan chiqqanda unutiladi." }
+      ],
+      "explanation": "Leak — uzoq yashaydigan obyekt qisqa yashaydigan obyektga (Activity, Fragment, View) havola ushlab turganda yuzaga keladi: GC uni tozalay olmaydi. Singleton'lar, statik maydonlar va bekor qilinmagan fon vazifalari eng ko'p uchraydigan sabablar. LeakCanary bunday holatlarni topishga yordam beradi.",
+      "reviewed": false
+    },
+    {
+      "id": "android.arch.005",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Hilt'da `@Singleton` repository'ga `@ActivityScoped` obyektni inject qilmoqchisiz. Nima bo'ladi?",
+      "options": [
+        { "id": "a", "text": "Build xatosi: uzoqroq yashaydigan komponent qisqaroq yashaydigan komponentning bog'liqligini ola olmaydi", "correct": true },
+        { "id": "b", "text": "Ishlaydi: repository har safar joriy Activity'ning obyektini oladi", "hint": "Singleton bir marta yaratiladi; u \"joriy\" Activity'ni bila olmaydi." },
+        { "id": "c", "text": "Ishlaydi, lekin Activity leak bo'ladi", "hint": "Qo'lda DI qilinganda aynan shunday bo'lardi. Hilt esa komponentlar ierarxiyasini oldindan tekshiradi." },
+        { "id": "d", "text": "Runtime'da birinchi murojaatda `NullPointerException` chiqadi", "hint": "Hilt (Dagger) bog'liqliklar grafini runtime'da emas, build paytida tekshiradi." }
+      ],
+      "explanation": "Hilt komponentlari ierarxiya tashkil qiladi: `SingletonComponent` → `ActivityRetainedComponent` → `ActivityComponent` va hokazo. Bola komponent ota bog'liqliklarini ko'radi, lekin aksincha emas. Shuning uchun singleton Activity doirasidagi obyektni so'rasa, Dagger build paytida xato beradi va bu potensial leak'ning oldini oladi.",
+      "reviewed": false
+    },
+    {
+      "id": "android.arch.006",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "50 dan ortiq dasturchi ishlaydigan Android loyihada build vaqti va jamoalar orasidagi konfliktlar o'smoqda. Modullashtirishda qaysi qoida eng muhim?",
+      "options": [
+        { "id": "a", "text": "Feature modullar bir-biriga to'g'ridan-to'g'ri bog'lanmaydi; ular umumiy API yoki navigatsiya modullari orqali aloqa qiladi", "correct": true },
+        { "id": "b", "text": "Har bir klassni alohida modulga chiqarish", "hint": "Juda mayda modullar konfiguratsiya vaqtini va boshqaruv yukini oshiradi; granularlik me'yorida bo'lishi kerak." },
+        { "id": "c", "text": "Barcha umumiy kodni bitta katta `common` modulga yig'ish", "hint": "Bunday modulga hamma bog'liq bo'lib qoladi: undagi har bir o'zgarish butun loyihani qayta build qiladi." },
+        { "id": "d", "text": "Loyihani faqat qatlam bo'yicha uchta modulga bo'lish: `ui`, `domain`, `data`", "hint": "Faqat qatlam bo'yicha bo'lish jamoalarni ajratmaydi: har bir feature o'zgarishi uchala modulga tegadi va parallel build'dan foyda kam." }
+      ],
+      "explanation": "Feature modullar o'zaro mustaqil bo'lsa, ular parallel build qilinadi, bir moduldagi o'zgarish boshqalarni qayta kompilyatsiya qildirmaydi va jamoalar bir-birining kodiga tegmaydi. Aloqa kichik `api` modullari yoki navigatsiya shartnomalari orqali quriladi, implementatsiya esa `internal` qoladi.",
+      "reviewed": false
+    }
+  ]
+}

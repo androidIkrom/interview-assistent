@@ -1,0 +1,96 @@
+{
+  "topic": "android.compose",
+  "questions": [
+    {
+      "id": "android.compose.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Compose'da `remember` nima qiladi?",
+      "options": [
+        { "id": "a", "text": "Qiymatni recomposition'lar orasida saqlab qoladi", "correct": true },
+        { "id": "b", "text": "Qiymatni ekran aylantirilganda ham saqlab qoladi", "hint": "Konfiguratsiya o'zgarishida composition qaytadan quriladi. Buning uchun `Bundle` ga yozadigan boshqa API bor." },
+        { "id": "c", "text": "Qiymat o'zgarganda recomposition'ni ishga tushiradi", "hint": "Recomposition'ni `State` obyektining kuzatuvi ishga tushiradi. `remember` ning o'zi faqat saqlaydi." },
+        { "id": "d", "text": "Qiymatni diskka yozadi", "hint": "Compose runtime diskka hech narsa yozmaydi; saqlash faqat xotirada, composition ichida." }
+      ],
+      "explanation": "Composable funksiya har recomposition'da qaytadan bajariladi, shuning uchun oddiy lokal o'zgaruvchi har safar boshidan yaratiladi. `remember` qiymatni composition ichida saqlaydi va keyingi recomposition'da o'sha qiymatni qaytaradi. Aylantirishdan omon qolish uchun `rememberSaveable` kerak.",
+      "reviewed": false
+    },
+    {
+      "id": "android.compose.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Tugma bosilganda matn o'zgarmayapti. Sabab nima?",
+      "code": "@Composable\nfun Counter() {\n    var count = 0\n    Button(onClick = { count++ }) {\n        Text(\"Bosildi: $count\")\n    }\n}",
+      "options": [
+        { "id": "a", "text": "`count` oddiy o'zgaruvchi: Compose uning o'zgarishini kuzatmaydi va u har recomposition'da qayta 0 bo'ladi", "correct": true },
+        { "id": "b", "text": "`Button` ichida `Text` ishlatib bo'lmaydi", "hint": "`Button` ning content lambda'si aynan `Text` kabi composable'lar uchun mo'ljallangan." },
+        { "id": "c", "text": "`onClick` lambda'si main thread'da ishlamaydi", "hint": "Compose'da click callback'lari main thread'da chaqiriladi." },
+        { "id": "d", "text": "`count++` o'rniga `count += 1` yozish kerak", "hint": "Bu ikki yozuv bir xil ishni bajaradi. Muammo amalda emas, o'zgaruvchining qanday e'lon qilinganida." }
+      ],
+      "explanation": "Compose faqat `State` obyektlarining o'qilishi va yozilishini kuzatadi. To'g'ri variant: `var count by remember { mutableStateOf(0) }`. `mutableStateOf` o'zgarishni Compose'ga bildiradi, `remember` esa qiymatni recomposition'lar orasida saqlaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "android.compose.003",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`LaunchedEffect(userId) { load(userId) }` qachon qayta ishga tushadi?",
+      "options": [
+        { "id": "a", "text": "`userId` qiymati o'zgarganda: eski coroutine bekor qilinadi va yangisi boshlanadi", "correct": true },
+        { "id": "b", "text": "Har bir recomposition'da", "hint": "Unda har chizishda so'rov ketgan bo'lardi. Kalit (key) parametri aynan shuning oldini olish uchun berilgan." },
+        { "id": "c", "text": "Faqat bir marta, composable birinchi marta ekranga chiqqanda", "hint": "Bu `LaunchedEffect(Unit)` uchun to'g'ri bo'lardi. Bu yerda kalit sifatida o'zgaruvchan qiymat berilgan." },
+        { "id": "d", "text": "`load` funksiyasi tugagach, avtomatik takrorlanadi", "hint": "Effekt bloki tugagach o'z-o'zidan qayta boshlanmaydi; takrorlash uchun sikl yozish kerak." }
+      ],
+      "explanation": "`LaunchedEffect` composition'ga kirganda coroutine boshlaydi. Kalitlardan biri o'zgarsa, joriy coroutine bekor qilinadi va blok yangi qiymat bilan qayta boshlanadi. Composable composition'dan chiqsa, coroutine bekor qilinadi.",
+      "reviewed": false
+    },
+    {
+      "id": "android.compose.004",
+      "level": "middle",
+      "type": "multi",
+      "kind": "concept",
+      "prompt": "Qaysi holatlar composable'ning recomposition'iga olib keladi?",
+      "options": [
+        { "id": "a", "text": "U o'qiyotgan `State` qiymati o'zgarganda", "correct": true },
+        { "id": "b", "text": "Unga uzatilgan parametr qiymati o'zgarganda", "correct": true },
+        { "id": "c", "text": "`remember` ichidagi oddiy (State bo'lmagan) obyektning maydoni o'zgarganda", "hint": "Compose faqat snapshot `State` o'qishlarini kuzatadi. Oddiy obyekt maydoni o'zgarganini u bilmaydi." },
+        { "id": "d", "text": "Har 16 millisekundda, ekran yangilanish chastotasiga mos ravishda", "hint": "Compose kadr bo'yicha emas, holat o'zgarishi bo'yicha ishlaydi. O'zgarish bo'lmasa, hech narsa qayta bajarilmaydi." }
+      ],
+      "explanation": "Recomposition ikki sababdan boshlanadi: composable o'qigan `State` o'zgardi yoki ota composable uni yangi parametrlar bilan chaqirdi. Boshqa hollarda Compose funksiyani o'tkazib yuboradi (skip).",
+      "reviewed": false
+    },
+    {
+      "id": "android.compose.005",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`LazyColumn` da \"yuqoriga\" tugmasini `listState.firstVisibleItemIndex > 0` bo'lganda ko'rsatmoqchisiz. Scroll paytida ortiqcha recomposition bo'lmasligi uchun nima qilasiz?",
+      "options": [
+        { "id": "a", "text": "Shartni `remember { derivedStateOf { ... } }` ichiga olaman: recomposition faqat shart natijasi o'zgarganda bo'ladi", "correct": true },
+        { "id": "b", "text": "Shartni `LaunchedEffect` ichida hisoblab, natijani `mutableStateOf` ga yozaman", "hint": "Ishlaydi, lekin ortiqcha: bir holatdan boshqasini hisoblash uchun maxsus, soddaroq API bor va u qo'shimcha coroutine talab qilmaydi." },
+        { "id": "c", "text": "`firstVisibleItemIndex` ni `rememberSaveable` ga saqlayman", "hint": "Bu qiymatni saqlab qolish masalasi. Recomposition soniga ta'sir qilmaydi: indeks har o'zgarganda baribir qayta chiziladi." },
+        { "id": "d", "text": "Composable'ga `@Stable` annotatsiyasini qo'yaman", "hint": "`@Stable` parametr tiplarining barqarorligi haqida. Bu yerda muammo tez-tez o'zgaradigan holatni to'g'ridan-to'g'ri o'qishda." }
+      ],
+      "explanation": "`firstVisibleItemIndex` scroll paytida juda tez-tez o'zgaradi va uni to'g'ridan-to'g'ri o'qigan composable har o'zgarishda qayta bajariladi. `derivedStateOf` hisoblangan natijani (bu yerda `Boolean`) alohida holatga aylantiradi: o'quvchilar faqat natija `false` dan `true` ga (yoki aksincha) o'tganda xabardor qilinadi.",
+      "reviewed": false
+    },
+    {
+      "id": "android.compose.006",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Compose'da holatni qayerda saqlash (state hoisting) bo'yicha qaysi qoida to'g'ri?",
+      "options": [
+        { "id": "a", "text": "Holat uni o'qiydigan va o'zgartiradigan composable'larning eng yaqin umumiy ajdodiga ko'tariladi; biznes mantiqqa tegishli holat ViewModel'da turadi", "correct": true },
+        { "id": "b", "text": "Barcha holat doim eng yuqori (root) composable'da saqlanadi", "hint": "Unda har kichik o'zgarish butun daraxt bo'ylab parametr uzatishni talab qiladi va recomposition doirasi keraksiz kengayadi." },
+        { "id": "c", "text": "Har bir composable o'z holatini o'zi `remember` qiladi va tashqariga chiqarmaydi", "hint": "Bunday composable'ni qayta ishlatish va test qilish qiyin: tashqaridan uning holatini boshqarib bo'lmaydi." },
+        { "id": "d", "text": "Holat faqat ViewModel'da saqlanadi, composable ichida `remember` ishlatilmaydi", "hint": "Sof UI holati (masalan, menyu ochiq yoki yopiqligi) uchun ViewModel ortiqcha: u ekran mantiqiga tegishli emas." }
+      ],
+      "explanation": "State hoisting'da holat kerak bo'lgan eng past umumiy darajaga ko'tariladi: undan pastda bo'lsa, composable'lar uni ulasha olmaydi, undan yuqorida bo'lsa, keraksiz bog'liqlik va recomposition paydo bo'ladi. UI elementining o'ziga xos holati composable'da (`remember`), ekran va biznes holati esa ViewModel'da saqlanadi.",
+      "reviewed": false
+    }
+  ]
+}

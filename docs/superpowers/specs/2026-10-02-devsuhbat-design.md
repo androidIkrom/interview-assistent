@@ -277,6 +277,7 @@ Paket: `uz.devsuhbat`.
 
 - Asset fayl o'qilmasa yoki JSON buzuq bo'lsa: shu mavzu o'tkazib yuboriladi, ekranda "Kontent yuklanmadi" holati ko'rsatiladi; ilova yiqilmaydi. Reliz oldidan validator testi buni ushlab qoladi.
 - Mavzuda tanlangan darajaga mos savol bo'lmasa: mavzu ro'yxatda "Tez orada" belgisi bilan ko'rinadi va bosilmaydi.
+- Kontenti hali yozilmagan yo'nalishni ham tanlash mumkin (foydalanuvchi talabi, 2026-10-02): tanlash ekranida u "Savollar tez orada qo'shiladi" izohi bilan ko'rinadi, mavzular ekranida esa savollar hali yozilmagani aytiladi va barcha mavzular "Tez orada" bo'ladi.
 - Mock uchun savollar 25 tadan kam bo'lsa: mavjud savollar soni bilan o'tkaziladi (kamida 5 ta), aks holda tugma o'chirilgan.
 - Jarayon o'ldirilsa (process death): mashq sessiyasi qayta tiklanmaydi, lekin allaqachon javob berilgan savollarning holati saqlangan bo'ladi (har savoldan keyin yoziladi). Mock sessiyasi yo'qoladi.
 - Ekran aylantirilganda holat ViewModel'da saqlanadi.

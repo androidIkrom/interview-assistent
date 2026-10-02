@@ -1,0 +1,94 @@
+{
+  "topic": "android.components",
+  "questions": [
+    {
+      "id": "android.components.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Activity ekranda ko'rinib, foydalanuvchi bilan muloqotga tayyor bo'lganda qaysi callback oxirgi bo'lib chaqiriladi?",
+      "options": [
+        { "id": "a", "text": "`onResume()`", "correct": true },
+        { "id": "b", "text": "`onStart()`", "hint": "Bu callback'dan keyin Activity ko'rinadi, lekin hali fokusda emas va kiritishni qabul qilmaydi." },
+        { "id": "c", "text": "`onCreate()`", "hint": "Bu yerda Activity faqat yaratiladi va UI o'rnatiladi; ekranda hali ko'rinmaydi." },
+        { "id": "d", "text": "`onRestart()`", "hint": "Bu callback faqat to'xtatilgan Activity qayta ko'rsatilganda chaqiriladi va undan keyin yana boshqa callback'lar keladi." }
+      ],
+      "explanation": "Ishga tushish tartibi: `onCreate()` → `onStart()` → `onResume()`. `onResume()` dan keyin Activity oldingi planda (foreground) bo'ladi va foydalanuvchi kiritishini qabul qiladi.",
+      "reviewed": false
+    },
+    {
+      "id": "android.components.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "true_false",
+      "prompt": "Quyidagi fikr to'g'rimi?\n\nEkran aylantirilganda (konfiguratsiya o'zgarishi) Activity standart holatda yo'q qilinib, qaytadan yaratiladi.",
+      "options": [
+        { "id": "a", "text": "Ha", "correct": true },
+        { "id": "b", "text": "Yo'q", "hint": "Standart holatda tizim yangi konfiguratsiyaga mos resurslarni yuklash uchun Activity'ni qayta ishga tushiradi. Bunga yo'l qo'ymaslik uchun manifestda `configChanges` alohida ko'rsatilishi kerak." }
+      ],
+      "explanation": "Konfiguratsiya o'zgarganda (aylantirish, til, shrift o'lchami) tizim Activity'ni yo'q qilib, yangi konfiguratsiya resurslari bilan qayta yaratadi. Shuning uchun UI holati `ViewModel` yoki saqlangan holat (`rememberSaveable`, `onSaveInstanceState`) orqali saqlanadi.",
+      "reviewed": false
+    },
+    {
+      "id": "android.components.003",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Nega `ViewModel` ekran aylantirilganda saqlanib qoladi?",
+      "options": [
+        { "id": "a", "text": "U `ViewModelStore` da turadi, bu store esa konfiguratsiya o'zgarishida yangi Activity nusxasiga uzatiladi", "correct": true },
+        { "id": "b", "text": "U `onSaveInstanceState` orqali `Bundle` ga serializatsiya qilinadi", "hint": "`Bundle` ga faqat kichik, serializatsiya qilinadigan ma'lumot yoziladi. ViewModel obyektining o'zi xotirada tirik qoladi." },
+        { "id": "c", "text": "U Application darajasidagi singleton", "hint": "Unda ViewModel ekran yopilganda ham tozalanmas edi. Aslida Activity butunlay tugaganda `onCleared()` chaqiriladi." },
+        { "id": "d", "text": "Tizim uni diskka yozib, keyin qayta o'qiydi", "hint": "Diskka hech narsa yozilmaydi. Shuning uchun jarayon o'ldirilganda (process death) ViewModel yo'qoladi." }
+      ],
+      "explanation": "Har bir `ViewModelStoreOwner` (Activity, Fragment, navigatsiya yozuvi) o'z `ViewModelStore` iga ega. Konfiguratsiya o'zgarishida tizim bu store'ni eski Activity'dan yangisiga o'tkazadi, shuning uchun ViewModel o'sha obyekt bo'lib qoladi. Activity haqiqatan tugaganda store tozalanadi.",
+      "reviewed": false
+    },
+    {
+      "id": "android.components.004",
+      "level": "middle",
+      "type": "multi",
+      "kind": "concept",
+      "prompt": "Qaysi holatlarda `onSaveInstanceState` da saqlangan ma'lumot keyin tiklanadi?",
+      "options": [
+        { "id": "a", "text": "Ekran aylantirilganda", "correct": true },
+        { "id": "b", "text": "Ilova fonda turganida tizim jarayonni o'ldirgan va foydalanuvchi ilovaga qaytgan bo'lsa", "correct": true },
+        { "id": "c", "text": "Foydalanuvchi ilovani \"Recents\" ro'yxatidan surib yopganda", "hint": "Foydalanuvchi ilovani o'zi yopsa, tizim buni ataylab tugatish deb biladi va saqlangan holatni tashlab yuboradi." },
+        { "id": "d", "text": "Activity `finish()` bilan yopilganda", "hint": "`finish()` Activity'ni butunlay tugatadi; uni qayta tiklash kutilmaydi, shuning uchun holat ham saqlanmaydi." }
+      ],
+      "explanation": "Saqlangan holat (saved instance state) tizim Activity'ni o'zi yo'q qilgan va uni qayta tiklamoqchi bo'lgan hollar uchun: konfiguratsiya o'zgarishi va fonda jarayonning o'ldirilishi. Foydalanuvchi yoki kod Activity'ni ataylab yopsa, holat tashlab yuboriladi.",
+      "reviewed": false
+    },
+    {
+      "id": "android.components.005",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Bu kodda asosiy muammo nima?",
+      "code": "class ProfileViewModel : ViewModel() {\n    private var listener: ProfileListener? = null\n\n    fun attach(activity: ProfileActivity) {\n        listener = activity\n    }\n}",
+      "options": [
+        { "id": "a", "text": "ViewModel Activity'ga havola saqlaydi: ekran aylantirilgach, eski Activity xotiradan tozalanmaydi", "correct": true },
+        { "id": "b", "text": "ViewModel ichida `private var` ishlatish mumkin emas", "hint": "ViewModel oddiy Kotlin klass, unda o'zgaruvchan maydonlar bo'lishi mumkin." },
+        { "id": "c", "text": "`attach` funksiyasi `suspend` bo'lishi kerak", "hint": "Bu yerda asinxron ish yo'q, oddiy tayinlash bor. `suspend` hech narsani o'zgartirmaydi." },
+        { "id": "d", "text": "`listener` nullable bo'lgani uchun NPE chiqadi", "hint": "Nullable tip aksincha NPE'dan himoya qiladi: kompilyator xavfsiz chaqiruvni talab qiladi." }
+      ],
+      "explanation": "ViewModel Activity'dan uzoqroq yashaydi. U Activity'ga (yoki View, Fragment'ga) havola ushlab tursa, aylantirishdan keyin eski Activity GC tomonidan tozalanmaydi — bu memory leak. ViewModel holatni `StateFlow` kabi kuzatiladigan oqim orqali berishi, UI esa unga obuna bo'lishi kerak.",
+      "reviewed": false
+    },
+    {
+      "id": "android.components.006",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Foydalanuvchi uzun formani to'ldirayotganda ilova fonga o'tdi va tizim jarayonni o'ldirdi. Qaytganda kiritilgan ma'lumot saqlanishi uchun qaysi yondashuv to'g'ri?",
+      "options": [
+        { "id": "a", "text": "Kichik UI holatini `SavedStateHandle` yoki `rememberSaveable` orqali, katta ma'lumotni esa diskda saqlash", "correct": true },
+        { "id": "b", "text": "Holatni ViewModel maydonida saqlash kifoya", "hint": "ViewModel konfiguratsiya o'zgarishidan omon qoladi, lekin jarayon o'ldirilganda u ham yo'qoladi." },
+        { "id": "c", "text": "Holatni `companion object` yoki singleton'da saqlash", "hint": "Statik maydonlar jarayon xotirasida yashaydi. Jarayon o'ldirilsa, ular ham tozalanadi." },
+        { "id": "d", "text": "Manifestda `android:configChanges` ni ko'rsatish", "hint": "Bu atribut faqat konfiguratsiya o'zgarishida qayta yaratishning oldini oladi; jarayon o'limiga aloqasi yo'q." }
+      ],
+      "explanation": "Jarayon o'limidan faqat ikki narsa omon qoladi: saqlangan holat (`Bundle`, ya'ni `SavedStateHandle` va `rememberSaveable`) va disk. `Bundle` hajmi cheklangan, shuning uchun unga faqat kichik holat (kiritilgan matn, tanlangan id) yoziladi; katta ma'lumot Room yoki faylga saqlanadi va id orqali qayta yuklanadi.",
+      "reviewed": false
+    }
+  ]
+}

@@ -431,7 +431,7 @@ object Routes { const val ONBOARDING = "onboarding"; const val HOME = "home"; co
 
 DataStore keys: `field` (string), `level` (string, the serial name), `onboarding_done` (boolean), `theme` (string, enum name). An unknown stored level or theme falls back to `null` / `SYSTEM`.
 
-Onboarding: step 1 lists fields grouped by `group` in catalog order with group headers (`mobile` → "Mobile", `frontend` → "Frontend", `backend` → "Backend", `other` → "Boshqa"). A field whose topics have no questions at all is shown disabled with the label "Tez orada". Step 2 lists the four levels with the experience range and description from spec 2.2. "Boshlash" calls `completeOnboarding` and navigates to Home, clearing the back stack. The same screen is reused from Settings (Task 9) to change field and level.
+Onboarding: step 1 lists fields grouped by `group` in catalog order with group headers (`mobile` → "Mobile", `frontend` → "Frontend", `backend` → "Backend", `other` → "Boshqa"). A field whose topics have no questions at all stays selectable and carries the caption "Savollar tez orada qo'shiladi" (changed on user feedback: a disabled field read as "the selection cannot be changed"). Step 2 lists the four levels with the experience range and description from spec 2.2. "Boshlash" calls `completeOnboarding` and navigates to Home, clearing the back stack. The same screen is reused from Settings (Task 9) to change field and level.
 
 `MainActivity` collects `settings`, shows nothing until the first value arrives, then starts at `ONBOARDING` or `HOME`. Theme: Material 3 light and dark colour schemes from a fixed brand palette (primary indigo `#3F51B5` light / `#B4BEFF` dark), no dynamic colour; `ThemeMode` picks the scheme.
 

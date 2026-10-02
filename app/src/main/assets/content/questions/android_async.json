@@ -1,0 +1,98 @@
+{
+  "topic": "android.async",
+  "questions": [
+    {
+      "id": "android.async.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`suspend` funksiya nima?",
+      "options": [
+        { "id": "a", "text": "Oqimni (thread) bloklamasdan to'xtab turib, keyinroq davom eta oladigan funksiya", "correct": true },
+        { "id": "b", "text": "Har doim fon oqimida (background thread) bajariladigan funksiya", "hint": "`suspend` kod qaysi oqimda ishlashini belgilamaydi; buni dispatcher hal qiladi." },
+        { "id": "c", "text": "Yangi oqim yaratib, shu oqimda ishlaydigan funksiya", "hint": "Coroutine'lar oqim yaratmasdan ishlaydi: minglab coroutine bir necha oqimda bajarilishi mumkin." },
+        { "id": "d", "text": "Faqat `main` funksiyasidan chaqirish mumkin bo'lgan funksiya", "hint": "Uni boshqa `suspend` funksiyadan yoki coroutine builder (`launch`, `async`) ichidan chaqirish mumkin." }
+      ],
+      "explanation": "`suspend` funksiya to'xtash nuqtasida (masalan, `delay` yoki tarmoq so'rovi) oqimni bo'shatadi va natija tayyor bo'lganda davom etadi. Oqim bu vaqtda boshqa ish bilan band bo'lishi mumkin. Qaysi oqimda ishlashini `CoroutineDispatcher` belgilaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "android.async.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Fayl o'qish yoki bloklovchi tarmoq so'rovi kabi I/O ishlari uchun qaysi dispatcher mo'ljallangan?",
+      "options": [
+        { "id": "a", "text": "`Dispatchers.IO`", "correct": true },
+        { "id": "b", "text": "`Dispatchers.Main`", "hint": "Bu dispatcher UI oqimida ishlaydi; uni bloklash ilovani qotiradi." },
+        { "id": "c", "text": "`Dispatchers.Default`", "hint": "Bu dispatcher protsessorni yuklaydigan hisob-kitoblar uchun; oqimlari soni yadrolar soni bilan cheklangan." },
+        { "id": "d", "text": "`Dispatchers.Unconfined`", "hint": "U coroutine'ni chaqirilgan oqimda boshlaydi va aniq bir oqimga bog'lamaydi; oddiy kodda tavsiya etilmaydi." }
+      ],
+      "explanation": "`Dispatchers.IO` bloklovchi kirish-chiqish amallari uchun katta oqimlar hovuziga ega. `Default` protsessor ishlari uchun, `Main` esa UI uchun. Retrofit va Room'ning `suspend` funksiyalari oqimni o'zlari almashtiradi, shuning uchun ularni `Main` dan chaqirish xavfsiz.",
+      "reviewed": false
+    },
+    {
+      "id": "android.async.003",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Bu kod nima chiqaradi?",
+      "code": "fun main() = runBlocking {\n    launch {\n        delay(100)\n        print(\"A\")\n    }\n    print(\"B\")\n    delay(200)\n    print(\"C\")\n}",
+      "options": [
+        { "id": "a", "text": "BAC", "correct": true },
+        { "id": "b", "text": "ABC", "hint": "`launch` yangi coroutine boshlaydi, lekin uning tanasi darhol bajarilmaydi: avval joriy kod o'zining birinchi to'xtash nuqtasigacha davom etadi." },
+        { "id": "c", "text": "BCA", "hint": "Kechikishlarni solishtiring: ichki coroutine 100 ms, tashqi kod esa 200 ms kutadi." },
+        { "id": "d", "text": "BC", "hint": "`runBlocking` ichidagi barcha bola coroutine'lar tugashini kutadi; hech biri tashlab ketilmaydi." }
+      ],
+      "explanation": "`launch` coroutine'ni navbatga qo'yadi va darhol qaytadi, shuning uchun avval \"B\" chiqadi. Keyin tashqi kod `delay(200)` da to'xtaydi va ichki coroutine ishlay boshlaydi: 100 ms dan keyin \"A\". 200 ms o'tgach tashqi kod davom etib, \"C\" ni chiqaradi.",
+      "reviewed": false
+    },
+    {
+      "id": "android.async.004",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Bu kod taxminan qaysi sonni chiqaradi?",
+      "code": "fun main() = runBlocking {\n    val time = measureTimeMillis {\n        val a = async { delay(1000); 1 }\n        val b = async { delay(1000); 2 }\n        a.await() + b.await()\n    }\n    println(time / 1000)\n}",
+      "options": [
+        { "id": "a", "text": "1", "correct": true },
+        { "id": "b", "text": "2", "hint": "Ikkala `async` ham birinchi `await` chaqirilishidan oldin ishga tushirilgan. Ular ketma-ket emas, bir vaqtda kutadi." },
+        { "id": "c", "text": "0", "hint": "`delay` haqiqatan ham kutadi; `runBlocking` virtual vaqtni ishlatmaydi (u `runTest` da bor)." },
+        { "id": "d", "text": "3", "hint": "Chop etilayotgan narsa qiymatlar yig'indisi emas, balki o'tgan vaqt (soniyalarda)." }
+      ],
+      "explanation": "`async` coroutine'ni darhol boshlaydi va `Deferred` qaytaradi. Ikkala coroutine parallel kutadi, shuning uchun umumiy vaqt 2 emas, taxminan 1 soniya. Agar `async { ... }.await()` ketma-ket yozilsa, parallellik yo'qoladi va vaqt 2 soniya bo'ladi.",
+      "reviewed": false
+    },
+    {
+      "id": "android.async.005",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Bu kod nima chiqaradi?",
+      "code": "fun main() = runBlocking {\n    val numbers = flow {\n        emit(1)\n        emit(2)\n        emit(3)\n    }\n    numbers.collectLatest { value ->\n        delay(100)\n        print(value)\n    }\n}",
+      "options": [
+        { "id": "a", "text": "3", "correct": true },
+        { "id": "b", "text": "123", "hint": "Oddiy `collect` shunday ishlagan bo'lardi. `collectLatest` yangi qiymat kelganda oldingi blokni nima qilishini eslang." },
+        { "id": "c", "text": "1", "hint": "Birinchi qiymatning bloki 100 ms kutayotganda keyingi qiymat keladi. Shunda birinchi blokka nima bo'ladi?" },
+        { "id": "d", "text": "Hech narsa chiqmaydi", "hint": "Oxirgi qiymatdan keyin yangi emissiya yo'q, demak uning blokini hech narsa to'xtatmaydi." }
+      ],
+      "explanation": "`collectLatest` yangi qiymat kelganda oldingi qiymat uchun ishlayotgan blokni bekor qiladi. 1 va 2 uchun bloklar `delay(100)` paytida bekor qilinadi, chunki keyingi qiymat darhol keladi. Faqat oxirgi qiymat (3) bloki oxirigacha bajariladi. Bu qidiruv maydoni kabi \"faqat oxirgisi muhim\" holatlar uchun qulay.",
+      "reviewed": false
+    },
+    {
+      "id": "android.async.006",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Ekranda uchta mustaqil so'rov parallel yuklanadi. Bittasi xato bersa, qolgan ikkitasi davom etishi kerak. Qaysi yondashuv to'g'ri?",
+      "options": [
+        { "id": "a", "text": "So'rovlarni `supervisorScope` ichida ishga tushirish va har birining xatosini alohida ushlash", "correct": true },
+        { "id": "b", "text": "So'rovlarni `coroutineScope` ichida `async` bilan ishga tushirish", "hint": "Bu scope'da bitta bolaning xatosi ota scope'ni va qolgan barcha bolalarni bekor qiladi." },
+        { "id": "c", "text": "Har bir so'rovni `GlobalScope.launch` bilan ishga tushirish", "hint": "So'rovlar mustaqil bo'ladi, lekin ekran yopilganda ham ishlayveradi: bekor qilish va xatolarni boshqarish yo'qoladi." },
+        { "id": "d", "text": "Butun blokni bitta `try/catch` ga o'rash", "hint": "`try/catch` xatoni ushlaydi, lekin bu paytga kelib qolgan so'rovlar allaqachon bekor qilingan bo'ladi." }
+      ],
+      "explanation": "Structured concurrency'da bolaning xatosi odatda otani va boshqa bolalarni bekor qiladi. `supervisorScope` (yoki `SupervisorJob`) bu tarqalishni to'xtatadi: bir bolaning xatosi boshqalarga ta'sir qilmaydi, lekin scope bekor qilinsa, hammasi bekor bo'ladi. Har bir bolaning xatosi o'z ichida ushlanishi kerak.",
+      "reviewed": false
+    }
+  ]
+}
