@@ -93,6 +93,126 @@
       ],
       "explanation": "`inline` funksiya chaqirilmaydi: kompilyator uning tanasini har bir chaqiruv joyiga ko'chiradi. Kichik, lambda qabul qiladigan funksiyalar uchun bu foydali (obyekt va chaqiruv tejaladi). Katta funksiyalarda esa kod ko'p marta takrorlanib, bayt-kod va APK hajmi oshadi, shuning uchun `inline` ni faqat kichik yuqori tartibli funksiyalarga qo'llash tavsiya etiladi.",
       "reviewed": false
+    },
+    {
+      "id": "android.kotlin.007",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Kotlin'da `==` va `===` operatorlari nimasi bilan farq qiladi?",
+      "options": [
+        { "id": "a", "text": "`==` qiymatlarni (`equals` orqali) solishtiradi, `===` esa ikki havola bitta obyektga ishora qilishini tekshiradi", "correct": true },
+        { "id": "b", "text": "`==` havolalarni, `===` esa qiymatlarni solishtiradi", "hint": "Bu Java'dagi `==` bilan adashtirish. Kotlin'da ikki belgili operator `equals` ni chaqiradi." },
+        { "id": "c", "text": "Ikkalasi bir xil ishlaydi, `===` shunchaki tipni qat'iyroq tekshiradi", "hint": "Bu JavaScript'dagi ma'no. Kotlin'da tiplar baribir compile vaqtida tekshiriladi." },
+        { "id": "d", "text": "`===` faqat sonlar uchun ishlatiladi", "hint": "Bu operator har qanday havola tipi bilan ishlaydi." }
+      ],
+      "explanation": "`a == b` aslida `a?.equals(b) ?: (b === null)` ga aylanadi, ya'ni mazmunni solishtiradi. `a === b` esa ikkala o'zgaruvchi xotiradagi aynan bitta obyektga ishora qilgandagina `true` bo'ladi.",
+      "reviewed": false
+    },
+    {
+      "id": "android.kotlin.008",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Bu kod nima chiqaradi?",
+      "code": "val list = listOf(1, 2, 3)\nprintln(list.map { it * 2 }.filter { it > 2 })",
+      "options": [
+        { "id": "a", "text": "[4, 6]", "correct": true },
+        { "id": "b", "text": "[2, 4, 6]", "hint": "`map` dan keyin yana bir amal bor: u shartga mos kelmaydigan elementlarni olib tashlaydi." },
+        { "id": "c", "text": "[3]", "hint": "Avval `map` bajariladi; `filter` allaqachon ko'paytirilgan qiymatlarni tekshiradi." },
+        { "id": "d", "text": "[6]", "hint": "Shart `it > 2`: ko'paytirilgandan keyin undan katta bo'lgan elementlar bittadan ko'p." }
+      ],
+      "explanation": "`map` har bir elementni ikkiga ko'paytiradi: 2, 4, 6. `filter` esa 2 dan katta bo'lganlarini qoldiradi: 4 va 6. Amallar zanjirda chapdan o'ngga bajariladi va har biri yangi ro'yxat qaytaradi.",
+      "reviewed": false
+    },
+    {
+      "id": "android.kotlin.009",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`data class` oddiy klassga nisbatan nimani qo'shimcha beradi?",
+      "options": [
+        { "id": "a", "text": "`equals`, `hashCode`, `toString`, `copy` va `componentN` funksiyalarini avtomatik generatsiya qiladi", "correct": true },
+        { "id": "b", "text": "Obyektni avtomatik ravishda o'zgarmas (immutable) qiladi", "hint": "Data class'da `var` xususiyatlar ham bo'lishi mumkin; o'zgarmaslik kafolatlanmaydi." },
+        { "id": "c", "text": "Klassni avtomatik `Serializable` qiladi", "hint": "Serializatsiya uchun alohida interfeys yoki annotatsiya kerak." },
+        { "id": "d", "text": "Klassdan faqat bitta nusxa (singleton) yaratilishini ta'minlaydi", "hint": "Singleton uchun `object` kalit so'zi ishlatiladi." }
+      ],
+      "explanation": "Data class ma'lumot saqlash uchun mo'ljallangan: kompilyator asosiy konstruktordagi xususiyatlar asosida taqqoslash, xesh, matn ko'rinishi, nusxalash (`copy`) va destrukturizatsiya (`componentN`) funksiyalarini yozib beradi.",
+      "reviewed": false
+    },
+    {
+      "id": "android.kotlin.010",
+      "level": "junior",
+      "type": "single",
+      "kind": "true_false",
+      "prompt": "Quyidagi fikr to'g'rimi?\n\nKotlin'da `String` tipidagi o'zgaruvchiga `null` tayinlab bo'lmaydi; buning uchun tip `String?` bo'lishi kerak.",
+      "options": [
+        { "id": "a", "text": "Ha", "correct": true },
+        { "id": "b", "text": "Yo'q", "hint": "Kotlin'da oddiy tiplar `null` qabul qilmaydi: bunday tayinlash kompilyatsiya xatosi. Nullable qilish uchun tipga `?` qo'shiladi." }
+      ],
+      "explanation": "Kotlin tip tizimi nullable (`String?`) va non-null (`String`) tiplarni ajratadi. Shu sabab ko'p `NullPointerException` lar runtime'da emas, compile vaqtida ushlanadi.",
+      "reviewed": false
+    },
+    {
+      "id": "android.kotlin.011",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`lateinit` va `by lazy` qachon ishlatiladi?",
+      "options": [
+        { "id": "a", "text": "`lateinit` — keyinroq qo'lda tayinlanadigan `var` uchun; `by lazy` — birinchi murojaatda bir marta hisoblanadigan `val` uchun", "correct": true },
+        { "id": "b", "text": "`lateinit` faqat `val` bilan, `by lazy` faqat `var` bilan ishlaydi", "hint": "Aksincha: qayta tayinlanishi kerak bo'lgani `var`, bir marta hisoblanadigani `val`." },
+        { "id": "c", "text": "Ikkalasi ham primitiv tiplar (`Int`, `Boolean`) uchun mo'ljallangan", "hint": "`lateinit` primitiv tiplar bilan umuman ishlamaydi." },
+        { "id": "d", "text": "`by lazy` qiymatni har murojaatda qaytadan hisoblaydi", "hint": "Unda `lazy` ning ma'nosi qolmas edi: natija keshlanadi." }
+      ],
+      "explanation": "`lateinit var` qiymat keyinroq (masalan, `onCreate` da yoki DI orqali) berilishini bildiradi; tayinlanmasdan o'qilsa, `UninitializedPropertyAccessException` chiqadi. `by lazy` lambda'ni birinchi murojaatda bir marta bajaradi va natijani saqlaydi; standart holatda u thread-safe.",
+      "reviewed": false
+    },
+    {
+      "id": "android.kotlin.012",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Bu kod nima chiqaradi?",
+      "code": "fun main() {\n    val numbers = mutableListOf(1, 2, 3)\n    val copy = numbers\n    copy.add(4)\n    println(numbers.size)\n}",
+      "options": [
+        { "id": "a", "text": "4", "correct": true },
+        { "id": "b", "text": "3", "hint": "`val copy = numbers` yangi ro'yxat yaratmaydi; ikkala nom bitta obyektga ishora qiladi." },
+        { "id": "c", "text": "Kompilyatsiya xatosi", "hint": "`val` havolani qotiradi, lekin `MutableList` ning ichini o'zgartirish mumkin." },
+        { "id": "d", "text": "ConcurrentModificationException", "hint": "Bu xato ro'yxat ustida iteratsiya paytida uni o'zgartirganda chiqadi; bu yerda iteratsiya yo'q." }
+      ],
+      "explanation": "Tayinlash obyektni nusxalamaydi, faqat havolani nusxalaydi. `copy` va `numbers` bitta ro'yxat, shuning uchun element qo'shilgach o'lcham 4 bo'ladi. Mustaqil nusxa uchun `numbers.toMutableList()` kerak.",
+      "reviewed": false
+    },
+    {
+      "id": "android.kotlin.013",
+      "level": "middle",
+      "type": "multi",
+      "kind": "concept",
+      "prompt": "Extension funksiyalar haqida qaysi fikrlar to'g'ri?",
+      "options": [
+        { "id": "a", "text": "Qaysi extension chaqirilishi compile vaqtidagi (e'lon qilingan) tip bo'yicha tanlanadi", "correct": true },
+        { "id": "b", "text": "Ular klassning `private` a'zolariga murojaat qila olmaydi", "correct": true },
+        { "id": "c", "text": "Ular klassning bayt-kodini o'zgartirib, unga yangi metod qo'shadi", "hint": "Klass o'zgarmaydi: extension aslida qabul qiluvchini birinchi parametr sifatida oladigan statik funksiya." },
+        { "id": "d", "text": "A'zo funksiya bilan bir xil imzoli extension bo'lsa, extension chaqiriladi", "hint": "Nom va imzo bir xil bo'lsa, har doim a'zo funksiya ustun turadi." }
+      ],
+      "explanation": "Extension — sintaktik qulaylik: `fun String.shout()` aslida `shout(String)` statik funksiyasiga kompilyatsiya bo'ladi. Shu sabab u polimorf emas (dispatch statik), klassning yopiq a'zolarini ko'rmaydi va a'zo funksiyani bosib o'ta olmaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "android.kotlin.014",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Nega `inline fun <reified T> parse(json: String): T` ichida `T::class` ga murojaat qilish mumkin, oddiy generic funksiyada esa mumkin emas?",
+      "options": [
+        { "id": "a", "text": "Funksiya chaqiruv joyiga ko'chirilgani uchun kompilyator `T` o'rniga aniq tipni qo'yadi", "correct": true },
+        { "id": "b", "text": "`reified` tipni runtime'da reflection orqali aniqlaydi", "hint": "Reflection ishlatilmaydi: hammasi compile vaqtida hal bo'ladi." },
+        { "id": "c", "text": "JVM `reified` generic'lar uchun tip ma'lumotini o'chirmaydi", "hint": "JVM'da type erasure har doim ishlaydi; bu Kotlin kompilyatorining hiylasi, JVM xususiyati emas." },
+        { "id": "d", "text": "`reified` parametr `Class<T>` obyektini yashirin argument sifatida uzatadi", "hint": "Yashirin argument yo'q; shuning uchun bunday funksiyalar faqat `inline` bo'la oladi." }
+      ],
+      "explanation": "JVM'da generic tiplar runtime'da o'chiriladi (type erasure). `inline` funksiya tanasi har bir chaqiruv joyiga ko'chiriladi va o'sha yerda `T` aniq ma'lum, shuning uchun kompilyator `T::class` o'rniga haqiqiy klassni yozadi. Shu sabab `reified` faqat `inline` funksiyalarda ishlaydi va Java'dan chaqirib bo'lmaydi.",
+      "reviewed": false
     }
   ]
 }

@@ -91,6 +91,112 @@
       ],
       "explanation": "State hoisting'da holat kerak bo'lgan eng past umumiy darajaga ko'tariladi: undan pastda bo'lsa, composable'lar uni ulasha olmaydi, undan yuqorida bo'lsa, keraksiz bog'liqlik va recomposition paydo bo'ladi. UI elementining o'ziga xos holati composable'da (`remember`), ekran va biznes holati esa ViewModel'da saqlanadi.",
       "reviewed": false
+    },
+    {
+      "id": "android.compose.007",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`Modifier.padding(16.dp).background(Color.Red)` va `Modifier.background(Color.Red).padding(16.dp)` bir xil natija beradimi?",
+      "options": [
+        { "id": "a", "text": "Yo'q: modifikatorlar tartib bilan qo'llanadi; birinchisida padding qismi bo'yalmaydi, ikkinchisida bo'yaladi", "correct": true },
+        { "id": "b", "text": "Ha, modifikatorlar tartibi ahamiyatsiz", "hint": "Har bir modifikator o'zidan keyingisini o'rab oladi; zanjirdagi o'rin natijani o'zgartiradi." },
+        { "id": "c", "text": "Yo'q: ikkinchi variant kompilyatsiya bo'lmaydi", "hint": "Ikkala zanjir ham to'g'ri Kotlin kodi." },
+        { "id": "d", "text": "Ha, lekin faqat `Box` ichida", "hint": "Tartib qoidasi barcha composable'lar uchun bir xil." }
+      ],
+      "explanation": "Modifikatorlar chapdan o'ngga qo'llanadi. `padding().background()` da avval bo'sh joy ajratiladi, keyin qolgan ichki qism bo'yaladi. `background().padding()` da avval butun maydon bo'yaladi, keyin kontent ichkariga suriladi.",
+      "reviewed": false
+    },
+    {
+      "id": "android.compose.008",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "1000 ta elementli ro'yxat uchun nega `Column` emas, `LazyColumn` ishlatiladi?",
+      "options": [
+        { "id": "a", "text": "`LazyColumn` faqat ekranda ko'rinadigan elementlarni compose qiladi", "correct": true },
+        { "id": "b", "text": "`Column` 100 tadan ortiq elementni qabul qilmaydi", "hint": "Bunday cheklov yo'q; `Column` hammasini chizadi, muammo aynan shunda." },
+        { "id": "c", "text": "`LazyColumn` elementlarni fon oqimida chizadi", "hint": "Composition main thread'da bajariladi; gap nechta element compose qilinishida." },
+        { "id": "d", "text": "`Column` ni scroll qilib bo'lmaydi", "hint": "`verticalScroll` modifikatori bilan `Column` ham scroll bo'ladi, lekin barcha elementlar baribir yaratiladi." }
+      ],
+      "explanation": "`Column` barcha bolalarini darhol compose qiladi va o'lchaydi, ular ekranda ko'rinmasa ham. `LazyColumn` faqat ko'rinadigan (va biroz zaxira) elementlarni yaratadi va scroll paytida ularni almashtirib boradi, shuning uchun katta ro'yxatlarda xotira va vaqt tejaladi.",
+      "reviewed": false
+    },
+    {
+      "id": "android.compose.009",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`remember` va `rememberSaveable` farqi nima?",
+      "options": [
+        { "id": "a", "text": "`rememberSaveable` qiymatni `Bundle` ga saqlaydi, shuning uchun u ekran aylantirilganda va jarayon o'ldirilganda ham tiklanadi", "correct": true },
+        { "id": "b", "text": "`rememberSaveable` qiymatni diskdagi bazaga yozadi", "hint": "Disk ishlatilmaydi; saqlash mexanizmi Activity'ning saqlangan holati bilan bir xil." },
+        { "id": "c", "text": "`rememberSaveable` har qanday obyektni hech qanday shartsiz saqlaydi", "hint": "Faqat `Bundle` ga sig'adigan tiplar; boshqalari uchun `Saver` yoki `@Parcelize` kerak." },
+        { "id": "d", "text": "Farqi yo'q, `rememberSaveable` eskirgan nom", "hint": "Ikkalasi ham amalda va vazifalari boshqa-boshqa." }
+      ],
+      "explanation": "`remember` qiymatni faqat composition yashab turgan paytda saqlaydi. `rememberSaveable` uni saqlangan holat (`Bundle`) orqali ham saqlaydi: aylantirish va jarayon o'limidan keyin tiklanadi. `Bundle` hajmi cheklangan, shuning uchun unga faqat kichik UI holati yoziladi.",
+      "reviewed": false
+    },
+    {
+      "id": "android.compose.010",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Ro'yxat o'rtasidan element o'chirilganda qatorlar holati (masalan, ochilgan menyu) boshqa qatorga o'tib qolyapti. Nima yetishmaydi?",
+      "code": "@Composable\nfun UserList(users: List<User>) {\n    LazyColumn {\n        items(users) { user ->\n            UserRow(user)\n        }\n    }\n}",
+      "options": [
+        { "id": "a", "text": "`items(users, key = { it.id })`: barqaror kalit bo'lmasa, holat elementga emas, pozitsiyaga bog'lanadi", "correct": true },
+        { "id": "b", "text": "`LazyColumn` o'rniga `Column` ishlatish kerak", "hint": "Bu holat adashishini hal qilmaydi va katta ro'yxatda performance'ni buzadi." },
+        { "id": "c", "text": "`UserRow` ni `remember` ichiga olish kerak", "hint": "Composable chaqiruvini `remember` qilib bo'lmaydi; `remember` qiymatlar uchun." },
+        { "id": "d", "text": "`users` ni `mutableStateListOf` ga aylantirish kerak", "hint": "Bu ro'yxat o'zgarishini kuzatishga yordam beradi, lekin qator holatini elementga bog'lamaydi." }
+      ],
+      "explanation": "Kalit berilmasa, `LazyColumn` elementni indeksi bo'yicha taniydi. Element o'chirilganda keyingilar bir pozitsiya yuqoriga suriladi va `remember` qilingan holat eski indeksda qoladi. Barqaror `key` holatni aynan o'sha elementga bog'laydi va animatsiyalar ham to'g'ri ishlaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "android.compose.011",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Uzoq ishlaydigan `LaunchedEffect` ichida `onTimeout` callback'ini chaqirasiz. Effektni qayta ishga tushirmasdan har doim eng so'nggi callback chaqirilishi uchun nima qilasiz?",
+      "options": [
+        { "id": "a", "text": "Callback'ni `rememberUpdatedState` ga o'rab, effekt ichida shu qiymatni chaqiraman", "correct": true },
+        { "id": "b", "text": "Callback'ni `LaunchedEffect` ning kaliti qilib beraman", "hint": "Unda callback har o'zgarganda effekt bekor qilinib, taymer boshidan boshlanadi." },
+        { "id": "c", "text": "Callback'ni `remember { onTimeout }` bilan saqlayman", "hint": "Bu birinchi callback'ni abadiy eslab qoladi; yangisi hech qachon chaqirilmaydi." },
+        { "id": "d", "text": "Effektni `SideEffect` ga almashtiraman", "hint": "`SideEffect` har muvaffaqiyatli recomposition'dan keyin ishlaydi va `suspend` kodni (masalan, `delay`) qo'llamaydi." }
+      ],
+      "explanation": "`rememberUpdatedState` qiymatni `State` ichida saqlaydi va har recomposition'da yangilaydi, lekin effektni qayta ishga tushirmaydi. Effekt ichidagi kod chaqirilgan paytda eng so'nggi callback'ni o'qiydi. Bu \"effekt bir marta ishlasin, lekin eskirgan qiymatni ushlab qolmasin\" degan holat uchun.",
+      "reviewed": false
+    },
+    {
+      "id": "android.compose.012",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Nega `collectAsState()` o'rniga `collectAsStateWithLifecycle()` tavsiya etiladi?",
+      "options": [
+        { "id": "a", "text": "Ilova fonga o'tganda (lifecycle `STARTED` dan pastga tushganda) oqimni kuzatish to'xtaydi va resurslar tejaladi", "correct": true },
+        { "id": "b", "text": "U oqimni fon oqimida (background thread) yig'adi", "hint": "Yig'ish baribir main thread'da; farq qachon yig'ilishida." },
+        { "id": "c", "text": "U `StateFlow` dan boshqa oqimlar bilan ham ishlaydi, `collectAsState` esa yo'q", "hint": "Ikkalasi ham istalgan `Flow` bilan ishlaydi (boshlang'ich qiymat berilsa)." },
+        { "id": "d", "text": "U qiymatni jarayon o'limidan keyin ham tiklaydi", "hint": "Holatni tiklash bunga aloqador emas; buning uchun saqlangan holat API'lari bor." }
+      ],
+      "explanation": "`collectAsState` composition tirik ekan, ilova fonda bo'lsa ham kuzatishda davom etadi: yuqori oqim (masalan, joylashuv yoki baza so'rovi) behuda ishlaydi. `collectAsStateWithLifecycle` lifecycle'ga qaraydi va ekran ko'rinmay qolganda kuzatishni to'xtatadi, qaytganda davom ettiradi.",
+      "reviewed": false
+    },
+    {
+      "id": "android.compose.013",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Compose ekrani sekin ishlayapti. Sababni topishda qaysi yondashuv to'g'ri?",
+      "options": [
+        { "id": "a", "text": "Release build'da o'lchash, Layout Inspector'da recomposition sonlarini ko'rish, tez-tez o'qiladigan holatni kechiktirish va baseline profile qo'shish", "correct": true },
+        { "id": "b", "text": "Debug build'da o'lchab, barcha klasslarga `@Stable` qo'yish", "hint": "Debug build'da Compose sezilarli sekin ishlaydi va o'lchov noto'g'ri bo'ladi; annotatsiyani ko'r-ko'rona qo'yish esa xatoga olib keladi." },
+        { "id": "c", "text": "Barcha holatni bitta katta `data class` ga yig'ib, root composable'da o'qish", "hint": "Bu aksincha: har kichik o'zgarish butun ekranni qayta compose qiladi." },
+        { "id": "d", "text": "`LazyColumn` larni `Column` ga almashtirish", "hint": "Bu ko'rinmaydigan elementlarni ham compose qilishga majbur qiladi." }
+      ],
+      "explanation": "Avval o'lchash kerak, va faqat release (R8 yoqilgan) build'da: debug'da Compose interpretatsiya rejimida ishlaydi. Layout Inspector qaysi composable keraksiz qayta bajarilayotganini ko'rsatadi. Keyin holat o'qishni pastga tushirish (lambda modifikatorlar, `derivedStateOf`), barqaror kalitlar va baseline profile bilan tuzatiladi.",
+      "reviewed": false
     }
   ]
 }

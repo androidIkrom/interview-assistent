@@ -70,4 +70,28 @@ class ContentAssetsTest {
         assertTrue(all.count { it.kind == QuestionKind.TRUE_FALSE } >= 2)
         assertEquals(Level.entries.toSet(), all.map { it.level }.toSet())
     }
+
+    /**
+     * Topics whose content is finished, with the number of questions per level that docs/content/taxonomy.md
+     * plans for them: junior, middle, strong middle, senior.
+     */
+    private val completedTopics = mapOf(
+        "android.kotlin" to listOf(6, 5, 2, 1),
+        "android.components" to listOf(5, 4, 2, 1),
+        "android.compose" to listOf(4, 4, 3, 2),
+        "android.async" to listOf(4, 4, 3, 2),
+        "android.data" to listOf(3, 3, 2, 2),
+        "android.arch" to listOf(2, 2, 2, 2),
+        "core.mobile" to listOf(6, 8, 6, 4),
+    )
+
+    @Test
+    fun completedTopicsHaveTheirTaxonomyCounts() {
+        val actual = completedTopics.keys.associateWith { topicId ->
+            val questions = store.questions(topicId)
+            Level.entries.map { level -> questions.count { it.level == level } }
+        }
+
+        assertEquals(completedTopics, actual)
+    }
 }

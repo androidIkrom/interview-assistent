@@ -271,6 +271,12 @@ O'zbekiston bozoridagi ulush bo'yicha:
 
 Har bir savol `reviewed: false` bilan yoziladi va validator testidan o'tadi.
 
+Tugallangan mavzular `ContentAssetsTest.completedTopics` ro'yxatida turadi: test har bir tugallangan mavzuda darajalar bo'yicha savollar soni shu hujjatdagi rejaga teng ekanini tekshiradi.
+
+| Partiya | Holat | Savollar |
+|---|---|---|
+| 1. Android (6 mavzu) + `core.mobile` | yozildi (2026-10-02), inson tekshiruvi kutilmoqda | 94 / 1312 |
+
 ## 6. Manbalar
 
 - [State of Dev in Uzbekistan 2025](https://stateofdev.uz/)

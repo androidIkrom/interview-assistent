@@ -88,6 +88,66 @@
       ],
       "explanation": "Yagona to'g'ri strategiya yo'q. \"O'qilgan\" belgisi uchun last-write-wins yetarli; hujjat matni uchun maydon bo'yicha birlashtirish yoki CRDT kerak; to'lov yoki buyurtma uchun konfliktni foydalanuvchiga ko'rsatish to'g'riroq. Qaror ma'lumotni yo'qotish narxidan kelib chiqadi, texnik qulaylikdan emas.",
       "reviewed": false
+    },
+    {
+      "id": "android.data.007",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Retrofit qanday vazifani bajaradi?",
+      "options": [
+        { "id": "a", "text": "HTTP API'ni Kotlin interfeysi sifatida tasvirlash va so'rovlarni shu interfeys orqali yuborish imkonini beradi", "correct": true },
+        { "id": "b", "text": "Ma'lumotlarni qurilmadagi SQLite bazada saqlaydi", "hint": "Lokal baza bilan Room ishlaydi." },
+        { "id": "c", "text": "Rasmlarni yuklab, keshlaydi", "hint": "Bu Coil yoki Glide kabi kutubxonalarning ishi." },
+        { "id": "d", "text": "Fon vazifalarini rejalashtiradi", "hint": "Kechiktirilgan fon ishlar uchun WorkManager bor." }
+      ],
+      "explanation": "Retrofit'da endpoint'lar annotatsiyali interfeys funksiyalari sifatida yoziladi (`@GET(\"users/{id}\")`). Kutubxona shu interfeysning implementatsiyasini yaratadi, so'rovni OkHttp orqali yuboradi va javobni converter yordamida obyektga aylantiradi.",
+      "reviewed": false
+    },
+    {
+      "id": "android.data.008",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Room DAO funksiyasi `Flow<List<User>>` qaytaradi. Jadval o'zgarganda nima bo'ladi?",
+      "options": [
+        { "id": "a", "text": "Room so'rovni qayta bajaradi va yangi ro'yxatni oqimga yuboradi", "correct": true },
+        { "id": "b", "text": "Hech narsa: oqim faqat bir marta qiymat beradi", "hint": "Bir martalik natija uchun `suspend` funksiya ishlatiladi; `Flow` qaytarishning ma'nosi boshqa." },
+        { "id": "c", "text": "Oqim xato bilan yopiladi va qayta obuna bo'lish kerak", "hint": "O'zgarish xato emas; Room jadvallarni kuzatib turadi." },
+        { "id": "d", "text": "Faqat o'zgargan qatorlar yuboriladi", "hint": "Room farqni (diff) hisoblamaydi; so'rov natijasi to'liq qayta beriladi." }
+      ],
+      "explanation": "Room so'rovda ishtirok etgan jadvallarni kuzatadi (`InvalidationTracker`). Ulardan biriga yozilganda so'rov qayta bajariladi va natija oqimga yuboriladi. Shu sabab UI bazani \"haqiqat manbai\" sifatida kuzatishi va qo'lda yangilashsiz ishlashi mumkin.",
+      "reviewed": false
+    },
+    {
+      "id": "android.data.009",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Repository ma'lumotni ham tarmoqdan, ham lokal bazadan oladi. \"Single source of truth\" yondashuvida UI ma'lumotni qayerdan o'qiydi?",
+      "options": [
+        { "id": "a", "text": "Faqat lokal bazadan; tarmoq javobi bazaga yoziladi va UI baza oqimi orqali yangilanadi", "correct": true },
+        { "id": "b", "text": "Tarmoq mavjud bo'lsa tarmoqdan, bo'lmasa bazadan", "hint": "Ikki manbadan o'qish ikki xil holat va nomuvofiqlikka olib keladi; yondashuv nomi aynan bittasini talab qiladi." },
+        { "id": "c", "text": "Faqat tarmoqdan; baza zaxira nusxa sifatida turadi", "hint": "Unda oflayn rejim ishlamaydi va har ekran ochilishida kutish bo'ladi." },
+        { "id": "d", "text": "ViewModel'dagi xotira keshidan", "hint": "Xotira keshi jarayon bilan birga yo'qoladi; haqiqat manbai doimiy bo'lishi kerak." }
+      ],
+      "explanation": "Bitta haqiqat manbai bo'lganda ma'lumot faqat bir yo'nalishda oqadi: tarmoq → baza → UI. UI har doim bazani ko'rsatadi, yangilanish esa bazaga yozish orqali keladi. Natijada oflayn rejim, keshlash va izchillik bitta mexanizm bilan hal bo'ladi.",
+      "reviewed": false
+    },
+    {
+      "id": "android.data.010",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Cheksiz lenta (feed) uchun sahifalashda offset o'rniga cursor (keyset) ishlatishning asosiy sababi nima?",
+      "options": [
+        { "id": "a", "text": "Yangi yozuvlar qo'shilganda offset siljiydi va elementlar takrorlanadi yoki tushib qoladi; cursor esa oxirgi ko'rilgan elementdan davom etadi", "correct": true },
+        { "id": "b", "text": "Cursor so'rovlari har doim kamroq ma'lumot qaytaradi", "hint": "Sahifa hajmi ikkala usulda ham bir xil bo'lishi mumkin." },
+        { "id": "c", "text": "Offset'ni Retrofit qo'llab-quvvatlamaydi", "hint": "Bu oddiy query parametr; har qanday HTTP klient uni yubora oladi." },
+        { "id": "d", "text": "Cursor bilan sahifalarni keshlash shart emas", "hint": "Keshlash ehtiyoji sahifalash usuliga bog'liq emas." }
+      ],
+      "explanation": "Offset \"boshidan N ta o'tkazib yubor\" degani: foydalanuvchi o'qiyotganda lenta boshiga yangi yozuv tushsa, keyingi sahifa bir pozitsiyaga siljiydi va element takrorlanadi. Cursor \"shu elementdan keyingilarni ber\" degani va o'zgarishlarga chidamli. Katta jadvallarda u indeks bo'yicha tezroq ham ishlaydi.",
+      "reviewed": false
     }
   ]
 }

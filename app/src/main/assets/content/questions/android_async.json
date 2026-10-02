@@ -93,6 +93,113 @@
       ],
       "explanation": "Structured concurrency'da bolaning xatosi odatda otani va boshqa bolalarni bekor qiladi. `supervisorScope` (yoki `SupervisorJob`) bu tarqalishni to'xtatadi: bir bolaning xatosi boshqalarga ta'sir qilmaydi, lekin scope bekor qilinsa, hammasi bekor bo'ladi. Har bir bolaning xatosi o'z ichida ushlanishi kerak.",
       "reviewed": false
+    },
+    {
+      "id": "android.async.007",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`viewModelScope` da ishga tushirilgan coroutine qachon bekor qilinadi?",
+      "options": [
+        { "id": "a", "text": "ViewModel tozalanganda (`onCleared`)", "correct": true },
+        { "id": "b", "text": "Ekran aylantirilganda", "hint": "ViewModel konfiguratsiya o'zgarishidan omon qoladi, uning scope'i ham." },
+        { "id": "c", "text": "Ilova fonga o'tganda", "hint": "Fonga o'tish ViewModel'ni yo'q qilmaydi." },
+        { "id": "d", "text": "Hech qachon, uni qo'lda bekor qilish kerak", "hint": "Bu `GlobalScope` ga xos; `viewModelScope` aynan avtomatik bekor qilish uchun yaratilgan." }
+      ],
+      "explanation": "`viewModelScope` ViewModel bilan bog'langan: ekran butunlay yopilib, ViewModel tozalanganda uning barcha coroutine'lari bekor qilinadi. Aylantirishda ViewModel saqlanib qoladi, shuning uchun so'rov uzilmaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "android.async.008",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`Flow` nima?",
+      "options": [
+        { "id": "a", "text": "Vaqt o'tishi bilan ketma-ket bir nechta qiymat beradigan asinxron oqim", "correct": true },
+        { "id": "b", "text": "Faqat bitta qiymat qaytaradigan `suspend` funksiya", "hint": "Bitta qiymat uchun oddiy `suspend` funksiya yetarli; bu tip ko'p qiymat uchun." },
+        { "id": "c", "text": "Fon oqimlarini boshqaradigan thread pool", "hint": "Oqimlarni (thread) dispatcher boshqaradi." },
+        { "id": "d", "text": "UI holatini saqlaydigan Android komponenti", "hint": "U Android'ga bog'liq emas: kotlinx.coroutines kutubxonasining bir qismi." }
+      ],
+      "explanation": "`suspend` funksiya bitta natija qaytaradi, `Flow` esa ko'p qiymatni birin-ketin beradi: baza o'zgarishlari, qidiruv natijalari, joylashuv yangilanishlari. Oddiy `flow { }` sovuq (cold): u faqat `collect` chaqirilganda ishlay boshlaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "android.async.009",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`StateFlow` va `SharedFlow` nimasi bilan farq qiladi?",
+      "options": [
+        { "id": "a", "text": "`StateFlow` har doim joriy qiymatga ega va yangi kuzatuvchiga darhol uni beradi; `SharedFlow` standart holatda qiymat saqlamaydi va bir martalik hodisalar uchun mos", "correct": true },
+        { "id": "b", "text": "`StateFlow` sovuq (cold), `SharedFlow` issiq (hot) oqim", "hint": "Ikkalasi ham issiq oqim: kuzatuvchi bo'lmasa ham mavjud." },
+        { "id": "c", "text": "`SharedFlow` faqat bitta kuzatuvchiga ega bo'la oladi", "hint": "Nomi shundan: uni ko'p kuzatuvchi baham ko'radi." },
+        { "id": "d", "text": "`StateFlow` bir xil qiymatni ketma-ket ikki marta ham yuboradi", "hint": "U teng qiymatlarni o'tkazib yuboradi (`distinctUntilChanged` kabi)." }
+      ],
+      "explanation": "`StateFlow` — holat uchun: boshlang'ich qiymat shart, `value` orqali o'qiladi, teng qiymatlar takrorlanmaydi. `SharedFlow` — hodisalar uchun: `replay` va bufer sozlanadi, standart holatda yangi kuzatuvchi oldingi qiymatlarni olmaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "android.async.010",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Bu kod nima chiqaradi?",
+      "code": "fun main() = runBlocking {\n    val job = launch {\n        repeat(5) { i ->\n            delay(100)\n            print(i)\n        }\n    }\n    delay(250)\n    job.cancel()\n    print(\"X\")\n}",
+      "options": [
+        { "id": "a", "text": "01X", "correct": true },
+        { "id": "b", "text": "01234X", "hint": "`cancel()` dan keyin coroutine keyingi `delay` da to'xtaydi; qolgan takrorlar bajarilmaydi." },
+        { "id": "c", "text": "X", "hint": "Bekor qilishgacha 250 ms o'tadi; shu vaqt ichida ichki coroutine bir necha marta chiqarishga ulguradi." },
+        { "id": "d", "text": "012X", "hint": "Uchinchi chiqarish 300-millisekundda bo'lar edi, bekor qilish esa undan oldin." }
+      ],
+      "explanation": "Ichki coroutine 100 va 200 millisekundda `0` va `1` ni chiqaradi. 250 millisekundda `cancel()` chaqiriladi: coroutine `delay` ichida kutayotgan edi, u `CancellationException` bilan to'xtaydi. Keyin tashqi kod `X` ni chiqaradi. Bekor qilish kooperativ: u to'xtash nuqtalarida (masalan, `delay`) ishlaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "android.async.011",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "100 ta id uchun bu funksiya juda sekin ishlayapti. Sabab va yechim qaysi?",
+      "code": "suspend fun loadAll(ids: List<String>): List<User> {\n    val result = mutableListOf<User>()\n    for (id in ids) {\n        result += api.user(id)\n    }\n    return result\n}",
+      "options": [
+        { "id": "a", "text": "So'rovlar ketma-ket bajarilmoqda; ularni `coroutineScope` ichida `async` bilan parallel ishga tushirib, `awaitAll()` bilan yig'ish kerak", "correct": true },
+        { "id": "b", "text": "`mutableListOf` sekin; `ArrayList` ishlatish kerak", "hint": "`mutableListOf` aynan `ArrayList` yaratadi; vaqt tarmoqqa ketyapti." },
+        { "id": "c", "text": "Funksiya `Dispatchers.IO` da ishlamayapti", "hint": "Retrofit `suspend` funksiyalari oqimni o'zi almashtiradi; dispatcher'ni o'zgartirish so'rovlarni parallel qilmaydi." },
+        { "id": "d", "text": "`for` o'rniga `forEach` ishlatish kerak", "hint": "Ikkalasi ham elementlarni birma-bir, oldingisi tugashini kutib bajaradi." }
+      ],
+      "explanation": "Har bir `api.user(id)` oldingisi tugashini kutadi, shuning uchun umumiy vaqt barcha so'rovlar yig'indisiga teng. `coroutineScope { ids.map { async { api.user(it) } }.awaitAll() }` ularni bir vaqtda yuboradi. Serverni ortiqcha yuklamaslik uchun parallellikni cheklash (masalan, `Semaphore`) ham kerak bo'lishi mumkin.",
+      "reviewed": false
+    },
+    {
+      "id": "android.async.012",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), initial)` dagi 5 soniya nima uchun kerak?",
+      "options": [
+        { "id": "a", "text": "Ekran aylantirilganda kuzatuvchi qisqa vaqtga yo'qoladi; kechikish yuqori oqimni bekor qilib, qayta boshlashning oldini oladi", "correct": true },
+        { "id": "b", "text": "Har 5 soniyada oqim qayta ishga tushadi", "hint": "Bu davriy taymer emas; vaqt faqat oxirgi kuzatuvchi ketgandan keyin sanaladi." },
+        { "id": "c", "text": "Birinchi qiymat 5 soniyadan keyin beriladi", "hint": "Boshlang'ich qiymat darhol mavjud; kechikish boshlanishga emas, to'xtashga tegishli." },
+        { "id": "d", "text": "5 soniyadan keyin `StateFlow` qiymati tozalanadi", "hint": "Qiymat saqlanib qoladi; to'xtaydigan narsa — yuqori oqimni kuzatish." }
+      ],
+      "explanation": "`WhileSubscribed` oxirgi kuzatuvchi ketganda yuqori oqimni to'xtatadi. Aylantirishda UI bir lahzaga obunani uzadi va qayta ulanadi; 5 soniyalik muhlat shu oraliqda oqimni tirik saqlaydi. Foydalanuvchi ilovadan haqiqatan chiqib ketsa, muhlatdan keyin oqim to'xtaydi va resurs tejaladi.",
+      "reviewed": false
+    },
+    {
+      "id": "android.async.013",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Katta loyihada dispatcher'larni (`Dispatchers.IO` va boshqalarni) klass ichiga to'g'ridan-to'g'ri yozish o'rniga konstruktor orqali inject qilish nima beradi?",
+      "options": [
+        { "id": "a", "text": "Testda ularni `TestDispatcher` bilan almashtirib, vaqtni boshqarish va testlarni deterministik qilish mumkin bo'ladi", "correct": true },
+        { "id": "b", "text": "Production'da kod tezroq ishlaydi", "hint": "Tezlikka ta'siri yo'q; production'da o'sha dispatcher'lar ishlatiladi." },
+        { "id": "c", "text": "Coroutine'lar avtomatik bekor qilinadigan bo'ladi", "hint": "Bekor qilishni scope boshqaradi, dispatcher emas." },
+        { "id": "d", "text": "`suspend` funksiyalarni main thread'dan chaqirish mumkin bo'ladi", "hint": "Buni inject qilmasdan ham qilish mumkin: main-safe funksiya o'zi `withContext` ishlatadi." }
+      ],
+      "explanation": "Klass ichida `Dispatchers.IO` qattiq yozilgan bo'lsa, test haqiqiy oqimlar va haqiqiy vaqt bilan ishlaydi: sekin va beqaror. Inject qilingan dispatcher o'rniga testda `StandardTestDispatcher` beriladi; `delay` lar virtual vaqtda darhol o'tadi va bajarilish tartibi boshqariladi.",
+      "reviewed": false
     }
   ]
 }
