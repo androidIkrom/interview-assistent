@@ -1,6 +1,5 @@
 package uz.devsuhbat.ui
 
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -10,6 +9,7 @@ import androidx.navigation.navArgument
 import uz.devsuhbat.AppContainer
 import uz.devsuhbat.ui.home.HomeScreen
 import uz.devsuhbat.ui.onboarding.OnboardingScreen
+import uz.devsuhbat.ui.session.SessionScreen
 import uz.devsuhbat.ui.settings.SettingsScreen
 import uz.devsuhbat.ui.topics.TopicsScreen
 
@@ -75,7 +75,13 @@ fun DevSuhbatNavHost(container: AppContainer, startDestination: String) {
             route = Routes.SESSION,
             arguments = listOf(navArgument(Routes.TOPIC_ID) { type = NavType.StringType }),
         ) { entry ->
-            Text(entry.arguments?.getString(Routes.TOPIC_ID).orEmpty())
+            SessionScreen(
+                container = container,
+                topicId = entry.arguments?.getString(Routes.TOPIC_ID) ?: Routes.MIXED,
+                onExit = { nav.popBackStack() },
+                onAgain = { nav.popBackStack(Routes.TOPICS, inclusive = false) },
+                onHome = { nav.popBackStack(Routes.HOME, inclusive = false) },
+            )
         }
     }
 }
