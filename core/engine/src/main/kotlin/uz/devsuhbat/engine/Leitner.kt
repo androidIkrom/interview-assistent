@@ -43,4 +43,21 @@ object Leitner {
             wrongAttempts = (previous?.wrongAttempts ?: 0) + outcome.wrongSubmissions,
         )
     }
+
+    /**
+     * A mock interview gives no feedback, so a missed question has not been worked through yet:
+     * it is due today and shows up in the mistakes session at once. A correct answer counts as a first try.
+     */
+    fun afterMock(previous: QuestionState?, questionId: String, correct: Boolean, today: Long): QuestionState {
+        if (correct) {
+            return afterOutcome(previous, QuestionOutcome(questionId, firstTryCorrect = true, wrongSubmissions = 0), today)
+        }
+        return QuestionState(
+            questionId = questionId,
+            box = FIRST_BOX,
+            dueDay = today,
+            attempts = (previous?.attempts ?: 0) + 1,
+            wrongAttempts = (previous?.wrongAttempts ?: 0) + 1,
+        )
+    }
 }

@@ -49,6 +49,9 @@ data class Question(
     val reviewed: Boolean = false,
 )
 
+/** A question id is `<topic id>.<3 digits>` (enforced by the validator), so the topic is the id without its number. */
+val Question.topicId: String get() = id.substringBeforeLast('.')
+
 @Serializable
 data class TopicFile(val topic: String, val questions: List<Question>)
 
