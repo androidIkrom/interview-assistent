@@ -1,4 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">DevSuhbat</string>
+
+    <string name="action_back">Orqaga</string>
+    <string name="action_close">Yopish</string>
+    <string name="action_continue">Davom etish</string>
+    <string name="action_start">Boshlash</string>
+    <string name="action_save">Saqlash</string>
+    <string name="coming_soon">Tez orada</string>
+    <string name="content_error">Kontent yuklanmadi</string>
+
+    <string name="group_mobile">Mobile</string>
+    <string name="group_frontend">Frontend</string>
+    <string name="group_backend">Backend</string>
+    <string name="group_other">Boshqa</string>
+
+    <string name="level_junior">Junior</string>
+    <string name="level_middle">Middle</string>
+    <string name="level_strong_middle">Strong Middle</string>
+    <string name="level_senior">Senior</string>
+    <string name="level_junior_desc">0–1 yil · ta\'rif, sintaksis, asosiy tushunchalar</string>
+    <string name="level_middle_desc">1–3 yil · ichki mexanizm, kod natijasi, tipik xatolar</string>
+    <string name="level_strong_middle_desc">3–5 yil · trade-off, performance, debugging</string>
+    <string name="level_senior_desc">5+ yil · arxitektura, system design, texnik qarorlar</string>
+
+    <string name="onboarding_field_title">Yo\'nalishingizni tanlang</string>
+    <string name="onboarding_level_title">Qaysi darajaga tayyorlanyapsiz?</string>
+    <string name="onboarding_level_subtitle">Tanlangan daraja va undan pastki darajalar savollari beriladi.</string>
+
+    <string name="home_practice">Mashq</string>
+    <string name="home_practice_desc">Mavzu tanlang va 10 ta savol yeching. Xato javobda to\'g\'ri variant ko\'rsatilmaydi: tushuntirishni o\'qib, qayta urinasiz.</string>
+    <string name="home_your_target">Tayyorlanayotgan yo\'nalish</string>
+
+    <string name="settings_title">Sozlamalar</string>
+    <string name="settings_field_level">Yo\'nalish va daraja</string>
+    <string name="settings_theme">Ko\'rinish</string>
+    <string name="theme_system">Tizim</string>
+    <string name="theme_light">Yorug\'</string>
+    <string name="theme_dark">Qorong\'i</string>
+
+    <string name="topics_title">Mavzular</string>
+    <string name="topics_mixed">Aralash</string>
+    <string name="topics_mixed_desc">Barcha mavzulardan</string>
+    <string name="topics_count">%1$d ta savol</string>
+
+    <string name="session_check">Tekshirish</string>
+    <string name="session_next">Keyingi</string>
+    <string name="session_finish">Yakunlash</string>
+    <string name="session_repeat">Takror</string>
+    <string name="session_multi_caption">Bir nechta javob to\'g\'ri</string>
+    <string name="session_wrong_title">Noto\'g\'ri. Yana urinib ko\'ring</string>
+    <string name="session_correct_title">To\'g\'ri!</string>
+    <string name="session_multi_feedback">Tanlaganlaringizdan %1$d tasi to\'g\'ri, yana %2$d ta to\'g\'ri variant tanlanmagan.</string>
+    <string name="session_exit_title">Sessiyadan chiqasizmi?</string>
+    <string name="session_exit_text">Javob berilmagan savollar hisobga olinmaydi.</string>
+    <string name="session_exit_confirm">Chiqish</string>
+
+    <string name="result_title">Sessiya yakunlandi</string>
+    <string name="result_total">Savollar</string>
+    <string name="result_first_try">Birinchi urinishda to\'g\'ri</string>
+    <string name="result_reworked">Qayta ishlangan</string>
+    <string name="result_again">Yana mashq</string>
+    <string name="result_home">Bosh sahifa</string>
+    <string name="result_empty">Bu mavzuda savollar yo\'q</string>
 </resources>
