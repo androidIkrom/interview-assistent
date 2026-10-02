@@ -8,6 +8,8 @@
     <string name="action_start">Boshlash</string>
     <string name="action_save">Saqlash</string>
     <string name="coming_soon">Tez orada</string>
+    <string name="field_no_content">Savollar tez orada qo\'shiladi</string>
+    <string name="topics_no_content">Bu yo\'nalish uchun savollar hali yozilmagan. Mavzular ro\'yxati tayyor, savollar tez orada qo\'shiladi.</string>
     <string name="content_error">Kontent yuklanmadi</string>
 
     <string name="group_mobile">Mobile</string>

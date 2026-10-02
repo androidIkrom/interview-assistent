@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Button
@@ -29,7 +31,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -136,9 +137,8 @@ private fun FieldList(
             items(group.rows, key = { it.field.id }) { row ->
                 ChoiceCard(
                     title = row.field.title,
-                    subtitle = if (row.available) null else stringResource(R.string.coming_soon),
+                    subtitle = if (row.available) null else stringResource(R.string.field_no_content),
                     selected = row.field.id == selectedId,
-                    enabled = row.available,
                     onClick = { onSelect(row.field.id) },
                 )
             }
@@ -149,7 +149,11 @@ private fun FieldList(
 @Composable
 private fun LevelList(selected: Level?, onSelect: (Level) -> Unit, padding: PaddingValues) {
     Column(
-        modifier = Modifier.fillMaxSize().padding(padding).padding(horizontal = 16.dp, vertical = 8.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(padding)
+            .verticalScroll(rememberScrollState())
+            .padding(horizontal = 16.dp, vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Text(
@@ -163,7 +167,6 @@ private fun LevelList(selected: Level?, onSelect: (Level) -> Unit, padding: Padd
                 title = stringResource(level.titleRes),
                 subtitle = stringResource(level.descriptionRes),
                 selected = level == selected,
-                enabled = true,
                 onClick = { onSelect(level) },
             )
         }
@@ -171,15 +174,15 @@ private fun LevelList(selected: Level?, onSelect: (Level) -> Unit, padding: Padd
 }
 
 @Composable
-private fun ChoiceCard(title: String, subtitle: String?, selected: Boolean, enabled: Boolean, onClick: () -> Unit) {
+private fun ChoiceCard(title: String, subtitle: String?, selected: Boolean, onClick: () -> Unit) {
     val colors = MaterialTheme.colorScheme
     Surface(
+        selected = selected,
         onClick = onClick,
-        enabled = enabled,
         shape = MaterialTheme.shapes.medium,
         color = if (selected) colors.primaryContainer else colors.surface,
         border = BorderStroke(if (selected) 2.dp else 1.dp, if (selected) colors.primary else colors.outline.copy(alpha = 0.4f)),
-        modifier = Modifier.fillMaxWidth().alpha(if (enabled) 1f else 0.5f),
+        modifier = Modifier.fillMaxWidth(),
     ) {
         Row(Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
             Column(Modifier.weight(1f)) {

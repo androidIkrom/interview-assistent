@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -42,6 +41,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -241,18 +242,16 @@ private fun OptionCard(
         else -> colors.outline.copy(alpha = 0.4f)
     }
     Surface(
+        selected = selected,
+        onClick = onClick,
+        enabled = !eliminated && !solved,
         shape = MaterialTheme.shapes.medium,
         color = container,
         border = BorderStroke(if (selected) 2.dp else 1.dp, border),
         modifier = Modifier
             .fillMaxWidth()
             .alpha(if (eliminated) 0.45f else 1f)
-            .selectable(
-                selected = selected,
-                enabled = !eliminated && !solved,
-                role = if (multi) Role.Checkbox else Role.RadioButton,
-                onClick = onClick,
-            ),
+            .semantics { role = if (multi) Role.Checkbox else Role.RadioButton },
     ) {
         Row(Modifier.padding(horizontal = 12.dp, vertical = 14.dp), verticalAlignment = Alignment.CenterVertically) {
             if (multi) {

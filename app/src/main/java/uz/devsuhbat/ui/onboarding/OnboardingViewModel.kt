@@ -15,7 +15,7 @@ import uz.devsuhbat.content.Field
 import uz.devsuhbat.content.Level
 import uz.devsuhbat.data.SettingsRepository
 
-/** [available] is false while none of the field's topics has questions yet. */
+/** [available] is false while none of the field's topics has questions yet; the field can still be chosen. */
 data class FieldRow(val field: Field, val available: Boolean)
 
 data class FieldGroup(val group: String, val rows: List<FieldRow>)
@@ -43,11 +43,11 @@ class OnboardingViewModel(
         viewModelScope.launch {
             val groups = withContext(io) { loadGroups() }
             val current = settings.settings.first()
-            val availableIds = groups.flatMap { it.rows }.filter { it.available }.map { it.field.id }
+            val fieldIds = groups.flatMap { it.rows }.map { it.field.id }
             _state.value = OnboardingUiState(
                 loading = false,
                 groups = groups,
-                fieldId = current.fieldId?.takeIf { it in availableIds },
+                fieldId = current.fieldId?.takeIf { it in fieldIds },
                 level = current.level,
             )
         }

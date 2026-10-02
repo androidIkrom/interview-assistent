@@ -72,6 +72,16 @@ fun TopicsScreen(container: AppContainer, onBack: () -> Unit, onOpen: (topicId: 
                 contentPadding = PaddingValues(16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
+                if (state.mixedCount == 0) {
+                    item(key = "no-content") {
+                        Text(
+                            text = stringResource(R.string.topics_no_content),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(bottom = 8.dp),
+                        )
+                    }
+                }
                 item(key = Routes.MIXED) {
                     TopicCard(
                         title = stringResource(R.string.topics_mixed),
