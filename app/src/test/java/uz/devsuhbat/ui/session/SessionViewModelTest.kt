@@ -18,6 +18,7 @@ import uz.devsuhbat.content.Level
 import uz.devsuhbat.content.Option
 import uz.devsuhbat.content.Question
 import uz.devsuhbat.content.QuestionType
+import uz.devsuhbat.engine.QuestionOutcome
 import uz.devsuhbat.engine.SessionResult
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -263,5 +264,73 @@ class SessionViewModelTest {
         viewModel.toggle("b")
 
         assertEquals(setOf("a"), viewModel.state.value.selected)
+    }
+
+    // --- progress callbacks ---
+
+    private val outcomes = mutableListOf<QuestionOutcome>()
+    private val finished = mutableListOf<SessionResult>()
+
+    private fun recordingViewModel(questions: List<Question> = singles) = SessionViewModel(
+        loadQuestions = { questions },
+        random = Random(1),
+        onOutcome = { outcomes += it },
+        onFinished = { finished += it },
+    )
+
+    @Test
+    fun outcomeIsReportedAsSoonAsSolved() {
+        val viewModel = recordingViewModel()
+
+        viewModel.toggle("a")
+        viewModel.check()
+
+        assertEquals(listOf(QuestionOutcome("t.001", firstTryCorrect = true, wrongSubmissions = 0)), outcomes)
+        assertEquals(emptyList<SessionResult>(), finished)
+    }
+
+    @Test
+    fun wrongSubmissionAloneReportsNothing() {
+        val viewModel = recordingViewModel()
+
+        viewModel.toggle("c")
+        viewModel.check()
+
+        assertEquals(emptyList<QuestionOutcome>(), outcomes)
+    }
+
+    @Test
+    fun outcomeIsReportedOncePerQuestion() {
+        val viewModel = recordingViewModel()
+
+        viewModel.toggle("c")
+        viewModel.check()
+        repeat(4) { viewModel.answerCorrectly() }
+
+        assertEquals(
+            listOf(
+                QuestionOutcome("t.001", firstTryCorrect = false, wrongSubmissions = 1),
+                QuestionOutcome("t.002", firstTryCorrect = true, wrongSubmissions = 0),
+                QuestionOutcome("t.003", firstTryCorrect = true, wrongSubmissions = 0),
+            ),
+            outcomes,
+        )
+    }
+
+    @Test
+    fun finishedIsReportedOnce() {
+        val viewModel = recordingViewModel()
+
+        repeat(3) { viewModel.answerCorrectly() }
+        viewModel.next()
+
+        assertEquals(listOf(SessionResult(total = 3, firstTryCorrect = 3, reworked = 0)), finished)
+    }
+
+    @Test
+    fun emptySessionIsNotReported() {
+        recordingViewModel(emptyList())
+
+        assertEquals(emptyList<SessionResult>(), finished)
     }
 }

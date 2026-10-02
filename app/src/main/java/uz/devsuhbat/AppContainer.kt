@@ -1,10 +1,13 @@
 package uz.devsuhbat
 
 import android.content.Context
+import androidx.room.Room
 import java.io.IOException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import uz.devsuhbat.content.ContentStore
+import uz.devsuhbat.data.AppDatabase
+import uz.devsuhbat.data.ProgressRepository
 import uz.devsuhbat.data.SettingsRepository
 import uz.devsuhbat.data.settingsDataStore
 
@@ -24,4 +27,8 @@ class AppContainer(context: Context) {
     }
 
     val settings = SettingsRepository(appContext.settingsDataStore)
+
+    val progress = ProgressRepository(
+        Room.databaseBuilder(appContext, AppDatabase::class.java, "devsuhbat.db").build()
+    )
 }

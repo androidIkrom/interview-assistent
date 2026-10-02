@@ -28,6 +28,9 @@ object Routes {
     /** Topic id for a session mixing all topics of the field. */
     const val MIXED = "mixed"
 
+    /** Topic id for a session over the questions that are due for repetition. */
+    const val MISTAKES = "mistakes"
+
     fun session(topicId: String) = "session/$topicId"
 }
 
@@ -54,6 +57,7 @@ fun DevSuhbatNavHost(container: AppContainer, startDestination: String) {
             HomeScreen(
                 container = container,
                 onPractice = { nav.navigate(Routes.TOPICS) },
+                onMistakes = { nav.navigate(Routes.session(Routes.MISTAKES)) },
                 onSettings = { nav.navigate(Routes.SETTINGS) },
             )
         }
@@ -79,7 +83,12 @@ fun DevSuhbatNavHost(container: AppContainer, startDestination: String) {
                 container = container,
                 topicId = entry.arguments?.getString(Routes.TOPIC_ID) ?: Routes.MIXED,
                 onExit = { nav.popBackStack() },
-                onAgain = { nav.popBackStack(Routes.TOPICS, inclusive = false) },
+                // Back to where the session was opened from: the topic list, or Home for a mistakes session.
+                onAgain = {
+                    if (!nav.popBackStack(Routes.TOPICS, inclusive = false)) {
+                        nav.popBackStack(Routes.HOME, inclusive = false)
+                    }
+                },
                 onHome = { nav.popBackStack(Routes.HOME, inclusive = false) },
             )
         }

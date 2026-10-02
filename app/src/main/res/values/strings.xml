@@ -3,6 +3,7 @@
     <string name="app_name">DevSuhbat</string>
 
     <string name="action_back">Orqaga</string>
+    <string name="action_cancel">Bekor qilish</string>
     <string name="action_close">Yopish</string>
     <string name="action_continue">Davom etish</string>
     <string name="action_start">Boshlash</string>
@@ -33,6 +34,12 @@
     <string name="home_practice">Mashq</string>
     <string name="home_practice_desc">Mavzu tanlang va 10 ta savol yeching. Xato javobda to\'g\'ri variant ko\'rsatilmaydi: tushuntirishni o\'qib, qayta urinasiz.</string>
     <string name="home_your_target">Tayyorlanayotgan yo\'nalish</string>
+    <string name="home_readiness">Tayyorlik: %1$d%%</string>
+    <string name="home_mastered">%1$d / %2$d savol o\'zlashtirilgan</string>
+    <string name="home_mistakes">Xatolar</string>
+    <string name="home_mistakes_due">%1$d ta savol takrorlashni kutmoqda</string>
+    <string name="home_mistakes_none">Bugun takrorlanadigan savol yo\'q</string>
+    <string name="home_mistakes_action">Takrorlash</string>
 
     <string name="settings_title">Sozlamalar</string>
     <string name="settings_field_level">Yo\'nalish va daraja</string>
@@ -40,11 +47,15 @@
     <string name="theme_system">Tizim</string>
     <string name="theme_light">Yorug\'</string>
     <string name="theme_dark">Qorong\'i</string>
+    <string name="settings_reset">Progressni tozalash</string>
+    <string name="settings_reset_text">Barcha javoblar tarixi va tayyorlik ko\'rsatkichi o\'chiriladi. Buni ortga qaytarib bo\'lmaydi.</string>
+    <string name="settings_reset_confirm">Tozalash</string>
 
     <string name="topics_title">Mavzular</string>
     <string name="topics_mixed">Aralash</string>
     <string name="topics_mixed_desc">Barcha mavzulardan</string>
     <string name="topics_count">%1$d ta savol</string>
+    <string name="topics_count_progress">%1$d ta savol · %2$d%% o\'zlashtirilgan</string>
 
     <string name="session_check">Tekshirish</string>
     <string name="session_next">Keyingi</string>

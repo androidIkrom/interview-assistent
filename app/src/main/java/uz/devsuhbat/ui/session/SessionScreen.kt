@@ -49,6 +49,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import java.time.Instant
 import kotlin.random.Random
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
@@ -57,26 +58,41 @@ import uz.devsuhbat.R
 import uz.devsuhbat.content.Option
 import uz.devsuhbat.content.Question
 import uz.devsuhbat.content.QuestionType
+import uz.devsuhbat.data.SessionMode
 import uz.devsuhbat.engine.QuestionPicker
+import uz.devsuhbat.engine.SessionResult
 import uz.devsuhbat.ui.Routes
 import uz.devsuhbat.ui.common.CodeBlock
 import uz.devsuhbat.ui.common.InlineCodeText
 import uz.devsuhbat.ui.theme.LocalExtraColors
 
-/** Picks the practice questions for [topicId] (or for the whole field when it is [Routes.MIXED]). */
-private suspend fun loadPracticeQuestions(container: AppContainer, topicId: String, random: Random): List<Question> {
+/**
+ * Picks the questions of a session. [topicId] is a topic id, [Routes.MIXED] for the whole field,
+ * or [Routes.MISTAKES] for the questions that are due for repetition.
+ */
+private suspend fun loadSessionQuestions(container: AppContainer, topicId: String, random: Random): List<Question> {
     val settings = container.settings.settings.first()
     val fieldId = settings.fieldId ?: return emptyList()
     val level = settings.level ?: return emptyList()
+    val states = container.progress.states.first()
+    val today = container.progress.today()
     return withContext(container.io) {
         val content = container.content
-        val pool = if (topicId == Routes.MIXED) {
-            content.topicsOf(fieldId).flatMap { content.questions(it.id) }
-        } else {
-            content.questions(topicId)
+        fun fieldPool() = content.topicsOf(fieldId).flatMap { content.questions(it.id) }
+        when (topicId) {
+            Routes.MISTAKES -> QuestionPicker.mistakes(fieldPool(), level, states, today, random)
+            Routes.MIXED -> QuestionPicker.practice(fieldPool(), level, random, states = states, today = today)
+            else -> QuestionPicker.practice(content.questions(topicId), level, random, states = states, today = today)
         }
-        QuestionPicker.practice(pool, level, random)
     }
+}
+
+private suspend fun logSession(container: AppContainer, topicId: String, startedAt: Instant, result: SessionResult) {
+    val settings = container.settings.settings.first()
+    val fieldId = settings.fieldId ?: return
+    val level = settings.level ?: return
+    val mode = if (topicId == Routes.MISTAKES) SessionMode.MISTAKES else SessionMode.PRACTICE
+    container.progress.logSession(mode, fieldId, level, startedAt, result)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -92,7 +108,13 @@ fun SessionScreen(
         factory = viewModelFactory {
             initializer {
                 val random = Random.Default
-                SessionViewModel({ loadPracticeQuestions(container, topicId, random) }, random)
+                val startedAt = Instant.now()
+                SessionViewModel(
+                    loadQuestions = { loadSessionQuestions(container, topicId, random) },
+                    random = random,
+                    onOutcome = container.progress::record,
+                    onFinished = { result -> logSession(container, topicId, startedAt, result) },
+                )
             }
         }
     )
@@ -101,7 +123,11 @@ fun SessionScreen(
 
     if (result != null) {
         BackHandler(onBack = onAgain)
-        SessionResultScreen(result = result, onAgain = onAgain, onHome = onHome)
+        SessionResultScreen(
+            result = result,
+            onAgain = onAgain.takeIf { topicId != Routes.MISTAKES },
+            onHome = onHome,
+        )
         return
     }
 

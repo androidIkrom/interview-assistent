@@ -28,7 +28,7 @@ import uz.devsuhbat.engine.SessionResult
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SessionResultScreen(result: SessionResult, onAgain: () -> Unit, onHome: () -> Unit) {
+fun SessionResultScreen(result: SessionResult, onAgain: (() -> Unit)?, onHome: () -> Unit) {
     Scaffold(
         topBar = { TopAppBar(title = { Text(stringResource(R.string.result_title)) }) },
         bottomBar = {
@@ -36,11 +36,18 @@ fun SessionResultScreen(result: SessionResult, onAgain: () -> Unit, onHome: () -
                 modifier = Modifier.navigationBarsPadding().padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                Button(onClick = onAgain, modifier = Modifier.fillMaxWidth()) {
-                    Text(stringResource(R.string.result_again))
-                }
-                OutlinedButton(onClick = onHome, modifier = Modifier.fillMaxWidth()) {
-                    Text(stringResource(R.string.result_home))
+                // A mistakes session has no topic list to go back to, so "Bosh sahifa" is its only action.
+                if (onAgain != null) {
+                    Button(onClick = onAgain, modifier = Modifier.fillMaxWidth()) {
+                        Text(stringResource(R.string.result_again))
+                    }
+                    OutlinedButton(onClick = onHome, modifier = Modifier.fillMaxWidth()) {
+                        Text(stringResource(R.string.result_home))
+                    }
+                } else {
+                    Button(onClick = onHome, modifier = Modifier.fillMaxWidth()) {
+                        Text(stringResource(R.string.result_home))
+                    }
                 }
             }
         },
