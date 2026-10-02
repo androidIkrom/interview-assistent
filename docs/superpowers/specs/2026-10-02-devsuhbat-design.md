@@ -134,7 +134,7 @@ Qoidalar `core:engine` modulidagi `ContentValidator` da (sof Kotlin) yoziladi va
 
 Tekshiruvlar:
 
-1. Katalogdagi har bir mavzu fayli mavjud; har bir field faqat mavjud mavzularga ishora qiladi.
+1. `file` ko'rsatilgan har bir mavzuning fayli mavjud; har bir field faqat mavjud mavzularga ishora qiladi. `file` ko'rsatilmagan mavzu — rejalashtirilgan (kontenti hali yozilmagan), ilovada "Tez orada" deb ko'rinadi.
 2. Savol `id` lari yagona va o'z mavzusi prefiksi bilan boshlanadi.
 3. `level`, `type`, `kind` qiymatlari ruxsat etilgan ro'yxatdan.
 4. `single`: aynan 1 ta to'g'ri variant, 2–5 ta variant. `multi`: kamida 2 ta to'g'ri va kamida 1 ta xato variant.
