@@ -1,0 +1,98 @@
+{
+  "topic": "android.kotlin",
+  "questions": [
+    {
+      "id": "android.kotlin.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`val` va `var` o'rtasidagi farq nima?",
+      "options": [
+        { "id": "a", "text": "`val` ga qiymat bir marta beriladi va qayta tayinlanmaydi, `var` ni esa qayta tayinlash mumkin", "correct": true },
+        { "id": "b", "text": "`val` faqat primitiv tiplar uchun, `var` esa obyektlar uchun ishlatiladi", "hint": "Kotlin'da ikkala kalit so'z ham har qanday tip bilan ishlaydi. Farq tipda emas." },
+        { "id": "c", "text": "`val` compile vaqtida, `var` runtime'da hisoblanadi", "hint": "Compile vaqtidagi konstanta uchun `const val` bor. Oddiy `val` qiymati runtime'da ham hisoblanishi mumkin." },
+        { "id": "d", "text": "`val` bilan e'lon qilingan obyektning ichki holatini ham o'zgartirib bo'lmaydi", "hint": "`val` faqat havolani (reference) qotiradi. `val list = mutableListOf(1)` ga element qo'shish mumkin." }
+      ],
+      "explanation": "`val` — faqat o'qiladigan havola: unga boshqa qiymat tayinlab bo'lmaydi, lekin u ko'rsatayotgan obyekt o'zgaruvchan bo'lishi mumkin. `var` — qayta tayinlanadigan o'zgaruvchi. Imkon bo'lsa `val` ishlatish tavsiya etiladi.",
+      "reviewed": false
+    },
+    {
+      "id": "android.kotlin.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Bu kod nima chiqaradi?",
+      "code": "val name: String? = null\nprintln(name?.length ?: -1)",
+      "options": [
+        { "id": "a", "text": "-1", "correct": true },
+        { "id": "b", "text": "null", "hint": "`?.` natijasi haqiqatan `null` bo'ladi, lekin ifoda shu yerda tugamaydi: undan keyin yana bir operator bor." },
+        { "id": "c", "text": "0", "hint": "`null` ning uzunligi 0 deb hisoblanmaydi. `?.` hech narsani hisoblamasdan `null` qaytaradi." },
+        { "id": "d", "text": "NullPointerException", "hint": "NPE `!!` ishlatilganda chiqadi. Bu yerda xavfsiz chaqiruv `?.` ishlatilgan." }
+      ],
+      "explanation": "`name` — `null`, shuning uchun `name?.length` ham `null`. Elvis operatori `?:` chap tomon `null` bo'lganda o'ng tomondagi qiymatni qaytaradi, ya'ni `-1`.",
+      "reviewed": false
+    },
+    {
+      "id": "android.kotlin.003",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Bu kod nima chiqaradi?",
+      "code": "val result = StringBuilder(\"a\")\n    .apply { append(\"b\") }\n    .let { it.length }\nprintln(result)",
+      "options": [
+        { "id": "a", "text": "2", "correct": true },
+        { "id": "b", "text": "ab", "hint": "`apply` haqiqatan ham `StringBuilder` ning o'zini qaytaradi, lekin zanjirda undan keyin yana bir funksiya bor. Natija o'sha funksiyaning lambda'sidan olinadi." },
+        { "id": "c", "text": "1", "hint": "`apply` ichidagi `append` asl obyektni o'zgartiradi; nusxa yaratilmaydi." },
+        { "id": "d", "text": "kotlin.Unit", "hint": "`let` lambda'sining oxirgi ifodasi qiymat qaytaradi, `Unit` emas." }
+      ],
+      "explanation": "`apply` ichida obyekt `this` orqali ko'rinadi va obyektning o'zi qaytadi: `StringBuilder` endi \"ab\". `let` ichida obyekt `it` orqali ko'rinadi va lambda natijasi qaytadi: `it.length` — 2.",
+      "reviewed": false
+    },
+    {
+      "id": "android.kotlin.004",
+      "level": "middle",
+      "type": "multi",
+      "kind": "concept",
+      "prompt": "`sealed class` haqida qaysi fikrlar to'g'ri?",
+      "options": [
+        { "id": "a", "text": "Uning barcha to'g'ridan-to'g'ri vorislari compile vaqtida ma'lum", "correct": true },
+        { "id": "b", "text": "`when` ifodasida barcha vorislar ko'rib chiqilsa, `else` tarmog'i shart emas", "correct": true },
+        { "id": "c", "text": "Undan to'g'ridan-to'g'ri obyekt yaratish mumkin", "hint": "Sealed class o'z-o'zidan abstract; uning konstruktorini tashqaridan chaqirib bo'lmaydi." },
+        { "id": "d", "text": "Vorislari istalgan modul va paketda e'lon qilinishi mumkin", "hint": "Vorislar o'sha paket va o'sha modul ichida bo'lishi shart. Aks holda kompilyator ularning to'liq ro'yxatini bila olmaydi." }
+      ],
+      "explanation": "Sealed class cheklangan ierarxiya yaratadi: vorislar faqat o'sha paket va modulda e'lon qilinadi, shuning uchun kompilyator ularning hammasini biladi. Shu sabab `when` to'liq (exhaustive) bo'lishi mumkin va yangi voris qo'shilganda kompilyator barcha `when` larni ko'rsatib beradi.",
+      "reviewed": false
+    },
+    {
+      "id": "android.kotlin.005",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Bu kod nima chiqaradi?",
+      "code": "data class User(val name: String) {\n    var age: Int = 0\n}\n\nfun main() {\n    val a = User(\"Ali\").apply { age = 20 }\n    val b = User(\"Ali\").apply { age = 30 }\n    println(a == b)\n}",
+      "options": [
+        { "id": "a", "text": "true", "correct": true },
+        { "id": "b", "text": "false", "hint": "`age` har xil, bu rost. Lekin data class `equals` ni barcha xususiyatlardan emas, faqat ma'lum bir joyda e'lon qilinganlaridan generatsiya qiladi." },
+        { "id": "c", "text": "Kompilyatsiya xatosi", "hint": "Data class tanasida qo'shimcha xususiyat e'lon qilish ruxsat etilgan." },
+        { "id": "d", "text": "Runtime'da exception", "hint": "Bu kodda exception chiqaradigan amal yo'q: `apply` ham, taqqoslash ham xavfsiz." }
+      ],
+      "explanation": "Data class `equals`, `hashCode`, `toString` va `copy` ni faqat asosiy konstruktordagi xususiyatlardan generatsiya qiladi. `age` klass tanasida e'lon qilingan, shuning uchun taqqoslashda qatnashmaydi: ikkala obyektda `name` bir xil, demak ular teng. Bu `HashSet` va `copy` da kutilmagan xatolarga olib kelishi mumkin.",
+      "reviewed": false
+    },
+    {
+      "id": "android.kotlin.006",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Katta kod bazasida katta hajmli funksiyalarni ham `inline` qilish qanday oqibatga olib keladi?",
+      "options": [
+        { "id": "a", "text": "Bayt-kod hajmi oshadi, chunki funksiya tanasi har bir chaqiruv joyiga ko'chiriladi", "correct": true },
+        { "id": "b", "text": "Runtime'da reflection ko'payadi va ishlash sekinlashadi", "hint": "`inline` reflection ishlatmaydi. Aksincha, `reified` aynan reflection'siz tipga murojaat qilish imkonini beradi." },
+        { "id": "c", "text": "Lambda obyektlari ko'proq yaratiladi va GC yuklamasi oshadi", "hint": "`inline` ning asosiy foydasi buning aksi: lambda uchun alohida obyekt yaratilmaydi." },
+        { "id": "d", "text": "Bunday funksiyalarni Java kodidan umuman chaqirib bo'lmay qoladi", "hint": "Oddiy `inline` funksiyalar Java'dan oddiy metod sifatida chaqiriladi. Cheklov faqat `reified` parametrli funksiyalarda bor." }
+      ],
+      "explanation": "`inline` funksiya chaqirilmaydi: kompilyator uning tanasini har bir chaqiruv joyiga ko'chiradi. Kichik, lambda qabul qiladigan funksiyalar uchun bu foydali (obyekt va chaqiruv tejaladi). Katta funksiyalarda esa kod ko'p marta takrorlanib, bayt-kod va APK hajmi oshadi, shuning uchun `inline` ni faqat kichik yuqori tartibli funksiyalarga qo'llash tavsiya etiladi.",
+      "reviewed": false
+    }
+  ]
+}

@@ -1,0 +1,93 @@
+{
+  "topic": "android.data",
+  "questions": [
+    {
+      "id": "android.data.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Qaysi holatda Room o'rniga DataStore (yoki SharedPreferences) yetarli bo'ladi?",
+      "options": [
+        { "id": "a", "text": "Bir nechta oddiy sozlamani (masalan, tanlangan mavzu yoki til) saqlash uchun", "correct": true },
+        { "id": "b", "text": "Minglab yozuvlarni filtrlash va saralash kerak bo'lganda", "hint": "So'rovlar, indekslar va saralash uchun relyatsion baza kerak; kalit-qiymat saqlagichi buni bilmaydi." },
+        { "id": "c", "text": "Jadvallar orasida bog'lanish (relation) bo'lganda", "hint": "Bog'lanishlar va JOIN — SQL bazaning ishi." },
+        { "id": "d", "text": "Katta rasm fayllarini saqlash uchun", "hint": "Katta binar ma'lumot fayl tizimida saqlanadi; kalit-qiymat saqlagichi ham, baza ham bunga mos emas." }
+      ],
+      "explanation": "DataStore — kichik kalit-qiymat ma'lumotlari (sozlamalar, bayroqlar) uchun. Tuzilgan, ko'p sonli va so'rov talab qiladigan ma'lumot uchun Room ishlatiladi. Fayllar esa fayl tizimida saqlanadi, bazada faqat ularning yo'li turadi.",
+      "reviewed": false
+    },
+    {
+      "id": "android.data.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "true_false",
+      "prompt": "Quyidagi fikr to'g'rimi?\n\nRoom standart holatda ma'lumotlar bazasi so'rovlarini main thread'da bajarishga ruxsat bermaydi.",
+      "options": [
+        { "id": "a", "text": "Ha", "correct": true },
+        { "id": "b", "text": "Yo'q", "hint": "Room main thread'dagi so'rovda `IllegalStateException` tashlaydi. Buni o'chirish uchun `allowMainThreadQueries()` ni ataylab chaqirish kerak." }
+      ],
+      "explanation": "Diskka murojaat sekin bo'lishi mumkin va main thread'ni bloklasa, UI qotadi. Shuning uchun Room standart holatda bunga yo'l qo'ymaydi. DAO funksiyalari `suspend` yoki `Flow` qaytaradigan qilib yoziladi: Room ularni o'zi fon oqimida bajaradi.",
+      "reviewed": false
+    },
+    {
+      "id": "android.data.003",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Room entity'ga yangi ustun qo'shdingiz va baza versiyasini oshirdingiz, lekin migratsiya yozmadingiz. Foydalanuvchida ilova yangilanganda nima bo'ladi?",
+      "options": [
+        { "id": "a", "text": "Ilova bazani ochishda `IllegalStateException` bilan yiqiladi", "correct": true },
+        { "id": "b", "text": "Room yangi ustunni avtomatik qo'shadi", "hint": "Avtomatik migratsiya faqat `autoMigrations` aniq ko'rsatilganda va sxema eksport qilinganda ishlaydi." },
+        { "id": "c", "text": "Baza jimgina tozalanib, qaytadan yaratiladi", "hint": "Bu faqat `fallbackToDestructiveMigration()` chaqirilgan bo'lsa sodir bo'ladi; standart xatti-harakat bunday emas." },
+        { "id": "d", "text": "Yangi ustun e'tiborga olinmaydi, ilova eski sxema bilan ishlayveradi", "hint": "Room ochilishda sxemani tekshiradi; mos kelmasa, ishni davom ettirmaydi." }
+      ],
+      "explanation": "Room eski versiyadan yangisiga o'tish yo'lini topa olmasa, `IllegalStateException` tashlaydi. Yechim: `Migration` yozish yoki `autoMigrations` dan foydalanish va migratsiyani `MigrationTestHelper` bilan test qilish. Destruktiv migratsiya foydalanuvchi ma'lumotini o'chiradi, shuning uchun production'da ehtiyotkorlik bilan ishlatiladi.",
+      "reviewed": false
+    },
+    {
+      "id": "android.data.004",
+      "level": "middle",
+      "type": "multi",
+      "kind": "concept",
+      "prompt": "OkHttp `Interceptor` yordamida qaysi vazifalarni hal qilish mumkin?",
+      "options": [
+        { "id": "a", "text": "Har bir so'rovga avtorizatsiya sarlavhasini qo'shish", "correct": true },
+        { "id": "b", "text": "So'rov va javoblarni log qilish", "correct": true },
+        { "id": "c", "text": "JSON javobni data class'ga aylantirish", "hint": "Bu Retrofit converter'ining (masalan, kotlinx.serialization) vazifasi. Interceptor xom so'rov va javob bilan ishlaydi." },
+        { "id": "d", "text": "So'rovni main thread'dan fon oqimiga o'tkazish", "hint": "Oqimni chaqiruvchi tomon tanlaydi (coroutine dispatcher yoki OkHttp dispatcher). Interceptor allaqachon so'rov bajarilayotgan oqimda ishlaydi." }
+      ],
+      "explanation": "Interceptor so'rov zanjiriga qo'shiladi va so'rovni yuborishdan oldin yoki javobni olgandan keyin o'zgartirishi mumkin: sarlavha qo'shish, log, qayta urinish, keshlash. Ma'lumotni obyektga aylantirish va oqim tanlash uning vazifasi emas.",
+      "reviewed": false
+    },
+    {
+      "id": "android.data.005",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Loglarni serverga yuborish foydalanuvchi ilovani yopgandan keyin ham, tarmoq paydo bo'lganda bajarilishi kafolatlanishi kerak. Nima ishlatasiz?",
+      "options": [
+        { "id": "a", "text": "`WorkManager`, tarmoq sharti (constraint) bilan", "correct": true },
+        { "id": "b", "text": "`viewModelScope.launch`", "hint": "Bu scope ViewModel tozalanganda bekor qilinadi: ekran yopilsa, ish to'xtaydi." },
+        { "id": "c", "text": "Oddiy `Service` ichidagi coroutine", "hint": "Fon xizmatlari zamonaviy Android'da qattiq cheklangan: ilova fonda bo'lsa, tizim ularni to'xtatadi va qayta ishga tushishini kafolatlamaydi." },
+        { "id": "d", "text": "`AlarmManager` bilan har daqiqada tekshirish", "hint": "U aniq vaqt uchun mo'ljallangan, batareyani behuda sarflaydi va tarmoq mavjudligi kabi shartlarni bilmaydi." }
+      ],
+      "explanation": "WorkManager kechiktirilishi mumkin, lekin albatta bajarilishi kerak bo'lgan ishlar uchun: vazifani diskda saqlaydi, shartlar (tarmoq, quvvat) bajarilganda ishga tushiradi, ilova yopilgan yoki qurilma qayta yoqilgan bo'lsa ham davom ettiradi va muvaffaqiyatsiz urinishni qayta bajaradi.",
+      "reviewed": false
+    },
+    {
+      "id": "android.data.006",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Offline-first ilovada foydalanuvchi bitta yozuvni ikki qurilmada oflayn tahrirladi. Sinxronizatsiyada konfliktni hal qilish strategiyasini tanlashda eng muhim omil nima?",
+      "options": [
+        { "id": "a", "text": "Ma'lumotning biznes ma'nosi: qaysi yo'qotish qabul qilinishi mumkinligiga qarab last-write-wins, maydon bo'yicha birlashtirish yoki foydalanuvchidan so'rash tanlanadi", "correct": true },
+        { "id": "b", "text": "Har doim server versiyasi g'olib bo'lishi kerak", "hint": "Unda oflayn kiritilgan o'zgarishlar jimgina yo'qoladi. Ba'zi ma'lumotlar uchun bu qabul qilib bo'lmaydi." },
+        { "id": "c", "text": "Har doim eng oxirgi yozilgan versiya g'olib bo'lishi kerak", "hint": "Qurilma soatlari bir-biridan farq qiladi va bu strategiya bir tomonning o'zgarishini butunlay o'chiradi. Hamma ma'lumot uchun mos emas." },
+        { "id": "d", "text": "Konflikt bo'lmasligi uchun oflayn tahrirlashni taqiqlash kerak", "hint": "Bu offline-first g'oyasining o'ziga zid: ilova tarmoqsiz ham to'liq ishlashi kerak." }
+      ],
+      "explanation": "Yagona to'g'ri strategiya yo'q. \"O'qilgan\" belgisi uchun last-write-wins yetarli; hujjat matni uchun maydon bo'yicha birlashtirish yoki CRDT kerak; to'lov yoki buyurtma uchun konfliktni foydalanuvchiga ko'rsatish to'g'riroq. Qaror ma'lumotni yo'qotish narxidan kelib chiqadi, texnik qulaylikdan emas.",
+      "reviewed": false
+    }
+  ]
+}
