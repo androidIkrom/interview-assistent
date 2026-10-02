@@ -40,6 +40,23 @@
     <string name="home_mistakes_due">%1$d ta savol takrorlashni kutmoqda</string>
     <string name="home_mistakes_none">Bugun takrorlanadigan savol yo\'q</string>
     <string name="home_mistakes_action">Takrorlash</string>
+    <string name="home_mock">Mock interview</string>
+    <string name="home_mock_desc">%1$d ta savol, 30 daqiqa. Javoblar faqat oxirida tekshiriladi.</string>
+    <string name="home_mock_unavailable">Mock interview uchun kamida 5 ta savol kerak.</string>
+    <string name="home_mock_last">Oxirgi natija: %1$d / %2$d</string>
+
+    <string name="mock_previous">Oldingi</string>
+    <string name="mock_finish_title">Mock interviewni yakunlaysizmi?</string>
+    <string name="mock_finish_unanswered">%1$d ta savolga javob berilmagan. Ular xato deb hisoblanadi.</string>
+    <string name="mock_finish_all_answered">Barcha savollarga javob berilgan.</string>
+    <string name="mock_exit_title">Mock interviewdan chiqasizmi?</string>
+    <string name="mock_exit_text">Natija saqlanmaydi.</string>
+    <string name="mock_result_title">Mock interview natijasi</string>
+    <string name="mock_result_percent">%1$d%%</string>
+    <string name="mock_result_topics">Mavzular bo\'yicha</string>
+    <string name="mock_result_note">To\'g\'ri javoblar ko\'rsatilmaydi. Xato qilingan savollar «Xatolar» bo\'limiga qo\'shildi: u yerda har birini tushuntirish bilan qayta yechasiz.</string>
+    <string name="mock_result_mistakes">Xatolar ustida ishlash</string>
+    <string name="mock_result_empty">Mock interview uchun savollar yetarli emas.</string>
 
     <string name="settings_title">Sozlamalar</string>
     <string name="settings_field_level">Yo\'nalish va daraja</string>

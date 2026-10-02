@@ -90,4 +90,14 @@ class ContentParserTest {
 
         assertEquals(2, catalog.version)
     }
+
+    @Test
+    fun topicIdIsTheIdWithoutItsNumber() {
+        val file = ContentParser.parseTopicFile(
+            """{"topic":"android.kotlin","questions":[{"id":"android.kotlin.001","level":"junior","type":"single",
+            "prompt":"p","options":[{"id":"a","text":"1","correct":true}],"explanation":"e"}]}"""
+        )
+
+        assertEquals("android.kotlin", file.questions.single().topicId)
+    }
 }

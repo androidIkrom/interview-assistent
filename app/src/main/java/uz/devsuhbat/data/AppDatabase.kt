@@ -70,6 +70,32 @@ interface ProgressDao {
     @Query("SELECT * FROM session_log ORDER BY id")
     suspend fun sessions(): List<SessionLogEntity>
 
+    @Query("SELECT * FROM session_log WHERE mode = :mode AND fieldId = :fieldId ORDER BY id DESC LIMIT 1")
+    fun observeLastSession(mode: String, fieldId: String): Flow<SessionLogEntity?>
+
+    @Insert
+    suspend fun insertMockResults(results: List<MockTopicResultEntity>)
+
+    @Query("SELECT * FROM mock_topic_result WHERE sessionId = :sessionId ORDER BY rowid")
+    suspend fun mockResults(sessionId: Long): List<MockTopicResultEntity>
+
+    /**
+     * Stores a finished mock interview atomically: the session row, its per-topic scores built by [topics]
+     * from the new session id, and the next state of every question in [questionIds] computed by [transform].
+     */
+    @Transaction
+    suspend fun saveMock(
+        session: SessionLogEntity,
+        topics: (sessionId: Long) -> List<MockTopicResultEntity>,
+        questionIds: List<String>,
+        transform: (questionId: String, stored: QuestionStateEntity?) -> QuestionStateEntity,
+    ): Long {
+        val sessionId = insertSession(session)
+        insertMockResults(topics(sessionId))
+        questionIds.forEach { upsert(transform(it, state(it))) }
+        return sessionId
+    }
+
     @Query("DELETE FROM question_state")
     suspend fun deleteStates()
 

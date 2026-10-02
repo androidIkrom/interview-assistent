@@ -1,5 +1,6 @@
 package uz.devsuhbat.engine
 
+import kotlin.math.roundToInt
 import kotlin.random.Random
 import uz.devsuhbat.content.Level
 import uz.devsuhbat.content.Question
@@ -7,6 +8,12 @@ import uz.devsuhbat.content.Question
 object QuestionPicker {
     const val PRACTICE_SIZE = 10
     const val MISTAKES_SIZE = 20
+    const val MOCK_SIZE = 25
+
+    /** A mock with fewer questions than this is not offered. */
+    const val MOCK_MIN = 5
+
+    private const val MOCK_TARGET_SHARE = 0.6
 
     /** Questions of [maxLevel] and below, in pool order. */
     fun eligible(pool: List<Question>, maxLevel: Level): List<Question> = pool.filter { it.level <= maxLevel }
@@ -50,4 +57,16 @@ object QuestionPicker {
             .shuffled(random)
             .sortedBy { states.getValue(it.id).dueDay }
             .take(count)
+
+    /**
+     * Up to [count] questions for a mock interview: about 60% of exactly [maxLevel], the rest from lower levels.
+     * When one side has too few questions the other fills up.
+     */
+    fun mock(pool: List<Question>, maxLevel: Level, random: Random, count: Int = MOCK_SIZE): List<Question> {
+        val (target, lower) = eligible(pool, maxLevel).shuffled(random).partition { it.level == maxLevel }
+        val targetWanted = (count * MOCK_TARGET_SHARE).roundToInt()
+        val fromTarget = minOf(target.size, maxOf(targetWanted, count - lower.size))
+        val fromLower = minOf(lower.size, count - fromTarget)
+        return (target.take(fromTarget) + lower.take(fromLower)).shuffled(random)
+    }
 }

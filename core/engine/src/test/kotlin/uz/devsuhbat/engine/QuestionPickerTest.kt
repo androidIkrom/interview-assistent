@@ -127,4 +127,62 @@ class QuestionPickerTest {
 
         assertEquals(20, QuestionPicker.mistakes(many, Level.JUNIOR, states, today, Random(3)).size)
     }
+
+    // --- mock pick ---
+
+    private fun many(prefix: String, level: Level, count: Int) =
+        (1..count).map { single("$prefix.${it.toString().padStart(3, '0')}", level) }
+
+    private fun List<uz.devsuhbat.content.Question>.countOf(level: Level) = count { it.level == level }
+
+    @Test
+    fun mockMixesTargetAndLowerLevels() {
+        val picked = QuestionPicker.mock(many("m", Level.MIDDLE, 30) + many("j", Level.JUNIOR, 30), Level.MIDDLE, Random(5))
+
+        assertEquals(25, picked.size)
+        assertEquals(15, picked.countOf(Level.MIDDLE))
+        assertEquals(10, picked.countOf(Level.JUNIOR))
+    }
+
+    @Test
+    fun mockFillsFromLowerWhenTargetIsShort() {
+        val picked = QuestionPicker.mock(many("m", Level.MIDDLE, 5) + many("j", Level.JUNIOR, 30), Level.MIDDLE, Random(5))
+
+        assertEquals(5, picked.countOf(Level.MIDDLE))
+        assertEquals(20, picked.countOf(Level.JUNIOR))
+    }
+
+    @Test
+    fun mockFillsFromTargetWhenLowerIsShort() {
+        val picked = QuestionPicker.mock(many("m", Level.MIDDLE, 30) + many("j", Level.JUNIOR, 3), Level.MIDDLE, Random(5))
+
+        assertEquals(22, picked.countOf(Level.MIDDLE))
+        assertEquals(3, picked.countOf(Level.JUNIOR))
+    }
+
+    @Test
+    fun mockForJuniorIsAllJunior() {
+        val picked = QuestionPicker.mock(many("j", Level.JUNIOR, 30) + many("m", Level.MIDDLE, 30), Level.JUNIOR, Random(5))
+
+        assertEquals(25, picked.countOf(Level.JUNIOR))
+    }
+
+    @Test
+    fun mockReturnsAllWhenThePoolIsSmall() {
+        val small = many("m", Level.MIDDLE, 4) + many("j", Level.JUNIOR, 3)
+
+        val picked = QuestionPicker.mock(small, Level.MIDDLE, Random(5))
+
+        assertEquals(small.map { it.id }.toSet(), picked.map { it.id }.toSet())
+        assertEquals(7, picked.size)
+    }
+
+    @Test
+    fun mockHasNoDuplicates() {
+        repeat(10) { seed ->
+            val picked = QuestionPicker.mock(many("m", Level.MIDDLE, 20) + many("j", Level.JUNIOR, 20), Level.MIDDLE, Random(seed))
+
+            assertEquals(picked.size, picked.map { it.id }.toSet().size)
+        }
+    }
 }

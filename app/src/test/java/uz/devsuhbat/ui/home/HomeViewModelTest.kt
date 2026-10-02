@@ -4,6 +4,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
@@ -14,6 +15,7 @@ import org.junit.Before
 import org.junit.Test
 import uz.devsuhbat.content.ContentStore
 import uz.devsuhbat.content.Level
+import uz.devsuhbat.data.MockSummary
 import uz.devsuhbat.data.ThemeMode
 import uz.devsuhbat.data.UserSettings
 import uz.devsuhbat.engine.Progress
@@ -103,5 +105,27 @@ class HomeViewModelTest {
         assertEquals("iOS", state.fieldTitle)
         assertEquals(Progress(0, 0), state.readiness)
         assertEquals(0, state.dueCount)
+    }
+
+    @Test
+    fun mockQuestionCountIsTheEligibleCount() = runTest(dispatcher) {
+        assertEquals(4, viewModel().state.first { !it.loading }.mockQuestionCount)
+
+        settings.value = settings.value.copy(level = Level.SENIOR)
+
+        assertEquals(5, viewModel().state.first { !it.loading }.mockQuestionCount)
+    }
+
+    @Test
+    fun showsTheLastMockOfTheField() = runTest(dispatcher) {
+        val viewModel = HomeViewModel(content, settings, states, { today }, dispatcher) { fieldId ->
+            flowOf(MockSummary(correct = 18, total = 25).takeIf { fieldId == "android" })
+        }
+
+        assertEquals(MockSummary(18, 25), viewModel.state.first { !it.loading }.lastMock)
+
+        settings.value = settings.value.copy(fieldId = "ios")
+
+        assertEquals(null, viewModel.state.first { it.fieldTitle == "iOS" }.lastMock)
     }
 }

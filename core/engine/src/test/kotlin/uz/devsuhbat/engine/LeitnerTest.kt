@@ -81,4 +81,29 @@ class LeitnerTest {
         assertTrue(state(box = 3).mastered)
         assertTrue(state(box = 5).mastered)
     }
+
+    @Test
+    fun afterMockCorrectBehavesLikeFirstTry() {
+        assertEquals(Leitner.afterOutcome(null, firstTry(), today), Leitner.afterMock(null, id, correct = true, today = today))
+        assertEquals(
+            Leitner.afterOutcome(state(box = 1), firstTry(), today),
+            Leitner.afterMock(state(box = 1), id, correct = true, today = today),
+        )
+    }
+
+    @Test
+    fun afterMockWrongIsDueToday() {
+        val after = Leitner.afterMock(state(box = 4, attempts = 2, wrong = 0), id, correct = false, today = today)
+
+        assertEquals(QuestionState(id, box = 1, dueDay = 100, attempts = 3, wrongAttempts = 1), after)
+        assertTrue(after.isDue(today))
+    }
+
+    @Test
+    fun afterMockWrongOnNewQuestionIsDueToday() {
+        assertEquals(
+            QuestionState(id, box = 1, dueDay = 100, attempts = 1, wrongAttempts = 1),
+            Leitner.afterMock(null, id, correct = false, today = today),
+        )
+    }
 }

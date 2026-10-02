@@ -16,6 +16,8 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import uz.devsuhbat.content.Level
+import uz.devsuhbat.engine.MockAnswer
+import uz.devsuhbat.engine.MockResult
 import uz.devsuhbat.engine.QuestionOutcome
 import uz.devsuhbat.engine.QuestionState
 import uz.devsuhbat.engine.SessionResult
@@ -104,5 +106,54 @@ class ProgressRepositoryTest {
 
         assertEquals(emptyMap<String, QuestionState>(), repository.states.first())
         assertEquals(emptyList<SessionLogEntity>(), db.progressDao().sessions())
+    }
+
+    // --- mock interviews ---
+
+    private val mockResult = MockResult(
+        listOf(
+            MockAnswer("a.x.001", "a.x", correct = true),
+            MockAnswer("a.x.002", "a.x", correct = false),
+            MockAnswer("a.y.001", "a.y", correct = false),
+        )
+    )
+
+    @Test
+    fun recordMockStoresSessionAndTopicScores() = runTest {
+        val id = repository.recordMock("android", Level.MIDDLE, Instant.parse("2026-10-02T04:30:00Z"), mockResult)
+
+        val row = db.progressDao().sessions().single()
+        assertEquals(id, row.id)
+        assertEquals("MOCK", row.mode)
+        assertEquals("middle", row.level)
+        assertEquals(3, row.total)
+        assertEquals(1, row.firstTryCorrect)
+        assertEquals(
+            listOf(MockTopicResultEntity(id, "a.x", total = 2, correct = 1), MockTopicResultEntity(id, "a.y", total = 1, correct = 0)),
+            db.progressDao().mockResults(id),
+        )
+    }
+
+    @Test
+    fun recordMockSendsMissedQuestionsToToday() = runTest {
+        repository.recordMock("android", Level.MIDDLE, Instant.EPOCH, mockResult)
+
+        val states = repository.states.first()
+        assertEquals(QuestionState("a.x.001", box = 3, dueDay = today + 7, attempts = 1, wrongAttempts = 0), states["a.x.001"])
+        assertEquals(QuestionState("a.x.002", box = 1, dueDay = today, attempts = 1, wrongAttempts = 1), states["a.x.002"])
+        assertEquals(QuestionState("a.y.001", box = 1, dueDay = today, attempts = 1, wrongAttempts = 1), states["a.y.001"])
+    }
+
+    @Test
+    fun lastMockIsTheNewestOfTheField() = runTest {
+        val perfect = MockResult(listOf(MockAnswer("a.x.001", "a.x", correct = true)))
+        repository.recordMock("android", Level.MIDDLE, Instant.EPOCH, mockResult)
+        repository.recordMock("android", Level.MIDDLE, Instant.EPOCH, perfect)
+        repository.recordMock("ios", Level.MIDDLE, Instant.EPOCH, mockResult)
+        repository.logSession(SessionMode.PRACTICE, "android", Level.MIDDLE, Instant.EPOCH, SessionResult(10, 9, 1))
+
+        assertEquals(MockSummary(correct = 1, total = 1), repository.lastMock("android").first())
+        assertEquals(MockSummary(correct = 1, total = 3), repository.lastMock("ios").first())
+        assertEquals(null, repository.lastMock("qa").first())
     }
 }
