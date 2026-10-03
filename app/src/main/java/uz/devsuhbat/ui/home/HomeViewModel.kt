@@ -18,6 +18,7 @@ import uz.devsuhbat.content.ContentStore
 import uz.devsuhbat.content.Level
 import uz.devsuhbat.data.MockSummary
 import uz.devsuhbat.data.UserSettings
+import uz.devsuhbat.engine.NextReview
 import uz.devsuhbat.engine.Progress
 import uz.devsuhbat.engine.QuestionPicker
 import uz.devsuhbat.engine.QuestionState
@@ -31,6 +32,8 @@ data class HomeUiState(
     val readiness: Progress = Progress(0, 0),
     /** Questions waiting in the "Xatolar" session today. */
     val dueCount: Int = 0,
+    /** When the next answered questions come back for review, shown while nothing is due today. */
+    val nextReview: NextReview? = null,
     /** How many questions a mock interview would have now; below [QuestionPicker.MOCK_MIN] it is not offered. */
     val mockQuestionCount: Int = 0,
     val lastMock: MockSummary? = null,
@@ -68,6 +71,7 @@ class HomeViewModel(
                 level = level,
                 readiness = Readiness.of(scope, stored),
                 dueCount = scope.count { stored[it.id]?.isDue(today()) == true },
+                nextReview = level?.let { QuestionPicker.nextReview(scope, it, stored, today()) },
                 mockQuestionCount = minOf(scope.size, QuestionPicker.MOCK_SIZE),
                 // While the field is switching, the mock flow may still carry the previous field's result.
                 lastMock = mock.takeIf { mockField == current.fieldId },

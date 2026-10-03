@@ -2,6 +2,7 @@ package uz.devsuhbat.engine
 
 import kotlin.random.Random
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import uz.devsuhbat.content.Level
@@ -126,6 +127,22 @@ class QuestionPickerTest {
         val states = many.associate { state(it.id, 1, 99) }
 
         assertEquals(20, QuestionPicker.mistakes(many, Level.JUNIOR, states, today, Random(3)).size)
+    }
+
+    // --- next review ---
+
+    @Test
+    fun nextReviewIsTheEarliestFutureDay() {
+        val states = mapOf(state("j.001", 1, 102), state("j.002", 2, 102), state("j.003", 3, 105))
+
+        assertEquals(NextReview(inDays = 2, count = 2), QuestionPicker.nextReview(pool, Level.JUNIOR, states, today))
+    }
+
+    @Test
+    fun nextReviewIgnoresDueAndOutOfLevelQuestions() {
+        val states = mapOf(state("j.001", 1, 99), state("x.001", 1, 101))
+
+        assertNull(QuestionPicker.nextReview(pool, Level.JUNIOR, states, today))
     }
 
     // --- mock pick ---

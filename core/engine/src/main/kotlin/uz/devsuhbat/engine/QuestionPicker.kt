@@ -6,6 +6,9 @@ import uz.devsuhbat.content.Level
 import uz.devsuhbat.content.Question
 import uz.devsuhbat.content.topicId
 
+/** [count] questions come back for review in [inDays] days. */
+data class NextReview(val inDays: Int, val count: Int)
+
 object QuestionPicker {
     const val PRACTICE_SIZE = 10
     const val MISTAKES_SIZE = 20
@@ -47,6 +50,13 @@ object QuestionPicker {
     /** Eligible questions whose due day has come, in pool order. */
     fun due(pool: List<Question>, maxLevel: Level, states: Map<String, QuestionState>, today: Long): List<Question> =
         eligible(pool, maxLevel).filter { states[it.id]?.isDue(today) == true }
+
+    /** The earliest day after [today] on which eligible answered questions come back, or null when none is scheduled. */
+    fun nextReview(pool: List<Question>, maxLevel: Level, states: Map<String, QuestionState>, today: Long): NextReview? {
+        val days = eligible(pool, maxLevel).mapNotNull { states[it.id]?.dueDay }.filter { it > today }
+        val first = days.minOrNull() ?: return null
+        return NextReview(inDays = (first - today).toInt(), count = days.count { it == first })
+    }
 
     /** Up to [count] due questions, most overdue first; questions due on the same day come in random order. */
     fun mistakes(
