@@ -4,6 +4,7 @@ import kotlin.math.roundToInt
 import kotlin.random.Random
 import uz.devsuhbat.content.Level
 import uz.devsuhbat.content.Question
+import uz.devsuhbat.content.topicId
 
 object QuestionPicker {
     const val PRACTICE_SIZE = 10
@@ -14,6 +15,9 @@ object QuestionPicker {
     const val MOCK_MIN = 5
 
     private const val MOCK_TARGET_SHARE = 0.6
+
+    /** Share of mock questions taken from the field's own topics rather than the common ones. */
+    const val MOCK_FIELD_SHARE = 0.6
 
     /** Questions of [maxLevel] and below, in pool order. */
     fun eligible(pool: List<Question>, maxLevel: Level): List<Question> = pool.filter { it.level <= maxLevel }
@@ -59,14 +63,32 @@ object QuestionPicker {
             .take(count)
 
     /**
-     * Up to [count] questions for a mock interview: about 60% of exactly [maxLevel], the rest from lower levels.
+     * Up to [count] questions for a mock interview: about 60% from the field's own topics and the rest from the
+     * common topics ([isCommon]); inside each part about 60% are of exactly [maxLevel] and the rest of lower levels.
      * When one side has too few questions the other fills up.
      */
-    fun mock(pool: List<Question>, maxLevel: Level, random: Random, count: Int = MOCK_SIZE): List<Question> {
-        val (target, lower) = eligible(pool, maxLevel).shuffled(random).partition { it.level == maxLevel }
-        val targetWanted = (count * MOCK_TARGET_SHARE).roundToInt()
-        val fromTarget = minOf(target.size, maxOf(targetWanted, count - lower.size))
-        val fromLower = minOf(lower.size, count - fromTarget)
-        return (target.take(fromTarget) + lower.take(fromLower)).shuffled(random)
+    fun mock(
+        pool: List<Question>,
+        maxLevel: Level,
+        random: Random,
+        count: Int = MOCK_SIZE,
+        isCommon: (Question) -> Boolean = { it.topicId.startsWith("core.") },
+    ): List<Question> {
+        val (common, field) = eligible(pool, maxLevel).partition(isCommon)
+        val (fromField, fromCommon) = split(count, MOCK_FIELD_SHARE, field.size, common.size)
+        return (byLevel(field, maxLevel, fromField, random) + byLevel(common, maxLevel, fromCommon, random)).shuffled(random)
+    }
+
+    /** [n] questions of [questions]: about 60% of exactly [maxLevel], the rest of lower levels. */
+    private fun byLevel(questions: List<Question>, maxLevel: Level, n: Int, random: Random): List<Question> {
+        val (target, lower) = questions.shuffled(random).partition { it.level == maxLevel }
+        val (fromTarget, fromLower) = split(n, MOCK_TARGET_SHARE, target.size, lower.size)
+        return target.take(fromTarget) + lower.take(fromLower)
+    }
+
+    /** How many to take from a preferred side ([share] of [count]) and the other side, each filling the other's gap. */
+    private fun split(count: Int, share: Double, preferred: Int, other: Int): Pair<Int, Int> {
+        val fromPreferred = minOf(preferred, maxOf((count * share).roundToInt(), count - other))
+        return fromPreferred to minOf(other, count - fromPreferred)
     }
 }

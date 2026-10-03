@@ -177,6 +177,43 @@ class QuestionPickerTest {
         assertEquals(7, picked.size)
     }
 
+    private fun List<uz.devsuhbat.content.Question>.fieldCount() = count { !it.id.startsWith("core.") }
+
+    @Test
+    fun mockTakesSixtyPercentFromFieldTopics() {
+        val picked = QuestionPicker.mock(many("f", Level.MIDDLE, 40) + many("core.x", Level.MIDDLE, 40), Level.MIDDLE, Random(3))
+
+        assertEquals(25, picked.size)
+        assertEquals(15, picked.fieldCount())
+    }
+
+    @Test
+    fun mockFillsFromCommonWhenFieldIsShort() {
+        val picked = QuestionPicker.mock(many("f", Level.MIDDLE, 6) + many("core.x", Level.MIDDLE, 40), Level.MIDDLE, Random(3))
+
+        assertEquals(25, picked.size)
+        assertEquals(6, picked.fieldCount())
+    }
+
+    @Test
+    fun mockFillsFromFieldWhenCommonIsShort() {
+        val picked = QuestionPicker.mock(many("f", Level.MIDDLE, 40) + many("core.x", Level.MIDDLE, 4), Level.MIDDLE, Random(3))
+
+        assertEquals(25, picked.size)
+        assertEquals(21, picked.fieldCount())
+    }
+
+    @Test
+    fun mockKeepsLevelMixInsideEachPart() {
+        val pool = many("f.m", Level.MIDDLE, 30) + many("f.j", Level.JUNIOR, 30) +
+            many("core.m", Level.MIDDLE, 30) + many("core.j", Level.JUNIOR, 30)
+
+        val picked = QuestionPicker.mock(pool, Level.MIDDLE, Random(3))
+
+        assertEquals(15, picked.countOf(Level.MIDDLE))
+        assertEquals(15, picked.fieldCount())
+    }
+
     @Test
     fun mockHasNoDuplicates() {
         repeat(10) { seed ->
