@@ -1,0 +1,220 @@
+{
+  "topic": "ios.swift",
+  "questions": [
+    {
+      "id": "ios.swift.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Swift'da `let` va `var` qanday farqlanadi?",
+      "options": [
+        { "id": "a", "text": "`let` — konstanta: qiymat bir marta beriladi va qayta o'zlashtirilmaydi; `var` — o'zgaruvchi. `let` bilan e'lon qilingan `struct` (value type) xususiyatlarini ham o'zgartirib bo'lmaydi, `let` bilan e'lon qilingan `class` ob'ektida esa havola o'zgarmaydi, lekin uning `var` xususiyatlarini o'zgartirish mumkin", "correct": true },
+        { "id": "b", "text": "`let` faqat sonlar uchun, `var` — boshqa tiplar uchun", "hint": "Ikkalasi istalgan tip bilan ishlaydi; farq — qayta o'zlashtirish mumkinligida." },
+        { "id": "c", "text": "`let` bilan e'lon qilingan class ob'ektining hech qanday xususiyatini o'zgartirib bo'lmaydi", "hint": "Class — reference type: `let` faqat havolani qotiradi, ob'ektning `var` xususiyatlari o'zgaraveradi." },
+        { "id": "d", "text": "`var` tezroq ishlaydi, shuning uchun uni afzal ko'rish kerak", "hint": "Aksincha, Swift uslubi — default `let`; kompilyator o'zgartirilmagan `var` uchun ogohlantiradi." }
+      ],
+      "explanation": "Qoida: hamma joyda `let`, kerak bo'lganda `var`. Immutable qiymatlar bilan kod oson tushuniladi va thread'lar o'rtasida xavfsizroq. `let` qiymatini e'londa emas, keyinroq (masalan, `if/else` tarmoqlarida) bir marta berish ham mumkin.",
+      "reviewed": false
+    },
+    {
+      "id": "ios.swift.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Quyidagi kod nimani chop etadi?",
+      "code": "let n = Int(\"42a\") ?? 0\n\nif let m = Int(\"7\") {\n    print(n + m)\n} else {\n    print(-1)\n}",
+      "options": [
+        { "id": "a", "text": "7", "correct": true },
+        { "id": "b", "text": "49", "hint": "`Int(\"42a\")` raqam bo'lmagan belgi tufayli `nil` qaytaradi — `??` default qiymatni oladi." },
+        { "id": "c", "text": "-1", "hint": "`Int(\"7\")` muvaffaqiyatli — `if let` tarmog'i bajariladi." },
+        { "id": "d", "text": "Runtime crash", "hint": "Hech qayerda force unwrap (`!`) yo'q — `nil` xavfsiz boshqarilgan." }
+      ],
+      "explanation": "Optional unwrap usullari: `if let`/`guard let` (xavfsiz bog'lash), `??` (default), optional chaining (`user?.name`), force unwrap `!` (nil bo'lsa crash — faqat 100% ishonchli joyda). Swift 5.7+ da qisqa yozuv: `if let m { ... }`.",
+      "reviewed": false
+    },
+    {
+      "id": "ios.swift.003",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Quyidagi kod nimani chop etadi?",
+      "code": "struct PointS { var x: Int }\nfinal class PointC {\n    var x: Int\n    init(x: Int) { self.x = x }\n}\n\nvar s1 = PointS(x: 1)\nvar s2 = s1\ns2.x = 5\n\nlet c1 = PointC(x: 1)\nlet c2 = c1\nc2.x = 5\n\nprint(s1.x, c1.x)",
+      "options": [
+        { "id": "a", "text": "1 5", "correct": true },
+        { "id": "b", "text": "5 5", "hint": "`struct` — value type: `s2 = s1` mustaqil nusxa." },
+        { "id": "c", "text": "1 1", "hint": "`class` — reference type: `c1` va `c2` bitta ob'ektga qaraydi." },
+        { "id": "d", "text": "Kompilyatsiya xatosi — `let c2` o'zgartirilmoqda", "hint": "`let` faqat havolani qotiradi; class'ning `var` xususiyati o'zgaraveradi." }
+      ],
+      "explanation": "Swift'da struct afzal ko'riladi (standart kutubxonada `String`, `Array`, `Dictionary` — hammasi struct). Class kerak: identity muhim bo'lganda, meros, `deinit`, Objective-C bilan ishlash yoki umumiy o'zgaruvchan holat. `final` — meros yo'q, statik dispatch.",
+      "reviewed": false
+    },
+    {
+      "id": "ios.swift.004",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Swift'da `protocol` nima?",
+      "options": [
+        { "id": "a", "text": "Tip bajarishi kerak bo'lgan talablar (metodlar, xususiyatlar) kontrakti; uni `struct`, `class`, `enum` qabul qila oladi va bir tip bir nechta protokolga mos kelishi mumkin. Protocol extension bilan default implementatsiya beriladi — Swift \"protocol-oriented programming\"ning asosi", "correct": true },
+        { "id": "b", "text": "Faqat class'lar qabul qila oladigan abstrakt class", "hint": "Struct va enum ham protokolga mos keladi; class bilan cheklash uchun `AnyObject` talab qilinadi." },
+        { "id": "c", "text": "Tarmoq protokoli (HTTP) bilan ishlash uchun tip", "hint": "Bu til konstruksiyasi — interfeys/kontrakt, tarmoqqa aloqasi yo'q." },
+        { "id": "d", "text": "Protokolda saqlanadigan xususiyat (stored property) e'lon qilib, qiymat berish mumkin", "hint": "Protokol faqat talab qo'yadi (`var name: String { get }`); saqlash mos keluvchi tipning ishi." }
+      ],
+      "explanation": "Misollar: `Equatable`, `Hashable`, `Codable`, `Identifiable`. Delegate pattern ham protokol orqali. Protokolni test uchun mock qilish oson — DI'ning asosi.",
+      "reviewed": false
+    },
+    {
+      "id": "ios.swift.005",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`guard let` va `if let` qanday farqlanadi?",
+      "options": [
+        { "id": "a", "text": "`guard let` shart bajarilmasa `else` ichida doiradan chiqishni majburlaydi (`return`, `throw`, `break`), unwrap qilingan qiymat esa guard'dan keyin butun funksiya davomida ishlatiladi — \"erta chiqish\" va ichma-ich `if`larsiz o'qiladigan kod. `if let` qiymatni faqat o'z bloki ichida beradi", "correct": true },
+        { "id": "b", "text": "`guard let` force unwrap qiladi va nil bo'lsa crash beradi", "hint": "`guard` xavfsiz: nil bo'lsa `else` bloki bajariladi." },
+        { "id": "c", "text": "`guard`ning `else` blokida chiqish shart emas", "hint": "Kompilyator `else` dan chiqishni talab qiladi — aks holda xato." },
+        { "id": "d", "text": "Ikkalasi bir xil, faqat sintaksis farqi", "hint": "Unwrap qilingan nom qayerda ko'rinishi farq qiladi." }
+      ],
+      "explanation": "`guard let url = URL(string: s) else { return }` — keyin `url` oddiy qiymat. Bir nechta shartni bitta guard'da: `guard let a, let b, a > 0 else { ... }`. Ko'p ichma-ich `if let` — \"pyramid of doom\".",
+      "reviewed": false
+    },
+    {
+      "id": "ios.swift.006",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Swift'da closure nima va trailing closure sintaksisi qanday?",
+      "options": [
+        { "id": "a", "text": "Closure — nomsiz funksiya, atrofdagi o'zgaruvchilarni capture qila oladi: `{ (a: Int) -> Int in a * 2 }`. Funksiyaning oxirgi parametri closure bo'lsa, uni qavsdan tashqarida yozish mumkin: `numbers.map { $0 * 2 }`; `$0`, `$1` — qisqa parametr nomlari", "correct": true },
+        { "id": "b", "text": "Closure — faqat class ichidagi metod", "hint": "Closure mustaqil qiymat: o'zgaruvchiga saqlanadi, parametr sifatida uzatiladi." },
+        { "id": "c", "text": "Closure tashqi o'zgaruvchilarni ko'ra olmaydi", "hint": "Capture qilish — closure'ning asosiy xususiyati (va retain cycle manbai)." },
+        { "id": "d", "text": "Trailing closure faqat bitta parametrli funksiyalarda ishlaydi", "hint": "Oxirgi parametr closure bo'lsa yetarli; Swift 5.3+ da bir nechta trailing closure ham bor." }
+      ],
+      "explanation": "Closure — reference type. Funksiya qaytgandan keyin chaqiriladigan closure parametri `@escaping` deb belgilanadi (masalan, tarmoq callback'i) — bunda `self`ni capture qilish retain cycle'ga olib kelishi mumkin, `[weak self]` ishlatiladi.",
+      "reviewed": false
+    },
+    {
+      "id": "ios.swift.007",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Swift kolleksiyalarida copy-on-write (CoW) qanday ishlaydi?",
+      "options": [
+        { "id": "a", "text": "`Array`, `Dictionary`, `String` value type, lekin ichki buferni heap'da saqlaydi. `var b = a` buferni nusxalamaydi — ikkalasi bir buferni bo'lishadi; birinchi o'zgartirishda bufer boshqa egaga ham tegishli bo'lsa (`isKnownUniquelyReferenced`), shunda nusxa olinadi. Natija: value semantikasi + arzon nusxalash", "correct": true },
+        { "id": "b", "text": "Har o'zlashtirishda (`var b = a`) butun massiv darhol nusxalanadi", "hint": "Nusxa faqat yozishda va bufer bo'lishilgan bo'lsa olinadi." },
+        { "id": "c", "text": "CoW barcha struct'lar uchun avtomatik ishlaydi", "hint": "Standart kolleksiyalarda qo'lda implementatsiya qilingan; o'z struct'ingizda kerak bo'lsa o'zingiz yozasiz." },
+        { "id": "d", "text": "CoW tufayli `Array` reference type'ga aylanadi", "hint": "Semantika value bo'lib qoladi: `b` o'zgarishi `a`ga hech qachon ta'sir qilmaydi." }
+      ],
+      "explanation": "Tuzoq: siklda massivga yozish paytida boshqa nusxa (masalan, closure capture qilgan) mavjud bo'lsa, har iteratsiyada to'liq nusxa — O(n²). Katta qiymatli o'z struct'ingiz uchun CoW: ichki `final class` storage + `isKnownUniquelyReferenced(&storage)` tekshiruvi.",
+      "reviewed": false
+    },
+    {
+      "id": "ios.swift.008",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Quyidagi kod nimani chop etadi?",
+      "code": "enum Outcome {\n    case ok(Int)\n    case fail(String)\n}\n\nlet items: [Outcome] = [.ok(2), .fail(\"timeout\"), .ok(3)]\nvar sum = 0\nfor case .ok(let value) in items {\n    sum += value\n}\nprint(sum)",
+      "options": [
+        { "id": "a", "text": "5", "correct": true },
+        { "id": "b", "text": "Kompilyatsiya xatosi — `switch` barcha holatlarni qamrashi kerak", "hint": "`for case` — pattern matching filtri: mos kelmagan elementlar shunchaki o'tkazib yuboriladi, to'liqlik talab qilinmaydi." },
+        { "id": "c", "text": "3", "hint": "Sikl faqat oxirgi elementni emas, barcha `.ok` holatlarni oladi." },
+        { "id": "d", "text": "Runtime xato — `.fail` holatida qiymat Int emas", "hint": "`.fail` pattern'ga mos kelmaydi va sikl tanasiga kirmaydi." }
+      ],
+      "explanation": "Associated value'li enum — holatlarni tip darajasida modellashtirish (`Result<Success, Failure>`, ekran holati `.loading/.loaded(data)/.error(msg)`). `switch` esa to'liq bo'lishi shart — yangi holat qo'shilsa kompilyator unutilgan joylarni ko'rsatadi; shu sabab `default`dan ehtiyot bo'ling.",
+      "reviewed": false
+    },
+    {
+      "id": "ios.swift.009",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Quyidagi kod nimani chop etadi?",
+      "code": "func compute() -> Int {\n    var x = 1\n    defer {\n        x = 10\n        print(\"defer\", terminator: \" \")\n    }\n    print(\"body\", terminator: \" \")\n    return x\n}\n\nprint(compute())",
+      "options": [
+        { "id": "a", "text": "body defer 1", "correct": true },
+        { "id": "b", "text": "body defer 10", "hint": "Qaytariladigan qiymat `defer` ishlashidan oldin hisoblanadi; keyingi `x = 10` uni o'zgartirmaydi." },
+        { "id": "c", "text": "defer body 1", "hint": "`defer` bloki e'lon qilingan joyda emas, doiradan chiqishda bajariladi." },
+        { "id": "d", "text": "body 1 defer", "hint": "`defer` funksiya qaytishidan oldin ishlaydi — tashqi `print` undan keyin." }
+      ],
+      "explanation": "`defer` — doiradan har qanday yo'l bilan (return, throw) chiqishda tozalash: lock'ni bo'shatish, faylni yopish, `isLoading = false`. Bir nechta `defer` teskari tartibda bajariladi. `defer` ichida natijani o'zgartirishga urinish — chalkash kod.",
+      "reviewed": false
+    },
+    {
+      "id": "ios.swift.010",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`try`, `try?` va `try!` qanday farqlanadi?",
+      "options": [
+        { "id": "a", "text": "`try` — xatoni yuqoriga uzatadi, `do/catch` yoki `throws` funksiya ichida bo'lishi shart; `try?` — xato bo'lsa natija `nil` (xato tafsiloti yo'qoladi); `try!` — xato bo'lmasligiga ishonch, xato bo'lsa runtime crash", "correct": true },
+        { "id": "b", "text": "`try?` xatoni log qiladi va davom etadi", "hint": "Hech narsa log qilinmaydi — xato jimgina `nil`ga aylanadi." },
+        { "id": "c", "text": "`try!` xatoni ushlab, default qiymat qaytaradi", "hint": "`try!` xatoda ilovani to'xtatadi — hech qanday default yo'q." },
+        { "id": "d", "text": "Swift exception'lari Objective-C kabi stack'ni qimmat yechadi", "hint": "Swift `throw` — oddiy qaytish qiymati kabi arzon; stack unwinding yo'q." }
+      ],
+      "explanation": "Swift 6 da typed throws: `func load() throws(NetworkError)`. `Result<T, E>` — xatoni qiymat sifatida saqlash/uzatish uchun. Productionda `try!` faqat dasturchi xatosi bo'lsa (masalan, bundle'dagi aniq resurs) — tashqi ma'lumot bilan hech qachon.",
+      "reviewed": false
+    },
+    {
+      "id": "ios.swift.011",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Closure parametrini `@escaping` deb belgilash nimani anglatadi?",
+      "options": [
+        { "id": "a", "text": "Closure funksiya qaytgandan keyin ham saqlanishi va chaqirilishi mumkin (xususiyatga yoziladi, asinxron callback). Default — non-escaping: closure faqat funksiya ichida chaqiriladi, kompilyator optimallashtiradi va `self`ni aniq yozish shart emas. Escaping closure'da `self` capture'i aniq ko'rsatiladi — retain cycle xavfi", "correct": true },
+        { "id": "b", "text": "Closure xatolarni tashlay olishini bildiradi", "hint": "Bu `throws`; `@escaping` closure'ning yashash muddati haqida." },
+        { "id": "c", "text": "Closure boshqa thread'da bajarilishini kafolatlaydi", "hint": "Thread haqida hech narsa demaydi — faqat funksiyadan \"qochib\" chiqishi mumkinligini." },
+        { "id": "d", "text": "Barcha closure'lar default escaping", "hint": "Swift 3'dan beri default — non-escaping." }
+      ],
+      "explanation": "Misol: `func fetch(completion: @escaping (Result<Data, Error>) -> Void)` — completion tarmoq javobidan keyin chaqiriladi. `map`, `filter` closure'lari non-escaping. Escaping closure ichida `[weak self]` va `guard let self else { return }` keng tarqalgan pattern.",
+      "reviewed": false
+    },
+    {
+      "id": "ios.swift.012",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Quyidagi kod nimani chop etadi?",
+      "code": "protocol Greeter {\n    func hello() -> String\n}\n\nextension Greeter {\n    func hello() -> String { \"P-hello\" }\n    func bye() -> String { \"P-bye\" }\n}\n\nstruct Ali: Greeter {\n    func hello() -> String { \"A-hello\" }\n    func bye() -> String { \"A-bye\" }\n}\n\nlet g: any Greeter = Ali()\nprint(g.hello(), g.bye())",
+      "options": [
+        { "id": "a", "text": "A-hello P-bye", "correct": true },
+        { "id": "b", "text": "A-hello A-bye", "hint": "`bye` protokol talablari ro'yxatida yo'q — u statik dispatch bilan e'lon qilingan tip (`any Greeter`) bo'yicha tanlanadi." },
+        { "id": "c", "text": "P-hello P-bye", "hint": "`hello` protokol talabi — dinamik dispatch (witness table) orqali `Ali`ning implementatsiyasi chaqiriladi." },
+        { "id": "d", "text": "P-hello A-bye", "hint": "Qaysi metod protokolda e'lon qilingani (talab) va qaysi biri faqat extension'da ekanini solishtiring." }
+      ],
+      "explanation": "Protokolda e'lon qilingan talab — customization point (dinamik dispatch). Faqat extension'dagi metod — statik: o'zgaruvchi `Ali` tipida bo'lsa `A-bye`, protokol tipida bo'lsa `P-bye`. Xulq o'zgarishi kerak bo'lgan metodni albatta protokol talablariga qo'shing.",
+      "reviewed": false
+    },
+    {
+      "id": "ios.swift.013",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`some Shape` va `any Shape` qanday farqlanadi?",
+      "options": [
+        { "id": "a", "text": "`some` — opaque type: aniq bitta konkret tip, kompilyator uni biladi, chaqiruvchidan yashiriladi; statik dispatch va specialization, associated type'li protokollar bilan ishlaydi (`some View`). `any` — existential box: runtime'da istalgan mos tipni saqlaydi (turli tiplar massivi), lekin dinamik dispatch va ehtimoliy heap allokatsiya xarajati bor", "correct": true },
+        { "id": "b", "text": "Ikkalasi bir xil — Swift 5.6 dan keyin nomi o'zgargan", "hint": "`some` bitta yashirin konkret tip; `any` — har xil tiplarni saqlay oladigan quti." },
+        { "id": "c", "text": "`some View` qaytaruvchi funksiya turli tarmoqlarda turli view tiplarini qaytara oladi", "hint": "Opaque tip bitta bo'lishi shart — shu sabab SwiftUI'da `@ViewBuilder` yoki `AnyView` kerak bo'ladi." },
+        { "id": "d", "text": "`any` tezroq, chunki tip tekshiruvi yo'q", "hint": "Existential — qo'shimcha indirection va dinamik dispatch; odatda `some`/generic tezroq." }
+      ],
+      "explanation": "Parametrda `func draw(_ s: some Shape)` = `func draw<S: Shape>(_ s: S)`. Heterogen kolleksiya kerak bo'lsagina `[any Shape]`. Swift 6 yo'nalishi: existential'ni aniq `any` bilan yozish — xarajat ko'rinib tursin.",
+      "reviewed": false
+    },
+    {
+      "id": "ios.swift.014",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Swift kodida method dispatch'ni performance uchun qanday boshqarish mumkin?",
+      "options": [
+        { "id": "a", "text": "Class metodlari default dinamik (vtable); `final` yoki `private`/`fileprivate` (whole-module optimization bilan `internal` ham) kompilyatorga override yo'qligini isbotlab statik dispatch va inlining imkonini beradi. Generic + `some` existential'dan tezroq (specialization). `@objc dynamic` — eng sekin (Objective-C message send), faqat KVO/swizzling kerak bo'lganda. Qarorni Instruments bilan o'lchab qabul qilish", "correct": true },
+        { "id": "b", "text": "Barcha metodlarni `@objc dynamic` qilish tezlashtiradi", "hint": "`objc_msgSend` — eng qimmat dispatch turi va optimallashtirishni to'sadi." },
+        { "id": "c", "text": "Dispatch turi faqat struct va class tanlovi bilan aniqlanadi, boshqa vosita yo'q", "hint": "`final`, access control, WMO va generic/existential tanlovi ham ta'sir qiladi." },
+        { "id": "d", "text": "Protocol extension'dagi metodlar har doim dinamik dispatch", "hint": "Talab sifatida e'lon qilinmagan extension metodlari — statik." }
+      ],
+      "explanation": "Release build'da Whole Module Optimization default yoqilgan. Modul chegarasida generic specialization uchun `@inlinable` kerak bo'lishi mumkin (kutubxonalar uchun, ABI oqibatlarini anglab). Aksariyat ilovalarda dispatch emas, ortiqcha allokatsiya va main thread'dagi ish bo'g'oz — avval profiling.",
+      "reviewed": false
+    }
+  ]
+}

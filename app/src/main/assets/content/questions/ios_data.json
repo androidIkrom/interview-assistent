@@ -1,0 +1,157 @@
+{
+  "topic": "ios.data",
+  "questions": [
+    {
+      "id": "ios.data.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`UserDefaults`da nimalarni saqlash to'g'ri?",
+      "options": [
+        { "id": "a", "text": "Kichik sozlamalar va bayroqlar: tanlangan til, tema, onboarding ko'rilgani, oxirgi tanlangan tab. Katta ma'lumotlar (ro'yxatlar, rasmlar) — fayl yoki DB'ga; parol va tokenlar — Keychain'ga, chunki `UserDefaults` shifrlanmagan plist", "correct": true },
+        { "id": "b", "text": "Foydalanuvchi paroli va access token", "hint": "`UserDefaults` oddiy plist fayl — sirlar uchun Keychain." },
+        { "id": "c", "text": "Minglab yozuvli ma'lumotlar bazasi", "hint": "U ilova ishga tushganda xotiraga yuklanadi — katta hajm ishga tushishni sekinlashtiradi; SwiftData/Core Data/SQLite kerak." },
+        { "id": "d", "text": "Hech narsa — `UserDefaults` eskirgan", "hint": "Sozlamalar uchun hali ham standart vosita; SwiftUI'da `@AppStorage` uning ustiga qurilgan." }
+      ],
+      "explanation": "`UserDefaults.standard.set(true, forKey: \"onboarded\")`. Kalitlarni bitta joyda konstanta qilib saqlang. App Group bilan widget va extension'lar bilan bo'lishish: `UserDefaults(suiteName:)`. Maxfiylik manifestida (`PrivacyInfo.xcprivacy`) `UserDefaults` API ishlatilishi sababi ko'rsatiladi.",
+      "reviewed": false
+    },
+    {
+      "id": "ios.data.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`Codable` protokoli nima beradi?",
+      "options": [
+        { "id": "a", "text": "`Codable` = `Encodable & Decodable`: barcha xususiyatlari ham `Codable` bo'lgan tip uchun kompilyator kodlash/dekodlash kodini o'zi yozadi; `JSONDecoder().decode(User.self, from: data)` va `JSONEncoder().encode(user)` bilan JSON'ga va JSON'dan aylantiriladi", "correct": true },
+        { "id": "b", "text": "Faqat class'lar uchun ishlaydi", "hint": "Struct va enum ham — aslida odatda struct ishlatiladi." },
+        { "id": "c", "text": "JSON'ni qo'lda `[String: Any]` lug'atga aylantirib, maydonlarni tortib olish uchun", "hint": "`Codable` aynan shu qo'lda ishni tiplangan avtomatik kod bilan almashtiradi." },
+        { "id": "d", "text": "Faqat JSON formatini qo'llaydi", "hint": "`PropertyListEncoder` va boshqa encoder'lar ham bor; format encoder'ga bog'liq." }
+      ],
+      "explanation": "JSON kalitlari Swift nomlaridan farq qilsa — `CodingKeys` enum yoki `keyDecodingStrategy`. Ixtiyoriy maydon — `Optional` xususiyat. Sana formati — `dateDecodingStrategy` (masalan, `.iso8601`).",
+      "reviewed": false
+    },
+    {
+      "id": "ios.data.003",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`URLSession` bilan async/await orqali GET so'rov qanday yuboriladi?",
+      "options": [
+        { "id": "a", "text": "`let (data, response) = try await URLSession.shared.data(from: url)` — so'rov thread'ni bloklamasdan kutiladi; keyin `response`ni `HTTPURLResponse`ga cast qilib status kodni tekshirish va `data`ni `JSONDecoder` bilan dekodlash", "correct": true },
+        { "id": "b", "text": "`let data = try Data(contentsOf: url)` main thread'da — eng oddiy va to'g'ri usul", "hint": "Tarmoq uchun sinxron va bloklovchi: UI qotadi, timeout va xatolarni boshqarish yo'q." },
+        { "id": "c", "text": "`URLSession` faqat completion handler bilan ishlaydi", "hint": "iOS 15+ da async/await variantlari (`data(from:)`, `data(for:)`) bor." },
+        { "id": "d", "text": "HTTP so'rovi uchun albatta Alamofire kerak", "hint": "`URLSession` — o'rnatilgan va yetarli; Alamofire ixtiyoriy qulaylik." }
+      ],
+      "explanation": "POST va header'lar uchun `URLRequest`: `httpMethod`, `setValue(_:forHTTPHeaderField:)`, `httpBody`. ATS (App Transport Security) default'da faqat HTTPS'ga ruxsat beradi. Odatda bitta `APIClient` qatlam so'rov qurish, xatolar va dekodlashni markazlashtiradi.",
+      "reviewed": false
+    },
+    {
+      "id": "ios.data.004",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Quyidagi kod nimani chop etadi?",
+      "code": "struct User: Decodable {\n    let id: Int\n    let fullName: String\n}\n\nlet json = #\"{\"id\": 1, \"full_name\": \"Ali Valiyev\"}\"#.data(using: .utf8)!\n\ndo {\n    let user = try JSONDecoder().decode(User.self, from: json)\n    print(user.fullName)\n} catch {\n    print(\"xato\")\n}",
+      "options": [
+        { "id": "a", "text": "xato", "correct": true },
+        { "id": "b", "text": "Ali Valiyev", "hint": "Default decoder kalitlarni aynan solishtiradi: `fullName` va `full_name` — turli kalitlar." },
+        { "id": "c", "text": "Bo'sh satr", "hint": "Majburiy (`Optional` bo'lmagan) xususiyat uchun kalit topilmasa default qiymat berilmaydi." },
+        { "id": "d", "text": "Kompilyatsiya xatosi", "hint": "Kod to'g'ri kompilyatsiya qilinadi — xato runtime'da dekodlashda." }
+      ],
+      "explanation": "`DecodingError.keyNotFound`. Tuzatish: `decoder.keyDecodingStrategy = .convertFromSnakeCase` yoki `enum CodingKeys: String, CodingKey { case id; case fullName = \"full_name\" }`. `catch`da xatoni chop eting (`print(error)`) — `DecodingError` qaysi kalit va yo'lda muammo borligini aniq aytadi.",
+      "reviewed": false
+    },
+    {
+      "id": "ios.data.005",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Code review: server 404 yoki 500 qaytarganda foydalanuvchi \"Ma'lumot formati noto'g'ri\" xabarini ko'radi. Muammo qayerda?",
+      "code": "func loadUser(id: Int) async throws -> User {\n    let url = baseURL.appending(path: \"users/\\(id)\")\n    let (data, _) = try await URLSession.shared.data(from: url)\n    return try JSONDecoder().decode(User.self, from: data)\n}",
+      "options": [
+        { "id": "a", "text": "`URLSession` HTTP xato status kodlarida exception tashlamaydi — faqat transport xatolarida (internet yo'q, timeout). Javob tekshirilmagani uchun xato tanasi `User` sifatida dekodlanib `DecodingError` beradi. `HTTPURLResponse.statusCode`ni tekshirib (200...299), aks holda aniq xato (`.notFound`, `.server(code)`) tashlash kerak", "correct": true },
+        { "id": "b", "text": "`appending(path:)` noto'g'ri URL yaratadi", "hint": "URL to'g'ri; so'rov serverga yetib boradi va 404 qaytadi." },
+        { "id": "c", "text": "`try await` o'rniga completion handler kerak", "hint": "Async API to'g'ri ishlatilgan; javob tekshiruvi yetishmaydi." },
+        { "id": "d", "text": "`JSONDecoder` har chaqiruvda yaratilgani uchun", "hint": "Bu kichik performance masalasi; noto'g'ri xato xabari sababi emas." }
+      ],
+      "explanation": "Yaxshi `APIClient`: status kod → domen xatosi, server xato tanasini (`{\"message\": ...}`) alohida dekodlash, 401 da token yangilash, bekor qilishni xato sifatida ko'rsatmaslik. Foydalanuvchiga ko'rsatiladigan matn xato turiga mos bo'lsin.",
+      "reviewed": false
+    },
+    {
+      "id": "ios.data.006",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Ro'yxatdagi rasmlar har scroll'da qayta yuklanmoqda. Rasm keshlashni qanday tuzish to'g'ri?",
+      "options": [
+        { "id": "a", "text": "Ikki daraja: xotira keshi (`NSCache` — xotira bosimida o'zi tozalanadi) dekodlangan va kerakli o'lchamga kichraytirilgan rasmlar uchun; disk keshi (`URLCache` HTTP kesh sarlavhalari bilan yoki o'z fayl keshi) xom ma'lumot uchun. Bir URL'ga parallel so'rovlarni birlashtirish va ekrandan chiqqan hujayra vazifasini bekor qilish", "correct": true },
+        { "id": "b", "text": "Barcha rasmlarni oddiy `[URL: UIImage]` lug'atda abadiy saqlash", "hint": "Cheksiz o'sadi va xotira bosimida tozalanmaydi — tizim ilovani o'ldiradi." },
+        { "id": "c", "text": "Rasmlarni `UserDefaults`da saqlash", "hint": "`UserDefaults` katta binar ma'lumot uchun emas — ishga tushishni sekinlashtiradi." },
+        { "id": "d", "text": "Keshlash kerak emas — `URLSession` hammasini avtomatik xotirada saqlaydi", "hint": "`URLCache` faqat HTTP kesh qoidalariga ko'ra va dekodlanmagan ma'lumotni; dekodlangan rasm keshi baribir kerak." }
+      ],
+      "explanation": "Dekodlash qimmat: 4000×3000 rasm ~48 MB xotira egallaydi — `ImageIO` (`CGImageSourceCreateThumbnailAtIndex`) bilan downsample. Tayyor yechimlar: Kingfisher, Nuke, SDWebImage. SwiftUI `AsyncImage` o'z keshiga ega emas (faqat `URLCache`).",
+      "reviewed": false
+    },
+    {
+      "id": "ios.data.007",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Core Data / SwiftData'da konkurentlik qoidalari qanday?",
+      "options": [
+        { "id": "a", "text": "Context (`NSManagedObjectContext` / `ModelContext`) va undan olingan ob'ektlar thread-safe emas — har biri o'z queue/actor'ida ishlatiladi. Core Data: UI uchun `viewContext` (main), fon import uchun `newBackgroundContext()` + `perform {}`; context'lar o'rtasida ob'ekt emas, `NSManagedObjectID` uzatiladi. SwiftData: fon ishi uchun `@ModelActor`, uzatish — `PersistentIdentifier`", "correct": true },
+        { "id": "b", "text": "Bitta context'ni barcha thread'lardan bemalol ishlatish mumkin", "hint": "Bu ma'lumot buzilishi va tasodifiy crash'larga olib keladi; debug uchun `-com.apple.CoreData.ConcurrencyDebug 1`." },
+        { "id": "c", "text": "Managed object'ni bir thread'dan boshqasiga to'g'ridan-to'g'ri uzatish to'g'ri", "hint": "Ob'ekt o'z context'iga bog'langan; boshqa context'da `objectID` bo'yicha qayta olinadi." },
+        { "id": "d", "text": "Fon context'dagi o'zgarishlar main context'da hech qachon ko'rinmaydi", "hint": "`automaticallyMergesChangesFromParent = true` yoki merge bildirishnomalari bilan ko'rinadi." }
+      ],
+      "explanation": "Katta import: fon context'da partiyalab saqlash, `NSBatchInsertRequest` (context'ni chetlab) — keyin o'zgarishlarni merge qilish. Persistent history tracking — extension'lar va bir nechta jarayon bilan ishlaganda kerak. SwiftData'da `@Query` faqat main context bilan ishlaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "ios.data.008",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Combine va `AsyncSequence` (async/await) qanday taqqoslanadi?",
+      "options": [
+        { "id": "a", "text": "Ikkalasi vaqt bo'yicha keladigan qiymatlar oqimi. Combine — push asosidagi reaktiv framework: boy operatorlar (`debounce`, `combineLatest`), `AnyCancellable` bilan obunani boshqarish, scheduler'lar. `AsyncSequence` — pull asosida, `for await` bilan chiziqli kod, structured concurrency bilan bekor qilish va xatolar tabiiy. Yangi kod ko'pincha async'ga yo'naladi, operatorlar uchun swift-async-algorithms", "correct": true },
+        { "id": "b", "text": "Combine Swift Concurrency bilan birga ishlatib bo'lmaydi", "hint": "Ko'prik bor: `publisher.values` — `AsyncSequence` qaytaradi." },
+        { "id": "c", "text": "`AsyncSequence`da xatolarni boshqarib bo'lmaydi", "hint": "`AsyncThrowingStream` va `for try await` bilan xatolar oddiy `try/catch`da." },
+        { "id": "d", "text": "Combine obunasi `AnyCancellable` saqlanmasa ham ishlayveradi", "hint": "Cancellable yo'q qilinganda obuna darhol bekor bo'ladi — ko'pincha \"hech narsa kelmayapti\" xatosining sababi." }
+      ],
+      "explanation": "Tanlov: mavjud Combine kod bazasi va murakkab oqim kombinatsiyalari — Combine; yangi, ketma-ket ishlov (bildirishnomalar, WebSocket xabarlari) — `AsyncStream`. `NotificationCenter.default.notifications(named:)` — tayyor async sequence.",
+      "reviewed": false
+    },
+    {
+      "id": "ios.data.009",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Offline-first ilovada (masalan, eslatmalar) foydalanuvchi internetsiz tahrirlaydi. Sinxronizatsiya arxitekturasi qanday bo'lishi kerak?",
+      "options": [
+        { "id": "a", "text": "Lokal DB — yagona haqiqat manbai (UI faqat undan o'qiydi); har o'zgarish lokal saqlanadi va \"outbox\" navbatiga yoziladi; tarmoq paydo bo'lganda navbat idempotent so'rovlar bilan yuboriladi (client-generated ID, retry + backoff); serverdan delta (`updatedSince`/cursor) olinadi; konflikt strategiyasi aniq: versiya bilan aniqlash, so'ng last-write-wins, maydon bo'yicha birlashtirish yoki foydalanuvchiga tanlash", "correct": true },
+        { "id": "b", "text": "Internet yo'q bo'lsa tahrirlashni taqiqlash", "hint": "Offline-first'ning maqsadi aynan internetsiz ishlash." },
+        { "id": "c", "text": "Har ishga tushishda butun ma'lumotni serverdan qayta yuklab, lokal o'zgarishlarni ustidan yozish", "hint": "Sinxronlanmagan lokal o'zgarishlar yo'qoladi va trafik isrof." },
+        { "id": "d", "text": "Konfliktlarni e'tiborsiz qoldirish — ular amalda bo'lmaydi", "hint": "Bir nechta qurilma yoki uzoq offline bo'lish bilan konflikt muqarrar; jim yo'qotish — eng yomon natija." }
+      ],
+      "explanation": "Qo'shimcha: o'chirishlar uchun tombstone, sinxronizatsiya holatini UI'da ko'rsatish, fon sinxronizatsiyasi (`BGTaskScheduler`) va ilova ochilganda. Murakkab holatlar uchun CRDT yoki CloudKit/sinxronizatsiya platformalari. Testlar: tarmoq uzilishi o'rtasida yuborish, takroriy yuborish.",
+      "reviewed": false
+    },
+    {
+      "id": "ios.data.010",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Bank ilovasida access/refresh tokenlarni saqlash va tarmoq xavfsizligi uchun to'g'ri yondashuv qaysi?",
+      "options": [
+        { "id": "a", "text": "Tokenlar Keychain'da, mos `kSecAttrAccessible` darajasi bilan (masalan, `AfterFirstUnlockThisDeviceOnly` — zaxira nusxaga va boshqa qurilmaga ko'chmaydi); sezgir amallar uchun biometrik himoya (`SecAccessControl` + LocalAuthentication). Faqat HTTPS (ATS), kerak bo'lsa certificate/public key pinning va pin'larni almashtirish rejasi; tokenlarni log'ga yozmaslik", "correct": true },
+        { "id": "b", "text": "Tokenlarni `UserDefaults`da Base64 bilan saqlash", "hint": "Base64 — shifrlash emas; `UserDefaults` zaxira nusxada ochiq holda bo'ladi." },
+        { "id": "c", "text": "Tokenni ilova kodi ichiga (hardcode) yozish", "hint": "Binar fayldan osongina chiqarib olinadi va almashtirib bo'lmaydi." },
+        { "id": "d", "text": "Pinning qilinsa, sertifikatni almashtirish rejasi kerak emas", "hint": "Server sertifikati yangilanganda eski pin bilan barcha klientlar ishlamay qoladi — zaxira pin va yangilash rejasi kerak." }
+      ],
+      "explanation": "Qo'shimcha: jailbreak/qurilma butunligi tekshiruvlari (App Attest), ilova fonga o'tganda sezgir ekranlarni yashirish, qisqa umrli access token va server tomonida refresh token rotatsiyasi. Xavfsizlik klient tomonida hech qachon to'liq emas — server barcha so'rovlarni mustaqil tekshirishi kerak.",
+      "reviewed": false
+    }
+  ]
+}
