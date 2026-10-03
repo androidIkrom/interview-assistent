@@ -166,8 +166,8 @@
     { "id": "core.http", "title": "HTTP, REST, tarmoq", "file": "core_http.json" },
     { "id": "core.security", "title": "Xavfsizlik asoslari", "file": "core_security.json" },
     { "id": "core.testing", "title": "Testlash asoslari", "file": "core_testing.json" },
-    { "id": "core.sysdesign", "title": "System design" },
-    { "id": "core.aicode", "title": "AI yordamida kod va code review" },
+    { "id": "core.sysdesign", "title": "System design", "file": "core_sysdesign.json" },
+    { "id": "core.aicode", "title": "AI yordamida kod va code review", "file": "core_aicode.json" },
     { "id": "core.mobile", "title": "Mobile umumiy", "file": "core_mobile.json" }
   ]
 }
