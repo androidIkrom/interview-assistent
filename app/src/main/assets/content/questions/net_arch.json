@@ -1,0 +1,125 @@
+{
+  "topic": "net.arch",
+  "questions": [
+    {
+      "id": "net.arch.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": ".NET'da Garbage Collector (GC) nima qiladi?",
+      "options": [
+        { "id": "a", "text": "Managed heap'dagi ob'ektlar xotirasini avtomatik boshqaradi: ilova `new` bilan ob'ekt yaratadi, GC vaqti-vaqti bilan root'lardan (stack, statik maydonlar) yetib bo'lmaydigan ob'ektlarni topib xotirasini bo'shatadi va heap'ni zichlaydi. Dasturchi xotirani qo'lda `free` qilmaydi", "correct": true },
+        { "id": "b", "text": "Ob'ekt ishlatilmay qolgan zahoti darhol o'chiradi", "hint": "GC yig'ishni o'zi tanlagan vaqtda (allokatsiya bosimi bo'yicha) bajaradi — deterministik emas." },
+        { "id": "c", "text": "Fayl, socket va DB ulanishlarni ham avtomatik va darhol yopadi", "hint": "Tashqi resurslar uchun `Dispose`/`using` kerak — GC faqat managed xotirani biladi." },
+        { "id": "d", "text": "GC faqat ilova yopilganda ishlaydi", "hint": "Ilova ishlayotgan paytda doimiy ravishda, kerak bo'lganda ishga tushadi." }
+      ],
+      "explanation": "Memory leak .NET'da ham bo'ladi: ob'ektga havola ushlanib qolsa (statik kolleksiya, obuna bo'linib bekor qilinmagan event, cheksiz kesh) GC uni yig'a olmaydi. `GC.Collect()`ni qo'lda chaqirish odatda xato — GC'ning evristikasini buzadi.",
+      "reviewed": false
+    },
+    {
+      "id": "net.arch.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "true_false",
+      "prompt": "Quyidagi fikr to'g'rimi?\n\n.NET'da GC bor, shuning uchun `FileStream` yoki `SqlConnection` bilan ishlagandan keyin `Dispose()` chaqirish (yoki `using`) shart emas.",
+      "options": [
+        { "id": "a", "text": "Ha", "hint": "GC ob'ektni qachon yig'ishi noma'lum — u ungacha fayl lock'ini va DB ulanishini ushlab turadi; pool tugab qolishi mumkin." },
+        { "id": "b", "text": "Yo'q", "correct": true }
+      ],
+      "explanation": "`using var conn = new SqlConnection(cs);` — scope oxirida ulanish pool'ga qaytadi. Dispose qilinmagan ulanishlar \"Timeout expired... max pool size was reached\" xatosiga olib keladi. Finalizer zaxira mexanizm, lekin kechikadi va GC'ga yuk qo'shadi.",
+      "reviewed": false
+    },
+    {
+      "id": "net.arch.003",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "GC avlodlari (Gen 0, 1, 2) va Large Object Heap (LOH) qanday ishlaydi?",
+      "options": [
+        { "id": "a", "text": "Ko'p ob'ektlar qisqa yashaydi degan farazga asoslangan: yangi ob'ektlar Gen 0'da, yig'ishdan omon qolganlar Gen 1, keyin Gen 2'ga ko'tariladi. Gen 0 yig'ish tez va tez-tez, Gen 2 (to'liq) — qimmat. 85 000 baytdan katta ob'ektlar LOH'ga tushadi — u Gen 2 bilan yig'iladi va default'da zichlanmaydi (fragmentatsiya)", "correct": true },
+        { "id": "b", "text": "Har bir avlod alohida thread'da ishlaydi", "hint": "Avlod — ob'ekt yoshi bo'yicha guruh, thread emas." },
+        { "id": "c", "text": "Gen 2 ob'ektlari hech qachon yig'ilmaydi", "hint": "Gen 2 to'liq yig'ishda yig'iladi — faqat kamroq va qimmatroq." },
+        { "id": "d", "text": "Ob'ekt hajmidan qat'i nazar hammasi Gen 0'dan boshlanadi", "hint": "Katta ob'ektlar (≥85 000 bayt) to'g'ridan-to'g'ri LOH'ga ajratiladi." }
+      ],
+      "explanation": "\"O'rta yoshda o'lish\" (Gen 2'gacha yashab keyin keraksiz bo'lish) eng qimmat pattern — masalan, uzoq keshlangan, lekin keyin tashlanadigan ob'ektlar. Katta buferlar uchun `ArrayPool<T>.Shared` LOH allokatsiyalarini kamaytiradi. Server GC (ASP.NET Core default) — har yadro uchun heap, throughput'ga yo'naltirilgan.",
+      "reviewed": false
+    },
+    {
+      "id": "net.arch.004",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Code review: 50 000 qatorli hisobotda bu metod juda sekin va ko'p xotira ishlatadi. Nima tuzatiladi?",
+      "code": "public string BuildCsv(IEnumerable<Row> rows)\n{\n    string csv = \"\";\n    foreach (var r in rows)\n    {\n        csv += r.Id + \",\" + r.Name + \",\" + r.Amount + \"\\n\";\n    }\n    return csv;\n}",
+      "options": [
+        { "id": "a", "text": "`string` o'zgarmas — har `+=` butun eski satrni yangi satrga nusxalaydi: O(n²) vaqt va katta satrlar LOH'ga tushib GC bosimi. `StringBuilder` (yoki to'g'ridan-to'g'ri `StreamWriter`ga yozish) ishlatish kerak; CSV qiymatlarini escape qilishni ham unutmaslik", "correct": true },
+        { "id": "b", "text": "`foreach` o'rniga `for` ishlatish kerak", "hint": "Sikl turi deyarli farq qilmaydi; qimmat qism — har iteratsiyada butun satrni nusxalash." },
+        { "id": "c", "text": "`\"\\n\"` o'rniga `Environment.NewLine` yozilsa tezlashadi", "hint": "Bu platforma moslik masalasi, performance muammosini hal qilmaydi." },
+        { "id": "d", "text": "Muammo yo'q — kompilyator `+=`ni avtomatik `StringBuilder`ga aylantiradi", "hint": "Bitta ifodadagi `+`lar `string.Concat`ga birlashadi, lekin sikl bo'ylab yig'ish optimallashtirilmaydi." }
+      ],
+      "explanation": "Katta eksportda butun natijani satr sifatida yig'ish o'rniga oqim bilan yozish (`Response.Body`, `StreamWriter`) — xotira O(1). CSV uchun CsvHelper kabi kutubxona vergul/qo'shtirnoqni to'g'ri escape qiladi. O'lchash: BenchmarkDotNet `[MemoryDiagnoser]` allokatsiyalarni ko'rsatadi.",
+      "reviewed": false
+    },
+    {
+      "id": "net.arch.005",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`Span<T>` va `Memory<T>` nima beradi va qanday cheklovlari bor?",
+      "options": [
+        { "id": "a", "text": "`Span<T>` — massiv, `stackalloc` yoki native xotiraning uzluksiz bo'lagiga nusxasiz, xavfsiz \"ko'rinish\": `text.AsSpan(0, 5)` yangi satr yaratmaydi, parsing allokatsiyasiz. `Span<T>` — `ref struct`: faqat stack'da yashaydi — class maydoni bo'la olmaydi, box qilinmaydi, `await`dan keyin ushlab turilmaydi. Asinxron yoki heap'da saqlash uchun `Memory<T>`", "correct": true },
+        { "id": "b", "text": "`Span<T>` — massivning tezroq nusxasi", "hint": "Nusxa emas — mavjud xotiraga ko'rinish (pointer + uzunlik)." },
+        { "id": "c", "text": "`Span<T>`ni class maydonida saqlab, keyin ishlatish mumkin", "hint": "`ref struct` heap'ga tusha olmaydi — kompilyator buni taqiqlaydi; buning uchun `Memory<T>`." },
+        { "id": "d", "text": "`Span<T>` faqat `unsafe` kodda ishlaydi", "hint": "Xavfsiz kodda ishlaydi va chegaralar tekshiriladi; `unsafe` shart emas." }
+      ],
+      "explanation": "Qo'llanish: protokol va fayl parsing (`Utf8Parser`, `int.Parse(ReadOnlySpan<char>)`), `string.Create`, `ArrayPool` buferlari bilan ishlash. Kestrel va System.Text.Json ichki ravishda shu primitivlarga qurilgan. Issiq yo'lda allokatsiyalarni kamaytirish GC pauzalarini qisqartiradi — lekin avval profiler bilan issiq yo'lni toping.",
+      "reviewed": false
+    },
+    {
+      "id": "net.arch.006",
+      "level": "strong_middle",
+      "type": "multi",
+      "kind": "concept",
+      "prompt": ".NET ilovada performance muammosini diagnostika qilish uchun qaysi vositalar mos? (bir nechta javob)",
+      "options": [
+        { "id": "a", "text": "`dotnet-counters` — CPU, GC, thread pool, so'rovlar sonini real vaqtda kuzatish", "correct": true },
+        { "id": "b", "text": "`dotnet-trace` / PerfView — CPU va allokatsiya profili, issiq metodlarni topish", "correct": true },
+        { "id": "c", "text": "`dotnet-dump` (yoki dotMemory) — xotira dump'ini olib, leak va qaysi ob'ektlar heap'ni egallaganini tahlil qilish", "correct": true },
+        { "id": "d", "text": "BenchmarkDotNet — ikki implementatsiyani mikro-benchmark bilan statistik ishonchli solishtirish", "correct": true },
+        { "id": "e", "text": "Debug konfiguratsiyasida `Stopwatch` bilan bir marta o'lchash — yetarli va ishonchli", "hint": "Debug build optimallashtirilmagan, JIT isinishi va shovqin hisobga olinmaydi; natija chalg'itadi." }
+      ],
+      "explanation": "Tartib: avval kuzatuvchanlik (metrikalar, OpenTelemetry trace'lar) bilan qaysi endpoint/bosqich sekinligini aniqlash, keyin profiler bilan ichiga kirish, o'zgarishni benchmark bilan tasdiqlash. Production'da `dotnet-monitor` — trace va dump'larni xavfsiz yig'ish uchun sidecar.",
+      "reviewed": false
+    },
+    {
+      "id": "net.arch.007",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "CQRS va MediatR'ni loyihaga qachon kiritish asosli?",
+      "options": [
+        { "id": "a", "text": "CQRS — o'qish va yozish modellarini ajratish: o'qish tomoni optimallashtirilgan proyeksiyalar (hatto alohida DB), yozish tomoni domen qoidalari bilan. O'qish/yozish yuklamasi va shakli keskin farq qilganda yoki murakkab domen bo'lganda foydali. MediatR — faqat in-process dispatcher (va pipeline behavior'lar); CQRS uchun majburiy emas, oddiy CRUD'da ortiqcha qatlam va navigatsiya qiyinligi qo'shadi", "correct": true },
+        { "id": "b", "text": "Har bir .NET loyihada boshidan CQRS + MediatR bo'lishi kerak", "hint": "Oddiy CRUD ilovada murakkablik foydadan oshib ketadi — ehtiyojga qarab kiritiladi." },
+        { "id": "c", "text": "CQRS — MediatR kutubxonasining boshqa nomi", "hint": "CQRS — arxitektura pattern; MediatR — uni (yoki boshqa narsani) implementatsiya qilish uchun ixtiyoriy vosita." },
+        { "id": "d", "text": "CQRS albatta event sourcing talab qiladi", "hint": "Ular ko'pincha birga tilga olinadi, lekin mustaqil — CQRS bitta oddiy DB bilan ham ishlaydi." }
+      ],
+      "explanation": "Yengil variant: command handler'lar va query servislarni oddiy DI bilan ajratish — MediatR'siz. Alohida o'qish DB'si eventual consistency beradi — UI va biznes buni ko'tarishi kerak. MediatR 12+ dan keyingi versiyalar tijoriy litsenziyaga o'tgan — bog'liqlik qarorida buni ham hisobga oling.",
+      "reviewed": false
+    },
+    {
+      "id": "net.arch.008",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "O'sib borayotgan .NET monolitini qanday tuzilmaga keltirish to'g'ri — mikroservislarmi yoki modulli monolitmi?",
+      "options": [
+        { "id": "a", "text": "Ko'pincha avval modulli monolit: domen bo'yicha modullar (alohida loyiha/assembly), har modul o'z ma'lumotlari va ochiq kontrakti bilan, modullar o'rtasida faqat interfeys yoki in-process event'lar; chegaralar arxitektura testlari bilan qo'riqlanadi. Mikroservisga faqat aniq sabab (mustaqil deploy, alohida masshtab, jamoa avtonomiyasi) bo'lganda va ishonchli messaging (outbox, idempotent consumer) bilan chiqariladi", "correct": true },
+        { "id": "b", "text": "Darhol har bir jadval uchun alohida mikroservis yaratish", "hint": "Taqsimlangan monolit: tarmoq chaqiruvlari, distributed tranzaksiyalar va deploy murakkabligi, foyda esa yo'q." },
+        { "id": "c", "text": "Monolitni o'zgartirmaslik — tuzilma faqat katta kompaniyalarga kerak", "hint": "Chegarasiz monolit vaqt o'tib \"big ball of mud\"ga aylanadi — o'zgarish narxi o'sadi." },
+        { "id": "d", "text": "Mikroservislar o'rtasida bitta umumiy DB jadvallarini to'g'ridan-to'g'ri bo'lishish", "hint": "Umumiy sxema servislarni qattiq bog'laydi — mustaqil deploy va o'zgarish imkoni yo'qoladi." }
+      ],
+      "explanation": "Modul chegaralari to'g'ri bo'lsa, keyin modulni servisga chiqarish nisbatan oson. Asboblar: NetArchTest/ArchUnitNET (bog'liqlik qoidalari), har modul uchun alohida `DbContext`/sxema, integratsiya event'lari uchun outbox (MassTransit, Wolverine). Mikroservislar operatsion yuk (observability, CI/CD, versiyalash) talab qiladi — jamoa tayyorligi muhim.",
+      "reviewed": false
+    }
+  ]
+}

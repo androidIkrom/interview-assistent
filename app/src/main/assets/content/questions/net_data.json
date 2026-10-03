@@ -1,0 +1,158 @@
+{
+  "topic": "net.data",
+  "questions": [
+    {
+      "id": "net.data.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "EF Core'da `DbContext` va `DbSet<T>` nima?",
+      "options": [
+        { "id": "a", "text": "EF Core — ORM: C# class'larni (entity) jadvallarga bog'laydi. `DbContext` — DB bilan ishlash sessiyasi: ulanish, change tracking, `SaveChanges`; `DbSet<T>` — bitta entity to'plami (jadval), unga LINQ yoziladi va EF uni SQL'ga tarjima qiladi: `db.Users.Where(u => u.IsActive).ToListAsync()`", "correct": true },
+        { "id": "b", "text": "`DbContext` — DB serverining o'zi", "hint": "Server tashqarida (SQL Server, PostgreSQL); `DbContext` — ilova tomonidagi ish birligi ob'ekti." },
+        { "id": "c", "text": "`DbSet<T>` — xotiradagi oddiy `List<T>`", "hint": "`DbSet` — `IQueryable<T>`: so'rov DB'da bajariladi, butun jadval xotiraga yuklanmaydi." },
+        { "id": "d", "text": "EF Core'da SQL yozib bo'lmaydi", "hint": "`FromSql`, `SqlQuery`, `ExecuteSql` bilan xom SQL ham ishlatish mumkin (parametrlar xavfsiz)." }
+      ],
+      "explanation": "`DbContext` qisqa yashashi kerak — odatda HTTP so'rov uchun bitta (scoped). Konfiguratsiya: `OnModelCreating` yoki `IEntityTypeConfiguration<T>` (Fluent API), atributlar (`[Key]`, `[MaxLength]`). Provider tanlanadi: `UseNpgsql`, `UseSqlServer`, `UseSqlite`.",
+      "reviewed": false
+    },
+    {
+      "id": "net.data.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "EF Core migratsiyalari qanday ishlaydi?",
+      "options": [
+        { "id": "a", "text": "Model o'zgargach `dotnet ef migrations add AddUserEmail` — joriy model va oxirgi snapshot farqidan `Up`/`Down` metodli migratsiya klassi yaratiladi; `dotnet ef database update` uni DB'ga qo'llaydi va `__EFMigrationsHistory` jadvaliga yozadi. Migratsiya fayllari git'da saqlanadi va review qilinadi", "correct": true },
+        { "id": "b", "text": "EF Core har ishga tushishda jadvallarni o'chirib qayta yaratadi", "hint": "Bu `EnsureDeleted/EnsureCreated` xulqi (faqat test/prototip uchun); migratsiyalar ma'lumotni saqlab inkremental o'zgartiradi." },
+        { "id": "c", "text": "Migratsiya faqat yangi jadval qo'shishi mumkin", "hint": "Ustun qo'shish/o'chirish, indeks, nomni o'zgartirish, xom SQL — hammasi mumkin." },
+        { "id": "d", "text": "Migratsiya fayllarini qo'lda tahrirlash taqiqlangan", "hint": "Ko'pincha kerak: ma'lumotni ko'chirish (`migrationBuilder.Sql`), rename'ni drop+add o'rniga to'g'rilash." }
+      ],
+      "explanation": "Production'da `database update`ni ilova ishga tushganda avtomatik bajarish o'rniga — `dotnet ef migrations script --idempotent` bilan SQL skript yoki migration bundle, CI/CD bosqichida. Generatsiya qilingan migratsiyani doim tekshiring: ustun nomini o'zgartirish ba'zan drop + add bo'lib, ma'lumot yo'qolishiga olib keladi.",
+      "reviewed": false
+    },
+    {
+      "id": "net.data.003",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "`Users` jadvalida `Id = 1` foydalanuvchi bor. Quyidagi kod DB'ga qanday SQL yuboradi?",
+      "code": "var user = await db.Users.FirstAsync(u => u.Id == 1);\nuser.Name = \"Vali\";\nuser.Name = \"Gani\";\n\nawait db.SaveChangesAsync();",
+      "options": [
+        { "id": "a", "text": "Bitta SELECT, keyin `SaveChangesAsync`da bitta UPDATE (Name = 'Gani')", "correct": true },
+        { "id": "b", "text": "Bitta SELECT va ikkita UPDATE — har o'zlashtirish uchun", "hint": "Xususiyatga yozish DB'ga bormaydi; change tracker `SaveChanges` paytidagi yakuniy holatni solishtiradi." },
+        { "id": "c", "text": "Faqat SELECT — `Update()` chaqirilmagani uchun o'zgarish saqlanmaydi", "hint": "Kuzatilayotgan (tracked) entity'ning o'zgarishlarini EF o'zi aniqlaydi — `Update()` shart emas." },
+        { "id": "d", "text": "Hech qanday SQL — `FirstAsync` keshdan o'qiydi", "hint": "Birinchi so'rov DB'ga boradi; context keshidan faqat allaqachon kuzatilayotgan entity'lar qayta ishlatiladi." }
+      ],
+      "explanation": "Change tracking: yuklangan entity'ning asl qiymatlari snapshot'da saqlanadi; `SaveChanges` `DetectChanges` qilib, faqat o'zgargan ustunlar uchun UPDATE yaratadi va hammasini bitta tranzaksiyada yuboradi. `Add` → INSERT, `Remove` → DELETE.",
+      "reviewed": false
+    },
+    {
+      "id": "net.data.004",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`AsNoTracking()` nima qiladi va qachon ishlatiladi?",
+      "options": [
+        { "id": "a", "text": "Natija entity'larini change tracker'ga qo'shmaydi: snapshot va identity map xarajati yo'q — tezroq va kam xotira. Faqat o'qish so'rovlari (ro'yxat, hisobot, API GET) uchun. Natijani o'zgartirib `SaveChanges` qilsangiz hech narsa saqlanmaydi", "correct": true },
+        { "id": "b", "text": "So'rov natijasini keshlamaslik uchun — har safar DB'ga borishga majburlaydi", "hint": "EF Core so'rov natijalarini keshlamaydi; `AsNoTracking` change tracking'ni o'chiradi." },
+        { "id": "c", "text": "Tranzaksiyani o'chiradi", "hint": "Tranzaksiya bilan bog'liq emas — faqat kuzatish." },
+        { "id": "d", "text": "Yangilanadigan entity'lar uchun ham doim ishlatish kerak", "hint": "Kuzatilmagan entity o'zgarishini EF bilmaydi — yangilash uchun tracking kerak (yoki `Attach`/`Update`)." }
+      ],
+      "explanation": "Butun context uchun: `QueryTrackingBehavior.NoTracking`. Bir xil entity bir necha marta qaytsa, `AsNoTracking` alohida ob'ektlar yaratadi; `AsNoTrackingWithIdentityResolution` takrorlarni birlashtiradi. Projection (`Select` bilan DTO) — umuman tracking bo'lmaydi va ko'pincha eng samarali.",
+      "reviewed": false
+    },
+    {
+      "id": "net.data.005",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Code review: 100 ta buyurtma uchun bu kod DB'ga 101 ta so'rov yuboradi. Sabab va tuzatish?",
+      "code": "// Lazy loading proxy'lari yoqilgan\nvar orders = await db.Orders\n    .Where(o => o.CreatedAt > since)\n    .ToListAsync();\n\nforeach (var order in orders)\n{\n    Console.WriteLine($\"{order.Id}: {order.Customer.Name}\");\n}",
+      "options": [
+        { "id": "a", "text": "N+1 muammo: siklda har `order.Customer`ga murojaat lazy loading bilan alohida SELECT yuboradi. Tuzatish: eager loading — `.Include(o => o.Customer)` (bitta JOIN so'rov) yoki faqat kerakli maydonlarni projection: `.Select(o => new { o.Id, CustomerName = o.Customer.Name })`", "correct": true },
+        { "id": "b", "text": "`ToListAsync` o'rniga `ToList` ishlatish", "hint": "Sinxron/asinxron farqi so'rovlar sonini o'zgartirmaydi." },
+        { "id": "c", "text": "`Where` filtri sabab — uni olib tashlash kerak", "hint": "Filtr bitta so'rovda bajariladi; qo'shimcha 100 so'rov sikl ichidagi navigatsiyadan." },
+        { "id": "d", "text": "Muammo yo'q — EF Core `Customer`larni avtomatik birga yuklaydi", "hint": "Navigatsiya default'da yuklanmaydi; lazy loading esa har murojaatda alohida so'rov beradi." }
+      ],
+      "explanation": "Lazy loading (`UseLazyLoadingProxies`, `virtual` navigatsiyalar) N+1'ni yashiradi — ko'p jamoalar uni o'chiq qoldiradi. Logging bilan aniqlash: `LogTo(Console.WriteLine, LogLevel.Information)` yoki MiniProfiler. Ko'p kolleksiya `Include` qilinsa — cartesian explosion; `AsSplitQuery()` ko'rib chiqiladi.",
+      "reviewed": false
+    },
+    {
+      "id": "net.data.006",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "EF Core 3+ da `db.Users.Where(u => IsVip(u.Email)).ToList()` (bu yerda `IsVip` oddiy C# metod) bajarilganda nima bo'ladi?",
+      "options": [
+        { "id": "a", "text": "`InvalidOperationException` — so'rov SQL'ga tarjima qilinmaydi (\"could not be translated\"). EF Core 3'dan beri `Where` kabi oraliq qismlarda yashirin client evaluation yo'q; shartni tarjima qilinadigan ifodaga aylantirish yoki ataylab `AsEnumerable()` bilan xotiraga o'tish kerak (butun to'plam yuklanishini anglab)", "correct": true },
+        { "id": "b", "text": "EF jim holda butun jadvalni yuklab, filtrni xotirada bajaradi", "hint": "Bu EF Core 2.x xulqi edi; jim katta yuklashlar sabab 3.0 da exception'ga almashtirilgan." },
+        { "id": "c", "text": "`IsVip` SQL'ga avtomatik ravishda funksiya sifatida ko'chiriladi", "hint": "EF ixtiyoriy C# metod tanasini tahlil qilmaydi; faqat ma'lum metodlar yoki `HasDbFunction` bilan ro'yxatdan o'tganlar." },
+        { "id": "d", "text": "Kompilyatsiya xatosi", "hint": "Expression tree sifatida kompilyatsiya qilinadi; muammo runtime'da provider tarjimasida." }
+      ],
+      "explanation": "Yakuniy `Select` proyeksiyasida client evaluation hali ham ruxsat etiladi (ma'lumot allaqachon olingan). Tarjima qilinadigan metodlar: `string.Contains/StartsWith`, `EF.Functions.Like`, sana amallari va h.k. Murakkab qoidani hisoblangan ustun yoki DB funksiyasiga (`HasDbFunction`) ko'chirish mumkin.",
+      "reviewed": false
+    },
+    {
+      "id": "net.data.007",
+      "level": "strong_middle",
+      "type": "multi",
+      "kind": "concept",
+      "prompt": "Sekin EF Core so'rovini optimallashtirishning qaysi usullari to'g'ri? (bir nechta javob)",
+      "options": [
+        { "id": "a", "text": "Butun entity o'rniga `Select` bilan faqat kerakli ustunlarni DTO'ga proyeksiya qilish", "correct": true },
+        { "id": "b", "text": "Bir nechta kolleksiya `Include` qilinib natija qatorlari keskin ko'paysa (cartesian explosion), `AsSplitQuery()` ishlatish", "correct": true },
+        { "id": "c", "text": "Generatsiya qilingan SQL'ni log'da ko'rib, `WHERE`/`ORDER BY` ustunlariga indeks qo'shish (`HasIndex`)", "correct": true },
+        { "id": "d", "text": "So'rovdan oldin `ToList()` qilib, filtrlashni xotirada bajarish", "hint": "Butun jadval yuklanadi — DB indekslari ishlamaydi, tarmoq va xotira isrof." },
+        { "id": "e", "text": "Har doim lazy loading yoqib qo'yish", "hint": "Lazy loading N+1 so'rovlarga olib keladi — sekinlashtiradi." }
+      ],
+      "explanation": "Yana: `AsNoTracking` o'qish uchun, sahifalash (`Skip/Take` o'rniga keyset pagination katta offset'larda), issiq so'rovlar uchun compiled query (`EF.CompileAsyncQuery`), ommaviy yangilash uchun `ExecuteUpdateAsync`. Avval o'lchang: `ToQueryString()`, `EXPLAIN ANALYZE` / execution plan.",
+      "reviewed": false
+    },
+    {
+      "id": "net.data.008",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Ikki administrator bir vaqtda bitta mahsulot narxini tahrirlaydi — ikkinchisining saqlashi birinchisini jim yo'qotmasligi kerak. EF Core'da qanday hal qilinadi?",
+      "options": [
+        { "id": "a", "text": "Optimistic concurrency: entity'ga concurrency token qo'shish (SQL Server'da `[Timestamp] byte[] RowVersion`, PostgreSQL'da `xmin` yoki `[ConcurrencyCheck]` versiya ustuni). EF UPDATE'ga `WHERE RowVersion = @original` qo'shadi; 0 qator o'zgarsa `DbUpdateConcurrencyException` tashlanadi — ilova foydalanuvchiga konflikt haqida aytadi yoki qayta yuklab birlashtiradi", "correct": true },
+        { "id": "b", "text": "EF Core buni avtomatik hal qiladi — oxirgi saqlash g'olib bo'ladi va bu to'g'ri", "hint": "\"Last write wins\" — aynan jim yo'qotish; token bo'lmasa EF konfliktni aniqlamaydi." },
+        { "id": "c", "text": "Har tahrirlashda butun jadvalni `LOCK TABLE` qilish", "hint": "Pessimistik va qo'pol: boshqa barcha yozishlarni to'xtatadi, foydalanuvchi forma ochib turgan vaqt davomida lock ushlab bo'lmaydi." },
+        { "id": "d", "text": "`SaveChanges`ni ikki marta chaqirish", "hint": "Konfliktni aniqlamaydi — ikkinchi chaqiruv shunchaki o'zgarishsiz qaytadi." }
+      ],
+      "explanation": "Web'da RowVersion klientga (forma/ETag) beriladi va saqlashda qaytariladi — aks holda tekshiruv faqat bitta so'rov ichida ishlaydi. HTTP'da konflikt — 409 yoki `If-Match`/412. Pessimistik lock (`SELECT ... FOR UPDATE`) qisqa, server tomonidagi kritik amallar (balans) uchun mos.",
+      "reviewed": false
+    },
+    {
+      "id": "net.data.009",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Yuqori yuklamali API'da `DbContext` lifetime va pooling bo'yicha to'g'ri yondashuv qaysi?",
+      "options": [
+        { "id": "a", "text": "`DbContext` thread-safe emas va qisqa ish birligi uchun: so'rov uchun scoped. Yaratish xarajatini kamaytirish — `AddDbContextPool` (context instansiyalari qayta ishlatiladi; context'da so'rovga xos holat saqlamaslik kerak). Fon va parallel ish — `IDbContextFactory<T>` bilan har vazifaga alohida context. DB ulanishlari baribir ADO.NET connection pool'dan olinadi", "correct": true },
+        { "id": "b", "text": "Bitta singleton `DbContext` — ulanish bir marta ochiladi, eng tez", "hint": "Parallel so'rovlar bitta context'da exception beradi, change tracker cheksiz o'sadi, eskirgan ma'lumot qaytadi." },
+        { "id": "c", "text": "Har bir LINQ so'rov uchun yangi `DbContext` yaratib, bitta biznes amalni bir nechta context'ga bo'lish", "hint": "Bir amaldagi o'zgarishlar bitta `SaveChanges` (tranzaksiya) ichida bo'lishi kerak; ortiqcha bo'lish konsistentlikni buzadi." },
+        { "id": "d", "text": "Context pooling DB ulanishlar sonini kamaytirish uchun", "hint": "Ulanishlarni ADO.NET connection pool boshqaradi; context pooling .NET ob'ektlari yaratish xarajatini kamaytiradi." }
+      ],
+      "explanation": "Connection pool hajmi (`Max Pool Size`) va DB `max_connections` instansiyalar soniga ko'paytirib hisoblanishi kerak — gorizontal masshtabda PgBouncer kabi tashqi pooler. Pooled context'da `OnConfiguring` va konstruktorga holat qo'shish xato — `DbContext` reset qilinadi, lekin o'z maydonlaringiz emas.",
+      "reviewed": false
+    },
+    {
+      "id": "net.data.010",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "500 000 ta yozuvning statusini shart bo'yicha yangilash va murakkab hisobot so'rovlari kerak. EF Core bilan qanday strategiya to'g'ri?",
+      "options": [
+        { "id": "a", "text": "Ommaviy yangilash uchun entity'larni yuklamasdan bitta SQL: EF Core 7+ `ExecuteUpdateAsync`/`ExecuteDeleteAsync` (change tracker'ni chetlab o'tadi). Og'ir hisobotlar uchun xom SQL (`SqlQuery<T>`) yoki Dapper, DB view/materialized view; oddiy CRUD va domen logikasi EF'da qoladi — vosita vazifaga qarab", "correct": true },
+        { "id": "b", "text": "Hammasini `ToListAsync()` bilan yuklab, siklda o'zgartirib, bitta `SaveChangesAsync`", "hint": "500 000 entity xotiraga yuklanadi va kuzatiladi; har qator uchun alohida UPDATE — juda sekin." },
+        { "id": "c", "text": "EF Core'dan butunlay voz kechib, hamma joyda xom SQL yozish", "hint": "CRUD, migratsiya va tiplangan so'rovlar foydasi yo'qoladi; gibrid yondashuv odatda yaxshiroq." },
+        { "id": "d", "text": "Har 1000 ta yozuvdan keyin yangi `DbContext` yaratib, entity'larni yuklab yangilash", "hint": "Xotira muammosini yumshatadi, lekin hamon yarim million alohida UPDATE va yuklash — bitta set-based so'rovdan ancha sekin." }
+      ],
+      "explanation": "`ExecuteUpdate` change tracker'dagi entity'larni yangilamaydi — keyin xuddi shu context'da eskirgan qiymatlar ko'rinishi mumkin. Katta yangilash uzoq lock va log o'sishi beradi — partiyalab (batch) bajarish va tranzaksiya chegaralarini rejalashtirish. Ommaviy qo'shish uchun `SqlBulkCopy`/`COPY` yoki EFCore.BulkExtensions.",
+      "reviewed": false
+    }
+  ]
+}

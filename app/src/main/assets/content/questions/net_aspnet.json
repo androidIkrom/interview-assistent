@@ -1,0 +1,203 @@
+{
+  "topic": "net.aspnet",
+  "questions": [
+    {
+      "id": "net.aspnet.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "ASP.NET Core'da controller va minimal API qanday farqlanadi?",
+      "options": [
+        { "id": "a", "text": "Controller — `ControllerBase`dan meros olgan class, action metodlar va atributlar (`[HttpGet]`, `[Route]`, `[ApiController]`) bilan; filtrlar, model validatsiya konvensiyalari tayyor. Minimal API — `app.MapGet(\"/users/{id}\", handler)` kabi to'g'ridan-to'g'ri endpoint'lar: kam boilerplate, kichik servis va mikroservislar uchun qulay. Ikkalasi bir xil pipeline, DI va routing ustida ishlaydi", "correct": true },
+        { "id": "b", "text": "Minimal API faqat test va prototip uchun, production'da ishlatilmaydi", "hint": "Production uchun to'liq qo'llab-quvvatlanadi: DI, validatsiya, auth, OpenAPI, endpoint filtrlar bor." },
+        { "id": "c", "text": "Controller'larda DI ishlamaydi", "hint": "Constructor injection — controller'larning odatiy usuli." },
+        { "id": "d", "text": "Minimal API alohida web server ishlatadi", "hint": "Ikkalasi ham Kestrel va bir xil middleware pipeline'da." }
+      ],
+      "explanation": "Tanlov ko'pincha jamoa uslubi: katta API'da controller'lar tuzilmani beradi; minimal API'da `MapGroup` bilan guruhlash va endpoint'larni alohida fayllarga ajratish kerak. Minimal API Native AOT bilan yaxshiroq ishlaydi. Bitta ilovada aralash ishlatish mumkin.",
+      "reviewed": false
+    },
+    {
+      "id": "net.aspnet.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "ASP.NET Core'da Dependency Injection nima va qanday ishlatiladi?",
+      "options": [
+        { "id": "a", "text": "Class o'z bog'liqliklarini o'zi yaratmaydi — ular tashqaridan (odatda constructor orqali) beriladi. `Program.cs`da ro'yxatga olinadi: `builder.Services.AddScoped<IOrderService, OrderService>();` — framework controller yoki handler yaratganda kerakli servisni avtomatik uzatadi. Natija: bo'sh bog'lanish, testda mock bilan almashtirish oson", "correct": true },
+        { "id": "b", "text": "DI — har bir servisni `new` bilan kerakli joyda yaratish", "hint": "Aynan buning teskarisi: yaratish mas'uliyati container'ga o'tadi." },
+        { "id": "c", "text": "DI uchun albatta Autofac kabi tashqi kutubxona kerak", "hint": "ASP.NET Core'da built-in container bor (`Microsoft.Extensions.DependencyInjection`)." },
+        { "id": "d", "text": "DI faqat controller'larda ishlaydi", "hint": "Middleware, background service, minimal API handler va boshqa servislarga ham inject qilinadi." }
+      ],
+      "explanation": "Interfeysga bog'lanish — implementatsiyani almashtirish imkoni (masalan, `IEmailSender` → testda fake). `IServiceProvider.GetService` bilan qo'lda olish (service locator) — anti-pattern, bog'liqlikni yashiradi. Lifetime'lar (transient, scoped, singleton) — keyingi muhim mavzu.",
+      "reviewed": false
+    },
+    {
+      "id": "net.aspnet.003",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`[HttpGet(\"{id:int}\")] public IActionResult Get(int id, [FromQuery] bool full)` — `GET /api/users/42?full=true` so'rovida qiymatlar qayerdan olinadi?",
+      "options": [
+        { "id": "a", "text": "Model binding: `id` route segmentidan (42, `int` constraint bilan), `full` query string'dan (true). `[FromBody]` — JSON tanadan, `[FromHeader]` — header'dan, `[FromServices]` — DI'dan", "correct": true },
+        { "id": "b", "text": "Ikkalasi ham JSON body'dan", "hint": "GET so'rovida odatda body bo'lmaydi; manba atributlar va route shabloni bilan aniqlanadi." },
+        { "id": "c", "text": "`id` query string'dan, `full` route'dan", "hint": "Route shablonidagi `{id:int}` segment aynan `id` parametrga bog'lanadi." },
+        { "id": "d", "text": "Parametrlar qo'lda `HttpContext.Request`dan o'qilishi shart", "hint": "Model binding buni avtomatik bajaradi va tiplarga o'giradi." }
+      ],
+      "explanation": "`{id:int}` constraint — `/api/users/abc` bu route'ga mos kelmaydi (404). `[ApiController]` bilan murakkab tiplar default'da body'dan, oddiylar route/query'dan olinadi. Binding xatosi `ModelState`ga yoziladi va `[ApiController]` avtomatik 400 qaytaradi.",
+      "reviewed": false
+    },
+    {
+      "id": "net.aspnet.004",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "ASP.NET Core'da konfiguratsiya (`appsettings.json`, muhitlar) qanday ishlaydi?",
+      "options": [
+        { "id": "a", "text": "Bir nechta manba qatlam-qatlam o'qiladi: `appsettings.json` → `appsettings.{Environment}.json` → user secrets (Development) → environment variables → command line; keyingisi oldingisini ustidan yozadi. Muhit `ASPNETCORE_ENVIRONMENT` bilan tanlanadi. Qiymatlar `IConfiguration` yoki tiplangan `IOptions<T>` orqali olinadi", "correct": true },
+        { "id": "b", "text": "Faqat `appsettings.json` o'qiladi — boshqa manbalar yo'q", "hint": "Environment variable va boshqa provider'lar default'da ulangan — production'da sirlar odatda shu yo'l bilan beriladi." },
+        { "id": "c", "text": "Parol va API kalitlarni `appsettings.json`ga yozib git'ga qo'yish normal", "hint": "Sirlar repozitoriyga tushmasligi kerak: lokal — user secrets, production — env yoki Key Vault." },
+        { "id": "d", "text": "Konfiguratsiya o'zgarsa ilovani qayta kompilyatsiya qilish kerak", "hint": "Fayl ishga tushganda o'qiladi; `IOptionsMonitor` hatto qayta ishga tushirmasdan yangilanishni oladi." }
+      ],
+      "explanation": "Options pattern: `builder.Services.Configure<SmtpOptions>(builder.Configuration.GetSection(\"Smtp\"))` → `IOptions<SmtpOptions>` inject. `ValidateDataAnnotations().ValidateOnStart()` — noto'g'ri sozlama bilan ilova ishga tushmasin. Env variable'da ichma-ich kalit `Smtp__Host` (ikki pastki chiziq).",
+      "reviewed": false
+    },
+    {
+      "id": "net.aspnet.005",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "DI lifetime'lari — transient, scoped, singleton — qanday farqlanadi?",
+      "options": [
+        { "id": "a", "text": "Transient — har so'ralganda yangi instansiya; scoped — har HTTP so'rov (scope) uchun bitta, so'rov ichida bo'lishiladi (`DbContext` odatda scoped); singleton — ilova umri davomida bitta, barcha so'rovlar va threadlar uchun umumiy, shuning uchun thread-safe bo'lishi shart", "correct": true },
+        { "id": "b", "text": "Scoped — har thread uchun bitta instansiya", "hint": "Scope thread'ga emas, HTTP so'rovga (yoki qo'lda yaratilgan `IServiceScope`ga) bog'liq." },
+        { "id": "c", "text": "Singleton — har foydalanuvchi uchun bitta", "hint": "Foydalanuvchi tushunchasi yo'q: singleton butun ilova uchun yagona." },
+        { "id": "d", "text": "Transient servis hech qachon dispose qilinmaydi", "hint": "Container yaratgan `IDisposable` transient'lar scope oxirida dispose qilinadi (root scope'da esa ilova to'xtaguncha yig'ilib qoladi)." }
+      ],
+      "explanation": "Tanlov: holatsiz, yengil — transient; so'rov konteksti (`DbContext`, joriy foydalanuvchi) — scoped; qimmat yaratiladigan, thread-safe (kesh, `HttpClient` factory, konfiguratsiya) — singleton. Qoidalar: uzun yashovchi servis qisqa yashovchini ushlab qolmasligi kerak (captive dependency). `ValidateScopes` Development'da buni ushlaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "net.aspnet.006",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "`GET /` so'rovida javob tanasiga nima yoziladi?",
+      "code": "app.Use(async (ctx, next) =>\n{\n    await ctx.Response.WriteAsync(\"A\");\n    await next();\n    await ctx.Response.WriteAsync(\"B\");\n});\napp.Use(async (ctx, next) =>\n{\n    await ctx.Response.WriteAsync(\"C\");\n    await next();\n    await ctx.Response.WriteAsync(\"D\");\n});\napp.Run(async ctx => await ctx.Response.WriteAsync(\"E\"));",
+      "options": [
+        { "id": "a", "text": "ACEDB", "correct": true },
+        { "id": "b", "text": "ABCDE", "hint": "`await next()` keyingi middleware'ni chaqiradi va u tugaguncha kutadi — `B` qaytish yo'lida yoziladi." },
+        { "id": "c", "text": "ACEBD", "hint": "Qaytish yo'li teskari tartibda: ichki middleware (C/D) avval tugaydi." },
+        { "id": "d", "text": "E", "hint": "`app.Run` terminal, lekin oldingi `Use` middleware'lari baribir ishlaydi." }
+      ],
+      "explanation": "Pipeline — \"matryoshka\": so'rov yuqoridan pastga, javob pastdan yuqoriga. `app.Run` — terminal (keyingisini chaqirmaydi). Amalda javob boshlangandan keyin (`Response.HasStarted`) header yoki status kodni o'zgartirib bo'lmaydi — shuning uchun real middleware'lar odatda `next()`dan keyin tanaga yozmaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "net.aspnet.007",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Nega `app.UseAuthentication()` `app.UseAuthorization()`dan oldin turishi kerak?",
+      "options": [
+        { "id": "a", "text": "Middleware'lar ro'yxatdagi tartibda ishlaydi: authentication so'rovdan (cookie, JWT) foydalanuvchini aniqlab `HttpContext.User`ni to'ldiradi; authorization shu `User` asosida ruxsatni tekshiradi. Tartib teskari bo'lsa, authorization bo'sh (anonim) foydalanuvchini ko'radi va himoyalangan endpoint'lar 401 qaytaradi", "correct": true },
+        { "id": "b", "text": "Tartib ahamiyatsiz — framework o'zi saralaydi", "hint": "Middleware tartibi aynan `Program.cs`dagi chaqiruvlar tartibi; framework uni o'zgartirmaydi." },
+        { "id": "c", "text": "Authorization foydalanuvchini aniqlaydi, authentication ruxsatni tekshiradi", "hint": "Authentication — \"kimsan?\", authorization — \"bunga ruxsating bormi?\"." },
+        { "id": "d", "text": "`UseAuthorization` `UseRouting`dan oldin turishi kerak", "hint": "Authorization qaysi endpoint (va uning `[Authorize]` metadata'si) tanlanganini bilishi uchun routing'dan keyin turadi." }
+      ],
+      "explanation": "Tipik tartib: exception handler → HTTPS/HSTS → static files → routing → CORS → authentication → authorization → endpoint'lar. .NET 7+ `WebApplication` routing'ni avtomatik qo'shadi, lekin auth middleware'lar tartibi baribir muhim. 401 — autentifikatsiya yo'q, 403 — autentifikatsiya bor, lekin ruxsat yo'q.",
+      "reviewed": false
+    },
+    {
+      "id": "net.aspnet.008",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`[ApiController]` atributi model validatsiyasida nima beradi?",
+      "options": [
+        { "id": "a", "text": "DTO'dagi DataAnnotations (`[Required]`, `[Range]`, `[EmailAddress]`) binding vaqtida tekshiriladi; `ModelState` noto'g'ri bo'lsa action umuman chaqirilmaydi — avtomatik 400 va `ValidationProblemDetails` (maydonlar bo'yicha xatolar) qaytadi. Shuningdek binding manbalarini konvensiya bo'yicha aniqlaydi", "correct": true },
+        { "id": "b", "text": "Validatsiyani o'chiradi — tekshiruv qo'lda yozilishi kerak", "hint": "Teskari: `ModelState.IsValid` tekshiruvini avtomatlashtiradi." },
+        { "id": "c", "text": "Validatsiya xatosida 500 qaytaradi", "hint": "Kirish xatosi — klient xatosi: 400 Bad Request." },
+        { "id": "d", "text": "Faqat JSON formatini tekshiradi, atributlarni emas", "hint": "DataAnnotations va `IValidatableObject` qoidalari ham tekshiriladi." }
+      ],
+      "explanation": "Murakkab qoidalar uchun FluentValidation keng tarqalgan. Minimal API'da .NET 10'gacha avtomatik validatsiya yo'q edi — endpoint filtr yoki kutubxona ishlatilgan. Biznes qoidalari (masalan, \"balans yetarli\") — servis qatlamida, kirish validatsiyasidan alohida.",
+      "reviewed": false
+    },
+    {
+      "id": "net.aspnet.009",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Code review: bu ro'yxatdan o'tkazishda qanday xato bor?",
+      "code": "builder.Services.AddDbContext<AppDbContext>(); // scoped\nbuilder.Services.AddSingleton<PriceCache>();\n\npublic class PriceCache\n{\n    private readonly AppDbContext _db;\n    public PriceCache(AppDbContext db) => _db = db;\n\n    public Task<decimal> GetAsync(int id) =>\n        _db.Prices.Where(p => p.Id == id).Select(p => p.Value).FirstAsync();\n}",
+      "options": [
+        { "id": "a", "text": "Captive dependency: singleton scoped `DbContext`ni ushlab oladi — u birinchi scope'dan \"qochib\" ilova umri bo'yi yashaydi, barcha so'rovlar bitta `DbContext`ni parallel ishlatadi (thread-safe emas), change tracker cheksiz o'sadi. Yechim: `IServiceScopeFactory` bilan har amalda scope yaratish yoki `IDbContextFactory<T>`", "correct": true },
+        { "id": "b", "text": "`FirstAsync` o'rniga `First` yozish kerak", "hint": "Asinxron chaqiruv to'g'ri; muammo lifetime'lar nomuvofiqligida." },
+        { "id": "c", "text": "Singleton servislarga hech narsa inject qilib bo'lmaydi", "hint": "Singleton boshqa singleton yoki transient'larni oladi; xavfli faqat qisqa yashovchi (scoped) bog'liqlik." },
+        { "id": "d", "text": "Muammo yo'q — DI container lifetime'larni o'zi moslaydi", "hint": "Container moslamaydi; Development'da `ValidateScopes` bu holatni ishga tushishda exception bilan ushlaydi." }
+      ],
+      "explanation": "Qoida: servis o'zidan qisqa yashovchi bog'liqlikni constructor orqali olmasligi kerak (singleton ← scoped/transient-with-state). Production'da `ValidateScopes` default o'chiq — xato faqat yuklama ostida g'alati concurrency exception'lar sifatida chiqadi. `builder.Host.UseDefaultServiceProvider(o => { o.ValidateScopes = true; o.ValidateOnBuild = true; })` — hamma muhitda yoqish mumkin.",
+      "reviewed": false
+    },
+    {
+      "id": "net.aspnet.010",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`BackgroundService` ichida scoped servis (masalan, `DbContext`) qanday to'g'ri ishlatiladi?",
+      "options": [
+        { "id": "a", "text": "Hosted service singleton sifatida yashaydi, shuning uchun scoped servisni constructor'da olmaydi; `IServiceScopeFactory` inject qilib, har ish birligida `using var scope = _scopeFactory.CreateScope();` va `scope.ServiceProvider.GetRequiredService<AppDbContext>()`. `ExecuteAsync`dagi `stoppingToken`ni hurmat qilish va exception'larni ushlab log qilish kerak", "correct": true },
+        { "id": "b", "text": "`DbContext`ni constructor'da olib, butun umr ishlatish", "hint": "Bu captive dependency: bitta `DbContext` cheksiz yashaydi va change tracker o'sadi." },
+        { "id": "c", "text": "Har iteratsiyada `new AppDbContext()` yaratish yagona yo'l", "hint": "Konfiguratsiya va DI'dan chetlanadi; scope yoki `IDbContextFactory<T>` to'g'ri usul." },
+        { "id": "d", "text": "`BackgroundService` HTTP so'rov kelgandagina ishlaydi", "hint": "Ilova ishga tushganda boshlanadi va mustaqil (so'rovlarsiz) ishlaydi." }
+      ],
+      "explanation": ".NET 6+ da `BackgroundService`dagi qo'lga olinmagan exception default'da butun host'ni to'xtatadi (`BackgroundServiceExceptionBehavior.StopHost`). Davriy ish uchun `PeriodicTimer`. Bir nechta instansiyada (gorizontal masshtab) har nusxa ishni takrorlaydi — distributed lock yoki Hangfire/Quartz kabi scheduler kerak bo'lishi mumkin.",
+      "reviewed": false
+    },
+    {
+      "id": "net.aspnet.011",
+      "level": "strong_middle",
+      "type": "multi",
+      "kind": "concept",
+      "prompt": "ASP.NET Core'da policy-based authorization haqida qaysi fikrlar to'g'ri? (bir nechta javob)",
+      "options": [
+        { "id": "a", "text": "Policy `AddAuthorization(o => o.AddPolicy(\"CanRefund\", p => p.RequireClaim(\"perm\", \"refund\")))` bilan e'lon qilinadi va `[Authorize(Policy = \"CanRefund\")]` yoki `.RequireAuthorization(\"CanRefund\")` bilan qo'llanadi", "correct": true },
+        { "id": "b", "text": "Murakkab qoidalar uchun o'z `IAuthorizationRequirement` va `AuthorizationHandler<T>` yoziladi", "correct": true },
+        { "id": "c", "text": "Resurs egasini tekshirish (\"faqat o'z buyurtmasini\") uchun `IAuthorizationService.AuthorizeAsync(User, order, \"Owner\")` — resource-based authorization", "correct": true },
+        { "id": "d", "text": "Policy faqat rollarni tekshira oladi", "hint": "Rol — bitta variant; claim, yosh, vaqt, resurs egaligi kabi har qanday qoida yozish mumkin." },
+        { "id": "e", "text": "Autentifikatsiyadan o'tmagan foydalanuvchi policy'dan o'tolmasa 403 oladi", "hint": "Anonim foydalanuvchi challenge oladi — 401; 403 autentifikatsiyadan o'tgan, lekin ruxsati yo'q foydalanuvchiga." }
+      ],
+      "explanation": "Rol bo'yicha `[Authorize(Roles = \"Admin\")]` tez murakkablashadi (rol portlashi); permission/claim asosidagi policy'lar kengayishga qulay. `FallbackPolicy` — hamma endpoint default'da autentifikatsiya talab qilsin (`[AllowAnonymous]` bilan istisno). Handler'lar DI'dan servis ola oladi.",
+      "reviewed": false
+    },
+    {
+      "id": "net.aspnet.012",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "API'da xatolarni yagona tarzda qaytarish uchun qaysi yondashuv to'g'ri?",
+      "options": [
+        { "id": "a", "text": "Global darajada: `AddProblemDetails()` + `UseExceptionHandler()` va .NET 8+ `IExceptionHandler` — kutilmagan exception bitta joyda log qilinadi va RFC 9457 `ProblemDetails` (type, title, status, traceId) qaytadi, stack trace tashqariga chiqmaydi. Kutilgan biznes xatolari (topilmadi, konflikt) exception emas, natija (`Results.NotFound`, `Result<T>`) sifatida aniq status bilan qaytariladi", "correct": true },
+        { "id": "b", "text": "Har action'ni `try/catch` bilan o'rab, `ex.ToString()`ni javobga yozish", "hint": "Kod takrorlanadi va stack trace hamda ichki tafsilotlar klientga oqib chiqadi — xavfsizlik muammosi." },
+        { "id": "c", "text": "Har qanday xatoda 200 va `{ \"success\": false }` qaytarish", "hint": "HTTP status kodlari ma'nosini yo'qotadi: proxy, retry va monitoring xatoni ko'rmaydi." },
+        { "id": "d", "text": "Developer exception page'ni production'da ham yoqish", "hint": "U ichki kod va konfiguratsiyani ochib beradi — faqat Development uchun." }
+      ],
+      "explanation": "Exception'larni boshqaruv oqimi uchun ishlatish qimmat va noaniq; validatsiya — 400 `ValidationProblemDetails`, topilmadi — 404, versiya to'qnashuvi — 409, kutilmagan — 500 + `traceId` (log bilan bog'lash uchun). Klientlar uchun xato `type` URI'lari va hujjatlangan kodlar API kontraktining bir qismi.",
+      "reviewed": false
+    },
+    {
+      "id": "net.aspnet.013",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "ASP.NET Core ilovasini load balancer ortida 1 tadan 5 ta instansiyaga ko'paytirganda nimalarni o'zgartirish kerak?",
+      "options": [
+        { "id": "a", "text": "Holatni instansiyadan chiqarish: Data Protection kalitlarini umumiy joyda saqlash (Redis, blob) — aks holda cookie/antiforgery boshqa nusxada ochilmaydi; `IMemoryCache` o'rniga yoki ustiga distributed cache; sessiya — distributed; fon vazifalarida takrorlanishni oldini olish (lock yoki tashqi scheduler); forwarded headers (asl IP, sxema); health check'lar", "correct": true },
+        { "id": "b", "text": "Hech narsa — ASP.NET Core avtomatik ravishda instansiyalar o'rtasida holatni sinxronlaydi", "hint": "Har instansiya mustaqil jarayon: xotira, kesh va Data Protection kalitlari default'da lokal." },
+        { "id": "c", "text": "Faqat sticky session yoqish yetarli", "hint": "Sticky session nusxa o'chganda yoki deploy'da foydalanuvchini uzib qo'yadi va yukni notekis taqsimlaydi; holatni tashqariga chiqarish ishonchliroq." },
+        { "id": "d", "text": "Har instansiya uchun alohida ma'lumotlar bazasi yaratish", "hint": "Ma'lumotlar konsistentligi buziladi; odatda instansiyalar bitta DB (yoki klaster)ni bo'lishadi." }
+      ],
+      "explanation": "Stateless servis — gorizontal masshtabning asosi. Data Protection: `AddDataProtection().PersistKeysToStackExchangeRedis(...)` va bir xil `SetApplicationName`. Rate limiting ham instansiya bo'yicha lokal — global limit kerak bo'lsa gateway yoki distributed hisoblagich. SignalR uchun backplane (Redis) yoki Azure SignalR kerak.",
+      "reviewed": false
+    }
+  ]
+}
