@@ -8,12 +8,12 @@
       "kind": "concept",
       "prompt": "TypeScript'da `interface` va `type` farqi nima?",
       "options": [
-        { "id": "a", "text": "Ko'p hollarda almashtirsa bo'ladi; `interface` kengaytiriladi va qayta ochiladi (declaration merging), `type` esa union, tuple va hisoblangan tiplarni ifodalay oladi", "correct": true },
+        { "id": "a", "text": "Ko'p hollarda almashtirsa bo'ladi: `interface` kengaytiriladi va birlashadi, `type` union va tuple'ni ifodalaydi", "correct": true },
         { "id": "b", "text": "`type` eskirgan", "hint": "Ikkalasi ham faol ishlatiladi." },
-        { "id": "c", "text": "`interface` runtime'da tekshiradi, `type` yo'q", "hint": "Ikkalasi ham runtime'da yo'q." },
+        { "id": "c", "text": "`interface` runtime'da obyektning tuzilmasini tekshiradi va xatoni tashlaydi, `type` esa faqat kompilyatsiya vaqtida bor", "hint": "Ikkalasi ham runtime'da yo'q." },
         { "id": "d", "text": "`interface` faqat klasslar uchun", "hint": "Oddiy obyekt shakllari uchun ham ishlatiladi." }
       ],
-      "explanation": "Obyekt shakli va public API uchun `interface` (xato xabarlari aniqroq, `extends` qulay), union (`'a' | 'b'`), funksiya tiplari va mapped tiplar uchun `type`. Jamoada bitta uslubni tanlab, izchil bo'lish muhimroq.",
+      "explanation": "Interface qayta ochilishi (declaration merging) mumkin; type hisoblangan tiplarni ham ifodalay oladi. Obyekt shakli va public API uchun `interface` (xato xabarlari aniqroq, `extends` qulay), union (`'a' | 'b'`), funksiya tiplari va mapped tiplar uchun `type`. Jamoada bitta uslubni tanlab, izchil bo'lish muhimroq.",
       "reviewed": false
     },
     {
@@ -23,9 +23,9 @@
       "kind": "concept",
       "prompt": "`any` va `unknown` farqi nima?",
       "options": [
-        { "id": "a", "text": "`any` tip tekshiruvini o'chiradi; `unknown` har qanday qiymatni qabul qiladi, lekin ishlatishdan oldin tipni toraytirishni (narrowing) talab qiladi", "correct": true },
+        { "id": "a", "text": "`any` tekshiruvni o'chiradi; `unknown` esa ishlatishdan oldin tipni toraytirishni talab qiladi", "correct": true },
         { "id": "b", "text": "Farqi yo'q", "hint": "`unknown` qiymatga `.foo` deb murojaat qilib bo'lmaydi, `any` ga mumkin." },
-        { "id": "c", "text": "`unknown` faqat xatolar uchun", "hint": "`catch (e)` da u keng tarqalgan, lekin boshqa joylarda ham ishlatiladi." },
+        { "id": "c", "text": "`unknown` faqat `catch` blokidagi xatolar uchun mo'ljallangan maxsus tip, boshqa joyda ishlatilmaydi", "hint": "`catch (e)` da u keng tarqalgan, lekin boshqa joylarda ham ishlatiladi." },
         { "id": "d", "text": "`any` xavfsizroq", "hint": "Aksincha: `any` xatolarni runtime'gacha yashiradi." }
       ],
       "explanation": "`JSON.parse` natijasi, tashqi API javobi — `unknown` bo'lishi va `typeof`, `in` yoki zod kabi sxema bilan tekshirilishi kerak. `any` tiplar tizimidan \"chiqish eshigi\"; uni `noImplicitAny` va lint bilan cheklash odat.",
@@ -82,9 +82,9 @@
       "kind": "concept",
       "prompt": "Type narrowing (tipni toraytirish) qanday ishlaydi?",
       "options": [
-        { "id": "a", "text": "`typeof`, `instanceof`, `in`, tenglik tekshiruvi va type guard funksiyalar orqali kompilyator tarmoq ichida tipni aniqlashtiradi", "correct": true },
+        { "id": "a", "text": "`typeof`, `instanceof`, `in` va type guard'lar orqali kompilyator tarmoq ichida tipni aniqlaydi", "correct": true },
         { "id": "b", "text": "Faqat `as` bilan tipni majburlash orqali", "hint": "`as` tekshirmaydi, kompilyatorni \"ishontiradi\"; narrowing esa haqiqiy tekshiruv." },
-        { "id": "c", "text": "Runtime'da TypeScript tipni tekshiradi", "hint": "Tekshiruv sizning kodingiz; TypeScript faqat uni tushunadi." },
+        { "id": "c", "text": "TypeScript runtime'da har bir o'zgaruvchining tipini tekshirib, noto'g'ri tarmoqlarni o'tkazib yuboradi", "hint": "Tekshiruv sizning kodingiz; TypeScript faqat uni tushunadi." },
         { "id": "d", "text": "Narrowing faqat primitiv tiplar uchun", "hint": "Obyektlar (`in`, discriminated union) uchun ham ishlaydi." }
       ],
       "explanation": "`function f(x: string | number) { if (typeof x === 'string') { x.toUpperCase() } }` — `if` ichida `x: string`. Maxsus guard: `function isUser(v: unknown): v is User`. Narrowing tiplar tizimining kundalik vositasi.",
@@ -97,12 +97,12 @@
       "kind": "concept",
       "prompt": "`Partial<T>`, `Pick<T, K>`, `Omit<T, K>` kabi utility tiplar nima uchun kerak?",
       "options": [
-        { "id": "a", "text": "Mavjud tipdan yangisini hosil qilish: hammasi ixtiyoriy, faqat ba'zi maydonlar, ba'zilarisiz; takrorlanish va ikki manba muammosini yo'qotadi", "correct": true },
-        { "id": "b", "text": "Runtime'da obyektni o'zgartirish uchun", "hint": "Ular faqat tip darajasida; obyektga tegmaydi." },
+        { "id": "a", "text": "Mavjud tipdan yangisini hosil qilish (ixtiyoriy, tanlangan yoki chiqarilgan maydonlar bilan)", "correct": true },
+        { "id": "b", "text": "Runtime'da obyektning maydonlarini o'chirish, nusxalash va ixtiyoriy qilib o'zgartirish uchun", "hint": "Ular faqat tip darajasida; obyektga tegmaydi." },
         { "id": "c", "text": "Faqat kutubxona mualliflari uchun", "hint": "Oddiy ilova kodida ham har kuni ishlatiladi (forma, update DTO)." },
         { "id": "d", "text": "Ular `interface` ni almashtiradi", "hint": "Ular mavjud tiplar ustida ishlaydi, o'rnini bosmaydi." }
       ],
-      "explanation": "`updateUser(id, patch: Partial<User>)`, `type UserPreview = Pick<User, 'id' | 'name'>`, `type CreateUser = Omit<User, 'id'>`. Asosiy tip o'zgarsa, hosilalar avtomatik yangilanadi.",
+      "explanation": "Ular takrorlanish va ikki manba muammosini yo'qotadi. `updateUser(id, patch: Partial<User>)`, `type UserPreview = Pick<User, 'id' | 'name'>`, `type CreateUser = Omit<User, 'id'>`. Asosiy tip o'zgarsa, hosilalar avtomatik yangilanadi.",
       "reviewed": false
     },
     {
@@ -112,12 +112,12 @@
       "kind": "concept",
       "prompt": "`enum` o'rniga literal union (`type Role = 'admin' | 'user'`) ko'pincha nega afzal ko'riladi?",
       "options": [
-        { "id": "a", "text": "Union runtime kod hosil qilmaydi, oddiy satrlar bilan ishlaydi, tree shaking'ga xalaqit bermaydi va `as const` obyekt bilan birga ikkala afzallikni beradi", "correct": true },
+        { "id": "a", "text": "Union runtime kod hosil qilmaydi, oddiy satrlar bilan ishlaydi va tree shaking'ga xalaqit bermaydi", "correct": true },
         { "id": "b", "text": "`enum` TypeScript'da taqiqlangan", "hint": "Taqiqlanmagan; faqat ba'zi qoidalar (`erasableSyntaxOnly`) uni cheklaydi." },
-        { "id": "c", "text": "Union tezroq kompilyatsiya bo'ladi", "hint": "Farq sezilmas; sabab runtime va ergonomikada." },
+        { "id": "c", "text": "Union tezroq kompilyatsiya bo'ladi va IDE'da `enum` ga qaraganda ko'proq autokomplit taklif qiladi", "hint": "Farq sezilmas; sabab runtime va ergonomikada." },
         { "id": "d", "text": "`enum` da autokomplit ishlamaydi", "hint": "Ishlaydi; muammo boshqa joyda." }
       ],
-      "explanation": "Sonli `enum` teskari xaritalash hosil qiladi va istalgan sonni qabul qilishi mumkin edi (eski versiyalarda). `const ROLES = ['admin', 'user'] as const; type Role = typeof ROLES[number]` — ro'yxat ham, tip ham bitta manbadan.",
+      "explanation": "`as const` obyekt bilan birga ikkala usulning afzalligini olish mumkin. Sonli `enum` teskari xaritalash hosil qiladi va istalgan sonni qabul qilishi mumkin edi (eski versiyalarda). `const ROLES = ['admin', 'user'] as const; type Role = typeof ROLES[number]` — ro'yxat ham, tip ham bitta manbadan.",
       "reviewed": false
     },
     {
@@ -143,12 +143,12 @@
       "kind": "concept",
       "prompt": "Mapped va conditional tiplar qanday masalani hal qiladi?",
       "options": [
-        { "id": "a", "text": "Tiplarni dasturiy hosil qilish: mapped tip har kalitni o'zgartiradi (`{ [K in keyof T]: ... }`), conditional tip shartga qarab tip tanlaydi (`T extends U ? X : Y`)", "correct": true },
+        { "id": "a", "text": "Tiplarni dasturiy hosil qilish: mapped — har kalitni o'zgartiradi, conditional — shartga qarab tip tanlaydi", "correct": true },
         { "id": "b", "text": "Runtime'da obyektlarni map qilish", "hint": "Faqat tip darajasida." },
-        { "id": "c", "text": "Ular faqat `Partial` kabi tayyor utility'lar ichida bor, o'zingiz yoza olmaysiz", "hint": "Utility tiplar aynan shu mexanizmlar bilan yozilgan; siz ham yoza olasiz." },
+        { "id": "c", "text": "Ular faqat `Partial` va `Pick` kabi tayyor utility'lar ichida mavjud, ularni o'zingiz yozib, kengaytira olmaysiz", "hint": "Utility tiplar aynan shu mexanizmlar bilan yozilgan; siz ham yoza olasiz." },
         { "id": "d", "text": "Generics'ni almashtiradi", "hint": "Ular generics ustiga quriladi." }
       ],
-      "explanation": "Misol: `type ApiResponse<T> = T extends Array<infer U> ? Page<U> : Single<T>` yoki `type Getters<T> = { [K in keyof T as \\`get${Capitalize<K & string>}\\`]: () => T[K] }`. Kuchli, lekin o'qilishi qiyin; murakkab tip utility'larga izoh va test (`expectTypeOf`) kerak.",
+      "explanation": "Mapped: `{ [K in keyof T]: ... }`; conditional: `T extends U ? X : Y`. Misol: `type ApiResponse<T> = T extends Array<infer U> ? Page<U> : Single<T>` yoki `type Getters<T> = { [K in keyof T as \\`get${Capitalize<K & string>}\\`]: () => T[K] }`. Kuchli, lekin o'qilishi qiyin; murakkab tip utility'larga izoh va test (`expectTypeOf`) kerak.",
       "reviewed": false
     },
     {
@@ -158,9 +158,9 @@
       "kind": "concept",
       "prompt": "`satisfies` operatori `as` va oddiy tip annotatsiyasidan nimasi bilan farq qiladi?",
       "options": [
-        { "id": "a", "text": "`satisfies` qiymat tipga mosligini tekshiradi, lekin qiymatning aniq (literal) tipini saqlab qoladi; annotatsiya tipni kengaytiradi, `as` esa tekshirmaydi", "correct": true },
+        { "id": "a", "text": "`satisfies` moslikni tekshiradi va literal tipni saqlaydi; annotatsiya tipni kengaytiradi, `as` tekshirmaydi", "correct": true },
         { "id": "b", "text": "`satisfies` — `as` ning yangi nomi", "hint": "`as` xatoni yashirishi mumkin, `satisfies` esa tekshiradi." },
-        { "id": "c", "text": "`satisfies` runtime'da tekshiradi", "hint": "Compile vaqtida." },
+        { "id": "c", "text": "`satisfies` qiymatning tipga mosligini runtime'da, dastur ishlayotgan paytda tekshiradi va mos kelmasa xato tashlaydi", "hint": "Compile vaqtida." },
         { "id": "d", "text": "Farqi yo'q", "hint": "`const c = { a: 1 } satisfies Record<string, number>` da `c.a` tipi `number`, annotatsiyada esa `c.a` ga murojaat qilish uchun kalit noma'lum bo'lardi." }
       ],
       "explanation": "Konfiguratsiya obyektlari uchun ideal: `const routes = { home: '/', about: '/about' } satisfies Record<string, string>` — kalitlar autokomplitda qoladi va tipga moslik tekshiriladi.",
@@ -188,12 +188,12 @@
       "kind": "concept",
       "prompt": "Katta JavaScript kod bazasini TypeScript'ga o'tkazish strategiyasi qanday bo'lishi kerak?",
       "options": [
-        { "id": "a", "text": "Bosqichma-bosqich: `allowJs` + `checkJs`, fayllarni chetlardan (utility, model) markazga qarab o'tkazish, `strict` ni asta yoqish, chegaralarda runtime validatsiya; `any` sonini metrika sifatida kuzatish", "correct": true },
+        { "id": "a", "text": "Bosqichma-bosqich: `allowJs`, chetdan markazga o'tkazish, `strict` ni asta yoqish, `any` sonini kuzatish", "correct": true },
         { "id": "b", "text": "Hammasini bir hafta ichida qayta yozish", "hint": "Katta bazada bu ishlab chiqarishni to'xtatadi va xavfli." },
-        { "id": "c", "text": "Fayllarni `.ts` ga nomini o'zgartirib, hamma joyga `any` qo'yish", "hint": "Kompilyatsiya bo'ladi, lekin hech qanday foyda bermaydi va keyin tozalash qiyin." },
+        { "id": "c", "text": "Barcha fayllarni bir kunda `.ts` ga qayta nomlab, xato chiqqan hamma joyga `any` qo'yib, keyin unutish", "hint": "Kompilyatsiya bo'ladi, lekin hech qanday foyda bermaydi va keyin tozalash qiyin." },
         { "id": "d", "text": "O'tkazmaslik, yangi kodni ham JS'da yozish", "hint": "Qarz o'saveradi." }
       ],
-      "explanation": "Muvaffaqiyat shartlari: avtomatik vositalar (ts-migrate), CI'da yangi `any` ni taqiqlash, eng ko'p o'zgaradigan modullarni birinchi o'tkazish, jamoani o'qitish. Strict rejim boshidan yoqilmasa, keyin yoqish alohida katta ish bo'ladi.",
+      "explanation": "Chegaralarda runtime validatsiya ham qo'shiladi. Muvaffaqiyat shartlari: avtomatik vositalar (ts-migrate), CI'da yangi `any` ni taqiqlash, eng ko'p o'zgaradigan modullarni birinchi o'tkazish, jamoani o'qitish. Strict rejim boshidan yoqilmasa, keyin yoqish alohida katta ish bo'ladi.",
       "reviewed": false
     }
   ]

@@ -8,12 +8,12 @@
       "kind": "concept",
       "prompt": "`var`, `let` va `const` o'rtasidagi asosiy farq nima?",
       "options": [
-        { "id": "a", "text": "`var` funksiya doirasida (function scope) va hoisting bilan `undefined`; `let` va `const` blok doirasida; `const` qayta tayinlanmaydi", "correct": true },
-        { "id": "b", "text": "`const` bilan e'lon qilingan obyektni o'zgartirib bo'lmaydi", "hint": "`const` faqat havolani qotiradi; `const a = []; a.push(1)` ishlaydi." },
+        { "id": "a", "text": "`var` — funksiya doirasi va hoisting; `let`/`const` — blok doirasi; `const` qayta tayinlanmaydi", "correct": true },
+        { "id": "b", "text": "`const` bilan e'lon qilingan obyekt yoki massivning ichidagi qiymatlarni ham o'zgartirib bo'lmaydi", "hint": "`const` faqat havolani qotiradi; `const a = []; a.push(1)` ishlaydi." },
         { "id": "c", "text": "`let` eskirgan, `var` yangi sintaksis", "hint": "Aksincha: `let`/`const` ES2015 da keldi va `var` o'rnini bosdi." },
         { "id": "d", "text": "Farqi faqat uslubda", "hint": "Doira (scope) va hoisting xatti-harakati haqiqatan farq qiladi." }
       ],
-      "explanation": "`var` siklda e'lon qilinsa ham butun funksiyada ko'rinadi va klassik `setTimeout` siklidagi xatolarga sabab bo'ladi. `let`/`const` blok ichida yashaydi va e'londan oldin murojaat `ReferenceError` beradi (temporal dead zone). Standart tanlov: `const`, kerak bo'lsa `let`.",
+      "explanation": "`var` hoisting bilan `undefined` qiymat oladi. `var` siklda e'lon qilinsa ham butun funksiyada ko'rinadi va klassik `setTimeout` siklidagi xatolarga sabab bo'ladi. `let`/`const` blok ichida yashaydi va e'londan oldin murojaat `ReferenceError` beradi (temporal dead zone). Standart tanlov: `const`, kerak bo'lsa `let`.",
       "reviewed": false
     },
     {
@@ -26,7 +26,7 @@
         { "id": "a", "text": "`==` tiplarni o'zgartirib (coercion) solishtiradi, `===` tip va qiymat ikkalasini tekshiradi", "correct": true },
         { "id": "b", "text": "`===` faqat obyektlar uchun", "hint": "U har qanday qiymat bilan ishlaydi." },
         { "id": "c", "text": "Farqi yo'q", "hint": "`0 == ''` true, `0 === ''` false." },
-        { "id": "d", "text": "`==` tezroq, shuning uchun tavsiya etiladi", "hint": "Tezlik farqi sezilmas; `==` ning yashirin o'zgartirishlari xatoga olib keladi." }
+        { "id": "d", "text": "`==` tezroq ishlaydi, chunki tipni tekshirmaydi, shuning uchun loyihalarda tavsiya etiladi", "hint": "Tezlik farqi sezilmas; `==` ning yashirin o'zgartirishlari xatoga olib keladi." }
       ],
       "explanation": "`'5' == 5` true, `null == undefined` true, `[] == false` true — bu qoidalarni eslab qolish qiyin. Shuning uchun deyarli har doim `===` ishlatiladi; `== null` esa `null` va `undefined` ni birga tekshirish uchun qulay istisno.",
       "reviewed": false
@@ -54,8 +54,8 @@
       "kind": "concept",
       "prompt": "`map` va `forEach` farqi nima?",
       "options": [
-        { "id": "a", "text": "`map` har element uchun qaytarilgan qiymatlardan yangi massiv yaratadi; `forEach` faqat aylanib chiqadi va `undefined` qaytaradi", "correct": true },
-        { "id": "b", "text": "`forEach` yangi massiv qaytaradi, `map` yo'q", "hint": "Aksincha." },
+        { "id": "a", "text": "`map` qaytarilgan qiymatlardan yangi massiv yaratadi; `forEach` faqat aylanadi va `undefined` qaytaradi", "correct": true },
+        { "id": "b", "text": "`forEach` har element uchun qaytarilgan qiymatlardan yangi massiv qaytaradi, `map` esa hech narsa qaytarmaydi", "hint": "Aksincha." },
         { "id": "c", "text": "`map` asl massivni o'zgartiradi", "hint": "`map` asl massivga tegmaydi; o'zgartiradigan metodlar `push`, `splice`, `sort`." },
         { "id": "d", "text": "Farqi faqat tezlikda", "hint": "Farq semantikada: natija kerakmi yoki faqat yon ta'sir." }
       ],
@@ -69,8 +69,8 @@
       "kind": "concept",
       "prompt": "Closure nima?",
       "options": [
-        { "id": "a", "text": "Funksiya o'zi yaratilgan doiradagi o'zgaruvchilarni, hatto o'sha doira tugagandan keyin ham, eslab qoladi", "correct": true },
-        { "id": "b", "text": "Funksiyani yopiq (private) qilish sintaksisi", "hint": "Maxsus sintaksis emas, tilning tabiiy xususiyati." },
+        { "id": "a", "text": "Funksiya o'zi yaratilgan doiradagi o'zgaruvchilarni, doira tugagandan keyin ham eslab qoladi", "correct": true },
+        { "id": "b", "text": "Funksiyani tashqaridan ko'rinmaydigan yopiq (private) qilish uchun ishlatiladigan maxsus sintaksis", "hint": "Maxsus sintaksis emas, tilning tabiiy xususiyati." },
         { "id": "c", "text": "Obyekt metodini chaqirish usuli", "hint": "Metodlarga aloqasi yo'q." },
         { "id": "d", "text": "Xotirani bo'shatish mexanizmi", "hint": "Aksincha, closure o'zgaruvchilarni tirik saqlaydi." }
       ],
@@ -113,12 +113,12 @@
       "kind": "concept",
       "prompt": "Arrow funksiyada `this` oddiy funksiyadan nimasi bilan farq qiladi?",
       "options": [
-        { "id": "a", "text": "Arrow funksiya o'z `this` iga ega emas; u tashqi (leksik) doiradagi `this` ni ishlatadi. Oddiy funksiyada `this` chaqirilish usuliga bog'liq", "correct": true },
+        { "id": "a", "text": "Arrow funksiyaning o'z `this` i yo'q — tashqi (leksik) doiradagi `this` ishlatiladi", "correct": true },
         { "id": "b", "text": "Arrow funksiyada `this` har doim `window`", "hint": "U tashqi doiraga bog'liq; klass metodi ichida bu obyektning o'zi bo'ladi." },
         { "id": "c", "text": "Farqi yo'q", "hint": "`setTimeout(function() { this... })` va `setTimeout(() => this...)` har xil ishlaydi." },
-        { "id": "d", "text": "Oddiy funksiyada `this` har doim obyektning o'zi", "hint": "`const f = obj.method; f()` da `this` yo'qoladi (`undefined` yoki `window`)." }
+        { "id": "d", "text": "Oddiy funksiyada `this` har doim o'zi e'lon qilingan obyektning o'zi, chaqirilish usulidan qat'i nazar", "hint": "`const f = obj.method; f()` da `this` yo'qoladi (`undefined` yoki `window`)." }
       ],
-      "explanation": "Oddiy funksiyada `this` ni chaqiruv belgilaydi: `obj.f()` → `obj`, `f()` → `undefined` (strict), `new f()` → yangi obyekt. Arrow funksiya buni e'tiborsiz qoldiradi, shuning uchun callback'larda qulay, lekin obyekt metodi yoki konstruktor sifatida yaramaydi.",
+      "explanation": "Oddiy funksiyada esa `this` chaqirilish usuliga bog'liq. Oddiy funksiyada `this` ni chaqiruv belgilaydi: `obj.f()` → `obj`, `f()` → `undefined` (strict), `new f()` → yangi obyekt. Arrow funksiya buni e'tiborsiz qoldiradi, shuning uchun callback'larda qulay, lekin obyekt metodi yoki konstruktor sifatida yaramaydi.",
       "reviewed": false
     },
     {
@@ -144,9 +144,9 @@
       "kind": "concept",
       "prompt": "`async` funksiyada xatolarni qanday ushlash to'g'ri?",
       "options": [
-        { "id": "a", "text": "`await` ni `try/catch` ichiga olish; chaqiruvchi tomonda esa `async` funksiya qaytargan promise'ga `.catch` yoki yana `try/catch`", "correct": true },
+        { "id": "a", "text": "`await` ni `try/catch` ga olish; chaqiruvchida qaytgan promise'ga `.catch` yoki `try/catch`", "correct": true },
         { "id": "b", "text": "`async` funksiyalar xato tashlamaydi", "hint": "Ichidagi xato rad etilgan (rejected) promise'ga aylanadi." },
-        { "id": "c", "text": "`window.onerror` hammasini ushlaydi", "hint": "Ushlanmagan promise xatosi `unhandledrejection` hodisasi; bu zaxira, asosiy usul emas." },
+        { "id": "c", "text": "`window.onerror` sahifadagi barcha xatolarni, jumladan rad etilgan promise'larni ham ushlab oladi", "hint": "Ushlanmagan promise xatosi `unhandledrejection` hodisasi; bu zaxira, asosiy usul emas." },
         { "id": "d", "text": "`await` siz chaqirish kifoya", "hint": "`await` siz xato promise ichida qoladi va hech kim ko'rmaydi." }
       ],
       "explanation": "`async` funksiya har doim promise qaytaradi; `throw` uni reject qiladi. `await` reject'ni oddiy exception kabi tashlaydi, shuning uchun `try/catch` ishlaydi. Unutilgan `await` xatoni yutib yuboradi va promise \"osilib\" qoladi.",
@@ -174,9 +174,9 @@
       "kind": "concept",
       "prompt": "Debounce va throttle farqi nima va qaysi holatda qaysi biri?",
       "options": [
-        { "id": "a", "text": "Debounce hodisalar to'xtagach bir marta chaqiradi (qidiruv maydoni); throttle berilgan oraliqda ko'pi bilan bir marta chaqiradi (scroll, resize)", "correct": true },
+        { "id": "a", "text": "Debounce — hodisalar to'xtagach bir marta (qidiruv); throttle — oraliqda ko'pi bilan bir marta (scroll)", "correct": true },
         { "id": "b", "text": "Ikkalasi bir xil, nomlari har xil", "hint": "Qidiruv kiritishda throttle har 300 ms da so'rov yuboradi, debounce faqat terish to'xtagach." },
-        { "id": "c", "text": "Throttle hodisani butunlay bekor qiladi", "hint": "U chastotani cheklaydi, bekor qilmaydi." },
+        { "id": "c", "text": "Throttle oraliq ichidagi barcha hodisalarni butunlay bekor qiladi, debounce esa ularni navbat bilan keyinroq bajaradi", "hint": "U chastotani cheklaydi, bekor qilmaydi." },
         { "id": "d", "text": "Debounce faqat tarmoq so'rovlari uchun", "hint": "Har qanday tez-tez chaqiriladigan funksiya uchun." }
       ],
       "explanation": "Debounce: taymer har hodisada qayta boshlanadi, funksiya tinchlikdan keyin ishlaydi. Throttle: funksiya ishlagach, oraliq tugaguncha keyingi chaqiruvlar tashlab yuboriladi. Scroll pozitsiyasini kuzatishda throttle, avtokomplitda debounce.",
@@ -190,12 +190,12 @@
       "prompt": "Bu komponent ko'p marta ochilib yopilgach, sahifa sekinlashyapti. Sabab nima?",
       "code": "function setup(panel) {\n  const data = loadBigData();\n  window.addEventListener('resize', () => {\n    panel.style.width = data.width + 'px';\n  });\n}",
       "options": [
-        { "id": "a", "text": "Memory leak: listener hech qachon olib tashlanmaydi va closure orqali `data` ni ushlab turadi; har `setup` yangi listener va yangi `data` qo'shadi", "correct": true },
+        { "id": "a", "text": "Memory leak: listener olib tashlanmaydi va closure orqali `data` ni ushlab turadi", "correct": true },
         { "id": "b", "text": "`resize` hodisasi juda tez-tez keladi", "hint": "Chastota throttle bilan hal bo'ladi; lekin sekinlashuv to'planishdan." },
-        { "id": "c", "text": "`style.width` o'rniga `className` ishlatish kerak", "hint": "Uslub masalasi; leak'ni tuzatmaydi." },
+        { "id": "c", "text": "`style.width` ni har safar o'zgartirish reflow chaqiradi, uning o'rniga `className` ishlatish kerak", "hint": "Uslub masalasi; leak'ni tuzatmaydi." },
         { "id": "d", "text": "`const` o'rniga `let` kerak", "hint": "E'lon turi xotiraga ta'sir qilmaydi." }
       ],
-      "explanation": "`window` butun sahifa davomida yashaydi; unga qo'shilgan listener va u ushlab turgan closure ham. Yechim: `removeEventListener` (yoki `AbortController` signali) komponent yopilganda. React'da bu `useEffect` cleanup funksiyasi.",
+      "explanation": "Har `setup` chaqiruvi yangi listener va yangi `data` qo'shadi. `window` butun sahifa davomida yashaydi; unga qo'shilgan listener va u ushlab turgan closure ham. Yechim: `removeEventListener` (yoki `AbortController` signali) komponent yopilganda. React'da bu `useEffect` cleanup funksiyasi.",
       "reviewed": false
     },
     {

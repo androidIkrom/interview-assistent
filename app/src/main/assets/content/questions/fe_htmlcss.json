@@ -8,9 +8,9 @@
       "kind": "concept",
       "prompt": "Semantik HTML (`<header>`, `<nav>`, `<main>`, `<article>`) nima uchun kerak?",
       "options": [
-        { "id": "a", "text": "Brauzer, qidiruv tizimlari va yordamchi texnologiyalar (screen reader) sahifa tuzilmasini tushunishi uchun", "correct": true },
+        { "id": "a", "text": "Brauzer, qidiruv tizimi va screen reader sahifa tuzilmasini tushunishi uchun", "correct": true },
         { "id": "b", "text": "Sahifa tezroq yuklanishi uchun", "hint": "Teg nomi yuklanish tezligiga ta'sir qilmaydi." },
-        { "id": "c", "text": "CSS'siz chiroyli ko'rinishi uchun", "hint": "Semantik teglar standart ko'rinishda `div` dan deyarli farq qilmaydi." },
+        { "id": "c", "text": "CSS umuman ulanmagan holatda ham sahifa chiroyli va zamonaviy ko'rinishi uchun", "hint": "Semantik teglar standart ko'rinishda `div` dan deyarli farq qilmaydi." },
         { "id": "d", "text": "Faqat eski brauzerlar uchun", "hint": "Aksincha, bu zamonaviy standart." }
       ],
       "explanation": "`<div class=\"nav\">` odam uchun tushunarli, mashina uchun emas. `<nav>` esa screen reader'ga \"bu navigatsiya\" deydi, qidiruv tizimiga asosiy kontentni ajratishga yordam beradi. Semantika accessibility va SEO'ning poydevori.",
@@ -38,10 +38,10 @@
       "kind": "concept",
       "prompt": "Flexbox va Grid qachon ishlatiladi?",
       "options": [
-        { "id": "a", "text": "Flexbox bir o'qli joylashuv (qator yoki ustun) uchun; Grid ikki o'qli, satr va ustunlar bilan sahifa maketi uchun", "correct": true },
+        { "id": "a", "text": "Flexbox — bir o'q (qator yoki ustun); Grid — ikki o'qli sahifa maketi", "correct": true },
         { "id": "b", "text": "Grid eskirgan, hamma joyda Flexbox", "hint": "Grid yangiroq va ikki o'lchamli maket uchun kuchliroq." },
         { "id": "c", "text": "Flexbox faqat markazlash uchun", "hint": "Markazlash uning bitta qo'llanishi, xolos." },
-        { "id": "d", "text": "Ikkalasini birga ishlatib bo'lmaydi", "hint": "Odatda Grid sahifa maketi, ichidagi komponentlar Flexbox." }
+        { "id": "d", "text": "Ikkalasini bitta sahifada birga ishlatib bo'lmaydi, ular bir-biriga zid ishlaydi", "hint": "Odatda Grid sahifa maketi, ichidagi komponentlar Flexbox." }
       ],
       "explanation": "Navbar elementlari, tugmalar qatori — Flexbox. Sahifa: sidebar + kontent + footer, kartochkalar to'ri — Grid. `gap`, `align-items`, `justify-content` ikkalasida ham ishlaydi.",
       "reviewed": false
@@ -53,9 +53,9 @@
       "kind": "concept",
       "prompt": "Bosiladigan element uchun `<div onclick>` o'rniga `<button>` ishlatish nega muhim?",
       "options": [
-        { "id": "a", "text": "`<button>` klaviaturadan fokuslanadi, Enter/Space bilan bosiladi va screen reader unga \"tugma\" deydi; `div` buni bermaydi", "correct": true },
+        { "id": "a", "text": "`<button>` fokuslanadi, Enter/Space bilan bosiladi va screen reader uni taniydi", "correct": true },
         { "id": "b", "text": "`<button>` tezroq ishlaydi", "hint": "Tezlik farqi yo'q; farq accessibility'da." },
-        { "id": "c", "text": "`div` ga `onclick` qo'yib bo'lmaydi", "hint": "Qo'yish mumkin, lekin faqat sichqoncha uchun ishlaydi." },
+        { "id": "c", "text": "`div` ga `onclick` qo'yib bo'lmaydi, chunki u faqat matn konteyneri va hodisa qabul qilmaydi", "hint": "Qo'yish mumkin, lekin faqat sichqoncha uchun ishlaydi." },
         { "id": "d", "text": "Farqi faqat standart ko'rinishda", "hint": "Ko'rinishni CSS bilan tenglashtirish mumkin; semantika va klaviatura qo'llab-quvvatlashi qoladi." }
       ],
       "explanation": "`div` ni tugmaga aylantirish uchun `role=\"button\"`, `tabindex=\"0\"`, klaviatura handler'lari kerak — `<button>` buni bepul beradi. Qoida: mavjud semantik element bo'lsa, uni ishlatish; ARIA faqat zarurat bo'lganda.",
@@ -99,10 +99,10 @@
       "kind": "concept",
       "prompt": "`position: absolute` element nimaga nisbatan joylashadi?",
       "options": [
-        { "id": "a", "text": "Eng yaqin `position` i `static` bo'lmagan ajdodga nisbatan; bunday ajdod bo'lmasa, sahifaga (`html`) nisbatan", "correct": true },
+        { "id": "a", "text": "Eng yaqin `position` i `static` bo'lmagan ajdodga; bo'lmasa — sahifaga nisbatan", "correct": true },
         { "id": "b", "text": "Har doim brauzer oynasiga nisbatan", "hint": "Bu `position: fixed`." },
         { "id": "c", "text": "O'zining oddiy o'rniga nisbatan", "hint": "Bu `position: relative`." },
-        { "id": "d", "text": "Bevosita ota elementga nisbatan, qanday bo'lmasin", "hint": "Ota `static` bo'lsa, u e'tiborga olinmaydi." }
+        { "id": "d", "text": "Bevosita ota elementga nisbatan, ota elementning `position` qiymatidan qat'i nazar", "hint": "Ota `static` bo'lsa, u e'tiborga olinmaydi." }
       ],
       "explanation": "Shuning uchun absolyut elementning otasiga `position: relative` qo'yiladi — bu ota'ni \"konteyner\" qiladi. `sticky` esa `relative` va `fixed` aralashmasi: scroll chegaraga yetguncha oddiy, keyin yopishadi.",
       "reviewed": false
@@ -114,8 +114,8 @@
       "kind": "concept",
       "prompt": "\"Mobile-first\" yondashuvda media query'lar qanday yoziladi?",
       "options": [
-        { "id": "a", "text": "Asosiy uslublar kichik ekran uchun, `@media (min-width: ...)` bilan kattaroq ekranlar uchun qo'shimchalar", "correct": true },
-        { "id": "b", "text": "Asosiy uslublar desktop uchun, `max-width` bilan mobil uchun qayta yozish", "hint": "Bu desktop-first; mobil qurilma ortiqcha uslublarni yuklab, keyin bekor qiladi." },
+        { "id": "a", "text": "Asosiy uslub kichik ekran uchun, `@media (min-width: ...)` bilan kattalarga qo'shimcha", "correct": true },
+        { "id": "b", "text": "Asosiy uslublar katta desktop uchun yoziladi, keyin `max-width` bilan mobil uchun qayta yoziladi", "hint": "Bu desktop-first; mobil qurilma ortiqcha uslublarni yuklab, keyin bekor qiladi." },
         { "id": "c", "text": "Har qurilma uchun alohida CSS fayl", "hint": "Qurilmalar juda ko'p; breakpoint'lar bilan ishlanadi." },
         { "id": "d", "text": "Media query kerak emas, Flexbox hammasini hal qiladi", "hint": "Flexbox moslashuvchan, lekin maket o'zgarishi uchun breakpoint kerak." }
       ],
@@ -129,12 +129,12 @@
       "kind": "concept",
       "prompt": "Shrift o'lchamini `px` emas, `rem` da berish nega tavsiya etiladi?",
       "options": [
-        { "id": "a", "text": "`rem` ildiz shrift o'lchamiga bog'liq: foydalanuvchi brauzerda shriftni kattalashtirsa, matn ham kattalashadi; `px` buni e'tiborsiz qoldiradi", "correct": true },
+        { "id": "a", "text": "`rem` ildiz shriftga bog'liq: foydalanuvchi shriftni kattalashtirsa, matn ham kattalashadi", "correct": true },
         { "id": "b", "text": "`rem` tezroq render bo'ladi", "hint": "Render tezligiga aloqasi yo'q." },
-        { "id": "c", "text": "`px` eski brauzerlarda ishlamaydi", "hint": "`px` hamma joyda ishlaydi; gap accessibility'da." },
+        { "id": "c", "text": "`px` birligi eski brauzerlarda va ko'plab mobil qurilmalarda umuman to'g'ri ko'rsatilmaydi", "hint": "`px` hamma joyda ishlaydi; gap accessibility'da." },
         { "id": "d", "text": "`rem` har doim 16px", "hint": "Standart 16px, lekin foydalanuvchi sozlamasi uni o'zgartiradi — aynan shu afzallik." }
       ],
-      "explanation": "`em` ota elementga nisbatan (ichma-ichlikda ko'payib ketadi), `rem` ildizga nisbatan (bashorat qilinadigan). Matn va bo'shliqlar `rem`, border kabi mayda narsalar `px` bo'lishi mumkin.",
+      "explanation": "`px` esa foydalanuvchining shrift sozlamasini e'tiborsiz qoldiradi. `em` ota elementga nisbatan (ichma-ichlikda ko'payib ketadi), `rem` ildizga nisbatan (bashorat qilinadigan). Matn va bo'shliqlar `rem`, border kabi mayda narsalar `px` bo'lishi mumkin.",
       "reviewed": false
     },
     {
@@ -144,12 +144,12 @@
       "kind": "concept",
       "prompt": "Sahifa yuklanayotganda kontent \"sakrab\" ketadi (layout shift). Eng ko'p uchraydigan sabablar va yechim?",
       "options": [
-        { "id": "a", "text": "O'lchami ko'rsatilmagan rasm va iframe'lar, kech yuklanadigan shriftlar, yuqoriga qo'shiladigan bannerlar; yechim: `width`/`height` yoki `aspect-ratio`, `font-display`, joy zaxiralash", "correct": true },
+        { "id": "a", "text": "O'lchamsiz rasm va iframe'lar, kech yuklanadigan shriftlar, yuqoriga qo'shiladigan bannerlar", "correct": true },
         { "id": "b", "text": "JavaScript juda katta", "hint": "Hajm yuklanishni sekinlashtiradi, lekin sakrash joy zaxiralanmaganidan." },
-        { "id": "c", "text": "CSS faylda juda ko'p selektor bor", "hint": "Selektorlar soni layout shift'ga sabab emas." },
+        { "id": "c", "text": "CSS faylda juda ko'p selektor bor, shuning uchun brauzer uslublarni bir necha marta qayta hisoblaydi", "hint": "Selektorlar soni layout shift'ga sabab emas." },
         { "id": "d", "text": "Bu brauzer xatosi, tuzatib bo'lmaydi", "hint": "Bu CLS metrikasi va u to'liq dasturchi nazoratida." }
       ],
-      "explanation": "Brauzer rasm hajmini yuklamaguncha bilmaydi; `width` va `height` atributlari joyni oldindan ajratadi. Cumulative Layout Shift (CLS) Core Web Vitals'dan biri va qidiruv reytingiga ta'sir qiladi.",
+      "explanation": "Yechim: `width`/`height` yoki `aspect-ratio`, `font-display` va joy zaxiralash. Brauzer rasm hajmini yuklamaguncha bilmaydi; `width` va `height` atributlari joyni oldindan ajratadi. Cumulative Layout Shift (CLS) Core Web Vitals'dan biri va qidiruv reytingiga ta'sir qiladi.",
       "reviewed": false
     },
     {
@@ -159,12 +159,12 @@
       "kind": "concept",
       "prompt": "CSS Modules va runtime CSS-in-JS (styled-components kabi) o'rtasida tanlashda asosiy savdo nima?",
       "options": [
-        { "id": "a", "text": "CSS Modules build vaqtida oddiy CSS beradi (tez, nol runtime); runtime CSS-in-JS dinamik uslublar va props bo'yicha o'zgarishda qulay, lekin runtime narx va SSR murakkabligi bor", "correct": true },
+        { "id": "a", "text": "CSS Modules — build vaqtida oddiy CSS, runtime narxi yo'q; CSS-in-JS — dinamik uslubda qulay, lekin runtime narxi bor", "correct": true },
         { "id": "b", "text": "CSS-in-JS har doim tezroq", "hint": "Aksincha: runtime'da uslub yaratish qo'shimcha ish." },
-        { "id": "c", "text": "CSS Modules'da class nomlari to'qnashadi", "hint": "Modules aynan nomlarni lokal qiladi (hash qo'shadi)." },
+        { "id": "c", "text": "CSS Modules'da class nomlari boshqa komponentlarnikiga to'qnashadi, shuning uchun katta loyihada ishlatib bo'lmaydi", "hint": "Modules aynan nomlarni lokal qiladi (hash qo'shadi)." },
         { "id": "d", "text": "Farqi faqat sintaksisda", "hint": "Farq qayerda va qachon CSS hosil bo'lishida." }
       ],
-      "explanation": "Yangi avlod (vanilla-extract, Panda, Tailwind) build vaqtida ishlab, ikkalasining afzalligini birlashtiradi. React Server Components bilan runtime CSS-in-JS yomon mos keladi, shuning uchun tendensiya nol-runtime tomon.",
+      "explanation": "Runtime CSS-in-JS SSR'ni ham murakkablashtiradi. Yangi avlod (vanilla-extract, Panda, Tailwind) build vaqtida ishlab, ikkalasining afzalligini birlashtiradi. React Server Components bilan runtime CSS-in-JS yomon mos keladi, shuning uchun tendensiya nol-runtime tomon.",
       "reviewed": false
     },
     {

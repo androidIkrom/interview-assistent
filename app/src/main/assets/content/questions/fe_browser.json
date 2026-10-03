@@ -8,8 +8,8 @@
       "kind": "concept",
       "prompt": "DOM nima?",
       "options": [
-        { "id": "a", "text": "Brauzer HTML'dan quradigan daraxt ko'rinishidagi obyekt modeli; JavaScript sahifani shu model orqali o'qiydi va o'zgartiradi", "correct": true },
-        { "id": "b", "text": "HTML faylning o'zi", "hint": "HTML — matn; DOM undan qurilgan jonli tuzilma." },
+        { "id": "a", "text": "Brauzer HTML'dan quradigan obyektlar daraxti; JavaScript sahifani shu orqali o'zgartiradi", "correct": true },
+        { "id": "b", "text": "HTML faylning o'zi: brauzer uni serverdan olib, o'zgartirmasdan matn ko'rinishida xotirada saqlaydi", "hint": "HTML — matn; DOM undan qurilgan jonli tuzilma." },
         { "id": "c", "text": "CSS qoidalari to'plami", "hint": "CSS uchun alohida CSSOM bor." },
         { "id": "d", "text": "JavaScript kutubxonasi", "hint": "Bu brauzerning o'z API'si." }
       ],
@@ -23,12 +23,12 @@
       "kind": "concept",
       "prompt": "`localStorage` va cookie farqi nima?",
       "options": [
-        { "id": "a", "text": "`localStorage` faqat brauzerda saqlanadi (~5 MB, muddatsiz) va serverga yuborilmaydi; cookie har so'rov bilan serverga ketadi, kichik (4 KB) va `HttpOnly` bo'lishi mumkin", "correct": true },
+        { "id": "a", "text": "`localStorage` faqat brauzerda qoladi va serverga ketmaydi; cookie har so'rov bilan yuboriladi", "correct": true },
         { "id": "b", "text": "Cookie kattaroq hajmni saqlaydi", "hint": "Aksincha, cookie 4 KB atrofida." },
-        { "id": "c", "text": "`localStorage` serverga avtomatik yuboriladi", "hint": "Hech qachon; faqat JavaScript o'qiydi." },
+        { "id": "c", "text": "`localStorage` ma'lumotlari har bir HTTP so'rov bilan serverga avtomatik yuboriladi, cookie esa yuborilmaydi", "hint": "Hech qachon; faqat JavaScript o'qiydi." },
         { "id": "d", "text": "Farqi yo'q", "hint": "Serverga yuborilishi va xavfsizlik bayroqlari butunlay farq qiladi." }
       ],
-      "explanation": "Sessiya tokeni uchun `HttpOnly; Secure; SameSite` cookie xavfsizroq: JavaScript (demak XSS) uni o'qiy olmaydi. `localStorage` UI afzalliklari (theme, qoralama) uchun; unga sir yozish XSS'da o'g'irlanadi.",
+      "explanation": "`localStorage` ~5 MB va muddatsiz; cookie kichik (4 KB) va `HttpOnly` bo'lishi mumkin. Sessiya tokeni uchun `HttpOnly; Secure; SameSite` cookie xavfsizroq: JavaScript (demak XSS) uni o'qiy olmaydi. `localStorage` UI afzalliklari (theme, qoralama) uchun; unga sir yozish XSS'da o'g'irlanadi.",
       "reviewed": false
     },
     {
@@ -39,12 +39,12 @@
       "prompt": "Server 500 qaytarganda bu kod `catch` ga tushmayapti. Nega?",
       "code": "try {\n  const res = await fetch('/api/users');\n  const users = await res.json();\n  render(users);\n} catch (e) {\n  showError(e);\n}",
       "options": [
-        { "id": "a", "text": "`fetch` HTTP xato kodlarida reject qilmaydi, faqat tarmoq xatosida; `res.ok` ni tekshirib, o'zingiz `throw` qilishingiz kerak", "correct": true },
+        { "id": "a", "text": "`fetch` HTTP xato kodlarida reject qilmaydi — `res.ok` ni tekshirib, o'zingiz `throw` qilasiz", "correct": true },
         { "id": "b", "text": "`await` `try` ichida ishlamaydi", "hint": "Ishlaydi; `await` reject'ni exception qiladi." },
-        { "id": "c", "text": "`res.json()` xatolarni yutadi", "hint": "`json()` faqat tana JSON bo'lmasa xato beradi." },
+        { "id": "c", "text": "`res.json()` server qaytargan xatolarni jimgina yutib yuboradi, shuning uchun `catch` ishlamaydi", "hint": "`json()` faqat tana JSON bo'lmasa xato beradi." },
         { "id": "d", "text": "`catch` dan oldin `finally` kerak", "hint": "`finally` ixtiyoriy va bunga aloqasi yo'q." }
       ],
-      "explanation": "`fetch` uchun 404 va 500 — muvaffaqiyatli \"javob keldi\" holati. Shuning uchun `if (!res.ok) throw new Error(res.status)` deyarli har doim kerak; axios kabi kutubxonalar buni o'zi qiladi.",
+      "explanation": "`fetch` faqat tarmoq xatosida reject qiladi. `fetch` uchun 404 va 500 — muvaffaqiyatli \"javob keldi\" holati. Shuning uchun `if (!res.ok) throw new Error(res.status)` deyarli har doim kerak; axios kabi kutubxonalar buni o'zi qiladi.",
       "reviewed": false
     },
     {
@@ -54,8 +54,8 @@
       "kind": "concept",
       "prompt": "Brauzer qachon CORS preflight (`OPTIONS`) so'rovini yuboradi?",
       "options": [
-        { "id": "a", "text": "\"Oddiy\" bo'lmagan so'rovlarda: `PUT`/`DELETE`/`PATCH`, `Content-Type: application/json`, maxsus sarlavhalar (masalan, `Authorization`)", "correct": true },
-        { "id": "b", "text": "Har qanday boshqa domenga so'rovda", "hint": "Oddiy `GET` yoki form-urlencoded `POST` preflight'siz ketadi (javob baribir CORS tekshiruvidan o'tadi)." },
+        { "id": "a", "text": "\"Oddiy\" bo'lmagan so'rovlarda: `PUT`/`DELETE`, JSON `Content-Type`, `Authorization` kabi sarlavhalar", "correct": true },
+        { "id": "b", "text": "Boshqa domen yoki portga yuborilgan har qanday so'rovdan oldin, hatto sarlavhasiz oddiy `GET` bo'lsa ham", "hint": "Oddiy `GET` yoki form-urlencoded `POST` preflight'siz ketadi (javob baribir CORS tekshiruvidan o'tadi)." },
         { "id": "c", "text": "Faqat HTTPS'da", "hint": "Protokolga bog'liq emas." },
         { "id": "d", "text": "Hech qachon, bu server ishi", "hint": "Preflight'ni brauzer yuboradi, server unga javob beradi." }
       ],
@@ -69,12 +69,12 @@
       "kind": "concept",
       "prompt": "Event delegation nima va u nega foydali?",
       "options": [
-        { "id": "a", "text": "Hodisalar yuqoriga ko'tarilgani (bubbling) uchun bitta listener ota elementga qo'yiladi va `event.target` orqali qaysi bola bosilgani aniqlanadi; ko'p va dinamik elementlar uchun tejamkor", "correct": true },
+        { "id": "a", "text": "Bubbling tufayli bitta listener ota elementga qo'yiladi va `event.target` bilan bola aniqlanadi", "correct": true },
         { "id": "b", "text": "Hodisani boshqa elementga qo'lda yuborish", "hint": "Bu `dispatchEvent`; delegation esa tinglashni markazlashtirish." },
-        { "id": "c", "text": "Har elementga alohida listener qo'yish", "hint": "Aksincha, bundan qochish uchun." },
+        { "id": "c", "text": "Har bir bola elementga alohida listener qo'yib, hodisalarni ularning har biri ichida qayta ishlash", "hint": "Aksincha, bundan qochish uchun." },
         { "id": "d", "text": "Faqat jQuery'da ishlaydi", "hint": "Oddiy DOM API bilan ham ishlaydi; React ham ichida shunga yaqin yondashuvdan foydalanadi." }
       ],
-      "explanation": "1000 ta ro'yxat elementiga 1000 listener o'rniga bitta `ul` listener; keyin qo'shilgan elementlar ham avtomatik ishlaydi. `stopPropagation` bubbling'ni to'xtatadi va delegation'ni buzishi mumkin.",
+      "explanation": "Ko'p va dinamik elementlar uchun tejamkor. 1000 ta ro'yxat elementiga 1000 listener o'rniga bitta `ul` listener; keyin qo'shilgan elementlar ham avtomatik ishlaydi. `stopPropagation` bubbling'ni to'xtatadi va delegation'ni buzishi mumkin.",
       "reviewed": false
     },
     {
@@ -84,10 +84,10 @@
       "kind": "concept",
       "prompt": "Reflow (layout) va repaint farqi nima va qaysi biri qimmatroq?",
       "options": [
-        { "id": "a", "text": "Reflow — elementlar o'lchami va joyini qayta hisoblash (qimmat, butun daraxtga tarqalishi mumkin); repaint — faqat ko'rinishni (rang, soya) qayta chizish", "correct": true },
+        { "id": "a", "text": "Reflow — o'lcham va joyni qayta hisoblash (qimmat); repaint — faqat rang va soyani qayta chizish", "correct": true },
         { "id": "b", "text": "Repaint qimmatroq", "hint": "Repaint'da geometriya o'zgarmaydi; reflow undan keyin baribir repaint'ni ham keltirib chiqaradi." },
         { "id": "c", "text": "Ikkalasi bir xil narsa", "hint": "`color` o'zgarishi faqat repaint, `width` o'zgarishi reflow + repaint." },
-        { "id": "d", "text": "Bular faqat eski brauzerlarda bor", "hint": "Har brauzerning render pipeline'ida bor." }
+        { "id": "d", "text": "Bular faqat eski brauzerlarda bor, zamonaviy brauzerlar sahifani GPU'da bir martada chizadi va qayta hisoblamaydi", "hint": "Har brauzerning render pipeline'ida bor." }
       ],
       "explanation": "Siklda `el.offsetHeight` o'qib, keyin `el.style.height` yozish \"layout thrashing\" — har iteratsiyada majburiy reflow. `transform` va `opacity` animatsiyalari layout va paint'ni chetlab, faqat compositor'da ishlaydi, shuning uchun silliq.",
       "reviewed": false
@@ -99,12 +99,12 @@
       "kind": "concept",
       "prompt": "SSR, SSG va CSR o'rtasida qanday tanlanadi?",
       "options": [
-        { "id": "a", "text": "SSG — kontent kam o'zgaradigan sahifalar (blog, hujjat), eng tez va arzon; SSR — har so'rovda shaxsiy yoki tez o'zgaradigan ma'lumot, SEO kerak; CSR — kirish talab qiladigan interaktiv ilova (dashboard), SEO muhim emas", "correct": true },
+        { "id": "a", "text": "SSG — kam o'zgaradigan sahifalar; SSR — shaxsiy yoki tez o'zgaradigan ma'lumot va SEO; CSR — dashboard", "correct": true },
         { "id": "b", "text": "SSR har doim eng yaxshi", "hint": "SSR server narxi va murakkablik qo'shadi; statik sahifaga keraksiz." },
         { "id": "c", "text": "CSR SEO uchun eng yaxshi", "hint": "Qidiruv botlari JavaScript'ni ishga tushirsa ham, bo'sh HTML indekslashni yomonlashtiradi." },
-        { "id": "d", "text": "SSG dinamik ma'lumot bilan ishlamaydi", "hint": "ISR (incremental static regeneration) statik sahifani vaqti-vaqti bilan yangilaydi." }
+        { "id": "d", "text": "SSG dinamik ma'lumot bilan umuman ishlamaydi, shuning uchun uni faqat statik landing sahifalarda ishlatish mumkin", "hint": "ISR (incremental static regeneration) statik sahifani vaqti-vaqti bilan yangilaydi." }
       ],
-      "explanation": "Next.js kabi freymvorklar sahifa darajasida aralashtirish imkonini beradi: marketing sahifalari SSG, mahsulot sahifasi ISR, shaxsiy kabinet SSR yoki CSR. Tanlov mezonlari: ma'lumot yangiligi, SEO, shaxsiylashtirish, server narxi.",
+      "explanation": "SSG eng tez va arzon; CSR'da SEO muhim emas. Next.js kabi freymvorklar sahifa darajasida aralashtirish imkonini beradi: marketing sahifalari SSG, mahsulot sahifasi ISR, shaxsiy kabinet SSR yoki CSR. Tanlov mezonlari: ma'lumot yangiligi, SEO, shaxsiylashtirish, server narxi.",
       "reviewed": false
     },
     {

@@ -182,6 +182,7 @@ class ContentAssetsTest {
     /** Topics whose option lengths are already balanced; grows batch by batch until it holds all 88. */
     private val lengthFixedTopics = setOf(
         "android.kotlin", "android.components", "android.compose", "android.async", "android.data", "android.arch",
+        "fe.js", "fe.htmlcss", "fe.react", "fe.ts", "fe.browser", "fe.arch",
     )
 
     /**
