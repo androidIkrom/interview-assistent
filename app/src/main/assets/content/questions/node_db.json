@@ -24,10 +24,10 @@
       "kind": "concept",
       "prompt": "Node'da baza bilan ishlashda connection pool nima uchun kerak?",
       "options": [
-        { "id": "a", "text": "Har so'rovda yangi ulanish ochish qimmat; pool bir nechta ochiq ulanishni saqlab, so'rovlarga navbat bilan beradi", "correct": true },
+        { "id": "a", "text": "Har so'rovda yangi ulanish ochish qimmat; pool ochiq ulanishlarni saqlab, navbat bilan beradi", "correct": true },
         { "id": "b", "text": "So'rovlarni keshlash uchun", "hint": "Pool natijani emas, ulanishni qayta ishlatadi." },
         { "id": "c", "text": "Faqat PostgreSQL uchun kerak", "hint": "Har qanday baza (MySQL, Mongo) klientida bor." },
-        { "id": "d", "text": "Pool so'rovlarni tezlashtirmaydi, faqat log yozadi", "hint": "Ulanish ochishdan qutqarish aynan tezlashtiradi." }
+        { "id": "d", "text": "Pool so'rovlarni umuman tezlashtirmaydi: u faqat har bir so'rovni log faylga yozib boradi, xolos", "hint": "Ulanish ochishdan qutqarish aynan tezlashtiradi." }
       ],
       "explanation": "Pool ilova boshida bir marta yaratiladi (modul darajasida) va hamma joyda ulashiladi. Har so'rovda `new Client()` yaratish ulanish limitini tez tugatadi. Tranzaksiya bir ulanishda bajarilishi kerak: `pool.connect()` bilan klient olib, oxirida `release()`.",
       "reviewed": false
@@ -39,8 +39,8 @@
       "kind": "concept",
       "prompt": "Prisma, TypeORM, Drizzle kabi ORM/query builder'lar nima beradi?",
       "options": [
-        { "id": "a", "text": "Tiplangan so'rovlar (natija tipi avtomatik), migratsiyalar, injection'dan himoya; narxi: murakkab so'rovlarda cheklov va yashirin N+1", "correct": true },
-        { "id": "b", "text": "SQL bilishni keraksiz qiladi", "hint": "Optimizatsiya va murakkab so'rovlar uchun SQL baribir kerak." },
+        { "id": "a", "text": "Tiplangan so'rovlar, migratsiyalar va injection'dan himoya; narxi — murakkab so'rovda cheklov, yashirin N+1", "correct": true },
+        { "id": "b", "text": "SQL bilishni butunlay keraksiz qiladi: har qanday murakkab so'rovni ORM o'zi eng samarali shaklda yozib beradi", "hint": "Optimizatsiya va murakkab so'rovlar uchun SQL baribir kerak." },
         { "id": "c", "text": "Bazani tezlashtiradi", "hint": "Qo'shimcha qatlam; qulaylik uchun." },
         { "id": "d", "text": "Faqat NoSQL uchun", "hint": "Asosan relyatsion bazalar uchun." }
       ],
@@ -70,12 +70,12 @@
       "kind": "concept",
       "prompt": "Node'da baza tranzaksiyasi qanday to'g'ri yoziladi?",
       "options": [
-        { "id": "a", "text": "Bitta ulanishda `BEGIN` → amallar → `COMMIT`, xatoda `ROLLBACK`, `finally` da ulanishni qaytarish; ORM'da `prisma.$transaction` yoki `dataSource.transaction` callback'i", "correct": true },
-        { "id": "b", "text": "`pool.query('BEGIN')` va keyin `pool.query(...)` lar", "hint": "Pool har so'rovga boshqa ulanish berishi mumkin; tranzaksiya bitta ulanishga bog'liq." },
+        { "id": "a", "text": "Bitta ulanishda `BEGIN` → amallar → `COMMIT`, xatoda `ROLLBACK`, `finally` da ulanishni qaytarish", "correct": true },
+        { "id": "b", "text": "`pool.query('BEGIN')` chaqirib, keyin oddiy `pool.query(...)` lar bilan amallarni ketma-ket bajarish yetarli", "hint": "Pool har so'rovga boshqa ulanish berishi mumkin; tranzaksiya bitta ulanishga bog'liq." },
         { "id": "c", "text": "Tranzaksiya kerak emas, Node bitta oqimli", "hint": "Oqim soni emas, baza amallarining atomikligi masala." },
         { "id": "d", "text": "Har so'rovdan keyin `COMMIT`", "hint": "Unda bu tranzaksiya emas, alohida so'rovlar." }
       ],
-      "explanation": "Tranzaksiya ichida tashqi API chaqirish yoki uzoq kutish qulflarni ushlab turadi; tranzaksiya qisqa bo'lsin. Interaktiv tranzaksiya (Prisma `$transaction(async tx => ...)`) ichida `tx` ni ishlatish shart, `prisma` ni emas — aks holda amal tranzaksiyadan tashqarida ketadi.",
+      "explanation": "ORM'da `prisma.$transaction` yoki `dataSource.transaction` callback'i ishlatiladi. Tranzaksiya ichida tashqi API chaqirish yoki uzoq kutish qulflarni ushlab turadi; tranzaksiya qisqa bo'lsin. Interaktiv tranzaksiya (Prisma `$transaction(async tx => ...)`) ichida `tx` ni ishlatish shart, `prisma` ni emas — aks holda amal tranzaksiyadan tashqarida ketadi.",
       "reviewed": false
     },
     {
@@ -85,12 +85,12 @@
       "kind": "concept",
       "prompt": "Redis'ni Node backend'da nima uchun ishlatish mumkin?",
       "options": [
-        { "id": "a", "text": "Kesh, sessiya saqlash, rate limiting hisoblagichlari, navbat (BullMQ), pub/sub, taqsimlangan qulf — tez, xotirada, ko'p jarayon orasida ulashiladigan holat", "correct": true },
-        { "id": "b", "text": "Asosiy baza sifatida, PostgreSQL o'rniga", "hint": "Doimiylik va so'rovlar relyatsion bazadek emas; u yordamchi saqlagich." },
+        { "id": "a", "text": "Kesh, sessiya, rate limiting hisoblagichi, navbat (BullMQ), pub/sub, taqsimlangan qulf", "correct": true },
+        { "id": "b", "text": "Asosiy baza sifatida, PostgreSQL o'rniga — u tezroq va barcha ma'lumotni xavfsiz saqlaydi", "hint": "Doimiylik va so'rovlar relyatsion bazadek emas; u yordamchi saqlagich." },
         { "id": "c", "text": "Faqat kesh uchun", "hint": "Kesh bitta qo'llanish; navbat va pub/sub ham keng tarqalgan." },
         { "id": "d", "text": "Statik fayllarni saqlash uchun", "hint": "Fayllar obyekt saqlagichda (S3) yoki CDN'da." }
       ],
-      "explanation": "Node ko'p jarayonda ishlagani uchun jarayon xotirasidagi holat (sessiya, hisoblagich) ulashilmaydi; Redis umumiy joy. TTL, atomik amallar (`INCR`, `SET NX`) va Lua skriptlari race condition'siz mantiq yozish imkonini beradi.",
+      "explanation": "Redis — tez, xotirada va ko'p jarayon orasida ulashiladigan holat. Node ko'p jarayonda ishlagani uchun jarayon xotirasidagi holat (sessiya, hisoblagich) ulashilmaydi; Redis umumiy joy. TTL, atomik amallar (`INCR`, `SET NX`) va Lua skriptlari race condition'siz mantiq yozish imkonini beradi.",
       "reviewed": false
     },
     {
@@ -100,12 +100,12 @@
       "kind": "concept",
       "prompt": "MongoDB'da sxema dizayni (embedding vs referencing) qanday tanlanadi?",
       "options": [
-        { "id": "a", "text": "Birga o'qiladigan, cheklangan hajmli ma'lumot ichiga joylanadi (buyurtma ichida satrlar); mustaqil o'sadigan yoki ko'p joydan ishlatiladigan ma'lumot alohida hujjat va havola; 16 MB hujjat limiti va yangilanish naqshlari hisobga olinadi", "correct": true },
-        { "id": "b", "text": "Har doim relyatsion bazadagidek normallashtirish", "hint": "Mongo'da `JOIN` (`$lookup`) qimmat; birga o'qiladigan ma'lumot birga saqlanadi." },
+        { "id": "a", "text": "Birga o'qiladigan, cheklangan hajmli ma'lumot ichiga joylanadi; mustaqil o'sadigani — alohida hujjat", "correct": true },
+        { "id": "b", "text": "Har doim relyatsion bazadagidek to'liq normallashtirish va har bog'lanishni alohida kolleksiyaga chiqarish", "hint": "Mongo'da `JOIN` (`$lookup`) qimmat; birga o'qiladigan ma'lumot birga saqlanadi." },
         { "id": "c", "text": "Hamma narsani bitta hujjatga joylash", "hint": "Cheksiz o'sadigan massivlar (izohlar) hujjatni limitga yetkazadi va yangilashni sekinlashtiradi." },
         { "id": "d", "text": "Sxema kerak emas, Mongo sxemasiz", "hint": "Baza majburlamaydi, lekin ilova sxemasiz yashay olmaydi; Mongoose/validator bilan belgilanadi." }
       ],
-      "explanation": "Qoida: \"birga ishlatiladigan ma'lumot birga saqlanadi\". Hujjatli model so'rovlar shakliga qarab loyihalanadi, munosabatlarga qarab emas. Indekslar va `explain()` relyatsion bazadagidek muhim.",
+      "explanation": "16 MB hujjat limiti va yangilanish naqshlari ham hisobga olinadi. Qoida: \"birga ishlatiladigan ma'lumot birga saqlanadi\". Hujjatli model so'rovlar shakliga qarab loyihalanadi, munosabatlarga qarab emas. Indekslar va `explain()` relyatsion bazadagidek muhim.",
       "reviewed": false
     },
     {
@@ -115,12 +115,12 @@
       "kind": "concept",
       "prompt": "Cache-aside bilan ishlaganda \"cache stampede\" (thundering herd) nima va qanday oldini olinadi?",
       "options": [
-        { "id": "a", "text": "Mashhur kalit muddati tugaganda yuzlab so'rov bir vaqtda bazaga tushadi; yechim: bitta so'rov hisoblab, qolganlar kutadi (qulf yoki in-flight promise dedup), muddatni tasodifiy yoyish, eskirgan qiymatni berib fonda yangilash", "correct": true },
-        { "id": "b", "text": "Kesh juda katta bo'lib ketishi", "hint": "Bu hajm muammosi; stampede — bir vaqtdagi qayta hisoblash." },
+        { "id": "a", "text": "Mashhur kalit eskirganda yuzlab so'rov bazaga birdan tushadi; yechim — bitta so'rov hisoblab, qolganlar kutadi", "correct": true },
+        { "id": "b", "text": "Kesh juda katta bo'lib, Redis xotirasi tugashi va eski kalitlar oldindan ogohlantirishsiz avtomatik o'chirilib ketishi holati", "hint": "Bu hajm muammosi; stampede — bir vaqtdagi qayta hisoblash." },
         { "id": "c", "text": "Oldini olib bo'lmaydi", "hint": "Request coalescing va stale-while-revalidate standart yechimlar." },
         { "id": "d", "text": "TTL'ni olib tashlash", "hint": "Unda ma'lumot hech qachon yangilanmaydi." }
       ],
-      "explanation": "Node'da bitta jarayon ichida oson: `Map<key, Promise>` — birinchi so'rov promise'ni saqlaydi, qolganlar o'sha promise'ni kutadi. Ko'p jarayon uchun Redis `SET NX` qulfi yoki \"probabilistic early expiration\".",
+      "explanation": "Muddatni tasodifiy yoyish va eskirgan qiymatni berib fonda yangilash ham yordam beradi. Node'da bitta jarayon ichida oson: `Map<key, Promise>` — birinchi so'rov promise'ni saqlaydi, qolganlar o'sha promise'ni kutadi. Ko'p jarayon uchun Redis `SET NX` qulfi yoki \"probabilistic early expiration\".",
       "reviewed": false
     },
     {
@@ -130,12 +130,12 @@
       "kind": "concept",
       "prompt": "Node servislari ko'payganda (50 jarayon, har biri pool 10) PostgreSQL ulanishlar limiti tugaydi. Yechim?",
       "options": [
-        { "id": "a", "text": "Tashqi pooler (PgBouncer transaction rejimida) orqali minglab klient ulanishini o'nlab baza ulanishiga multiplekslash; har servis pool'ini kichraytirish; prepared statement va sessiya holatiga tayanadigan kodni moslash", "correct": true },
-        { "id": "b", "text": "`max_connections` ni 5000 qilish", "hint": "Har ulanish jarayon va xotira; baza sekinlashadi." },
+        { "id": "a", "text": "PgBouncer (transaction rejimi) bilan klient ulanishlarini o'nlab baza ulanishiga multiplekslash", "correct": true },
+        { "id": "b", "text": "PostgreSQL'da `max_connections` ni 5000 qilish — server har qancha ulanishni muammosiz ko'tara oladi", "hint": "Har ulanish jarayon va xotira; baza sekinlashadi." },
         { "id": "c", "text": "Pool'ni butunlay o'chirish", "hint": "Har so'rovda ulanish ochish yanada yomon." },
         { "id": "d", "text": "Servislar sonini kamaytirish", "hint": "Masshtabdan voz kechish yechim emas." }
       ],
-      "explanation": "Transaction rejimida PgBouncer ulanishni faqat tranzaksiya davomida beradi, shuning uchun `SET` sessiya o'zgaruvchilari va ba'zi prepared statement'lar ishlamaydi (Prisma, pg kutubxonalari uchun maxsus sozlamalar). Serverless muhitda (Lambda) bu muammo yanada keskin.",
+      "explanation": "Har servis pool'ini kichraytirish va prepared statement'larga tayanadigan kodni moslash kerak. Transaction rejimida PgBouncer ulanishni faqat tranzaksiya davomida beradi, shuning uchun `SET` sessiya o'zgaruvchilari va ba'zi prepared statement'lar ishlamaydi (Prisma, pg kutubxonalari uchun maxsus sozlamalar). Serverless muhitda (Lambda) bu muammo yanada keskin.",
       "reviewed": false
     },
     {

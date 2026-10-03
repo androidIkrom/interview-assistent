@@ -184,6 +184,7 @@ class ContentAssetsTest {
         "android.kotlin", "android.components", "android.compose", "android.async", "android.data", "android.arch",
         "fe.js", "fe.htmlcss", "fe.react", "fe.ts", "fe.browser", "fe.arch",
         "py.lang", "py.idioms", "py.web", "py.async", "py.db", "py.arch",
+        "node.arch", "node.async", "node.db", "node.js", "node.runtime", "node.web",
     )
 
     /**
