@@ -110,6 +110,12 @@ class ContentAssetsTest {
         "core.testing" to listOf(10, 10, 8, 4),
         "core.sysdesign" to listOf(0, 10, 16, 22),
         "core.aicode" to listOf(6, 8, 8, 6),
+        "java.lang" to listOf(6, 5, 2, 1),
+        "java.collections" to listOf(5, 4, 2, 1),
+        "java.spring" to listOf(4, 4, 3, 2),
+        "java.concurrency" to listOf(4, 4, 3, 2),
+        "java.data" to listOf(3, 3, 2, 2),
+        "java.arch" to listOf(2, 2, 2, 2),
     )
 
     @Test

@@ -1,0 +1,202 @@
+{
+  "topic": "java.concurrency",
+  "questions": [
+    {
+      "id": "java.concurrency.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Java'da thread yaratishning asosiy usullari qaysilar?",
+      "options": [
+        { "id": "a", "text": "`Thread` klassidan meros olish, `Runnable` (yoki `Callable`) implement qilib `Thread`ga berish, yoki `ExecutorService` orqali vazifa topshirish (amalda afzal)", "correct": true },
+        { "id": "b", "text": "Faqat `Thread`dan meros olish", "hint": "Bu eng kam tavsiya etiladigan usul — klass boshqa narsadan meros ololmaydi." },
+        { "id": "c", "text": "`new Process()`", "hint": "Process — alohida OS jarayoni, thread emas." },
+        { "id": "d", "text": "Thread'lar avtomatik yaratiladi", "hint": "Dasturchi aniq yaratadi yoki pool'dan oladi." }
+      ],
+      "explanation": "`new Thread(() -> work()).start()` — `run()` emas, `start()` (aks holda joriy thread'da bajariladi). Amaliyotda thread'ni qo'lda yaratish kamdan-kam — `ExecutorService` pool boshqaradi, qayta ishlatadi, cheklaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "java.concurrency.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Race condition nima?",
+      "options": [
+        { "id": "a", "text": "Ikki yoki ko'p thread umumiy ma'lumotga sinxronizatsiyasiz kirib, natija bajarilish tartibiga bog'liq bo'lib qolishi — har ishga tushirishda boshqa natija", "correct": true },
+        { "id": "b", "text": "Ikki thread bir-birini kutib qolishi", "hint": "Bu deadlock." },
+        { "id": "c", "text": "Thread juda tez ishlashi", "hint": "Tezlik muammo emas; kirish tartibi muammo." },
+        { "id": "d", "text": "Bitta thread ikki marta ishga tushishi", "hint": "`start()` ikkinchi marta `IllegalThreadStateException` beradi — bu boshqa narsa." }
+      ],
+      "explanation": "Klassik: `count++` — o'qish, oshirish, yozish, uch qadam. Ikki thread bir vaqtda o'qisa, bitta inkrement yo'qoladi. Yechimlar: `synchronized`, `AtomicInteger`, `Lock`, yoki umumiy mutable holatdan qochish (immutable, thread-confined).",
+      "reviewed": false
+    },
+    {
+      "id": "java.concurrency.003",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`synchronized` kalit so'zi nima qiladi?",
+      "options": [
+        { "id": "a", "text": "Blok/metodga bir vaqtda faqat bitta thread kirishini ta'minlaydi (monitor qulfi) va qulf chiqarilganda o'zgarishlar boshqa thread'larga ko'rinadi (happens-before)", "correct": true },
+        { "id": "b", "text": "Metodni tezlashtiradi", "hint": "Aksincha — qulf kutish vaqti qo'shadi." },
+        { "id": "c", "text": "Thread'ni to'xtatadi", "hint": "To'xtatmaydi — kirishni ketma-ket qiladi." },
+        { "id": "d", "text": "O'zgaruvchini immutable qiladi", "hint": "O'zgartirish mumkin, lekin bir vaqtda bitta thread." }
+      ],
+      "explanation": "`synchronized` metod — `this` (yoki static'da klass) ustida qulf. Blok: `synchronized (lock) { ... }` — maxsus private lock ob'ekti afzal (tashqi kod `this`ni qulflab deadlock qilmasin). Reentrant: bitta thread o'zi ushlagan qulfga qayta kira oladi.",
+      "reviewed": false
+    },
+    {
+      "id": "java.concurrency.004",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Deadlock nima va qanday paydo bo'ladi?",
+      "options": [
+        { "id": "a", "text": "Ikki (yoki ko'p) thread bir-biri ushlab turgan qulfni kutib, abadiy to'xtab qolishi: T1 A'ni olib B'ni kutadi, T2 B'ni olib A'ni kutadi", "correct": true },
+        { "id": "b", "text": "Thread exception bilan tugashi", "hint": "Exception — thread tugaydi; deadlock — hech qachon tugamaydi." },
+        { "id": "c", "text": "CPU 100% band bo'lishi", "hint": "Deadlock'da thread'lar kutadi — CPU odatda bo'sh. 100% CPU — livelock yoki busy loop." },
+        { "id": "d", "text": "Xotira tugashi", "hint": "Bu `OutOfMemoryError`." }
+      ],
+      "explanation": "Oldini olish: qulflarni doim bir xil tartibda olish, `tryLock(timeout)`, bitta qulf bilan cheklash, qulf ichida tashqi kod chaqirmaslik. Aniqlash: thread dump (`jstack`) \"Found one Java-level deadlock\" deb ko'rsatadi.",
+      "reviewed": false
+    },
+    {
+      "id": "java.concurrency.005",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`volatile` nima beradi va nima bermaydi?",
+      "options": [
+        { "id": "a", "text": "Beradi — ko'rinuvchanlik (yozish darhol boshqa thread'larga ko'rinadi, CPU cache'da qolmaydi) va qayta tartiblashdan himoya; bermaydi — atomiklik (`volatile int count; count++` hali ham race)", "correct": true },
+        { "id": "b", "text": "`synchronized` bilan bir xil", "hint": "Qulf bermaydi — faqat ko'rinuvchanlik." },
+        { "id": "c", "text": "O'zgaruvchini thread-safe qiladi", "hint": "Oddiy o'qish/yozish uchun — ha; murakkab operatsiya (`++`, check-then-act) uchun — yo'q." },
+        { "id": "d", "text": "O'zgaruvchini xotiradan o'chirmaydi", "hint": "GC bilan aloqasi yo'q." }
+      ],
+      "explanation": "Tipik ishlatish: `volatile boolean running` — bir thread o'chiradi, boshqasi sikl shartida o'qiydi. `volatile`siz JIT o'qishni registrga ko'chirib, sikl abadiy bo'lishi mumkin. Atomik operatsiya kerak bo'lsa — `AtomicInteger` (CAS asosida).",
+      "reviewed": false
+    },
+    {
+      "id": "java.concurrency.006",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`ExecutorService` to'g'ridan-to'g'ri thread yaratishdan nimasi bilan yaxshi?",
+      "options": [
+        { "id": "a", "text": "Thread'larni qayta ishlatadi (yaratish qimmat), sonini cheklaydi (resurs portlashi yo'q), navbat beradi, `Future` orqali natija/xato, graceful shutdown; vazifa va ijro siyosati ajratiladi", "correct": true },
+        { "id": "b", "text": "Farqi yo'q, faqat sintaksis", "hint": "10 000 so'rov uchun 10 000 thread yaratib ko'ring — OOM." },
+        { "id": "c", "text": "`ExecutorService` thread ishlatmaydi", "hint": "Ishlatadi — pool'da." },
+        { "id": "d", "text": "Faqat bitta thread'da ishlaydi", "hint": "`newSingleThreadExecutor` — bir variant; `newFixedThreadPool(n)` — ko'p." }
+      ],
+      "explanation": "`Executors.newCachedThreadPool` — cheksiz o'sadi, production'da xavfli. `ThreadPoolExecutor(core, max, queue, rejectionPolicy)` — aniq nazorat. `shutdown()` + `awaitTermination` unutilsa, ilova to'xtamaydi (non-daemon thread'lar). Java 21: `newVirtualThreadPerTaskExecutor()`.",
+      "reviewed": false
+    },
+    {
+      "id": "java.concurrency.007",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Quyidagi kod thread-safe'mi?",
+      "code": "public class Cache {\n    private final Map<String, String> map = new HashMap<>();\n\n    public String get(String key) {\n        if (!map.containsKey(key)) {\n            map.put(key, load(key));\n        }\n        return map.get(key);\n    }\n}",
+      "options": [
+        { "id": "a", "text": "Yo'q — `HashMap` thread-safe emas (ko'p oqimda buzilishi, hatto abadiy sikl) va check-then-act race: ikki thread bir kalitni ikki marta yuklaydi. `ConcurrentHashMap.computeIfAbsent(key, this::load)` kerak", "correct": true },
+        { "id": "b", "text": "Ha — `final` map thread-safe qiladi", "hint": "`final` havolani qotiradi, ichki holatni emas." },
+        { "id": "c", "text": "Ha — `containsKey` tekshiruvi himoya qiladi", "hint": "Tekshiruv va `put` orasida boshqa thread kirishi mumkin." },
+        { "id": "d", "text": "Yo'q, lekin `synchronized` qo'yish yagona yechim", "hint": "Ishlaydi, lekin butun cache'ni qulflaydi; `ConcurrentHashMap` nozikroq." }
+      ],
+      "explanation": "`HashMap` ko'p oqimda `put` vaqtida resize — ichki tuzilma buzilishi (Java 7'da abadiy sikl mashhur edi). `computeIfAbsent` atomik — faqat bitta thread yuklaydi, boshqalar kutadi. `load` uzoq bo'lsa — bucket qulflanadi; Caffeine kutubxonasi — production cache uchun.",
+      "reviewed": false
+    },
+    {
+      "id": "java.concurrency.008",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`Callable` va `Future` qanday ishlaydi?",
+      "options": [
+        { "id": "a", "text": "`Callable<T>` — natija qaytaradigan va exception tashlashi mumkin vazifa; `executor.submit(callable)` darhol `Future<T>` qaytaradi; `future.get()` natijani kutadi (bloklaydi), vazifa xatosi `ExecutionException` ichida keladi", "correct": true },
+        { "id": "b", "text": "`Future` natijani darhol beradi", "hint": "Vazifa tugamagan bo'lsa `get()` kutadi." },
+        { "id": "c", "text": "`Callable` `Runnable` bilan bir xil", "hint": "`Runnable.run()` void va checked exception tashlamaydi." },
+        { "id": "d", "text": "`Future`ni bekor qilib bo'lmaydi", "hint": "`cancel(true)` — interrupt yuboradi (vazifa unga javob bersa)." }
+      ],
+      "explanation": "`get(timeout, unit)` — cheksiz kutmaslik uchun. `Future` zanjirlab bo'lmaydi (\"tugaganda shuni qil\" yo'q) — shu sabab `CompletableFuture` paydo bo'ldi. `invokeAll(tasks)` — hammasini topshirib, hammasini kutish.",
+      "reviewed": false
+    },
+    {
+      "id": "java.concurrency.009",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Quyidagi `CompletableFuture` kodida qanday muammo bor?",
+      "code": "CompletableFuture<User> user = CompletableFuture.supplyAsync(() -> userClient.get(id));\nCompletableFuture<List<Order>> orders = CompletableFuture.supplyAsync(() -> orderClient.list(id));\n\nreturn user.thenCombine(orders, Profile::new).join();",
+      "options": [
+        { "id": "a", "text": "Executor ko'rsatilmagan — umumiy `ForkJoinPool.commonPool()` ishlatiladi (CPU soni - 1 thread); blocking I/O chaqiruvlar uni to'ldiradi va butun JVM'dagi parallel stream'lar/boshqa async kod to'xtaydi. Alohida executor berish kerak; xato ishlovi (`exceptionally`) ham yo'q", "correct": true },
+        { "id": "b", "text": "`thenCombine` ikki future'ni parallel bajarmaydi", "hint": "Ikkalasi `supplyAsync` bilan allaqachon boshlangan — parallel." },
+        { "id": "c", "text": "`join()` o'rniga `get()` kerak", "hint": "`join` checked exception tashlamaydi — bu yerda qulayroq; muammo boshqa." },
+        { "id": "d", "text": "Muammo yo'q", "hint": "100 parallel so'rov, har I/O 500 ms — commonPool'da nima bo'ladi?" }
+      ],
+      "explanation": "Qoida: I/O-bound ish — o'z executor'i (`supplyAsync(task, ioExecutor)`); commonPool — faqat qisqa CPU ish. `thenApplyAsync` vs `thenApply` — qaysi thread'da davom etishi. Java 21 virtual thread executor bu muammoni deyarli yo'q qiladi: har vazifa o'z yengil thread'ida bloklanadi.",
+      "reviewed": false
+    },
+    {
+      "id": "java.concurrency.010",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Java 21 virtual thread nima va u platform thread'dan nimasi bilan farq qiladi?",
+      "options": [
+        { "id": "a", "text": "JVM boshqaradigan yengil thread: millionlab yaratish mumkin (stack heap'da, o'sadi), bloklanganda (I/O, sleep, lock) carrier platform thread'ni bo'shatadi — thread-per-request modeli masshtab oladi, reaktiv kod yozmasdan", "correct": true },
+        { "id": "b", "text": "Tezroq ishlaydigan thread", "hint": "CPU ish tezligi bir xil; afzallik — bloklanish arzon." },
+        { "id": "c", "text": "Thread pool'ning yangi nomi", "hint": "Pool emas — har vazifaga yangi virtual thread, pool qilish kerak emas." },
+        { "id": "d", "text": "Faqat GUI uchun", "hint": "Asosan server I/O uchun." }
+      ],
+      "explanation": "`Thread.ofVirtual().start(...)`, `Executors.newVirtualThreadPerTaskExecutor()`. Spring Boot 3.2: `spring.threads.virtual.enabled=true`. Virtual thread'ni pool qilmang, `ThreadLocal`ni ehtiyot ishlatin (millionlab nusxa), CPU-bound ish uchun foyda yo'q. Project Loom — Java'ning eng katta concurrency o'zgarishi.",
+      "reviewed": false
+    },
+    {
+      "id": "java.concurrency.011",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Virtual thread'da pinning nima va qayerda sodir bo'ladi?",
+      "options": [
+        { "id": "a", "text": "Virtual thread bloklanganda carrier thread'ni bo'shata olmasligi — `synchronized` blok/metod ichida bloklanish (Java 21–23) va native metod (JNI) ichida; ko'p pinning — carrier'lar tugaydi, masshtab yo'qoladi. Yechim: `ReentrantLock`, Java 24+ (synchronized tuzatilgan)", "correct": true },
+        { "id": "b", "text": "Thread'ni ma'lum CPU yadrosiga biriktirish", "hint": "Bu CPU affinity — boshqa tushuncha." },
+        { "id": "c", "text": "Virtual thread'ni platform thread'ga aylantirish", "hint": "Aylantirilmaydi — vaqtincha carrier'ni ushlab qoladi." },
+        { "id": "d", "text": "Pinning muammo emas", "hint": "Bir necha pinned thread DB pool kutishda — butun ilova qotishi mumkin." }
+      ],
+      "explanation": "Aniqlash: `-Djdk.tracePinnedThreads=full` (21–23) yoki JFR `jdk.VirtualThreadPinned` event. Eski kutubxonalar (JDBC drayverlar, ba'zi HTTP klientlar) `synchronized` ko'p ishlatadi — versiyani tekshirish. JEP 491 (Java 24) `synchronized`da pinning'ni olib tashladi.",
+      "reviewed": false
+    },
+    {
+      "id": "java.concurrency.012",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Production'da ilova \"qotib qoldi\" — thread dump qanday tahlil qilinadi?",
+      "options": [
+        { "id": "a", "text": "`jstack <pid>` (yoki `jcmd Thread.print`), bir necha dump 5–10 s oraliqda; holatlar bo'yicha guruhlash: `BLOCKED` (qulf kutish — kimda qulf?), `WAITING` (nimani kutadi — DB pool, future), `RUNNABLE` ko'p bir xil stack — issiq nuqta; \"Found deadlock\" bo'limi; thread nomlari pool'ni ko'rsatadi", "correct": true },
+        { "id": "b", "text": "Ilovani qayta ishga tushirish yetarli", "hint": "Muammo qaytadi; dump — sababni topish uchun yagona dalil." },
+        { "id": "c", "text": "Faqat heap dump kerak", "hint": "Heap dump — xotira; qotish — thread holati." },
+        { "id": "d", "text": "Loglardan hamma narsa ko'rinadi", "hint": "Qotgan thread log yozmaydi." }
+      ],
+      "explanation": "Tipik topilmalar: barcha worker `WAITING` on `HikariPool` — DB ulanishlar tugagan (sizish yoki uzun tranzaksiya); ko'p `BLOCKED` bitta monitor'da — synchronized bottleneck; `RUNNABLE` regex/JSON parsing — CPU issiq nuqta. Vositalar: fastthread.io, IntelliJ dump analyzer, JFR doimiy yozuv.",
+      "reviewed": false
+    },
+    {
+      "id": "java.concurrency.013",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Yuqori yuklanishli servisda concurrency modelini tanlashda (thread pool, virtual threads, reaktiv) senior nimani hisobga oladi?",
+      "options": [
+        { "id": "a", "text": "Ish turi (I/O vs CPU), ulanishlar soni, ekotizim mosligi (blocking drayverlar), jamoa tajribasi va debug qulayligi, backpressure zarurati; 2026 da default — virtual threads bilan oddiy blocking kod, reaktiv — streaming/backpressure zarur bo'lgan joyda, CPU-bound — cheklangan platform pool", "correct": true },
+        { "id": "b", "text": "Doim reaktiv — eng zamonaviy", "hint": "Reaktiv kod debug va o'qish qiyin; virtual threads ko'p holatda bir xil masshtabni soddalik bilan beradi." },
+        { "id": "c", "text": "Doim katta thread pool", "hint": "Minglab platform thread — xotira va context switch yuki." },
+        { "id": "d", "text": "Model ahamiyatsiz, apparat hal qiladi", "hint": "Bir xil apparatda model 10x farq beradi." }
+      ],
+      "explanation": "Structured concurrency (Java 21 preview, `StructuredTaskScope`) — parallel subtask'larni bitta birlik sifatida boshqarish, bekor qilish va xato tarqalishi — \"go'dak thread\" yo'qolmaydi. Scoped values — `ThreadLocal` o'rniga virtual thread uchun. Migratsiya: avval o'lchash (JFR), keyin eng bloklanadigan yo'llardan boshlash.",
+      "reviewed": false
+    }
+  ]
+}
