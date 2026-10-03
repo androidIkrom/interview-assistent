@@ -1,0 +1,202 @@
+{
+  "topic": "flutter.state",
+  "questions": [
+    {
+      "id": "flutter.state.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Flutter'da \"state\" (holat) nima?",
+      "options": [
+        { "id": "a", "text": "UI'ni chizish uchun kerak bo'lgan va vaqt o'tishi bilan o'zgaradigan har qanday ma'lumot — holat o'zgarsa, UI qayta chiziladi (UI = f(state))", "correct": true },
+        { "id": "b", "text": "Faqat `StatefulWidget` ichidagi o'zgaruvchilar", "hint": "Bu bir ko'rinishi; state ilova darajasida (foydalanuvchi, savat) ham bo'ladi." },
+        { "id": "c", "text": "DB'dagi ma'lumot", "hint": "DB — manba; state — hozir UI'ga kerak bo'lgan nusxa." },
+        { "id": "d", "text": "Widget'ning rangi", "hint": "Rang holatning bir misoli bo'lishi mumkin, lekin tushuncha kengroq." }
+      ],
+      "explanation": "Deklarativ UI: siz \"nima ko'rsatish\"ni holat asosida tasvirlaysiz, framework \"qanday o'zgartirish\"ni hal qiladi. Holatni qayerda saqlash (widget ichida, yuqorida, global) — state management savoli.",
+      "reviewed": false
+    },
+    {
+      "id": "flutter.state.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "\"Lifting state up\" nimani anglatadi?",
+      "options": [
+        { "id": "a", "text": "Ikki widget bitta holatni baham ko'rishi kerak bo'lsa, holatni ularning umumiy ota widget'iga ko'chirish va pastga parametr/callback orqali uzatish", "correct": true },
+        { "id": "b", "text": "Holatni global o'zgaruvchiga chiqarish", "hint": "Global — oxirgi chora; birinchi qadam — eng yaqin umumiy ota." },
+        { "id": "c", "text": "Holatni serverga yuborish", "hint": "Server bilan aloqasi yo'q." },
+        { "id": "d", "text": "Widget'ni daraxtda yuqoriga ko'chirish", "hint": "Widget emas, holat ko'chadi." }
+      ],
+      "explanation": "Misol: `Counter` va `CounterDisplay` — holat `CounterPage`da, `onIncrement` callback pastga. Daraxt chuqur bo'lsa (\"prop drilling\") — `InheritedWidget`/Provider/Riverpod kerak bo'ladi. Qoida: holatni iloji boricha pastda, lekin baham ko'ruvchilarning ustida saqlang.",
+      "reviewed": false
+    },
+    {
+      "id": "flutter.state.003",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Ephemeral (lokal) va app (global) state qanday farqlanadi?",
+      "options": [
+        { "id": "a", "text": "Ephemeral — bitta widget'ga tegishli, boshqalar bilmaydi (tab indeksi, animatsiya, matn maydoni) — `setState` yetarli; app state — ko'p ekran/widget baham ko'radi (foydalanuvchi, savat, sozlamalar) — state management kerak", "correct": true },
+        { "id": "b", "text": "Ephemeral — xotirada, app — diskda", "hint": "Ikkalasi ham xotirada; farq kim ishlatishida." },
+        { "id": "c", "text": "Hamma holat global bo'lishi kerak", "hint": "Lokal holatni global qilish — ortiqcha murakkablik va bog'liqlik." },
+        { "id": "d", "text": "Farqi yo'q", "hint": "Tab indeksini Bloc'da saqlash — haddan tashqari." }
+      ],
+      "explanation": "Rasmiy Flutter hujjatidagi bo'linish. Chegara qattiq emas: \"bu holatni boshqa ekran bilishi kerakmi? Ekran o'chirilsa saqlanishi kerakmi?\" — ha bo'lsa, app state. Boshlang'ich `setState`, kerak bo'lganda ko'tarish — amaliy yondashuv.",
+      "reviewed": false
+    },
+    {
+      "id": "flutter.state.004",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`InheritedWidget` nima uchun kerak?",
+      "options": [
+        { "id": "a", "text": "Ma'lumotni daraxt bo'ylab pastga, har widget'ga parametr sifatida uzatmasdan yetkazish — avlodlar `context.dependOnInheritedWidgetOfExactType` orqali oladi va u o'zgarganda rebuild bo'ladi (`Theme.of`, `MediaQuery.of` shunday ishlaydi)", "correct": true },
+        { "id": "b", "text": "Widget'dan meros olish uchun", "hint": "Klass merosi emas — daraxt bo'ylab ma'lumot." },
+        { "id": "c", "text": "Holatni saqlash uchun", "hint": "O'zi holat saqlamaydi — yuqoridan berilgan qiymatni uzatadi." },
+        { "id": "d", "text": "Eskirgan, endi ishlatilmaydi", "hint": "Provider, Riverpod (qisman), Bloc — barchasi uning ustida." }
+      ],
+      "explanation": "`updateShouldNotify` — qachon avlodlarni rebuild qilish. To'g'ridan-to'g'ri yozish noqulay (holat o'zgartirish uchun Stateful ota kerak) — shu sabab `provider` paketi uni o'rab beradi. `of(context)` konvensiyasi — statik metod.",
+      "reviewed": false
+    },
+    {
+      "id": "flutter.state.005",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Provider, Riverpod va Bloc qanday farqlanadi?",
+      "options": [
+        { "id": "a", "text": "Provider — `InheritedWidget` o'rami, sodda, `BuildContext`ga bog'liq; Riverpod — compile-safe, context'siz, provider'lar global e'lon qilinadi, avtomatik dispose, test oson; Bloc — event → state oqimi, qattiq tuzilma, ko'p boilerplate, lekin kuzatuv va katta jamoa uchun yaxshi", "correct": true },
+        { "id": "b", "text": "Bir xil, faqat sintaksis", "hint": "Falsafa farq qiladi: Bloc — event asosli, Riverpod — reaktiv graf." },
+        { "id": "c", "text": "Provider eskirgan, ishlatmaslik kerak", "hint": "Hali qo'llab-quvvatlanadi; muallif Riverpod'ni \"Provider 2.0\" deydi, lekin Provider kichik ilovalarda yetarli." },
+        { "id": "d", "text": "Bloc faqat katta kompaniyalar uchun", "hint": "Hajm emas, jamoa va tuzilma afzalligi hal qiladi." }
+      ],
+      "explanation": "Riverpod: `final userProvider = FutureProvider((ref) => repo.getUser())`, `ref.watch(userProvider)` — `AsyncValue` bilan loading/error/data. Bloc: `on<LoginPressed>((e, emit) async { emit(Loading()); ... })`, `BlocBuilder`. Cubit — Bloc'ning event'siz soddasi. Tanlov jamoa tajribasi va loyiha hajmiga qarab.",
+      "reviewed": false
+    },
+    {
+      "id": "flutter.state.006",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Quyidagi Provider kodida performance muammosi nimada?",
+      "code": "@override\nWidget build(BuildContext context) {\n  final cart = context.watch<CartModel>();\n  return Column(children: [\n    const Header(),\n    ExpensiveProductList(),\n    Text('Jami: ${cart.total}'),\n  ]);\n}",
+      "options": [
+        { "id": "a", "text": "`context.watch` butun `build`ni `CartModel` har o'zgarishida rebuild qiladi — `ExpensiveProductList` ham; `Text`ni alohida `Consumer`/widget'ga ajratish yoki `context.select((CartModel c) => c.total)` kerak", "correct": true },
+        { "id": "b", "text": "`context.read` ishlatish kerak — hamma joyda", "hint": "`read` o'zgarishni kuzatmaydi — `total` yangilanmaydi." },
+        { "id": "c", "text": "`const Header()` xato", "hint": "`const` aksincha yaxshi — u rebuild bo'lmaydi." },
+        { "id": "d", "text": "Muammo yo'q", "hint": "Savatga mahsulot qo'shilganda nima rebuild bo'ladi?" }
+      ],
+      "explanation": "Qoida: `watch`/`select`ni iloji boricha kichik widget'da, faqat o'zgarishga muhtoj qismda. `select` — faqat tanlangan qiymat o'zgarsa rebuild. DevTools \"Highlight repaints\"/\"Track widget rebuilds\" — qaysi widget ko'p rebuild bo'layotganini ko'rsatadi.",
+      "reviewed": false
+    },
+    {
+      "id": "flutter.state.007",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Bloc'da `emit` chaqirilsa, lekin UI yangilanmasa — eng ko'p uchraydigan sabab nima?",
+      "options": [
+        { "id": "a", "text": "Yangi state eski bilan `==` bo'yicha teng (Equatable yoki bir xil ob'ekt mutatsiya qilingan) — Bloc teng state'ni o'tkazib yuboradi; yangi immutable ob'ekt (`copyWith`) emit qilish kerak", "correct": true },
+        { "id": "b", "text": "`BlocBuilder` o'rniga `BlocListener` kerak", "hint": "`BlocListener` UI chizmaydi — yon ta'sirlar uchun; `BlocBuilder` to'g'ri." },
+        { "id": "c", "text": "`emit` `async` bo'lishi kerak", "hint": "`emit` sinxron." },
+        { "id": "d", "text": "Bloc provider topilmadi", "hint": "Bu holda exception bo'lardi, jim turmas edi." }
+      ],
+      "explanation": "Misol: `state.items.add(x); emit(state)` — bir xil ob'ekt, Bloc `==` true deb o'tkazib yuboradi. To'g'ri: `emit(state.copyWith(items: [...state.items, x]))`. `buildWhen` — qo'shimcha filtr. Equatable `props`ga yangi maydon qo'shishni unutish — xuddi shu simptom.",
+      "reviewed": false
+    },
+    {
+      "id": "flutter.state.008",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Riverpod'da `ref.watch`, `ref.read` va `ref.listen` qanday farqlanadi?",
+      "options": [
+        { "id": "a", "text": "`watch` — qiymatni oladi va o'zgarishda rebuild/qayta hisoblash (build va provider ichida); `read` — bir martalik o'qish, kuzatmaydi (callback'larda: `onPressed`); `listen` — o'zgarishga yon ta'sir (snackbar, navigatsiya), rebuild'siz", "correct": true },
+        { "id": "b", "text": "Hammasi bir xil", "hint": "`build`da `read` ishlatsangiz UI yangilanmaydi." },
+        { "id": "c", "text": "`read` `build`da ishlatilishi kerak", "hint": "Aksincha — `build`da `watch`, lint ogohlantiradi." },
+        { "id": "d", "text": "`listen` rebuild qiladi", "hint": "Qilmaydi — yon ta'sir uchun." }
+      ],
+      "explanation": "Riverpod lint (`riverpod_lint`) `build`da `read`ni, `onPressed`da `watch`ni ko'rsatadi. `ref.watch(provider.select((s) => s.field))` — nozik kuzatuv. `autoDispose` — kuzatuvchi qolmasa provider tozalanadi; `keepAlive` — saqlab qolish.",
+      "reviewed": false
+    },
+    {
+      "id": "flutter.state.009",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`InheritedWidget` ichki ishlashi: avlod qanday ro'yxatdan o'tadi va qanday rebuild bo'ladi?",
+      "options": [
+        { "id": "a", "text": "`dependOnInheritedWidgetOfExactType` Element'ni `InheritedElement`ning `_dependents` to'plamiga qo'shadi; InheritedWidget yangilanganda `updateShouldNotify` true bo'lsa, barcha dependent Element'lar `didChangeDependencies` + dirty bo'ladi. Qidirish O(1) — Element'da ota InheritedElement'lar map'i saqlanadi", "correct": true },
+        { "id": "b", "text": "Har frame'da daraxt yuqoriga skanerlanadi", "hint": "Skan emas — Element yaratilganda ota map'i nusxalanadi; O(1) lookup." },
+        { "id": "c", "text": "Global event bus orqali", "hint": "Global emas — daraxt chegarasida, subtree'ga." },
+        { "id": "d", "text": "Hamma widget rebuild bo'ladi", "hint": "Faqat ro'yxatdan o'tgan dependent'lar." }
+      ],
+      "explanation": "Shu sabab `getInheritedWidgetOfExactType` (ro'yxatsiz o'qish) va `dependOn...` (kuzatuv) farq qiladi — `context.read` vs `context.watch`. `InheritedModel` — aspekt bo'yicha nozik kuzatuv (`MediaQuery.sizeOf` vs `MediaQuery.of` — faqat size o'zgarishida rebuild).",
+      "reviewed": false
+    },
+    {
+      "id": "flutter.state.010",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Katta ilovada Bloc va Riverpod trade-off'lari qanday?",
+      "options": [
+        { "id": "a", "text": "Bloc: event'lar aniq audit izi (logging, replay, `BlocObserver`), qattiq konvensiya katta jamoada izchillik, lekin boilerplate va provider'lar context'ga bog'liq; Riverpod: kam kod, provider grafi avtomatik bog'liqlik va dispose, test oson (`ProviderContainer`), kod generatsiya (`@riverpod`), lekin global e'lon va erkinlik — intizom talab qiladi", "correct": true },
+        { "id": "b", "text": "Riverpod doim yaxshi", "hint": "Event asosli audit kerak bo'lgan (fintech) joyda Bloc tuzilmasi afzallik." },
+        { "id": "c", "text": "Bloc doim yaxshi", "hint": "Kichik/o'rta jamoa uchun Bloc boilerplate'i tezlikni pasaytiradi." },
+        { "id": "d", "text": "Ikkalasini aralashtirish — eng yaxshi", "hint": "Ikki paradigma bir ilovada — chalkashlik; birini tanlab, izchil bo'ling." }
+      ],
+      "explanation": "2026 so'rovlarida Riverpod va Bloc taxminan teng mashhur. Arxitektura muhimroq: state management qatlami faqat UI ↔ domen ko'prigi; biznes mantiq use case/repository'da, qaysi kutubxona bo'lsa ham. Migratsiya qiyin — qaror boshida, jamoa bilan.",
+      "reviewed": false
+    },
+    {
+      "id": "flutter.state.011",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Quyidagi Riverpod kodida qanday muammo bor?",
+      "code": "final userProvider = FutureProvider<User>((ref) async {\n  final id = ref.watch(authProvider).userId;\n  return ref.read(apiProvider).getUser(id);\n});\n\nclass Profile extends ConsumerWidget {\n  @override\n  Widget build(BuildContext context, WidgetRef ref) {\n    final user = ref.read(userProvider);\n    return user.when(data: (u) => Text(u.name), loading: () => Spinner(), error: (e, _) => Text('$e'));\n  }\n}",
+      "options": [
+        { "id": "a", "text": "`build`da `ref.read(userProvider)` — loading → data o'tishi kuzatilmaydi, UI spinner'da qolib ketadi; `ref.watch` kerak. (`apiProvider`ni `read` qilish provider ichida — qabul qilinadi, lekin `watch` izchilroq)", "correct": true },
+        { "id": "b", "text": "`FutureProvider` o'rniga `StateProvider` kerak", "hint": "Asinxron ma'lumot uchun `FutureProvider`/`AsyncNotifier` — to'g'ri." },
+        { "id": "c", "text": "`when` eskirgan", "hint": "`when` — `AsyncValue`ning standart metodi (pattern matching ham mumkin)." },
+        { "id": "d", "text": "Muammo yo'q", "hint": "Future tugaganda widget qanday biladi?" }
+      ],
+      "explanation": "`riverpod_lint` buni ushlaydi. `authProvider` o'zgarsa `userProvider` avtomatik qayta hisoblanadi — bu Riverpod grafining kuchi. Xato ishlov: `AsyncValue.guard`, `ref.invalidate` — qayta yuklash, `ref.onDispose` — tozalash.",
+      "reviewed": false
+    },
+    {
+      "id": "flutter.state.012",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Flutter ilovasida state management qatlamini clean architecture bilan qanday birlashtirish kerak?",
+      "options": [
+        { "id": "a", "text": "Presentation (widget + Bloc/Notifier — faqat UI holati va use case chaqiruvi) → Domain (entity, use case, repository interfeysi — Flutter'dan mustaqil, sof Dart) → Data (repository implementatsiya, API/DB manbalar, DTO ↔ entity mapping); bog'liqlik ichkariga, DI (Riverpod/get_it) chekkada", "correct": true },
+        { "id": "b", "text": "Barcha mantiq Bloc ichida", "hint": "Bloc semiradi, test qiyin, Flutter'ga bog'liq." },
+        { "id": "c", "text": "Barcha mantiq widget ichida", "hint": "`build` ichida API chaqiruv — testlab va qayta ishlatib bo'lmaydi." },
+        { "id": "d", "text": "Qatlamlar kerak emas — Flutter o'zi arxitektura", "hint": "Flutter — UI framework; ilova arxitekturasi dasturchida." }
+      ],
+      "explanation": "Feature-first papka tuzilmasi (`features/cart/{presentation,domain,data}`) qatlam-first'dan ko'ra o'sishga yaxshi. Domain sof Dart — unit testlar millisekundlarda. Kichik ilova uchun 3 qatlam ortiqcha — presentation + data yetarli, domain kerak bo'lganda ajratiladi.",
+      "reviewed": false
+    },
+    {
+      "id": "flutter.state.013",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Offline-first Flutter ilovasida holat sinxronizatsiyasi (lokal DB ↔ server) qanday loyihalanadi?",
+      "options": [
+        { "id": "a", "text": "Lokal DB (Drift/Isar/Hive) — yagona haqiqat manbai UI uchun, UI stream orqali kuzatadi; yozishlar lokal + outbox navbati, fon sinxronizatsiya (connectivity, WorkManager/BGTaskScheduler); konflikt strategiyasi (last-write-wins, versiya, server ustun) biznes bilan kelishiladi; optimistic UI", "correct": true },
+        { "id": "b", "text": "Har ekran serverdan yuklaydi, internet yo'q bo'lsa xato", "hint": "Bu online-only; offline-first — aksincha." },
+        { "id": "c", "text": "Serverdan hamma ma'lumotni bir marta yuklab, qayta sinxronlamaslik", "hint": "Eskiradi; ikki tomonlama sinxron kerak." },
+        { "id": "d", "text": "SharedPreferences hamma ma'lumot uchun", "hint": "Kichik kalit-qiymat uchun; strukturali ma'lumot — DB." }
+      ],
+      "explanation": "Repository: `Stream<List<Item>> watch()` DB'dan; `sync()` server bilan. Idempotent yozishlar (klient UUID), `updatedAt`/`version` bilan konflikt. Riverpod `StreamProvider` yoki Bloc DB stream'ini kuzatadi — UI serverni bilmaydi. Test: fake server, offline simulyatsiya.",
+      "reviewed": false
+    }
+  ]
+}

@@ -82,12 +82,12 @@
     { "id": "ios.data", "title": "Tarmoq va saqlash" },
     { "id": "ios.arch", "title": "Xotira, arxitektura, performance" },
 
-    { "id": "flutter.dart", "title": "Dart tili" },
-    { "id": "flutter.widgets", "title": "Widgetlar va lifecycle" },
-    { "id": "flutter.state", "title": "State management" },
-    { "id": "flutter.async", "title": "Future, Stream, isolate" },
-    { "id": "flutter.data", "title": "Tarmoq, saqlash, platform channels" },
-    { "id": "flutter.arch", "title": "Rendering, arxitektura, performance" },
+    { "id": "flutter.dart", "title": "Dart tili", "file": "flutter_dart.json" },
+    { "id": "flutter.widgets", "title": "Widgetlar va lifecycle", "file": "flutter_widgets.json" },
+    { "id": "flutter.state", "title": "State management", "file": "flutter_state.json" },
+    { "id": "flutter.async", "title": "Future, Stream, isolate", "file": "flutter_async.json" },
+    { "id": "flutter.data", "title": "Tarmoq, saqlash, platform channels", "file": "flutter_data.json" },
+    { "id": "flutter.arch", "title": "Rendering, arxitektura, performance", "file": "flutter_arch.json" },
 
     { "id": "fe.js", "title": "JavaScript", "file": "fe_js.json" },
     { "id": "fe.htmlcss", "title": "HTML va CSS", "file": "fe_htmlcss.json" },

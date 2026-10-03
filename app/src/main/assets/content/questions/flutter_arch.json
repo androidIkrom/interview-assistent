@@ -1,0 +1,126 @@
+{
+  "topic": "flutter.arch",
+  "questions": [
+    {
+      "id": "flutter.arch.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Flutter React Native va native'dan rendering jihatidan nimasi bilan farq qiladi?",
+      "options": [
+        { "id": "a", "text": "Flutter platforma UI komponentlarini ishlatmaydi — har pikselni o'z grafik dvigateli (Skia/Impeller) bilan chizadi; shu sabab barcha platformada bir xil ko'rinish va widget'lar ustidan to'liq nazorat; React Native — JS ko'prik orqali native komponentlar", "correct": true },
+        { "id": "b", "text": "Flutter native komponentlarni o'raydi", "hint": "O'ramaydi — o'zi chizadi (`Material`/`Cupertino` — chizilgan taqlid)." },
+        { "id": "c", "text": "Flutter web view ichida HTML", "hint": "Hybrid (Ionic) shunday; Flutter — canvas." },
+        { "id": "d", "text": "Farqi yo'q", "hint": "Rendering modeli — Flutter'ning asosiy arxitektura qarori." }
+      ],
+      "explanation": "Oqibat: OS yangilansa ham UI o'zgarmaydi (yaxshi va yomon tomoni), native komponent (xarita, web view) uchun `PlatformView` — qimmatroq. Impeller (iOS default 3.10+, Android 3.22+) — shader jank'ni yo'q qilish uchun Skia o'rniga.",
+      "reviewed": false
+    },
+    {
+      "id": "flutter.arch.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Flutter ilovasi papka tuzilmasi va kod tashkil qilishning asosiy printsipi nima?",
+      "options": [
+        { "id": "a", "text": "Feature bo'yicha ajratish (`features/auth`, `features/cart`), har feature ichida UI/mantiq/ma'lumot; umumiy narsalar `core`/`shared`da; kichik widget'lar alohida klasslar (metod emas) — o'qish va rebuild optimizatsiyasi uchun", "correct": true },
+        { "id": "b", "text": "Hamma kod `main.dart`da", "hint": "Bir necha ekrandan keyin boshqarib bo'lmaydi." },
+        { "id": "c", "text": "Faqat tur bo'yicha (`widgets/`, `models/`, `services/`)", "hint": "Kichik loyihada ishlaydi; o'sganda bir feature 5 papkaga tarqaladi." },
+        { "id": "d", "text": "Tuzilma ahamiyatsiz", "hint": "Jamoa va vaqt o'tishi bilan navigatsiya narxi oshadi." }
+      ],
+      "explanation": "Widget'ni metod (`_buildHeader()`) emas, klass (`Header`) qilish: `const` imkoni, alohida rebuild, DevTools'da ko'rinadi, test qilinadi. Katta loyiha — Dart paketlar (melos monorepo) — modul chegaralari kompilyator bilan.",
+      "reviewed": false
+    },
+    {
+      "id": "flutter.arch.003",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Flutter'da jank (frame tushishi) ning tipik sabablari qaysilar?",
+      "options": [
+        { "id": "a", "text": "Asosiy isolate'da og'ir sinxron ish (parsing, hisob), ortiqcha rebuild (katta subtree `setState`), qimmat `build` (har frame yangi ob'ektlar, `MediaQuery.of` yuqorida), shader kompilyatsiya (Skia, birinchi animatsiya), katta rasmlar (decode, o'lchamsiz), `Opacity`/`ClipRRect`/`saveLayer` ko'p qatlamda, `ListView` o'rniga `Column` + `SingleChildScrollView` uzun ro'yxatda", "correct": true },
+        { "id": "b", "text": "Faqat sekin tarmoq", "hint": "Tarmoq asinxron — o'zi jank bermaydi; javobni ishlov berish — mumkin." },
+        { "id": "c", "text": "Flutter o'zi sekin, hech narsa qilib bo'lmaydi", "hint": "To'g'ri yozilgan Flutter 60/120 fps beradi; jank — kod yoki rasm muammosi." },
+        { "id": "d", "text": "Faqat eski qurilmalar", "hint": "Eski qurilma kuchaytiradi, lekin sabab kodda." }
+      ],
+      "explanation": "Diagnostika: profile mode (debug'da o'lchamang!), DevTools Performance — UI va Raster thread; UI thread uzun — Dart kod, Raster uzun — chizish (shader, saveLayer, katta rasm). `RepaintBoundary` — animatsiyalanadigan qismni ajratish. `cacheWidth`/`cacheHeight` — rasm decode hajmi.",
+      "reviewed": false
+    },
+    {
+      "id": "flutter.arch.004",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Ortiqcha rebuild'ni qanday topish va kamaytirish mumkin?",
+      "options": [
+        { "id": "a", "text": "Topish — DevTools \"Track widget rebuilds\" / \"Highlight repaints\", `debugPrintRebuildDirtyWidgets`; kamaytirish — `setState`/`watch` doirasini kichik widget'ga toraytirish, `const` widget'lar, `select`/`buildWhen`, `MediaQuery.sizeOf` kabi aspekt metodlar, `ListView.builder` lazy", "correct": true },
+        { "id": "b", "text": "Rebuild har doim yomon — `setState`dan qochish kerak", "hint": "Rebuild arzon va normal; muammo — qimmat subtree'ni keraksiz rebuild." },
+        { "id": "c", "text": "Hamma widget'ni `GlobalKey` bilan belgilash", "hint": "GlobalKey qimmat va rebuild'ni kamaytirmaydi." },
+        { "id": "d", "text": "Rebuild'ni o'lchab bo'lmaydi", "hint": "DevTools aynan buni ko'rsatadi." }
+      ],
+      "explanation": "Qoida: holatni iste'mol qiladigan widget iloji boricha kichik va daraxtda pastda. `Builder`/`Consumer`/`ValueListenableBuilder` — subtree'ning bir qismini ajratish. `AnimatedBuilder`da `child` parametri — animatsiyada o'zgarmaydigan qismni bir marta qurish.",
+      "reviewed": false
+    },
+    {
+      "id": "flutter.arch.005",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Flutter rendering pipeline bosqichlari qanday?",
+      "options": [
+        { "id": "a", "text": "Vsync signal → animatsiya tick → build (dirty widget'lar) → layout (RenderObject'lar o'lcham/pozitsiya, constraints pastga, size yuqoriga) → compositing bits → paint (Layer daraxti) → semantics → Raster thread'da GPU chizish (Skia/Impeller). UI thread va Raster thread alohida", "correct": true },
+        { "id": "b", "text": "Har widget o'zini darhol chizadi", "hint": "Chizish — frame oxirida, batch, alohida thread'da." },
+        { "id": "c", "text": "Build va paint bir xil narsa", "hint": "Build — widget daraxti; paint — RenderObject chizish buyruqlari." },
+        { "id": "d", "text": "Layout GPU'da bo'ladi", "hint": "Layout — Dart, UI thread'da; GPU — faqat rasterizatsiya." }
+      ],
+      "explanation": "Layout bir o'tishda O(n): ota constraints beradi, bola size qaytaradi — shu sabab tez (`RenderObject` relayout boundary). \"Constraints go down, sizes go up, parent sets position\" — Flutter layout qoidasi. `RepaintBoundary` — Layer daraxtida alohida layer, boshqa qismlar o'zgarganda qayta chizilmaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "flutter.arch.006",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Quyidagi ro'yxat kodida qanday performance muammolari bor?",
+      "code": "SingleChildScrollView(\n  child: Column(\n    children: products.map((p) => Card(\n      child: Column(children: [\n        Image.network(p.imageUrl),\n        Text(p.name, style: TextStyle(fontSize: 16)),\n      ]),\n    )).toList(),\n  ),\n)",
+      "options": [
+        { "id": "a", "text": "Barcha elementlar birdan quriladi va layout qilinadi (lazy emas) — 1000 mahsulotda sekin va xotira; `ListView.builder` kerak. `Image.network` o'lchamsiz — to'liq o'lchamda decode (`cacheWidth` yoki `CachedNetworkImage` + o'lcham). `TextStyle` har build'da yangi — `const`", "correct": true },
+        { "id": "b", "text": "`Card` ishlatish xato", "hint": "`Card` normal; muammo ro'yxat tuzilmasida." },
+        { "id": "c", "text": "`map().toList()` o'rniga `for` kerak", "hint": "Sintaksis farqi; ikkalasi ham hamma elementni yaratadi." },
+        { "id": "d", "text": "Muammo yo'q", "hint": "1000 element bo'lsa ekranga sig'maydiganlari ham quriladimi?" }
+      ],
+      "explanation": "`ListView.builder(itemCount, itemBuilder)` — faqat ko'rinadigan + cache extent. `itemExtent`/`prototypeItem` — layout tezlashadi. Rasmlar: `Image.network(url, cacheWidth: 300)` — xotira 10x kamayadi; `precacheImage`. `AutomaticKeepAliveClientMixin` — scroll'da holat saqlash kerak bo'lsa.",
+      "reviewed": false
+    },
+    {
+      "id": "flutter.arch.007",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Flutter ilovasi hajmi va startup vaqtini kamaytirish uchun qanday choralar bor?",
+      "options": [
+        { "id": "a", "text": "Hajm: `--split-per-abi`/App Bundle, `--obfuscate --split-debug-info`, tree shaking (ikonka fontlar `--tree-shake-icons`), rasm optimizatsiya (WebP), keraksiz paketlarni olib tashlash, deferred components (Android). Startup: `main`da og'ir ishni kechiktirish, `runApp`gacha minimal, lazy DI, splash'da parallel init, `FlutterEngine` oldindan isitish (add-to-app), Impeller shader muammosi yo'q", "correct": true },
+        { "id": "b", "text": "Flutter ilovasi hajmini kamaytirib bo'lmaydi", "hint": "Engine ~5 MB — qolgani boshqariladi." },
+        { "id": "c", "text": "Faqat kuchli telefon kerak", "hint": "Hajm — yuklab olish konversiyasi; startup — birinchi taassurot; ikkalasi biznes metrikasi." },
+        { "id": "d", "text": "Debug APK hajmi — real hajm", "hint": "Debug 3–5x katta (JIT VM, asset'lar); release bilan o'lchang." }
+      ],
+      "explanation": "O'lchash: `flutter build apk --analyze-size`, DevTools App Size. Startup: `flutter run --trace-startup`, `Timeline`. Deferred components — kam ishlatiladigan feature'larni (Play Feature Delivery) keyin yuklash. Shader warm-up Skia uchun kerak edi — Impeller buni yo'q qildi.",
+      "reviewed": false
+    },
+    {
+      "id": "flutter.arch.008",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Ko'p platformali (mobil + web + desktop) Flutter ilovasida arxitektura qarorlari qanday bo'lishi kerak?",
+      "options": [
+        { "id": "a", "text": "Domen va ma'lumot qatlami platformadan mustaqil (interfeys ortida platform implementatsiyalar, shartli import); adaptiv UI (`LayoutBuilder`, breakpoint'lar, `NavigationRail` vs `BottomNavigationBar`), kirish turi (sichqoncha/klaviatura, hover, shortcut), platform konvensiyalari (`Platform.isIOS` → Cupertino); web uchun SEO/URL (go_router), WASM va canvaskit/HTML renderer tanlovi; bir kod bazasi — lekin hamma joyda bir xil UX emas", "correct": true },
+        { "id": "b", "text": "Mobil UI'ni web/desktop'da o'zgarishsiz ko'rsatish", "hint": "Katta ekranda telefon layout — yomon UX; adaptiv dizayn kerak." },
+        { "id": "c", "text": "Har platforma uchun alohida kod bazasi", "hint": "Flutter'ning asosiy afzalligi yo'qoladi; faqat UI va platform qatlami farqlansin." },
+        { "id": "d", "text": "Web'da Flutter ishlatmaslik kerak", "hint": "Kontent saytlar uchun mos emas (SEO, hajm), lekin ilova (dashboard, admin) uchun yaxshi — tanlov vazifaga qarab." }
+      ],
+      "explanation": "Flutter web: SPA/ilova uchun — ha, marketing sayt uchun — yo'q (hajm ~2 MB, SEO zaif). Desktop: oyna boshqaruvi, menyu, fayl dialoglari — paketlar. Test: har platforma CI'da (`flutter test --platform chrome`). `Material 3` adaptiv komponentlar yordam beradi; `flutter_adaptive_scaffold`.",
+      "reviewed": false
+    }
+  ]
+}
