@@ -89,12 +89,12 @@
     { "id": "flutter.data", "title": "Tarmoq, saqlash, platform channels" },
     { "id": "flutter.arch", "title": "Rendering, arxitektura, performance" },
 
-    { "id": "fe.js", "title": "JavaScript" },
-    { "id": "fe.htmlcss", "title": "HTML va CSS" },
-    { "id": "fe.react", "title": "React" },
-    { "id": "fe.ts", "title": "TypeScript" },
-    { "id": "fe.browser", "title": "Brauzer, tarmoq, Next.js" },
-    { "id": "fe.arch", "title": "Performance, arxitektura, accessibility" },
+    { "id": "fe.js", "title": "JavaScript", "file": "fe_js.json" },
+    { "id": "fe.htmlcss", "title": "HTML va CSS", "file": "fe_htmlcss.json" },
+    { "id": "fe.react", "title": "React", "file": "fe_react.json" },
+    { "id": "fe.ts", "title": "TypeScript", "file": "fe_ts.json" },
+    { "id": "fe.browser", "title": "Brauzer, tarmoq, Next.js", "file": "fe_browser.json" },
+    { "id": "fe.arch", "title": "Performance, arxitektura, accessibility", "file": "fe_arch.json" },
 
     { "id": "py.lang", "title": "Python tili" },
     { "id": "py.idioms", "title": "Ma'lumot tuzilmalari va idiomalar" },

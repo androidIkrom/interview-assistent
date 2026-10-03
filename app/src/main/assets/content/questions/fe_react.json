@@ -1,0 +1,202 @@
+{
+  "topic": "fe.react",
+  "questions": [
+    {
+      "id": "fe.react.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "React'da props va state farqi nima?",
+      "options": [
+        { "id": "a", "text": "Props ota komponentdan keladi va o'qish uchun; state komponentning o'z ichki ma'lumoti va u o'zgarganda komponent qayta chiziladi", "correct": true },
+        { "id": "b", "text": "Props o'zgaruvchan, state o'zgarmas", "hint": "Aksincha: props komponent ichida o'zgartirilmaydi." },
+        { "id": "c", "text": "State faqat klass komponentlarda bor", "hint": "`useState` funksional komponentlarga state beradi." },
+        { "id": "d", "text": "Farqi yo'q", "hint": "Biri tashqaridan kiradi, ikkinchisi ichkarida boshqariladi." }
+      ],
+      "explanation": "Ma'lumot yuqoridan pastga props orqali oqadi. Komponent o'zi o'zgartiradigan narsa (forma qiymati, ochiq/yopiq) state. Bir nechta komponentga kerak bo'lgan state eng yaqin umumiy ota'ga ko'tariladi (lifting state up).",
+      "reviewed": false
+    },
+    {
+      "id": "fe.react.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Ro'yxat render qilganda `key` nima uchun kerak va nega indeksni kalit qilish yomon?",
+      "options": [
+        { "id": "a", "text": "React elementlarni kalit bo'yicha taniydi; indeks kalit bo'lsa, element o'chirilganda yoki tartib o'zgarganda holat va DOM noto'g'ri elementga yopishib qoladi", "correct": true },
+        { "id": "b", "text": "`key` faqat ogohlantirishni o'chirish uchun", "hint": "Ogohlantirish bejiz emas: kalit reconciliation to'g'riligi uchun." },
+        { "id": "c", "text": "Indeks eng yaxshi kalit, chunki u yagona", "hint": "Yagona, lekin barqaror emas: element ko'chganda indeksi o'zgaradi." },
+        { "id": "d", "text": "`key` CSS uchun ishlatiladi", "hint": "U DOM'ga tushmaydi, faqat React ichida." }
+      ],
+      "explanation": "Barqaror kalit (id) React'ga \"bu o'sha element, faqat joyi o'zgardi\" deyish imkonini beradi. Indeks faqat ro'yxat statik va qayta tartiblanmaganda qabul qilinadi.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.react.003",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Tugma bir marta bosilganda `count` qancha bo'ladi?",
+      "code": "const [count, setCount] = useState(0);\n\nfunction onClick() {\n  setCount(count + 1);\n  setCount(count + 1);\n  setCount(count + 1);\n}",
+      "options": [
+        { "id": "a", "text": "1", "correct": true },
+        { "id": "b", "text": "3", "hint": "Uchala chaqiruvda ham `count` bir xil (0) qiymat; yangilanish darhol emas." },
+        { "id": "c", "text": "0", "hint": "Kamida bitta yangilanish qo'llanadi." },
+        { "id": "d", "text": "Xato: `setCount` ni ketma-ket chaqirib bo'lmaydi", "hint": "Chaqirish mumkin; faqat natija kutilgandek bo'lmaydi." }
+      ],
+      "explanation": "`count` render paytidagi qiymat (0); uch chaqiruv ham `setCount(1)`. React yangilanishlarni batch qiladi va oxirgisi qoladi. Oldingi holatga tayangan yangilanish uchun funksional shakl: `setCount(c => c + 1)` — unda natija 3 bo'ladi.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.react.004",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Controlled va uncontrolled input farqi nima?",
+      "options": [
+        { "id": "a", "text": "Controlled'da qiymat React state'da va `onChange` orqali yangilanadi; uncontrolled'da qiymat DOM'da turadi va `ref` bilan o'qiladi", "correct": true },
+        { "id": "b", "text": "Controlled input'ni foydalanuvchi o'zgartira olmaydi", "hint": "O'zgartira oladi, faqat har o'zgarish state orqali o'tadi." },
+        { "id": "c", "text": "Uncontrolled input React'da ishlamaydi", "hint": "Ishlaydi va oddiy formalar uchun yetarli." },
+        { "id": "d", "text": "Farqi faqat nomda", "hint": "Haqiqat manbai (state yoki DOM) farq qiladi." }
+      ],
+      "explanation": "Controlled: har tugma bosilishida validatsiya, formatlash, boshqa maydonlarga bog'liqlik oson. Uncontrolled: kamroq render, oddiy formalar uchun tez. React Hook Form kabi kutubxonalar uncontrolled asosida performance beradi.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.react.005",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`useEffect` dan funksiya qaytarish (cleanup) qachon chaqiriladi va nima uchun kerak?",
+      "options": [
+        { "id": "a", "text": "Komponent o'chirilganda va effekt qayta ishlashidan oldin; obunalar, taymerlar va listener'larni tozalash uchun", "correct": true },
+        { "id": "b", "text": "Faqat komponent o'chirilganda", "hint": "Dependency o'zgarib effekt qayta ishlaganda ham avval cleanup chaqiriladi." },
+        { "id": "c", "text": "Har render'da, effektdan oldin", "hint": "Faqat effekt qayta ishlashi kerak bo'lganda." },
+        { "id": "d", "text": "Hech qachon, bu faqat uslub", "hint": "Cleanup'siz obuna va taymerlar to'planib, leak va ikki marta ishlashga olib keladi." }
+      ],
+      "explanation": "`useEffect(() => { const id = setInterval(...); return () => clearInterval(id); }, [])`. Strict Mode development'da effektni ikki marta ishlatib, cleanup to'g'riligini tekshiradi: cleanup'siz effekt ikki taymer qoldiradi.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.react.006",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "React komponenti qachon qayta render bo'ladi?",
+      "options": [
+        { "id": "a", "text": "O'z state'i o'zgarganda, ota komponent qayta render bo'lganda (memo bo'lmasa) yoki ishlatayotgan context qiymati o'zgarganda", "correct": true },
+        { "id": "b", "text": "Faqat props o'zgarganda", "hint": "Standart holatda ota render bo'lsa, bola props o'zgarmasa ham render bo'ladi." },
+        { "id": "c", "text": "Faqat DOM o'zgarganda", "hint": "Render DOM o'zgarishi emas; render natijasi solishtirilib, keyin DOM yangilanadi." },
+        { "id": "d", "text": "Har soniyada avtomatik", "hint": "React faqat o'zgarishga javoban render qiladi." }
+      ],
+      "explanation": "Render arzon bo'lishi kerak; qayta render o'zi muammo emas. Muammo og'ir render yoki katta daraxt bo'lganda: `React.memo`, holatni pastga tushirish (state colocation) va context'ni bo'lish yordam beradi. React Compiler bu optimizatsiyalarni avtomatlashtiradi.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.react.007",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`useMemo` va `useCallback` qachon haqiqatan foydali?",
+      "options": [
+        { "id": "a", "text": "Qimmat hisobni takrorlamaslik yoki `memo` qilingan bolaga barqaror havola uzatish uchun; har joyda ishlatish o'zi xarajat", "correct": true },
+        { "id": "b", "text": "Har bir funksiya va qiymatni o'rash kerak", "hint": "Har `useMemo` taqqoslash va xotira narxi; foydasi bo'lmasa, kod sekinroq va murakkabroq." },
+        { "id": "c", "text": "Ular render'ni butunlay to'xtatadi", "hint": "Ular faqat qiymat yoki funksiya havolasini saqlaydi." },
+        { "id": "d", "text": "Faqat klass komponentlarda", "hint": "Bular hook'lar; funksional komponentlar uchun." }
+      ],
+      "explanation": "Inline funksiya har render'da yangi havola; `memo` qilingan bola uni \"yangi prop\" deb qayta render bo'ladi — `useCallback` shuni to'xtatadi. Boshqa hollarda avval React Profiler bilan o'lchash kerak. React Compiler bilan qo'lda memoization ehtiyoji kamayadi.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.react.008",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Prop drilling nima va Context uni qanday hal qiladi, qanday narxi bor?",
+      "options": [
+        { "id": "a", "text": "Prop'ni ko'p qatlam orqali faqat pastga uzatish uchun o'tkazish; Context daraxtning istalgan joyida qiymatni o'qish imkonini beradi, lekin qiymat o'zgarganda barcha iste'molchilar qayta render bo'ladi", "correct": true },
+        { "id": "b", "text": "Context global o'zgaruvchi va render'ga ta'sir qilmaydi", "hint": "Context o'zgarsa, uni o'qigan har komponent render bo'ladi." },
+        { "id": "c", "text": "Prop drilling har doim xato", "hint": "2–3 qatlam uchun props aniqroq va soddaroq." },
+        { "id": "d", "text": "Context faqat mavzu (theme) uchun", "hint": "Theme, til, auth, DI — kam o'zgaradigan har qanday ma'lumot uchun." }
+      ],
+      "explanation": "Context tez o'zgaradigan ma'lumot (forma kiritish, sichqoncha pozitsiyasi) uchun yomon: har o'zgarish keng render. Yechimlar: kompozitsiya (children orqali uzatish), context'ni mayda bo'laklarga bo'lish, Zustand kabi selektorli store.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.react.009",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Hisoblagich har soniyada emas, faqat 1 gacha oshib to'xtaydi. Nega?",
+      "code": "const [count, setCount] = useState(0);\n\nuseEffect(() => {\n  const id = setInterval(() => {\n    setCount(count + 1);\n  }, 1000);\n  return () => clearInterval(id);\n}, []);",
+      "options": [
+        { "id": "a", "text": "Stale closure: interval birinchi render'dagi `count` (0) ni ushlab qolgan va har safar 1 qo'yadi; `setCount(c => c + 1)` kerak", "correct": true },
+        { "id": "b", "text": "`setInterval` React'da ishlamaydi", "hint": "Ishlaydi; muammo closure'da." },
+        { "id": "c", "text": "Cleanup intervalni darhol to'xtatadi", "hint": "Cleanup faqat o'chirishda chaqiriladi (bo'sh dependency)." },
+        { "id": "d", "text": "`useState(0)` o'rniga `useState(1)` kerak", "hint": "Boshlang'ich qiymat muammo emas." }
+      ],
+      "explanation": "Effekt bir marta ishlagan, uning ichidagi funksiya o'sha paytdagi `count` ni ko'radi. Funksional yangilanish React'dan eng so'nggi qiymatni oladi. Muqobil: `count` ni dependency'ga qo'shish (interval har soniyada qayta yaratiladi) yoki `useRef` bilan so'nggi qiymatni saqlash.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.react.010",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Server ma'lumotini (API javoblari) Redux kabi global store'da emas, TanStack Query kabi kutubxonada saqlash nega tavsiya etiladi?",
+      "options": [
+        { "id": "a", "text": "Server holati keshlash, eskirish, qayta yuklash, dedup va xato/loading holatlarini talab qiladi; bu kutubxonalar shuni beradi, store esa faqat saqlaydi", "correct": true },
+        { "id": "b", "text": "Redux eskirgan va ishlatilmaydi", "hint": "Redux Toolkit hali ham klient holati uchun ishlatiladi; gap vazifalarni ajratishda." },
+        { "id": "c", "text": "Global store'da API ma'lumotini saqlab bo'lmaydi", "hint": "Mumkin, lekin kesh mantig'ini o'zingiz yozasiz." },
+        { "id": "d", "text": "TanStack Query ma'lumotni serverda saqlaydi", "hint": "U klientda keshlaydi; nomidagi \"server\" ma'lumot manbasini bildiradi." }
+      ],
+      "explanation": "Klient holati (modal ochiq, tanlangan tab) va server holati (foydalanuvchilar ro'yxati) tabiatan har xil. Server holati \"eskiradi\" va qayta sinxronlanishi kerak; `staleTime`, `refetchOnWindowFocus`, optimistic update kabi tushunchalar shu uchun.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.react.011",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`React.lazy` va `Suspense` bilan kodni bo'lish (code splitting) qanday ishlaydi?",
+      "options": [
+        { "id": "a", "text": "`lazy(() => import('./Page'))` komponent kodini alohida chunk qiladi va faqat kerak bo'lganda yuklaydi; `Suspense` yuklanish paytida fallback ko'rsatadi", "correct": true },
+        { "id": "b", "text": "`lazy` komponentni sekinroq render qiladi", "hint": "U render emas, yuklab olishni kechiktiradi." },
+        { "id": "c", "text": "`Suspense` xatolarni ushlaydi", "hint": "Xatolar uchun Error Boundary; `Suspense` kutish holati uchun." },
+        { "id": "d", "text": "Bu faqat Next.js'da ishlaydi", "hint": "Oddiy React'da ham ishlaydi; bundler dinamik `import` ni qo'llasa kifoya." }
+      ],
+      "explanation": "Odatda marshrutlar bo'yicha bo'linadi: foydalanuvchi sozlamalar sahifasini ochmasa, uning kodi yuklanmaydi. Suspense React 19 da ma'lumot yuklash (`use`) bilan ham ishlaydi; ma'lumot va kod kutish bitta mexanizmga birlashadi.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.react.012",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "React Server Components (RSC) klient komponentlardan nimasi bilan farq qiladi va qanday muammoni hal qiladi?",
+      "options": [
+        { "id": "a", "text": "RSC faqat serverda ishlaydi, bundle'ga tushmaydi, bazaga to'g'ridan-to'g'ri murojaat qila oladi; natijasi klientga tayyor daraxt sifatida keladi. Interaktivlik (`useState`, hodisalar) faqat klient komponentlarda", "correct": true },
+        { "id": "b", "text": "RSC — SSR'ning yangi nomi", "hint": "SSR klient komponentlarni HTML'ga chizadi va keyin hydrate qiladi; RSC kodi klientga umuman bormaydi." },
+        { "id": "c", "text": "RSC'da `useState` ishlatish mumkin", "hint": "Server komponent holatsiz; interaktivlik `'use client'` komponentlarda." },
+        { "id": "d", "text": "RSC klient komponentlarni butunlay almashtiradi", "hint": "Ikkalasi birga ishlaydi; interaktiv qism klientda qoladi." }
+      ],
+      "explanation": "RSC og'ir kutubxonalar (markdown parser, sana formatlash) va ma'lumot olishni serverda qoldirib, klient bundle'ini kichraytiradi va \"waterfall\" so'rovlarni kamaytiradi. Narxi: aqliy model murakkablashadi (server/klient chegarasi, serializatsiya), ekotizim (CSS-in-JS, ba'zi kutubxonalar) moslashishi kerak.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.react.013",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Katta React ilovasida holat (state) arxitekturasini qanday qurish to'g'ri?",
+      "options": [
+        { "id": "a", "text": "Holatni turi bo'yicha ajratish: server holati — so'rov keshi (TanStack Query), URL holati — router, lokal UI holati — komponentda, haqiqiy global klient holati — kichik store; hammasini bitta global store'ga yig'maslik", "correct": true },
+        { "id": "b", "text": "Hamma holatni bitta Redux store'da saqlash", "hint": "Server keshi, forma kiritishi va URL bitta joyda chalkashadi va har o'zgarish keng render beradi." },
+        { "id": "c", "text": "Hamma holatni Context'da saqlash", "hint": "Tez o'zgaradigan holat Context'da butun daraxtni render qiladi." },
+        { "id": "d", "text": "Holatni faqat `localStorage` da saqlash", "hint": "Bu saqlash joyi, arxitektura emas; sinxron va reaktiv emas." }
+      ],
+      "explanation": "Ko'p \"global state\" muammolari aslida server keshi yoki URL'da bo'lishi kerak bo'lgan holat. Filtr va sahifa URL'da bo'lsa, ulashish va orqaga qaytish bepul ishlaydi. Qolgan haqiqiy global holat odatda kichik: auth, theme, bir nechta bayroq.",
+      "reviewed": false
+    }
+  ]
+}

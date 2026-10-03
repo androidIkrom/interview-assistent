@@ -1,0 +1,217 @@
+{
+  "topic": "fe.js",
+  "questions": [
+    {
+      "id": "fe.js.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`var`, `let` va `const` o'rtasidagi asosiy farq nima?",
+      "options": [
+        { "id": "a", "text": "`var` funksiya doirasida (function scope) va hoisting bilan `undefined`; `let` va `const` blok doirasida; `const` qayta tayinlanmaydi", "correct": true },
+        { "id": "b", "text": "`const` bilan e'lon qilingan obyektni o'zgartirib bo'lmaydi", "hint": "`const` faqat havolani qotiradi; `const a = []; a.push(1)` ishlaydi." },
+        { "id": "c", "text": "`let` eskirgan, `var` yangi sintaksis", "hint": "Aksincha: `let`/`const` ES2015 da keldi va `var` o'rnini bosdi." },
+        { "id": "d", "text": "Farqi faqat uslubda", "hint": "Doira (scope) va hoisting xatti-harakati haqiqatan farq qiladi." }
+      ],
+      "explanation": "`var` siklda e'lon qilinsa ham butun funksiyada ko'rinadi va klassik `setTimeout` siklidagi xatolarga sabab bo'ladi. `let`/`const` blok ichida yashaydi va e'londan oldin murojaat `ReferenceError` beradi (temporal dead zone). Standart tanlov: `const`, kerak bo'lsa `let`.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.js.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`==` va `===` farqi nima?",
+      "options": [
+        { "id": "a", "text": "`==` tiplarni o'zgartirib (coercion) solishtiradi, `===` tip va qiymat ikkalasini tekshiradi", "correct": true },
+        { "id": "b", "text": "`===` faqat obyektlar uchun", "hint": "U har qanday qiymat bilan ishlaydi." },
+        { "id": "c", "text": "Farqi yo'q", "hint": "`0 == ''` true, `0 === ''` false." },
+        { "id": "d", "text": "`==` tezroq, shuning uchun tavsiya etiladi", "hint": "Tezlik farqi sezilmas; `==` ning yashirin o'zgartirishlari xatoga olib keladi." }
+      ],
+      "explanation": "`'5' == 5` true, `null == undefined` true, `[] == false` true — bu qoidalarni eslab qolish qiyin. Shuning uchun deyarli har doim `===` ishlatiladi; `== null` esa `null` va `undefined` ni birga tekshirish uchun qulay istisno.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.js.003",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Bu kod nima chiqaradi?",
+      "code": "console.log(typeof null);\nconsole.log(typeof undefined);\nconsole.log(typeof []);",
+      "options": [
+        { "id": "a", "text": "object, undefined, object", "correct": true },
+        { "id": "b", "text": "null, undefined, array", "hint": "`typeof` uchun na `null`, na `array` degan natija bor." },
+        { "id": "c", "text": "object, object, object", "hint": "`undefined` o'zining alohida tipiga ega." },
+        { "id": "d", "text": "null, undefined, object", "hint": "`null` uchun `typeof` tarixiy xato tufayli boshqa narsa qaytaradi." }
+      ],
+      "explanation": "`typeof null === 'object'` — tilning birinchi versiyasidan qolgan xato, moslik uchun tuzatilmagan. Massivni tekshirish uchun `Array.isArray`, `null` ni tekshirish uchun `=== null` ishlatiladi.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.js.004",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`map` va `forEach` farqi nima?",
+      "options": [
+        { "id": "a", "text": "`map` har element uchun qaytarilgan qiymatlardan yangi massiv yaratadi; `forEach` faqat aylanib chiqadi va `undefined` qaytaradi", "correct": true },
+        { "id": "b", "text": "`forEach` yangi massiv qaytaradi, `map` yo'q", "hint": "Aksincha." },
+        { "id": "c", "text": "`map` asl massivni o'zgartiradi", "hint": "`map` asl massivga tegmaydi; o'zgartiradigan metodlar `push`, `splice`, `sort`." },
+        { "id": "d", "text": "Farqi faqat tezlikda", "hint": "Farq semantikada: natija kerakmi yoki faqat yon ta'sir." }
+      ],
+      "explanation": "Qoida: natija massiv kerak bo'lsa `map`, o'zgartirish (filtr) `filter`, bitta qiymatga yig'ish `reduce`, faqat yon ta'sir (log, DOM) `forEach`. `map` ni natijasini ishlatmasdan chaqirish kod o'quvchini chalg'itadi.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.js.005",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Closure nima?",
+      "options": [
+        { "id": "a", "text": "Funksiya o'zi yaratilgan doiradagi o'zgaruvchilarni, hatto o'sha doira tugagandan keyin ham, eslab qoladi", "correct": true },
+        { "id": "b", "text": "Funksiyani yopiq (private) qilish sintaksisi", "hint": "Maxsus sintaksis emas, tilning tabiiy xususiyati." },
+        { "id": "c", "text": "Obyekt metodini chaqirish usuli", "hint": "Metodlarga aloqasi yo'q." },
+        { "id": "d", "text": "Xotirani bo'shatish mexanizmi", "hint": "Aksincha, closure o'zgaruvchilarni tirik saqlaydi." }
+      ],
+      "explanation": "`function counter() { let n = 0; return () => ++n; }` — qaytarilgan funksiya `n` ni ushlab turadi; har chaqiruv oshiradi. Closure'lar ma'lumotni yashirish, callback'lar va hook'lar asosida yotadi; eskirgan qiymatni ushlab qolish (stale closure) esa tipik xato.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.js.006",
+      "level": "junior",
+      "type": "single",
+      "kind": "true_false",
+      "prompt": "Quyidagi fikr to'g'rimi?\n\nJavaScript bitta asosiy oqimda ishlaydi; asinxron ishlar (taymerlar, tarmoq) event loop orqali navbatga qo'yilib, sinxron kod tugagach bajariladi.",
+      "options": [
+        { "id": "a", "text": "Ha", "correct": true },
+        { "id": "b", "text": "Yo'q", "hint": "Brauzer va Node.js'da JavaScript kodi bitta oqimda bajariladi. Taymer tugasa ham, uning callback'i joriy sinxron kod tugaguncha kutadi." }
+      ],
+      "explanation": "Shuning uchun uzoq sinxron hisob sahifani qotiradi va `setTimeout(fn, 0)` darhol emas, joriy kod va microtask'lar tugagach ishlaydi. Og'ir hisoblar uchun Web Worker'lar alohida oqim beradi.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.js.007",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Bu kod qanday tartibda chiqaradi?",
+      "code": "console.log(1);\nsetTimeout(() => console.log(2), 0);\nPromise.resolve().then(() => console.log(3));\nconsole.log(4);",
+      "options": [
+        { "id": "a", "text": "1 4 3 2", "correct": true },
+        { "id": "b", "text": "1 2 3 4", "hint": "Taymer va promise callback'lari sinxron kod tugaguncha kutadi." },
+        { "id": "c", "text": "1 4 2 3", "hint": "Promise callback'i (microtask) taymer callback'idan (macrotask) oldin bajariladi." },
+        { "id": "d", "text": "1 3 4 2", "hint": "`then` callback'i ham joriy sinxron kod tugagach ishlaydi." }
+      ],
+      "explanation": "Avval butun sinxron kod: 1, 4. Keyin microtask navbati (promise'lar): 3. Keyin macrotask (taymer): 2. Microtask'lar har macrotask'dan keyin to'liq bo'shatiladi, shuning uchun `await` dan keyingi kod ham taymerdan oldin ishlaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.js.008",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Arrow funksiyada `this` oddiy funksiyadan nimasi bilan farq qiladi?",
+      "options": [
+        { "id": "a", "text": "Arrow funksiya o'z `this` iga ega emas; u tashqi (leksik) doiradagi `this` ni ishlatadi. Oddiy funksiyada `this` chaqirilish usuliga bog'liq", "correct": true },
+        { "id": "b", "text": "Arrow funksiyada `this` har doim `window`", "hint": "U tashqi doiraga bog'liq; klass metodi ichida bu obyektning o'zi bo'ladi." },
+        { "id": "c", "text": "Farqi yo'q", "hint": "`setTimeout(function() { this... })` va `setTimeout(() => this...)` har xil ishlaydi." },
+        { "id": "d", "text": "Oddiy funksiyada `this` har doim obyektning o'zi", "hint": "`const f = obj.method; f()` da `this` yo'qoladi (`undefined` yoki `window`)." }
+      ],
+      "explanation": "Oddiy funksiyada `this` ni chaqiruv belgilaydi: `obj.f()` → `obj`, `f()` → `undefined` (strict), `new f()` → yangi obyekt. Arrow funksiya buni e'tiborsiz qoldiradi, shuning uchun callback'larda qulay, lekin obyekt metodi yoki konstruktor sifatida yaramaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.js.009",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Bu kod nima chiqaradi?",
+      "code": "console.log(a);\nvar a = 5;\nconsole.log(b);\nlet b = 6;",
+      "options": [
+        { "id": "a", "text": "undefined, keyin ReferenceError", "correct": true },
+        { "id": "b", "text": "5, 6", "hint": "Qiymatlar e'lon qatorida beriladi, undan oldin emas." },
+        { "id": "c", "text": "ReferenceError darhol birinchi qatorda", "hint": "`var` e'loni yuqoriga ko'tariladi (hoisting) va boshlang'ich qiymati `undefined`." },
+        { "id": "d", "text": "undefined, undefined", "hint": "`let` e'londan oldin murojaat qilishga yo'l qo'ymaydi (temporal dead zone)." }
+      ],
+      "explanation": "`var a` hoisting bilan funksiya boshiga ko'tariladi va `undefined` bo'ladi. `let b` ham ko'tariladi, lekin e'lon qatoriga yetguncha unga murojaat `ReferenceError`. Shuning uchun `let`/`const` xatolarni erta ko'rsatadi.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.js.010",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`async` funksiyada xatolarni qanday ushlash to'g'ri?",
+      "options": [
+        { "id": "a", "text": "`await` ni `try/catch` ichiga olish; chaqiruvchi tomonda esa `async` funksiya qaytargan promise'ga `.catch` yoki yana `try/catch`", "correct": true },
+        { "id": "b", "text": "`async` funksiyalar xato tashlamaydi", "hint": "Ichidagi xato rad etilgan (rejected) promise'ga aylanadi." },
+        { "id": "c", "text": "`window.onerror` hammasini ushlaydi", "hint": "Ushlanmagan promise xatosi `unhandledrejection` hodisasi; bu zaxira, asosiy usul emas." },
+        { "id": "d", "text": "`await` siz chaqirish kifoya", "hint": "`await` siz xato promise ichida qoladi va hech kim ko'rmaydi." }
+      ],
+      "explanation": "`async` funksiya har doim promise qaytaradi; `throw` uni reject qiladi. `await` reject'ni oddiy exception kabi tashlaydi, shuning uchun `try/catch` ishlaydi. Unutilgan `await` xatoni yutib yuboradi va promise \"osilib\" qoladi.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.js.011",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "JavaScript'da prototip zanjiri (prototype chain) qanday ishlaydi?",
+      "options": [
+        { "id": "a", "text": "Obyektda xususiyat topilmasa, uning prototipida, keyin prototipning prototipida qidiriladi, `null` gacha", "correct": true },
+        { "id": "b", "text": "Har obyekt barcha metodlarning o'z nusxasini saqlaydi", "hint": "Unda xotira isrof bo'lardi; metodlar prototipda bir marta turadi." },
+        { "id": "c", "text": "`class` sintaksisi prototiplarni bekor qildi", "hint": "`class` — prototiplar ustidagi sintaktik qulaylik." },
+        { "id": "d", "text": "Prototip faqat massivlarda bor", "hint": "Deyarli har obyektda prototip bor (`Object.prototype`)." }
+      ],
+      "explanation": "`[].map` massivning o'zida yo'q, `Array.prototype` da. `class A extends B` — `A.prototype.__proto__ === B.prototype` degani. Prototipni tushunish `instanceof`, `hasOwnProperty` va metodlarni ulashish mexanizmini tushuntiradi.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.js.012",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Debounce va throttle farqi nima va qaysi holatda qaysi biri?",
+      "options": [
+        { "id": "a", "text": "Debounce hodisalar to'xtagach bir marta chaqiradi (qidiruv maydoni); throttle berilgan oraliqda ko'pi bilan bir marta chaqiradi (scroll, resize)", "correct": true },
+        { "id": "b", "text": "Ikkalasi bir xil, nomlari har xil", "hint": "Qidiruv kiritishda throttle har 300 ms da so'rov yuboradi, debounce faqat terish to'xtagach." },
+        { "id": "c", "text": "Throttle hodisani butunlay bekor qiladi", "hint": "U chastotani cheklaydi, bekor qilmaydi." },
+        { "id": "d", "text": "Debounce faqat tarmoq so'rovlari uchun", "hint": "Har qanday tez-tez chaqiriladigan funksiya uchun." }
+      ],
+      "explanation": "Debounce: taymer har hodisada qayta boshlanadi, funksiya tinchlikdan keyin ishlaydi. Throttle: funksiya ishlagach, oraliq tugaguncha keyingi chaqiruvlar tashlab yuboriladi. Scroll pozitsiyasini kuzatishda throttle, avtokomplitda debounce.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.js.013",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Bu komponent ko'p marta ochilib yopilgach, sahifa sekinlashyapti. Sabab nima?",
+      "code": "function setup(panel) {\n  const data = loadBigData();\n  window.addEventListener('resize', () => {\n    panel.style.width = data.width + 'px';\n  });\n}",
+      "options": [
+        { "id": "a", "text": "Memory leak: listener hech qachon olib tashlanmaydi va closure orqali `data` ni ushlab turadi; har `setup` yangi listener va yangi `data` qo'shadi", "correct": true },
+        { "id": "b", "text": "`resize` hodisasi juda tez-tez keladi", "hint": "Chastota throttle bilan hal bo'ladi; lekin sekinlashuv to'planishdan." },
+        { "id": "c", "text": "`style.width` o'rniga `className` ishlatish kerak", "hint": "Uslub masalasi; leak'ni tuzatmaydi." },
+        { "id": "d", "text": "`const` o'rniga `let` kerak", "hint": "E'lon turi xotiraga ta'sir qilmaydi." }
+      ],
+      "explanation": "`window` butun sahifa davomida yashaydi; unga qo'shilgan listener va u ushlab turgan closure ham. Yechim: `removeEventListener` (yoki `AbortController` signali) komponent yopilganda. React'da bu `useEffect` cleanup funksiyasi.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.js.014",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Bundle hajmini kamaytirishda tree shaking samarali ishlashi uchun kod qanday yozilishi kerak?",
+      "options": [
+        { "id": "a", "text": "ES modullar (`import`/`export`) bilan, yon ta'sirsiz modullar (`sideEffects: false`) va kutubxonalardan nomli importlar", "correct": true },
+        { "id": "b", "text": "Hamma narsani bitta katta faylga yig'ish", "hint": "Unda ishlatilmagan kodni ajratib bo'lmaydi." },
+        { "id": "c", "text": "CommonJS (`require`) ishlatish", "hint": "`require` dinamik; bundler qaysi eksport ishlatilganini statik aniqlay olmaydi." },
+        { "id": "d", "text": "Kutubxonani butunlay import qilish (`import _ from 'lodash'`)", "hint": "Butun kutubxona bundle'ga tushadi; `import debounce from 'lodash/debounce'` kerak." }
+      ],
+      "explanation": "Tree shaking statik tahlilga tayanadi: ES modullarning `import`/`export` lari compile vaqtida ma'lum. Modul import qilinganda yon ta'sir bajarsa (global o'zgartirish, polyfill), bundler uni tashlab yubora olmaydi. Natijani bundle analyzer bilan o'lchash kerak.",
+      "reviewed": false
+    }
+  ]
+}
