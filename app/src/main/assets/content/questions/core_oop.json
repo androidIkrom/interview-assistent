@@ -1,0 +1,695 @@
+{
+  "topic": "core.oop",
+  "questions": [
+    {
+      "id": "core.oop.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "OOP'da encapsulation (inkapsulyatsiya) nima?",
+      "options": [
+        { "id": "a", "text": "Ob'ekt ichki holatini yashirib, unga faqat nazorat qilinadigan metodlar orqali kirishga ruxsat berish", "correct": true },
+        { "id": "b", "text": "Bir klassdan boshqa klass meros olishi", "hint": "Bu boshqa printsip — kodni qayta ishlatish uchun klasslar ierarxiyasi haqida." },
+        { "id": "c", "text": "Bir xil metodning turli klasslarda turlicha ishlashi", "hint": "Bu ham alohida printsip — bitta interfeys, turli xatti-harakat." },
+        { "id": "d", "text": "Barcha maydonlarni `public` qilib ochib qo'yish", "hint": "Aksincha, maqsad ichki holatni tashqaridan to'g'ridan-to'g'ri o'zgartirishdan himoya qilish." }
+      ],
+      "explanation": "Encapsulation — ma'lumot va u ustidagi operatsiyalarni bir joyda jamlab, ichki holatni `private` qilib yashirish. Tashqi kod ob'ekt bilan faqat ochiq metodlar orqali gaplashadi, shu sabab invariantlar buzilmaydi va ichki tuzilmani o'zgartirish xavfsiz bo'ladi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.oop.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Inheritance (meros) nimani anglatadi?",
+      "options": [
+        { "id": "a", "text": "Yangi klass mavjud klassning maydon va metodlarini olib, ularni kengaytiradi yoki o'zgartiradi", "correct": true },
+        { "id": "b", "text": "Klass o'zining nusxasini yaratadi", "hint": "Nusxa yaratish — ob'ekt darajasidagi amal (clone/copy), klasslar o'rtasidagi munosabat emas." },
+        { "id": "c", "text": "Ikki klass bir-birining private maydonlariga kira oladi", "hint": "Private maydonlar hatto meros olgan klassga ham ochilmaydi." },
+        { "id": "d", "text": "Klass bir nechta interfeysga ega bo'lishi", "hint": "Bu interfeyslarni implement qilish; savol klasslar orasidagi \"is-a\" munosabati haqida." }
+      ],
+      "explanation": "Inheritance \"is-a\" munosabatini ifodalaydi: `Dog : Animal`. Bola klass ota klassning ochiq (public/protected) a'zolarini oladi va ularni override qila oladi. Haddan ortiq chuqur ierarxiya kodni mo'rt qiladi, shu sabab ko'pincha kompozitsiya afzal.",
+      "reviewed": false
+    },
+    {
+      "id": "core.oop.003",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Polymorphism (polimorfizm) nima?",
+      "options": [
+        { "id": "a", "text": "Bitta interfeys yoki metod chaqiruvi ob'ektning haqiqiy turiga qarab turlicha bajarilishi", "correct": true },
+        { "id": "b", "text": "Bir klassda bir nechta konstruktor bo'lishi", "hint": "Bu konstruktor overloading — polimorfizmning juda tor ko'rinishi, asosiy ma'no emas." },
+        { "id": "c", "text": "Ob'ektning ko'p nusxada yaratilishi", "hint": "Nusxalar soni OOP printsipi emas." },
+        { "id": "d", "text": "Maydonlarni private qilish", "hint": "Bu boshqa printsip — ma'lumotni yashirish haqida." }
+      ],
+      "explanation": "Polimorfizm: `shape.area()` deb chaqirasiz, lekin `Circle` yoki `Square` o'z formulasini ishlatadi. Runtime polimorfizm override orqali, compile-time polimorfizm overload orqali amalga oshadi. U `if (type == ...)` zanjirlarini yo'q qiladi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.oop.004",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Abstraction (abstraksiya) printsipi nimani ko'zda tutadi?",
+      "options": [
+        { "id": "a", "text": "Muhim xususiyatlarni ajratib, keraksiz tafsilotlarni foydalanuvchidan yashirish", "correct": true },
+        { "id": "b", "text": "Barcha klasslarni abstract qilib e'lon qilish", "hint": "`abstract` kalit so'zi vositalardan biri, printsipning o'zi emas." },
+        { "id": "c", "text": "Kodni iloji boricha qisqa yozish", "hint": "Kod hajmi bilan bog'liq emas; gap murakkablikni qanday tashkil qilishda." },
+        { "id": "d", "text": "Ob'ektlarni xotirada siqish", "hint": "Xotira bilan aloqasi yo'q — bu dizayn printsipi." }
+      ],
+      "explanation": "Abstraksiya — \"nima qiladi\"ni \"qanday qiladi\"dan ajratish. `List` interfeysi `add`/`get`ni va'da qiladi, ichida massiv yoki bog'langan ro'yxat bo'lishi foydalanuvchiga muhim emas. Encapsulation abstraksiyani amalga oshirish vositasi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.oop.005",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Interface va abstract class o'rtasidagi asosiy farq qanday?",
+      "options": [
+        { "id": "a", "text": "Abstract class holat (maydonlar) va qisman implementatsiya saqlashi mumkin; interface asosan kontrakt — klass bir nechta interfeysni implement qila oladi, lekin bitta klassdan meros oladi", "correct": true },
+        { "id": "b", "text": "Interface'da metodlar bo'lmaydi, faqat konstantalar", "hint": "Interface'ning asosiy vazifasi aynan metod imzolarini e'lon qilish." },
+        { "id": "c", "text": "Abstract class'dan ob'ekt yaratish mumkin, interface'dan mumkin emas", "hint": "Ikkalasidan ham to'g'ridan-to'g'ri ob'ekt yaratilmaydi." },
+        { "id": "d", "text": "Farqi yo'q, bu sinonimlar", "hint": "Farq bor: holat saqlash va ko'p merosga ruxsat masalasida." }
+      ],
+      "explanation": "Abstract class — \"is-a\" ierarxiya ildizi: umumiy maydonlar, konstruktor, qisman tayyor metodlar. Interface — \"can-do\" kontrakt: `Comparable`, `Serializable`. Ko'p tillarda default metodlar interface'da ham bo'lishi mumkin, lekin holat (instance maydon) yo'q.",
+      "reviewed": false
+    },
+    {
+      "id": "core.oop.006",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Qaysi holatda interface'dan foydalanish abstract class'dan ko'ra to'g'riroq?",
+      "options": [
+        { "id": "a", "text": "Bir-biriga bog'liq bo'lmagan klasslar bitta umumiy xatti-harakatni (masalan, `Printable`) ta'minlashi kerak bo'lganda", "correct": true },
+        { "id": "b", "text": "Bir nechta klass umumiy maydonlar va tayyor metodlarni baham ko'rganda", "hint": "Umumiy holat va implementatsiya kerak bo'lsa, boshqa vosita qulayroq." },
+        { "id": "c", "text": "Faqat bitta klass bo'lganda", "hint": "Bitta klass uchun hech qanday abstraksiya shart emas." },
+        { "id": "d", "text": "Konstruktor kerak bo'lganda", "hint": "Interface'da konstruktor bo'lmaydi." }
+      ],
+      "explanation": "Interface imkoniyatni (capability) bildiradi: `Car` ham, `Document` ham `Printable` bo'lishi mumkin, ular umumiy ota klassga ega bo'lmasa ham. Abstract class esa umumiy ildiz va baham ko'rilgan kod bo'lganda qulay.",
+      "reviewed": false
+    },
+    {
+      "id": "core.oop.007",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "\"Composition over inheritance\" tamoyili nimani maslahat beradi?",
+      "options": [
+        { "id": "a", "text": "Xatti-harakatni meros orqali emas, boshqa ob'ektlarni maydon sifatida saqlab va ularga delegatsiya qilib qayta ishlatish", "correct": true },
+        { "id": "b", "text": "Merosdan umuman voz kechish", "hint": "Meros ham o'rinli vosita; tamoyil uni birinchi tanlov qilmaslik haqida." },
+        { "id": "c", "text": "Barcha klasslarni bitta katta klassga birlashtirish", "hint": "Bu aksincha — God object antipattern." },
+        { "id": "d", "text": "Klasslarni doim `final` qilish", "hint": "`final` kengaytirishni cheklaydi, lekin tamoyilning mohiyati delegatsiya haqida." }
+      ],
+      "explanation": "Meros kompilyatsiya vaqtida qotib qoladi va ota klassning barcha xususiyatlarini majburan oladi. Kompozitsiya (`Car` ichida `Engine` maydoni) runtime'da almashtirish, test uchun mock berish va faqat kerakli qismini ochish imkonini beradi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.oop.008",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "\"is-a\" va \"has-a\" munosabatlari qaysi OOP vositalariga mos keladi?",
+      "options": [
+        { "id": "a", "text": "is-a — inheritance, has-a — composition", "correct": true },
+        { "id": "b", "text": "is-a — composition, has-a — inheritance", "hint": "Teskari: \"It — hayvon\" meros, \"Mashinada motor bor\" kompozitsiya." },
+        { "id": "c", "text": "Ikkalasi ham inheritance", "hint": "\"Mashinada motor bor\" uchun `Car : Engine` deb yozish mantiqan noto'g'ri." },
+        { "id": "d", "text": "Ikkalasi ham interface", "hint": "Interface bu munosabatlarni emas, kontraktni ifodalaydi." }
+      ],
+      "explanation": "`Dog is an Animal` — meros. `Car has an Engine` — kompozitsiya. Dizaynda shu savolni berish: agar \"X — bu Y\" tabiiy jaranglamasa, meros ishlatmang.",
+      "reviewed": false
+    },
+    {
+      "id": "core.oop.009",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Method overriding va method overloading orasidagi farq?",
+      "options": [
+        { "id": "a", "text": "Overriding — bola klass ota metodini bir xil imzo bilan qayta aniqlaydi; overloading — bir klassda bir xil nomli, turli parametrli metodlar", "correct": true },
+        { "id": "b", "text": "Overriding — bir xil nomli turli parametrli metodlar; overloading — ota metodini qayta aniqlash", "hint": "Atamalar teskari qo'yilgan." },
+        { "id": "c", "text": "Ikkalasi bir xil narsa", "hint": "Biri runtime, biri compile-time hodisa — farq bor." },
+        { "id": "d", "text": "Overloading faqat konstruktorlar uchun ishlaydi", "hint": "Har qanday metod uchun ishlaydi." }
+      ],
+      "explanation": "Overriding — runtime polimorfizm: `Animal.speak()`ni `Dog` o'zicha aniqlaydi. Overloading — compile-time: `print(int)`, `print(String)`. Override'da imzo bir xil, overload'da parametrlar farq qiladi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.oop.010",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Quyidagi kod nimani chop etadi?",
+      "code": "open class Animal {\n    open fun speak() = \"...\"\n}\nclass Dog : Animal() {\n    override fun speak() = \"Woof\"\n}\n\nval a: Animal = Dog()\nprintln(a.speak())",
+      "options": [
+        { "id": "a", "text": "Woof", "correct": true },
+        { "id": "b", "text": "...", "hint": "O'zgaruvchi turi `Animal`, lekin ob'ektning haqiqiy turi boshqa — qaysi metod chaqirilishini haqiqiy tur hal qiladi." },
+        { "id": "c", "text": "Kompilyatsiya xatosi", "hint": "`Dog` `Animal`ning bolasi, shu sabab `Animal` turidagi o'zgaruvchiga joylash mumkin." },
+        { "id": "d", "text": "null", "hint": "Hech qayerda null yo'q." }
+      ],
+      "explanation": "Bu dynamic dispatch: metod chaqiruvi runtime'da ob'ektning haqiqiy turi (`Dog`) bo'yicha hal qilinadi, o'zgaruvchi e'lon qilingan turi (`Animal`) bo'yicha emas. Polimorfizmning asosiy mexanizmi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.oop.011",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`private`, `protected` va `public` modifikatorlari qanday farqlanadi?",
+      "options": [
+        { "id": "a", "text": "private — faqat klass ichida; protected — klass va uning avlodlarida; public — hamma joyda", "correct": true },
+        { "id": "b", "text": "private — faqat avlodlarda; protected — hamma joyda; public — klass ichida", "hint": "Tartib aralashgan. Eng yopig'i qaysi?" },
+        { "id": "c", "text": "Uchalasi ham bir xil, faqat uslub masalasi", "hint": "Kompilyator ularni qattiq tekshiradi." },
+        { "id": "d", "text": "protected — faqat bitta paket ichida", "hint": "Paket darajasi ba'zi tillarda alohida modifikator (package-private/internal)." }
+      ],
+      "explanation": "Encapsulation shu modifikatorlar orqali ishlaydi. Default tanlov — eng yopig'i (`private`), kerak bo'lgandagina ochish. `protected` meros ierarxiyasiga kengaytirish nuqtalari berish uchun.",
+      "reviewed": false
+    },
+    {
+      "id": "core.oop.012",
+      "level": "junior",
+      "type": "single",
+      "kind": "true_false",
+      "prompt": "Quyidagi fikr to'g'rimi?\n\nAbstract class'dan to'g'ridan-to'g'ri ob'ekt yaratish (instantiate) mumkin.",
+      "options": [
+        { "id": "a", "text": "Ha", "hint": "Abstract class'da bajarilmagan metodlar bo'lishi mumkin — bunday ob'ekt nima qilardi?" },
+        { "id": "b", "text": "Yo'q", "correct": true }
+      ],
+      "explanation": "Abstract class — to'liq bo'lmagan shablon. Undan ob'ekt yaratish taqiqlanadi; faqat barcha abstract metodlarni amalga oshirgan bola klassdan ob'ekt olinadi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.oop.013",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Konstruktor nima uchun kerak?",
+      "options": [
+        { "id": "a", "text": "Ob'ekt yaratilayotganda uning boshlang'ich holatini (maydonlarini) to'g'ri qiymatlar bilan o'rnatish", "correct": true },
+        { "id": "b", "text": "Ob'ektni xotiradan o'chirish", "hint": "O'chirish — destruktor/GC vazifasi." },
+        { "id": "c", "text": "Klassni boshqa klassdan meros oldirish", "hint": "Meros klass e'lonida ko'rsatiladi, konstruktorda emas." },
+        { "id": "d", "text": "Metodlarni overload qilish", "hint": "Konstruktorning o'zi overload bo'lishi mumkin, lekin vazifasi bu emas." }
+      ],
+      "explanation": "Konstruktor ob'ektning invariantlarini ta'minlaydi: majburiy maydonlarsiz ob'ekt yaratib bo'lmaydi. Yaxshi amaliyot — konstruktordan chiqqan ob'ekt darhol ishlatishga yaroqli bo'lishi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.oop.014",
+      "level": "junior",
+      "type": "multi",
+      "kind": "concept",
+      "prompt": "OOP'ning to'rt asosiy printsipi qaysilar? (bir nechta javob)",
+      "options": [
+        { "id": "a", "text": "Encapsulation", "correct": true },
+        { "id": "b", "text": "Inheritance", "correct": true },
+        { "id": "c", "text": "Polymorphism", "correct": true },
+        { "id": "d", "text": "Abstraction", "correct": true },
+        { "id": "e", "text": "Compilation", "hint": "Bu til/platforma jarayoni, dizayn printsipi emas." }
+      ],
+      "explanation": "Klassik to'rtlik: encapsulation (yashirish), inheritance (meros), polymorphism (bir interfeys — ko'p shakl), abstraction (muhimni ajratish). Intervyuda har biriga hayotiy misol keltira olish kutiladi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.oop.015",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Quyidagi klassdagi dizayn muammosi nimada?",
+      "code": "class BankAccount {\n    var balance: Double = 0.0\n}\n\n// ishlatish:\nval acc = BankAccount()\nacc.balance = -500.0",
+      "options": [
+        { "id": "a", "text": "`balance` tashqaridan to'g'ridan-to'g'ri o'zgartiriladi — manfiy balans kabi noto'g'ri holatni oldini olish imkoni yo'q (encapsulation buzilgan)", "correct": true },
+        { "id": "b", "text": "`Double` o'rniga `Int` ishlatish kerak", "hint": "Tur tanlovi alohida masala; asosiy muammo maydonga kirish darajasida." },
+        { "id": "c", "text": "Klass `open` emas", "hint": "Meros bu yerda talab qilinmaydi." },
+        { "id": "d", "text": "Hech qanday muammo yo'q", "hint": "Balansga -500 yozilganiga e'tibor bering." }
+      ],
+      "explanation": "Maydonni `private set` qilib, `deposit(amount)` / `withdraw(amount)` metodlari orqali o'zgartirish kerak — ular miqdorni tekshiradi va invariantni (balans ≥ 0) saqlaydi. Bu encapsulation'ning amaliy foydasi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.oop.016",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`super` (yoki `base`) kalit so'zi nima uchun ishlatiladi?",
+      "options": [
+        { "id": "a", "text": "Bola klassdan ota klassning konstruktori yoki metodiga murojaat qilish uchun", "correct": true },
+        { "id": "b", "text": "Klassni superklass qilib e'lon qilish uchun", "hint": "Klass ierarxiyasi e'lon qilish boshqa sintaksis orqali." },
+        { "id": "c", "text": "Statik maydonlarga murojaat uchun", "hint": "Statik a'zolarga klass nomi orqali murojaat qilinadi." },
+        { "id": "d", "text": "Ob'ektni o'chirish uchun", "hint": "O'chirish bilan aloqasi yo'q." }
+      ],
+      "explanation": "Override qilingan metodda `super.method()` deb chaqirish ota mantiqini saqlab, ustiga qo'shimcha qilish imkonini beradi. Konstruktorda `super(...)` ota maydonlarini to'g'ri initsializatsiya qiladi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.oop.017",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "SOLID'dagi Single Responsibility Principle (SRP) nimani talab qiladi?",
+      "options": [
+        { "id": "a", "text": "Klass o'zgarishi uchun faqat bitta sabab (bitta mas'uliyat / bitta aktor) bo'lishi kerak", "correct": true },
+        { "id": "b", "text": "Klassda faqat bitta metod bo'lishi kerak", "hint": "Metod soni emas, o'zgarish sabablari soni muhim." },
+        { "id": "c", "text": "Klass faqat bitta klassdan meros olishi kerak", "hint": "Bu ko'p tillarda til cheklovi, SOLID printsipi emas." },
+        { "id": "d", "text": "Har bir fayl bitta funksiya saqlashi kerak", "hint": "Fayl tuzilishi haqida emas, mas'uliyat haqida." }
+      ],
+      "explanation": "Misol: `ReportService` hisobotni ham hisoblasa, ham PDF'ga chizsa, ham email'ga yuborsa — uchta sabab bilan o'zgaradi. Uchta klassga ajratish har birini mustaqil test va o'zgartirish imkonini beradi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.oop.018",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Open/Closed Principle (OCP) nimani anglatadi?",
+      "options": [
+        { "id": "a", "text": "Modul kengaytirish uchun ochiq, lekin o'zgartirish uchun yopiq bo'lishi kerak — yangi xatti-harakat mavjud kodni tahrirlamasdan qo'shiladi", "correct": true },
+        { "id": "b", "text": "Barcha klasslar `open` bo'lishi kerak", "hint": "Hamma klassni ochish aksincha mo'rtlikni oshiradi." },
+        { "id": "c", "text": "Fayllarni ochib yopishni to'g'ri boshqarish", "hint": "Resurs boshqaruvi haqida emas, dizayn haqida." },
+        { "id": "d", "text": "Public API hech qachon o'zgarmasligi kerak", "hint": "API evolyutsiyasi haqida emas, yangi talablarni qanday qo'shish haqida." }
+      ],
+      "explanation": "`when (type) { CARD -> ...; CASH -> ... }` ga har yangi to'lov usuli uchun case qo'shish OCP'ni buzadi. `PaymentMethod` interfeysi va yangi klass qo'shish — kengaytirish, mavjud kodga tegmasdan.",
+      "reviewed": false
+    },
+    {
+      "id": "core.oop.019",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Quyidagi kod SOLID'ning qaysi printsipini buzadi?",
+      "code": "open class Rectangle(open var width: Int, open var height: Int) {\n    fun area() = width * height\n}\n\nclass Square(side: Int) : Rectangle(side, side) {\n    override var width: Int\n        get() = super.width\n        set(v) { super.width = v; super.height = v }\n    // height ham shunday\n}\n\nfun stretch(r: Rectangle) {\n    r.width = 10\n    r.height = 5\n    check(r.area() == 50)  // Square uchun 25 bo'ladi!\n}",
+      "options": [
+        { "id": "a", "text": "Liskov Substitution Principle — `Square` `Rectangle` o'rnida ishlatilganda kutilgan xatti-harakat buziladi", "correct": true },
+        { "id": "b", "text": "Single Responsibility — `Rectangle` juda ko'p ish qiladi", "hint": "Klassda bitta mas'uliyat (geometriya) — muammo almashtirish mumkinligida." },
+        { "id": "c", "text": "Dependency Inversion — konkret klassga bog'lanish", "hint": "Bu yerda bog'liqlik yo'nalishi haqida gap yo'q; gap bola klass ota kontraktini buzishida." },
+        { "id": "d", "text": "Hech qanday printsip buzilmagan", "hint": "`stretch` funksiyasining `check`i `Square` uchun yiqiladi." }
+      ],
+      "explanation": "LSP: bola klass ota o'rnida hech qanday kutilmagan natijasiz ishlashi kerak. Matematik \"kvadrat — to'rtburchak\" OOP'da ishlamaydi, chunki mutable `Rectangle` eni va bo'yini mustaqil o'zgartirishni va'da qiladi. Yechim: immutable shakllar yoki umumiy `Shape` interfeysi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.oop.020",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Interface Segregation Principle (ISP) nimani maslahat beradi?",
+      "options": [
+        { "id": "a", "text": "Klientlar ishlatmaydigan metodlarga bog'lanmasligi uchun katta interfeyslarni kichik, maqsadli interfeyslarga ajratish", "correct": true },
+        { "id": "b", "text": "Har bir klass uchun alohida interfeys yaratish", "hint": "Interfeys klass soniga qarab emas, klient ehtiyojiga qarab ajratiladi." },
+        { "id": "c", "text": "Interfeyslarni alohida modulga chiqarish", "hint": "Fayl/modul joylashuvi haqida emas." },
+        { "id": "d", "text": "Interface o'rniga abstract class ishlatish", "hint": "Vosita tanlovi haqida emas, interfeys hajmi haqida." }
+      ],
+      "explanation": "`Worker { work(); eat(); }` interfeysini `Robot` implement qilsa, `eat()` uchun bo'sh metod yozishga majbur. `Workable` va `Eatable`ga ajratish — har klient o'ziga keraklisini oladi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.oop.021",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Dependency Inversion Principle (DIP) nimani talab qiladi?",
+      "options": [
+        { "id": "a", "text": "Yuqori darajali modullar past darajali modullarga emas, ikkalasi ham abstraksiyaga bog'lanishi kerak", "correct": true },
+        { "id": "b", "text": "Bog'liqliklarni alfavit tartibida import qilish", "hint": "Import tartibi dizayn printsipi emas." },
+        { "id": "c", "text": "Past darajali modullar yuqori darajali modullarni chaqirishi kerak", "hint": "Yo'nalishni shunchaki teskari qilish emas — ikkala tomon abstraksiyaga qaraydi." },
+        { "id": "d", "text": "Dependency injection framework ishlatish shart", "hint": "DI framework vosita, printsip esa bog'liqlik yo'nalishi haqida; frameworksiz ham bajariladi." }
+      ],
+      "explanation": "`OrderService` `MySqlOrderRepository`ga emas, `OrderRepository` interfeysiga bog'lanadi. Natijada DB'ni almashtirish yoki testda fake berish oson. Interfeys yuqori darajali modul tomonida \"egalik qilinadi\".",
+      "reviewed": false
+    },
+    {
+      "id": "core.oop.022",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Singleton pattern nima va uning asosiy kamchiligi nimada?",
+      "options": [
+        { "id": "a", "text": "Klassning yagona instansiyasini global kirish bilan ta'minlaydi; kamchiligi — yashirin global holat, test qilish va almashtirish qiyin", "correct": true },
+        { "id": "b", "text": "Har chaqiruvda yangi ob'ekt yaratadi; kamchiligi — xotira sarfi", "hint": "Aksincha — bu pattern bitta instansiya haqida." },
+        { "id": "c", "text": "Ob'ektlarni klonlaydi; kamchiligi — chuqur nusxalash murakkab", "hint": "Bu Prototype pattern tavsifi." },
+        { "id": "d", "text": "Kamchiligi yo'q, doim ishlatish mumkin", "hint": "Global holat testlarda tartibga bog'liq xatolar keltiradi." }
+      ],
+      "explanation": "Singleton ko'pincha \"yashirin bog'liqlik\" bo'lib qoladi: klass ichida `Config.getInstance()` chaqirilsa, testda almashtirib bo'lmaydi. Zamonaviy yondashuv — DI konteyner orqali bitta instansiya berish (scope), klassning o'zi singleton bo'lmasdan.",
+      "reviewed": false
+    },
+    {
+      "id": "core.oop.023",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Factory Method pattern qanday muammoni hal qiladi?",
+      "options": [
+        { "id": "a", "text": "Ob'ekt yaratish mantiqini klientdan ajratib, qaysi konkret klass yaratilishini pastki klass yoki parametr hal qilishiga imkon beradi", "correct": true },
+        { "id": "b", "text": "Ob'ektlarni ketma-ket qadamlar bilan yig'ish", "hint": "Qadam-baqadam yig'ish — Builder pattern." },
+        { "id": "c", "text": "Ob'ektlar orasida xabar yuborish", "hint": "Bu Observer/Mediator sohasi." },
+        { "id": "d", "text": "Mavjud ob'ektga yangi interfeys berish", "hint": "Interfeysni moslashtirish — Adapter." }
+      ],
+      "explanation": "Klient `createButton()` chaqiradi, `WindowsDialog` yoki `MacDialog` o'z tugmasini qaytaradi. Klient konkret `WindowsButton`ni bilmaydi — `new` so'zi bir joyga jamlanadi, OCP'ga yordam beradi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.oop.024",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Builder pattern qachon foydali?",
+      "options": [
+        { "id": "a", "text": "Ob'ektda ko'p ixtiyoriy parametr bo'lib, konstruktor overload'lari yoki uzun parametr ro'yxati o'qilmas bo'lib qolganda", "correct": true },
+        { "id": "b", "text": "Bitta instansiya kerak bo'lganda", "hint": "Yagona instansiya — boshqa pattern." },
+        { "id": "c", "text": "Ob'ektlar orasida voqea tarqatish kerak bo'lganda", "hint": "Voqea tarqatish — Observer." },
+        { "id": "d", "text": "Algoritmni runtime'da almashtirish kerak bo'lganda", "hint": "Algoritm almashtirish — Strategy." }
+      ],
+      "explanation": "`HttpRequest.Builder().url(..).header(..).timeout(..).build()` — o'qilishi oson, ixtiyoriylar tashlab ketiladi, `build()` validatsiya qiladi. Kotlin'da named/default argumentlar ko'p hollarda Builder o'rnini bosadi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.oop.025",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Observer pattern mohiyati nimada?",
+      "options": [
+        { "id": "a", "text": "Ob'ekt (subject) holati o'zgarganda unga obuna bo'lgan ob'ektlarni (observers) avtomatik xabardor qiladi", "correct": true },
+        { "id": "b", "text": "Ob'ektlar bir-birini doimiy so'rab (polling) tekshiradi", "hint": "Polling aksincha — bu pattern push modeli." },
+        { "id": "c", "text": "Bitta ob'ekt barcha boshqalarni to'g'ridan-to'g'ri boshqaradi", "hint": "Markaziy boshqaruv — Mediator; bu yerda subject obunachilarini bilmaydi." },
+        { "id": "d", "text": "Ob'ektning holatini saqlab, keyin tiklash", "hint": "Holatni saqlash/tiklash — Memento." }
+      ],
+      "explanation": "Event listener, LiveData/Flow, RxJava, pub/sub — barchasi Observer. Subject obunachilar ro'yxatini saqlaydi va o'zgarishda `notify()` chaqiradi. Xavf: obunani bekor qilmaslik — memory leak.",
+      "reviewed": false
+    },
+    {
+      "id": "core.oop.026",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Strategy pattern qanday muammoni yechadi?",
+      "options": [
+        { "id": "a", "text": "Algoritmlar oilasini alohida klasslarga ajratib, ularni runtime'da almashtirish imkonini beradi — klient algoritmning ichini bilmaydi", "correct": true },
+        { "id": "b", "text": "Murakkab ob'ektni qadam-baqadam yig'adi", "hint": "Qadam-baqadam yig'ish — Builder." },
+        { "id": "c", "text": "Ob'ektga yangi xususiyat dinamik qo'shadi", "hint": "Dinamik \"o'rash\" — Decorator." },
+        { "id": "d", "text": "Murakkab tizimga sodda kirish nuqtasi beradi", "hint": "Sodda kirish nuqtasi — Facade." }
+      ],
+      "explanation": "`SortStrategy` interfeysi, `QuickSort`/`MergeSort` implementatsiyalari; `Sorter(strategy)` ularni almashtiradi. Bu `if/else` zanjirini olib tashlaydi va OCP'ga mos. Kotlin'da ko'pincha lambda sifatida ifodalanadi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.oop.027",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Immutable ob'ektlarning asosiy afzalliklari qaysilar?",
+      "options": [
+        { "id": "a", "text": "Thread-safe bo'lishi, holati kutilmaganda o'zgarmasligi, xavfsiz baham ko'rish va hash kalit sifatida ishonchli ishlatish", "correct": true },
+        { "id": "b", "text": "Xotirani kamroq ishlatishi", "hint": "Har o'zgarish yangi ob'ekt yaratadi — xotira ko'pincha ko'proq ketadi." },
+        { "id": "c", "text": "Doim tezroq ishlashi", "hint": "Ko'p nusxalash sekinlashtirishi mumkin; afzallik tezlik emas, ishonchlilik." },
+        { "id": "d", "text": "Meros olishni osonlashtirishi", "hint": "Meros bilan bevosita bog'liq emas." }
+      ],
+      "explanation": "Immutable ob'ekt yaratilgandan keyin o'zgarmaydi: `data class User(val name: String)`. Natijada sinxronizatsiya kerak emas, metodga uzatganda \"kimdir o'zgartirib qo'yadimi\" degan xavotir yo'q. O'zgarish — `copy()` bilan yangi nusxa.",
+      "reviewed": false
+    },
+    {
+      "id": "core.oop.028",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Quyidagi klass nega to'liq immutable emas?",
+      "code": "class Order(val id: String, val items: MutableList<String>)\n\nval order = Order(\"1\", mutableListOf(\"A\"))\norder.items.add(\"B\")",
+      "options": [
+        { "id": "a", "text": "`items` havolasi `val`, lekin ro'yxatning o'zi mutable — tashqaridan tarkibini o'zgartirish mumkin", "correct": true },
+        { "id": "b", "text": "`id` maydoni `var` bo'lishi kerak edi", "hint": "`var` aksincha mutability qo'shadi." },
+        { "id": "c", "text": "Klass `data class` emas", "hint": "`data` modifikatori immutability bermaydi, faqat `equals`/`copy` generatsiya qiladi." },
+        { "id": "d", "text": "Klass to'liq immutable", "hint": "Oxirgi qatorga qarang — ro'yxatga element qo'shilmoqda." }
+      ],
+      "explanation": "Shallow immutability: havola o'zgarmas, ichidagi ob'ekt o'zgaruvchan. Yechim — `List<String>` (read-only tur) qabul qilish va konstruktorda `.toList()` bilan defensive copy olish.",
+      "reviewed": false
+    },
+    {
+      "id": "core.oop.029",
+      "level": "middle",
+      "type": "multi",
+      "kind": "concept",
+      "prompt": "Qaysi holatlar Singleton'ning salbiy ta'sirini ko'rsatadi? (bir nechta javob)",
+      "options": [
+        { "id": "a", "text": "Unit testlar bir-biriga ta'sir qiladi, chunki holat testlar orasida saqlanib qoladi", "correct": true },
+        { "id": "b", "text": "Klassning haqiqiy bog'liqliklari imzosida ko'rinmaydi (yashirin bog'liqlik)", "correct": true },
+        { "id": "c", "text": "Kompilyatsiya vaqti sezilarli oshadi", "hint": "Singleton kompilyatsiya tezligiga ta'sir qilmaydi." },
+        { "id": "d", "text": "Ob'ekt xotirada ikki nusxada saqlanadi", "hint": "Aksincha, maqsad bitta nusxa." }
+      ],
+      "explanation": "Singleton — global o'zgaruvchining OOP niqobi. Test izolyatsiyasi buziladi, konstruktor imzosiga qarab klass nimaga bog'liqligini bilib bo'lmaydi. Yechim: bog'liqlikni konstruktor orqali uzatish, bitta instansiyani DI darajasida ta'minlash.",
+      "reviewed": false
+    },
+    {
+      "id": "core.oop.030",
+      "level": "middle",
+      "type": "single",
+      "kind": "true_false",
+      "prompt": "Quyidagi fikr to'g'rimi?\n\nSOLID printsiplariga rioya qilish uchun loyihada doim DI framework ishlatish shart.",
+      "options": [
+        { "id": "a", "text": "Ha", "hint": "Printsiplar dizayn haqida; bog'liqlikni konstruktor orqali qo'lda uzatish ham ularni qanoatlantiradi." },
+        { "id": "b", "text": "Yo'q", "correct": true }
+      ],
+      "explanation": "DIP abstraksiyaga bog'lanishni talab qiladi, framework'ni emas. Manual DI (composition root'da ob'ektlarni qo'lda yig'ish) kichik loyihalarda yetarli. Framework (Hilt, Spring) katta grafni boshqarishni osonlashtiradi, lekin printsipning sharti emas.",
+      "reviewed": false
+    },
+    {
+      "id": "core.oop.031",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Dependency Injection (DI) va Dependency Inversion Principle (DIP) qanday bog'liq?",
+      "options": [
+        { "id": "a", "text": "DIP — printsip (abstraksiyaga bog'lanish); DI — bu printsipni amalga oshirish texnikasi (bog'liqlikni tashqaridan uzatish)", "correct": true },
+        { "id": "b", "text": "Bu bitta tushunchaning ikki nomi", "hint": "Biri \"nima\", ikkinchisi \"qanday\" — ular turli darajada." },
+        { "id": "c", "text": "DI frameworksiz mumkin emas, DIP frameworksiz mumkin", "hint": "DI konstruktor orqali qo'lda ham qilinadi." },
+        { "id": "d", "text": "DIP faqat DB qatlamiga tegishli", "hint": "Printsip har qanday qatlamlar orasidagi bog'liqlikka tegishli." }
+      ],
+      "explanation": "DIP: `Service` `Repository` interfeysiga bog'lanadi. DI: kim `Service`ga konkret `Repository` beradi? — konstruktor/setter orqali tashqi kod. Inversion of Control (IoC) — umumiyroq atama: ob'ekt o'z bog'liqligini o'zi yaratmaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.oop.032",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Constructor injection nima uchun field/setter injection'dan afzal hisoblanadi?",
+      "options": [
+        { "id": "a", "text": "Bog'liqliklar aniq va majburiy bo'ladi, ob'ekt yaratilgandan keyin to'liq holatda, maydonlar `val`/final, testda osongina uzatiladi", "correct": true },
+        { "id": "b", "text": "U tezroq ishlaydi", "hint": "Tezlik farqi ahamiyatsiz; gap aniqlik va to'g'rilikda." },
+        { "id": "c", "text": "Field injection kompilyatsiya qilinmaydi", "hint": "Field injection ishlaydi, lekin kamchiliklari bor." },
+        { "id": "d", "text": "Setter injection faqat Java'da ishlaydi", "hint": "Setter injection har qanday OOP tilida mumkin." }
+      ],
+      "explanation": "Field injection'da ob'ektni `new` bilan yaratib bo'lmaydi (maydonlar null), bog'liqliklar yashirin, `final` bo'lolmaydi. Constructor injection imzo orqali \"menga nima kerak\"ni e'lon qiladi — ko'p bog'liqlik bo'lsa, bu SRP buzilgani haqida signal.",
+      "reviewed": false
+    },
+    {
+      "id": "core.oop.033",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Adapter pattern qachon ishlatiladi?",
+      "options": [
+        { "id": "a", "text": "Mavjud klassning interfeysi klient kutgan interfeysga mos kelmaganda — oraliq klass bir interfeysni ikkinchisiga tarjima qiladi", "correct": true },
+        { "id": "b", "text": "Ob'ektga dinamik qo'shimcha xatti-harakat berish kerak bo'lganda", "hint": "Qo'shimcha xatti-harakat — Decorator; Adapter interfeysni o'zgartiradi, xatti-harakatni emas." },
+        { "id": "c", "text": "Murakkab subsistemani yashirish kerak bo'lganda", "hint": "Subsistemani yashirish — Facade." },
+        { "id": "d", "text": "Ob'ektni kechiktirib yaratish kerak bo'lganda", "hint": "Kechiktirilgan yaratish — Proxy/lazy." }
+      ],
+      "explanation": "Tashqi kutubxona `LegacyLogger.writeLine(String)` beradi, sizning kod `Logger.log(Level, String)` kutadi — `LoggerAdapter` orasida turadi. Uchinchi tomon kodini o'zgartirmasdan integratsiya qilish usuli.",
+      "reviewed": false
+    },
+    {
+      "id": "core.oop.034",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Quyidagi kodda qaysi pattern ishlatilgan?",
+      "code": "interface DataSource { fun read(): String }\n\nclass FileSource : DataSource {\n    override fun read() = \"raw data\"\n}\n\nclass EncryptedSource(private val inner: DataSource) : DataSource {\n    override fun read() = decrypt(inner.read())\n}\n\nclass CachedSource(private val inner: DataSource) : DataSource {\n    private var cache: String? = null\n    override fun read() = cache ?: inner.read().also { cache = it }\n}\n\nval source = CachedSource(EncryptedSource(FileSource()))",
+      "options": [
+        { "id": "a", "text": "Decorator — har bir o'rama bir xil interfeysni saqlab, ichki ob'ektga qo'shimcha xatti-harakat qo'shadi va ular zanjirlanadi", "correct": true },
+        { "id": "b", "text": "Adapter — interfeyslar tarjima qilinmoqda", "hint": "Hamma klass bitta interfeysda — hech narsa tarjima qilinmayapti." },
+        { "id": "c", "text": "Factory — ob'ektlar yaratilmoqda", "hint": "Yaratish mantiqi ajratilmagan, oddiy konstruktor chaqiruvlari." },
+        { "id": "d", "text": "Singleton — bitta source", "hint": "Hech qayerda yagona instansiya nazorati yo'q." }
+      ],
+      "explanation": "Decorator meros o'rniga kompozitsiya orqali xatti-harakat qo'shadi: `Cached(Encrypted(File))` — istalgan tartibda, istalgan kombinatsiyada. Meros bilan `CachedEncryptedFileSource` kabi kombinatorik portlash bo'lardi. Java I/O stream'lari — klassik misol.",
+      "reviewed": false
+    },
+    {
+      "id": "core.oop.035",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Facade pattern nima maqsadda ishlatiladi?",
+      "options": [
+        { "id": "a", "text": "Murakkab subsistemaning bir nechta klassiga yagona sodda kirish nuqtasi berish, klientni ichki tafsilotlardan ajratish", "correct": true },
+        { "id": "b", "text": "Bir interfeysni boshqasiga moslashtirish", "hint": "Moslashtirish — Adapter; Facade yangi soddalashtirilgan interfeys yaratadi." },
+        { "id": "c", "text": "Ob'ektga kirishni nazorat qilish", "hint": "Kirish nazorati — Proxy." },
+        { "id": "d", "text": "Algoritm skeletini aniqlab, qadamlarni bola klassga qoldirish", "hint": "Bu Template Method." }
+      ],
+      "explanation": "`VideoConverter.convert(file, format)` ichida codec, demuxer, audio mixer kabi o'nlab klass ishlaydi — klient faqat bitta metodni ko'radi. Facade bog'lanishni (coupling) kamaytiradi, subsistemani almashtirishni osonlashtiradi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.oop.036",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "\"God object\" antipattern nima?",
+      "options": [
+        { "id": "a", "text": "Tizimning ko'p qismini biladigan va boshqaradigan haddan tashqari katta klass — SRP buzilgan, hamma narsa unga bog'liq", "correct": true },
+        { "id": "b", "text": "Hech qanday maydoni bo'lmagan klass", "hint": "Maydonsiz klass — utility yoki marker, boshqa holat." },
+        { "id": "c", "text": "Faqat getter/setter'dan iborat klass", "hint": "Bu anemic model — alohida antipattern." },
+        { "id": "d", "text": "Abstract metodlarsiz abstract class", "hint": "Bu dizayn hidi bo'lishi mumkin, lekin \"God object\" emas." }
+      ],
+      "explanation": "Belgilari: minglab qator, o'nlab bog'liqlik, har commit uni o'zgartiradi, merge conflict manbai. Yechim — mas'uliyatlar bo'yicha ajratish (extract class), har biriga aniq interfeys berish.",
+      "reviewed": false
+    },
+    {
+      "id": "core.oop.037",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "\"Anemic domain model\" antipattern nimani anglatadi?",
+      "options": [
+        { "id": "a", "text": "Domen ob'ektlari faqat ma'lumot (getter/setter) saqlaydi, barcha biznes-mantiq esa alohida service klasslarida — OOP afzalliklari yo'qoladi", "correct": true },
+        { "id": "b", "text": "Domen ob'ektlari juda ko'p mantiq saqlaydi", "hint": "Aksincha — mantiq ulardan tashqarida." },
+        { "id": "c", "text": "Domen modeli DB sxemasiga mos kelmaydi", "hint": "Sxema moslik — alohida masala (mapping)." },
+        { "id": "d", "text": "Domen klasslari meros ishlatmaydi", "hint": "Meros ishlatmaslik o'z-o'zidan muammo emas." }
+      ],
+      "explanation": "`Order` faqat maydonlar, `OrderService.calculateTotal(order)` esa mantiq — bu protsedural kod OOP niqobida. Rich model: `order.total()`, `order.addItem()` invariantlarni o'zi saqlaydi. Oddiy CRUD'da anemic model qabul qilinadi, murakkab domenda zarar.",
+      "reviewed": false
+    },
+    {
+      "id": "core.oop.038",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Coupling (bog'lanish) va cohesion (yaxlitlik) tushunchalari dizaynda qanday bo'lishi kerak?",
+      "options": [
+        { "id": "a", "text": "Past coupling (modullar bir-biriga kam bog'liq), yuqori cohesion (modul ichidagi elementlar bitta maqsadga xizmat qiladi)", "correct": true },
+        { "id": "b", "text": "Yuqori coupling, past cohesion", "hint": "Bu aynan yomon dizayn tavsifi." },
+        { "id": "c", "text": "Ikkalasi ham past", "hint": "Past cohesion — modul ichida bir-biriga aloqasi yo'q narsalar yig'ilgani." },
+        { "id": "d", "text": "Ikkalasi ham yuqori", "hint": "Yuqori coupling — bir o'zgarish ko'p modulni buzadi." }
+      ],
+      "explanation": "Cohesion — \"shu klassdagi narsalar birga tegishlimi?\" Coupling — \"bu klassni o'zgartirsam, qancha boshqasi buziladi?\" SRP cohesion'ni oshiradi, DIP/interface coupling'ni kamaytiradi. Ikkalasi birgalikda tizimni o'zgarishga bardoshli qiladi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.oop.039",
+      "level": "strong_middle",
+      "type": "multi",
+      "kind": "concept",
+      "prompt": "Qaysi belgilar yuqori (yomon) coupling'ni ko'rsatadi? (bir nechta javob)",
+      "options": [
+        { "id": "a", "text": "Klass boshqa klassning private tafsilotlarini bilib, ularga tayanib ishlaydi", "correct": true },
+        { "id": "b", "text": "Bir klassdagi kichik o'zgarish uchun beshta boshqa klassni ham o'zgartirish kerak", "correct": true },
+        { "id": "c", "text": "Klass bog'liqliklarini interfeys orqali konstruktorda qabul qiladi", "hint": "Bu aksincha coupling'ni kamaytiradigan amaliyot." },
+        { "id": "d", "text": "Klass bitta aniq mas'uliyatga ega", "hint": "Bu yuqori cohesion belgisi, muammo emas." }
+      ],
+      "explanation": "Tight coupling belgisi — \"shotgun surgery\": bitta mantiqiy o'zgarish ko'p faylga tarqaladi. Yechim: interfeys orqali gaplashish, konkret klasslarni `new` bilan yaratishni composition root'ga chiqarish, Law of Demeter (`a.b().c().d()` zanjirlaridan qochish).",
+      "reviewed": false
+    },
+    {
+      "id": "core.oop.040",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "true_false",
+      "prompt": "Quyidagi fikr to'g'rimi?\n\nDecorator pattern meros o'rniga kompozitsiyadan foydalanib, ob'ektga runtime'da xatti-harakat qo'shish imkonini beradi.",
+      "options": [
+        { "id": "a", "text": "Ha", "correct": true },
+        { "id": "b", "text": "Yo'q", "hint": "Decorator ichida ob'ektga havola saqlaydi va bir xil interfeysni implement qiladi — bu kompozitsiya." }
+      ],
+      "explanation": "Decorator \"o'rama\": `Cached(Encrypted(source))`. Har o'rama ichki ob'ektni chaqirib, oldin/keyin o'z ishini qiladi. Meros bilan kombinatsiyalar statik va ko'payib ketadi; kompozitsiya bilan runtime'da istalgancha yig'iladi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.oop.041",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Clean Architecture'da \"dependency rule\" nimani talab qiladi?",
+      "options": [
+        { "id": "a", "text": "Bog'liqliklar faqat ichkariga — domen/use case'lar tomon — yo'naltirilishi kerak; ichki qatlamlar tashqi (UI, DB, framework) haqida hech narsa bilmaydi", "correct": true },
+        { "id": "b", "text": "Har qatlam faqat o'zidan bir pog'ona pastdagi qatlamga bog'lanadi", "hint": "Bu klassik layered architecture; Clean'da yo'nalish markazga, va DB eng ichki emas." },
+        { "id": "c", "text": "Domen qatlami DB entity'lariga bog'lanadi", "hint": "Aksincha — domen DB'ni bilmasligi kerak." },
+        { "id": "d", "text": "UI va DB bir-biriga to'g'ridan-to'g'ri bog'lanadi", "hint": "Ikkalasi tashqi halqada; ular use case orqali gaplashadi." }
+      ],
+      "explanation": "Markaz — Entities va Use Cases, sof biznes qoidalari. Tashqarida Interface Adapters (presenter, repository implementatsiya), eng chetda Frameworks & Drivers. DB o'zgarsa domen o'zgarmaydi. Repository interfeysi ichkarida, implementatsiyasi tashqarida — DIP amalda.",
+      "reviewed": false
+    },
+    {
+      "id": "core.oop.042",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Hexagonal (Ports & Adapters) arxitekturada \"port\" va \"adapter\" nima?",
+      "options": [
+        { "id": "a", "text": "Port — domen e'lon qiladigan interfeys (nima kerak/nima taklif qilinadi); adapter — shu interfeysni konkret texnologiya (REST, DB, queue) bilan bog'laydigan implementatsiya", "correct": true },
+        { "id": "b", "text": "Port — tarmoq porti, adapter — tarmoq kartasi", "hint": "Bu arxitektura metaforasi, tarmoq apparati haqida emas." },
+        { "id": "c", "text": "Port — DB jadvali, adapter — ORM", "hint": "Port texnologiyaga bog'liq bo'lmagan interfeys; jadval tashqi tafsilot." },
+        { "id": "d", "text": "Ikkalasi ham UI komponentlari", "hint": "UI faqat adapterlardan biri (driving adapter)." }
+      ],
+      "explanation": "Driving port (masalan, `PlaceOrderUseCase`) — tashqi dunyo ilovani chaqiradi; driven port (`OrderRepository`) — ilova tashqi dunyoni chaqiradi. Adapterlar: REST controller, Room/JPA repository, Kafka producer. Domen test qilinadi — adapterlarsiz, fake portlar bilan.",
+      "reviewed": false
+    },
+    {
+      "id": "core.oop.043",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "DDD'da aggregate nima va u nima uchun kerak?",
+      "options": [
+        { "id": "a", "text": "Bir butun sifatida o'zgaradigan va invariantlari birga tekshiriladigan ob'ektlar klasteri; tashqaridan faqat aggregate root orqali o'zgartiriladi va tranzaksiya chegarasini belgilaydi", "correct": true },
+        { "id": "b", "text": "Barcha domen ob'ektlarini saqlaydigan global ro'yxat", "hint": "Aggregate aksincha chegara chizadi, hamma narsani yig'maydi." },
+        { "id": "c", "text": "DB'dagi SUM/COUNT so'rovi", "hint": "SQL aggregate funksiyalari boshqa tushuncha." },
+        { "id": "d", "text": "Bir nechta mikroservisni birlashtirgan API", "hint": "Bu API gateway/aggregator; DDD aggregate domen modeli ichida." }
+      ],
+      "explanation": "`Order` (root) + `OrderLine`lar: \"jami 10 tadan ko'p mahsulot bo'lmasin\" invarianti `order.addLine()` ichida tekshiriladi, `OrderLine`ni to'g'ridan-to'g'ri o'zgartirish mumkin emas. Bitta tranzaksiya — bitta aggregate; boshqa aggregate'larga ID orqali havola.",
+      "reviewed": false
+    },
+    {
+      "id": "core.oop.044",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "DDD'dagi bounded context nimani anglatadi?",
+      "options": [
+        { "id": "a", "text": "Bitta domen modeli va uning atamalari (ubiquitous language) bir ma'noda amal qiladigan aniq chegara; turli kontekstlarda bir so'z (masalan, \"Product\") turli modelga ega bo'lishi mumkin", "correct": true },
+        { "id": "b", "text": "Bitta DB jadvali", "hint": "Chegara modellar va til haqida, saqlash tuzilmasi haqida emas." },
+        { "id": "c", "text": "Bitta klass", "hint": "Kontekst ko'p klass va aggregate'larni qamraydi." },
+        { "id": "d", "text": "Butun kompaniya uchun yagona model", "hint": "DDD aynan yagona katta model g'oyasini rad etadi." }
+      ],
+      "explanation": "Sotuvda `Product` — narx va aksiya; omborda `Product` — og'irlik va joy. Bitta klassga hammasini tiqish God object beradi. Bounded context'lar orasida tarjima (context map, anti-corruption layer). Mikroservis chegaralari ko'pincha shu kontekstlarga mos tushadi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.oop.045",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Dizayn pattern'ni qo'llamaslik qachon to'g'ri qaror bo'ladi?",
+      "options": [
+        { "id": "a", "text": "Pattern hal qiladigan muammo hali mavjud bo'lmaganda — u faqat abstraksiya qatlamlari va murakkablik qo'shadi (speculative generality)", "correct": true },
+        { "id": "b", "text": "Hech qachon — pattern doim kodni yaxshilaydi", "hint": "Keraksiz abstraksiya o'qish va o'zgartirishni qiyinlashtiradi." },
+        { "id": "c", "text": "Faqat loyiha kichik bo'lganda", "hint": "Hajm emas, muammo mavjudligi hal qiluvchi." },
+        { "id": "d", "text": "Jamoa pattern'ni bilmaganda", "hint": "Bilim o'rgatiladi; asosiy mezon — real muammo bormi." }
+      ],
+      "explanation": "Bitta implementatsiya uchun interfeys + factory + strategy — \"pattern-itis\". Qoida: avval sodda yozing, ikkinchi variant paydo bo'lganda (yoki test uchun almashtirish kerak bo'lganda) abstraksiya kiriting. Pattern — nomlangan refactoring natijasi, boshlang'ich nuqta emas.",
+      "reviewed": false
+    },
+    {
+      "id": "core.oop.046",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Clean Architecture'ni kichik CRUD ilovaga to'liq qo'llashning asosiy xavfi nimada?",
+      "options": [
+        { "id": "a", "text": "Har oddiy amal uchun bir nechta qatlam, mapper va interfeys yoziladi — foyda keltirmaydigan boilerplate va tushunish qiyinligi oshadi", "correct": true },
+        { "id": "b", "text": "Ilova sekin ishlaydi", "hint": "Qatlamlar runtime'ga sezilarli ta'sir qilmaydi; muammo ishlab chiqish narxida." },
+        { "id": "c", "text": "Testlar yozish imkonsiz bo'ladi", "hint": "Aksincha, arxitektura testlashni osonlashtiradi — lekin arzimas kod uchun bu foyda kichik." },
+        { "id": "d", "text": "Xavf yo'q, doim qo'llash kerak", "hint": "Har arxitektura o'z narxiga ega; narx foydadan oshsa — xato." }
+      ],
+      "explanation": "Arxitektura murakkab domen va uzoq umr uchun investitsiya. Uch jadvalli admin panel uchun Entity → DTO → Domain → UI model mapping'lar — sof sarf. Senior qaror: muammo murakkabligiga mos arxitektura tanlash va kerak bo'lganda evolyutsiya qilish.",
+      "reviewed": false
+    }
+  ]
+}

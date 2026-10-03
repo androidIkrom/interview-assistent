@@ -281,6 +281,7 @@ Tugallangan mavzular `ContentAssetsTest.completedTopics` ro'yxatida turadi: test
 | 4. Frontend (6 mavzu) | yozildi (2026-10-03), inson tekshiruvi kutilmoqda | 356 / 1312 |
 | 5. Python (6 mavzu) | yozildi (2026-10-03), inson tekshiruvi kutilmoqda | 426 / 1312 |
 | 6. Node.js (6 mavzu) | yozildi (2026-10-03), inson tekshiruvi kutilmoqda | 496 / 1312 |
+| 7. `core.oop` + `core.security` + `core.testing` | yozildi (2026-10-03), inson tekshiruvi kutilmoqda | 606 / 1312 |
 
 ## 6. Manbalar
 
