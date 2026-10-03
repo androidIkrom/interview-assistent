@@ -39,8 +39,8 @@
       "kind": "concept",
       "prompt": "`set` ro'yxatdan qachon afzal?",
       "options": [
-        { "id": "a", "text": "Takrorlarni yo'qotish va a'zolikni (`x in s`) tez tekshirish kerak bo'lganda; tartib muhim bo'lmaganda", "correct": true },
-        { "id": "b", "text": "Elementlarni indeks bo'yicha olish kerak bo'lganda", "hint": "Set'da indeks yo'q." },
+        { "id": "a", "text": "Takrorlarni yo'qotish va `x in s` ni tez tekshirish kerak bo'lganda, tartib muhim bo'lmasa", "correct": true },
+        { "id": "b", "text": "Elementlarni indeks bo'yicha olish va ularni qo'shilgan tartibda qaytarish kerak bo'lganda", "hint": "Set'da indeks yo'q." },
         { "id": "c", "text": "Tartibni saqlash kerak bo'lganda", "hint": "Set tartibni kafolatlamaydi." },
         { "id": "d", "text": "Hech qachon, ro'yxat har doim yaxshi", "hint": "`x in list` O(n), `x in set` O(1)." }
       ],
@@ -70,12 +70,12 @@
       "kind": "concept",
       "prompt": "Fayldan satrlarni o'qishning to'g'ri usuli qaysi?",
       "options": [
-        { "id": "a", "text": "`with open(path, encoding='utf-8') as f:` va `for line in f:` — fayl avtomatik yopiladi va satrlar birma-bir o'qiladi", "correct": true },
-        { "id": "b", "text": "`f = open(path); data = f.read()` — yopish shart emas", "hint": "Yopilmagan fayl resurs sizib chiqishi; xato bo'lsa, u ochiq qoladi." },
+        { "id": "a", "text": "`with open(path, encoding='utf-8') as f:` va `for line in f:` — fayl o'zi yopiladi", "correct": true },
+        { "id": "b", "text": "`f = open(path); data = f.read()` — Python faylni o'zi yopadi, shuning uchun `close()` yoki `with` shart emas", "hint": "Yopilmagan fayl resurs sizib chiqishi; xato bo'lsa, u ochiq qoladi." },
         { "id": "c", "text": "`f.readlines()` har doim eng yaxshi", "hint": "Butun faylni xotiraga yuklaydi; katta fayl uchun yomon." },
         { "id": "d", "text": "`open` faqat `pathlib` orqali ishlaydi", "hint": "`open` satr yo'l bilan ham ishlaydi; `pathlib` qulaylik." }
       ],
-      "explanation": "Fayl obyekti iterator: `for line in f` bir vaqtda bitta satr saqlaydi. `encoding` ni aniq ko'rsatish platformalar orasidagi farqdan himoya qiladi (Windows'da standart UTF-8 emas bo'lishi mumkin).",
+      "explanation": "Satrlar birma-bir o'qiladi, butun fayl xotiraga yuklanmaydi. Fayl obyekti iterator: `for line in f` bir vaqtda bitta satr saqlaydi. `encoding` ni aniq ko'rsatish platformalar orasidagi farqdan himoya qiladi (Windows'da standart UTF-8 emas bo'lishi mumkin).",
       "reviewed": false
     },
     {
@@ -85,12 +85,12 @@
       "kind": "concept",
       "prompt": "`@dataclass` nima beradi?",
       "options": [
-        { "id": "a", "text": "Maydon e'lonlaridan `__init__`, `__repr__`, `__eq__` (va ixtiyoriy `order`, `frozen`, `slots`) ni avtomatik generatsiya qiladi", "correct": true },
+        { "id": "a", "text": "Maydon e'lonlaridan `__init__`, `__repr__` va `__eq__` ni avtomatik generatsiya qiladi", "correct": true },
         { "id": "b", "text": "Klassni ma'lumotlar bazasiga bog'laydi", "hint": "ORM emas; faqat sintaktik qulaylik." },
-        { "id": "c", "text": "Klassni avtomatik immutable qiladi", "hint": "Faqat `frozen=True` berilsa." },
+        { "id": "c", "text": "Klassni avtomatik ravishda immutable qiladi: yaratilgandan keyin maydonlarni o'zgartirib bo'lmaydi", "hint": "Faqat `frozen=True` berilsa." },
         { "id": "d", "text": "JSON serializatsiya qo'shadi", "hint": "`asdict` bor, lekin to'liq serializatsiya uchun pydantic kabi kutubxona kerak." }
       ],
-      "explanation": "`@dataclass class User: name: str; age: int = 0` — konstruktor, chiroyli `repr` va qiymat bo'yicha taqqoslash tayyor. Validatsiya va tashqi ma'lumot uchun pydantic, oddiy ichki tuzilma uchun dataclass yetadi.",
+      "explanation": "`order`, `frozen`, `slots` parametrlari ixtiyoriy. `@dataclass class User: name: str; age: int = 0` — konstruktor, chiroyli `repr` va qiymat bo'yicha taqqoslash tayyor. Validatsiya va tashqi ma'lumot uchun pydantic, oddiy ichki tuzilma uchun dataclass yetadi.",
       "reviewed": false
     },
     {
@@ -131,12 +131,12 @@
       "kind": "concept",
       "prompt": "Istisnolarni (exception) ushlashda qaysi yondashuv to'g'ri?",
       "options": [
-        { "id": "a", "text": "Aniq tipni ushlash (`except ValueError`), xatoni loglash yoki qayta ko'tarish; yalang'och `except:` va jim o'tkazishdan qochish", "correct": true },
+        { "id": "a", "text": "Aniq tipni (`except ValueError`) ushlab, xatoni loglash yoki qayta ko'tarish", "correct": true },
         { "id": "b", "text": "Har joyda `except Exception: pass`", "hint": "Xatolar yashiriladi va dastur noto'g'ri holatda davom etadi." },
         { "id": "c", "text": "Istisnolarni umuman ushlamaslik", "hint": "Kutilgan xatolar (fayl yo'q, tarmoq) uchun ishlov kerak." },
-        { "id": "d", "text": "Istisno o'rniga har doim xato kodi qaytarish", "hint": "Bu Python uslubiga zid (EAFP); istisnolar tilning asosiy mexanizmi." }
+        { "id": "d", "text": "Istisno o'rniga har doim xato kodi qaytarish, chunki istisnolar Python'da juda sekin ishlaydi", "hint": "Bu Python uslubiga zid (EAFP); istisnolar tilning asosiy mexanizmi." }
       ],
-      "explanation": "Yalang'och `except:` `KeyboardInterrupt` va `SystemExit` ni ham ushlaydi. Python falsafasi EAFP: \"kechirim so'rash osonroq\" — avval urinib, keyin aniq istisnoni ushlash. O'z istisnolaringizni ierarxiya qilib yaratish ishlov berishni soddalashtiradi.",
+      "explanation": "Yalang'och `except:` va xatoni jim o'tkazishdan qochish kerak. Yalang'och `except:` `KeyboardInterrupt` va `SystemExit` ni ham ushlaydi. Python falsafasi EAFP: \"kechirim so'rash osonroq\" — avval urinib, keyin aniq istisnoni ushlash. O'z istisnolaringizni ierarxiya qilib yaratish ishlov berishni soddalashtiradi.",
       "reviewed": false
     },
     {
@@ -162,12 +162,12 @@
       "kind": "concept",
       "prompt": "`functools.lru_cache` qachon mos va qanday xavfi bor?",
       "options": [
-        { "id": "a", "text": "Sof (pure), argumentlari hash qilinadigan va qayta chaqiriladigan funksiyalar uchun; xavfi: cheksiz kesh xotirani yeydi, metodlarda `self` ni ushlab qolib leak beradi, o'zgaruvchan argumentlar bilan ishlamaydi", "correct": true },
-        { "id": "b", "text": "Har qanday funksiyani tezlashtiradi", "hint": "Yon ta'sirli yoki har safar har xil natija beradigan funksiya uchun u xato natija beradi." },
+        { "id": "a", "text": "Sof, hash qilinadigan argumentli, qayta chaqiriladigan funksiyalar uchun; xavfi — cheksiz kesh va leak", "correct": true },
+        { "id": "b", "text": "Har qanday funksiyani, jumladan tasodifiy yoki vaqtga bog'liq natija qaytaradiganlarini ham xavfsiz tezlashtiradi", "hint": "Yon ta'sirli yoki har safar har xil natija beradigan funksiya uchun u xato natija beradi." },
         { "id": "c", "text": "Faqat rekursiya uchun", "hint": "Rekursiyada (fibonacci) mashhur, lekin umumiy vosita." },
         { "id": "d", "text": "Natijani diskka saqlaydi", "hint": "Faqat jarayon xotirasida." }
       ],
-      "explanation": "`maxsize` ni cheklash (`lru_cache(maxsize=1024)`) yoki `cache_info()` bilan kuzatish kerak. Nusxa metodlarida kesh klass darajasida va `self` ni kalit qiladi — nusxalar hech qachon o'chmaydi; `cached_property` yoki nusxa ichidagi kesh yaxshiroq.",
+      "explanation": "Metodlarda `self` ushlanib qolib leak bo'lishi mumkin; o'zgaruvchan argumentlar bilan ishlamaydi. `maxsize` ni cheklash (`lru_cache(maxsize=1024)`) yoki `cache_info()` bilan kuzatish kerak. Nusxa metodlarida kesh klass darajasida va `self` ni kalit qiladi — nusxalar hech qachon o'chmaydi; `cached_property` yoki nusxa ichidagi kesh yaxshiroq.",
       "reviewed": false
     },
     {

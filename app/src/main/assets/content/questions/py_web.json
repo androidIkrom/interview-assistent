@@ -8,9 +8,9 @@
       "kind": "concept",
       "prompt": "Django'ning MVT (Model-View-Template) arxitekturasida View nima qiladi?",
       "options": [
-        { "id": "a", "text": "So'rovni qabul qiladi, model orqali ma'lumot oladi va javob (odatda template bilan render qilingan HTML yoki JSON) qaytaradi", "correct": true },
+        { "id": "a", "text": "So'rovni qabul qilib, model orqali ma'lumot oladi va javob (HTML yoki JSON) qaytaradi", "correct": true },
         { "id": "b", "text": "Faqat HTML shablonini chizadi", "hint": "Bu Template vazifasi." },
-        { "id": "c", "text": "Ma'lumotlar bazasi jadvalini tasvirlaydi", "hint": "Bu Model." },
+        { "id": "c", "text": "Ma'lumotlar bazasi jadvalini va undagi maydonlarning tiplarini Python klassi sifatida tasvirlaydi", "hint": "Bu Model." },
         { "id": "d", "text": "URL'larni ro'yxatga oladi", "hint": "Bu `urls.py` ishi; u so'rovni view'ga yo'naltiradi." }
       ],
       "explanation": "Django'ning View'i MVC'dagi Controller'ga yaqin. So'rov yo'li: `urls.py` → view → model/ORM → template → `HttpResponse`. Class-based view'lar (ListView, DetailView) takroriy mantiqni tayyor beradi.",
@@ -25,7 +25,7 @@
       "code": "@app.get(\"/items/{item_id}\")\ndef read_item(item_id: int, verbose: bool = False):\n    return {\"id\": item_id, \"verbose\": verbose}",
       "options": [
         { "id": "a", "text": "`item_id = 7` (int), `verbose = True`; FastAPI tiplarga qarab o'zgartiradi va tekshiradi", "correct": true },
-        { "id": "b", "text": "`item_id = \"7\"` (satr), `verbose = \"true\"`", "hint": "FastAPI type hint'larga qarab qiymatlarni kerakli tipga o'tkazadi." },
+        { "id": "b", "text": "`item_id = \"7\"` (satr) va `verbose = \"true\"` (satr) — FastAPI qiymatlarni o'zgartirmaydi", "hint": "FastAPI type hint'larga qarab qiymatlarni kerakli tipga o'tkazadi." },
         { "id": "c", "text": "Xato: `verbose` yo'lda yo'q", "hint": "Yo'lda bo'lmagan parametr avtomatik query parametr deb olinadi." },
         { "id": "d", "text": "`verbose` har doim `False`", "hint": "Standart qiymat faqat parametr berilmaganda ishlatiladi." }
       ],
@@ -39,12 +39,12 @@
       "kind": "concept",
       "prompt": "Django'da migratsiya nima?",
       "options": [
-        { "id": "a", "text": "Model o'zgarishini bazaga qo'llaydigan, versiyalanadigan fayl; `makemigrations` yaratadi, `migrate` bajaradi", "correct": true },
-        { "id": "b", "text": "Ma'lumotni bir serverdan boshqasiga ko'chirish", "hint": "Bu boshqa ma'no; Django'da gap sxema o'zgarishlarida." },
+        { "id": "a", "text": "Model o'zgarishini bazaga qo'llaydigan versiyalangan fayl; `makemigrations` va `migrate`", "correct": true },
+        { "id": "b", "text": "Ma'lumotlarni bir serverdagi bazadan boshqa serverdagi bazaga avtomatik ko'chirish jarayoni", "hint": "Bu boshqa ma'no; Django'da gap sxema o'zgarishlarida." },
         { "id": "c", "text": "Django versiyasini yangilash", "hint": "Freymvork yangilanishi `pip` bilan; migratsiya baza sxemasi haqida." },
         { "id": "d", "text": "Faqat birinchi ishga tushirishda kerak", "hint": "Har model o'zgarishida yangi migratsiya." }
       ],
-      "explanation": "Migratsiyalar git'da saqlanadi va har muhitda bir xil tartibda qo'llanadi. Katta jadvallarda og'ir migratsiyalar (ustun qo'shish, indeks) production'da ehtiyotkorlik talab qiladi; ma'lumot migratsiyalari (`RunPython`) alohida yoziladi.",
+      "explanation": "`makemigrations` faylni yaratadi, `migrate` uni bajaradi. Migratsiyalar git'da saqlanadi va har muhitda bir xil tartibda qo'llanadi. Katta jadvallarda og'ir migratsiyalar (ustun qo'shish, indeks) production'da ehtiyotkorlik talab qiladi; ma'lumot migratsiyalari (`RunPython`) alohida yoziladi.",
       "reviewed": false
     },
     {
@@ -54,12 +54,12 @@
       "kind": "concept",
       "prompt": "Pydantic modeli FastAPI'da nima uchun ishlatiladi?",
       "options": [
-        { "id": "a", "text": "So'rov tanasini tiplar bo'yicha tekshirish, o'zgartirish (parse) va javobni serializatsiya qilish; hujjat shu modeldan hosil bo'ladi", "correct": true },
+        { "id": "a", "text": "So'rov tanasini tiplar bo'yicha tekshirish, parse qilish va javobni serializatsiya qilish", "correct": true },
         { "id": "b", "text": "Bazaga jadval yaratish uchun", "hint": "Bu ORM (SQLAlchemy, SQLModel) ishi." },
         { "id": "c", "text": "HTML render qilish uchun", "hint": "Pydantic ma'lumot bilan ishlaydi, ko'rinish bilan emas." },
-        { "id": "d", "text": "Faqat hujjat uchun, tekshirmaydi", "hint": "Noto'g'ri ma'lumot 422 bilan rad etiladi." }
+        { "id": "d", "text": "Faqat OpenAPI hujjatini chiroyli qilish uchun, so'rov ma'lumotlarini esa umuman tekshirmaydi", "hint": "Noto'g'ri ma'lumot 422 bilan rad etiladi." }
       ],
-      "explanation": "`class UserIn(BaseModel): email: EmailStr; age: int = Field(ge=0)` — kiruvchi JSON shu qoidalar bo'yicha tekshiriladi. Kirish va chiqish modellarini ajratish (`UserIn`/`UserOut`) parol kabi maydonlarni javobdan chiqarib tashlaydi.",
+      "explanation": "API hujjati ham shu modeldan hosil bo'ladi. `class UserIn(BaseModel): email: EmailStr; age: int = Field(ge=0)` — kiruvchi JSON shu qoidalar bo'yicha tekshiriladi. Kirish va chiqish modellarini ajratish (`UserIn`/`UserOut`) parol kabi maydonlarni javobdan chiqarib tashlaydi.",
       "reviewed": false
     },
     {
@@ -69,12 +69,12 @@
       "kind": "concept",
       "prompt": "FastAPI'da `Depends()` nima beradi?",
       "options": [
-        { "id": "a", "text": "Dependency injection: baza sessiyasi, joriy foydalanuvchi, sozlamalar kabi narsalar alohida funksiyada olinadi va endpoint'larga uzatiladi; testda almashtirish oson", "correct": true },
-        { "id": "b", "text": "Endpoint'lar orasidagi bajarilish tartibini", "hint": "Tartib emas, bog'liqlik ta'minoti." },
+        { "id": "a", "text": "Dependency injection: sessiya, joriy foydalanuvchi, sozlamalar alohida funksiyada olinib, endpoint'ga beriladi", "correct": true },
+        { "id": "b", "text": "Endpoint'lar orasidagi bajarilish tartibini belgilaydi: qaysi endpoint qaysi biridan keyin chaqirilishi kerakligini", "hint": "Tartib emas, bog'liqlik ta'minoti." },
         { "id": "c", "text": "Faqat autentifikatsiya uchun", "hint": "Auth eng mashhur misol, lekin har qanday umumiy mantiq uchun." },
         { "id": "d", "text": "Paketlarni o'rnatish", "hint": "Bu `pip` ishi." }
       ],
-      "explanation": "`def get_db(): db = Session(); try: yield db; finally: db.close()` — `yield` li dependency so'rovdan keyin tozalaydi. Dependency'lar ichma-ich bo'ladi va bir so'rovda keshlanadi; `app.dependency_overrides` testda haqiqiy bazani soxtasiga almashtiradi.",
+      "explanation": "Testda bog'liqlikni almashtirish oson. `def get_db(): db = Session(); try: yield db; finally: db.close()` — `yield` li dependency so'rovdan keyin tozalaydi. Dependency'lar ichma-ich bo'ladi va bir so'rovda keshlanadi; `app.dependency_overrides` testda haqiqiy bazani soxtasiga almashtiradi.",
       "reviewed": false
     },
     {
@@ -84,10 +84,10 @@
       "kind": "concept",
       "prompt": "Django middleware nima va qachon yoziladi?",
       "options": [
-        { "id": "a", "text": "Har so'rov va javob o'tadigan qatlam zanjiri; autentifikatsiya, CSRF, loglash, so'rov identifikatori kabi kesishuvchi mantiq uchun", "correct": true },
+        { "id": "a", "text": "Har so'rov va javob o'tadigan qatlamlar zanjiri: auth, CSRF, loglash kabi umumiy mantiq uchun", "correct": true },
         { "id": "b", "text": "Ma'lumotlar bazasi bilan ishlash qatlami", "hint": "Baza bilan ORM ishlaydi." },
         { "id": "c", "text": "Faqat xatolarni ushlash uchun", "hint": "Xato ishlov uning bir qo'llanishi, xolos." },
-        { "id": "d", "text": "Har view uchun alohida yoziladi", "hint": "Aksincha: barcha view'lar uchun umumiy." }
+        { "id": "d", "text": "Har bir view uchun alohida yoziladi va faqat o'sha bitta view'ning so'rovlariga qo'llaniladi", "hint": "Aksincha: barcha view'lar uchun umumiy." }
       ],
       "explanation": "Middleware tartibi muhim: `SessionMiddleware` `AuthenticationMiddleware` dan oldin turishi kerak. Har so'rovda ishlagani uchun u yengil bo'lishi kerak; og'ir ish (tashqi API) uni sekinlashtiradi.",
       "reviewed": false
@@ -115,12 +115,12 @@
       "kind": "concept",
       "prompt": "Django'da CSRF himoyasi qanday ishlaydi?",
       "options": [
-        { "id": "a", "text": "Server formaga yashirin token qo'yadi va cookie'da ham saqlaydi; `POST` da ikkalasi mos kelishi tekshiriladi, begona sayt tokenni bila olmaydi", "correct": true },
+        { "id": "a", "text": "Server formaga yashirin token qo'yadi va cookie'da saqlaydi; `POST` da ikkalasi solishtiriladi", "correct": true },
         { "id": "b", "text": "Barcha `POST` so'rovlarni bloklaydi", "hint": "Faqat tokensiz so'rovlarni." },
-        { "id": "c", "text": "SQL injection'dan himoya qiladi", "hint": "Bu boshqa hujum; undan ORM parametrlangan so'rovlar bilan himoya qiladi." },
+        { "id": "c", "text": "SQL injection'dan himoya qiladi: formadan kelgan barcha qiymatlarni bazaga yozishdan oldin tozalaydi", "hint": "Bu boshqa hujum; undan ORM parametrlangan so'rovlar bilan himoya qiladi." },
         { "id": "d", "text": "Faqat HTTPS'da ishlaydi", "hint": "HTTP'da ham ishlaydi, lekin HTTPS tavsiya etiladi." }
       ],
-      "explanation": "CSRF: foydalanuvchi tizimga kirgan holda zararli saytdagi forma uning nomidan so'rov yuboradi. Token bu so'rovni rad etadi. API'lar token (Bearer) bilan ishlasa, cookie avtomatik yuborilmaydi va CSRF xavfi kamayadi; `SameSite` cookie ham yordam beradi.",
+      "explanation": "Begona sayt bu tokenni bila olmaydi. CSRF: foydalanuvchi tizimga kirgan holda zararli saytdagi forma uning nomidan so'rov yuboradi. Token bu so'rovni rad etadi. API'lar token (Bearer) bilan ishlasa, cookie avtomatik yuborilmaydi va CSRF xavfi kamayadi; `SameSite` cookie ham yordam beradi.",
       "reviewed": false
     },
     {
@@ -130,10 +130,10 @@
       "kind": "concept",
       "prompt": "FastAPI (yoki Django) ilovasida fon vazifasi (email yuborish, hisobot) qanday bajarilishi kerak?",
       "options": [
-        { "id": "a", "text": "Qisqa va yo'qolsa ham mayli bo'lsa `BackgroundTasks`; ishonchli, uzoq yoki qayta urinish talab qilsa Celery/RQ/arq kabi navbat va alohida worker", "correct": true },
+        { "id": "a", "text": "Qisqa va yo'qolsa mayli — `BackgroundTasks`; ishonchli yoki uzoq — Celery/RQ kabi navbat va worker", "correct": true },
         { "id": "b", "text": "Har doim so'rov ichida sinxron bajarish", "hint": "Foydalanuvchi kutadi, timeout va server resursi band." },
         { "id": "c", "text": "Yangi `threading.Thread` ochish", "hint": "Jarayon qayta ishga tushsa vazifa yo'qoladi; nazorat va retry yo'q." },
-        { "id": "d", "text": "`asyncio.create_task` kifoya, har doim", "hint": "Jarayon tugasa yo'qoladi va ko'p worker'da nazorat qilib bo'lmaydi." }
+        { "id": "d", "text": "`asyncio.create_task` har doim kifoya: vazifa server qayta ishga tushsa ham yo'qolmaydi va qayta uriniladi", "hint": "Jarayon tugasa yo'qoladi va ko'p worker'da nazorat qilib bo'lmaydi." }
       ],
       "explanation": "Navbat (Redis, RabbitMQ) vazifani saqlaydi, worker uni oladi, muvaffaqiyatsizlikda qayta urinadi, kuzatuv (Flower) bor. Vazifalar idempotent bo'lishi kerak: qayta urinishda ikki marta email ketmasin.",
       "reviewed": false
@@ -145,12 +145,12 @@
       "kind": "concept",
       "prompt": "Django'da `QuerySet` dangasa (lazy) ekani nimani anglatadi va bu qanday xatoga olib keladi?",
       "options": [
-        { "id": "a", "text": "So'rov faqat natija kerak bo'lganda (iteratsiya, `len`, `list`) bajariladi; bir xil QuerySet'ni qayta-qayta baholash bazaga qayta so'rov yuboradi", "correct": true },
+        { "id": "a", "text": "So'rov faqat natija kerak bo'lganda bajariladi; bir QuerySet'ni qayta baholash yana so'rov yuboradi", "correct": true },
         { "id": "b", "text": "QuerySet sekin ishlaydi", "hint": "Dangasalik tezlik emas, qachon bajarilishi haqida." },
-        { "id": "c", "text": "Natija har doim keshlanadi", "hint": "Baholangan QuerySet o'z natijasini saqlaydi, lekin `filter` yangi QuerySet beradi." },
+        { "id": "c", "text": "Natija har doim keshlanadi, shuning uchun bir xil QuerySet bazaga hech qachon ikki marta murojaat qilmaydi", "hint": "Baholangan QuerySet o'z natijasini saqlaydi, lekin `filter` yangi QuerySet beradi." },
         { "id": "d", "text": "QuerySet'ni o'zgartirib bo'lmaydi", "hint": "Zanjir (`filter().exclude()`) yangi QuerySet qaytaradi." }
       ],
-      "explanation": "`users = User.objects.filter(active=True)` so'rov yubormaydi; `if users:` va keyin `for u in users:` ikkala holatda bazaga boradi (birinchisi `exists` emas, to'liq). `select_related`/`prefetch_related` esa bog'liq obyektlarni oldindan yuklab N+1 ni oldini oladi.",
+      "explanation": "Natija iteratsiya, `len` yoki `list` paytida kerak bo'ladi. `users = User.objects.filter(active=True)` so'rov yubormaydi; `if users:` va keyin `for u in users:` ikkala holatda bazaga boradi (birinchisi `exists` emas, to'liq). `select_related`/`prefetch_related` esa bog'liq obyektlarni oldindan yuklab N+1 ni oldini oladi.",
       "reviewed": false
     },
     {
@@ -160,12 +160,12 @@
       "kind": "concept",
       "prompt": "Production'da FastAPI/Django qanday ishga tushiriladi?",
       "options": [
-        { "id": "a", "text": "ASGI/WSGI server (uvicorn/gunicorn) bir nechta worker bilan, oldida reverse proxy (nginx) TLS va statik fayllar uchun; `DEBUG=False`, sozlamalar environment'dan", "correct": true },
-        { "id": "b", "text": "`python manage.py runserver` yoki `uvicorn --reload`", "hint": "Bu development serverlar: bitta oqim, xavfsizlik va barqarorlik kafolati yo'q." },
+        { "id": "a", "text": "uvicorn/gunicorn bir nechta worker bilan, oldida nginx (TLS, statik); `DEBUG=False`", "correct": true },
+        { "id": "b", "text": "`python manage.py runserver` yoki `uvicorn --reload` — ular production uchun yetarlicha tez", "hint": "Bu development serverlar: bitta oqim, xavfsizlik va barqarorlik kafolati yo'q." },
         { "id": "c", "text": "To'g'ridan-to'g'ri `python app.py`", "hint": "Worker boshqaruvi, qayta ishga tushirish va TLS yo'q." },
         { "id": "d", "text": "Jupyter notebook ichida", "hint": "Notebook server emas." }
       ],
-      "explanation": "Worker soni odatda `2 × CPU + 1` atrofida. Konteynerda jarayon menejeri sifatida gunicorn uvicorn worker'lari bilan keng tarqalgan. Statik fayllar ilova orqali emas, nginx/CDN orqali beriladi.",
+      "explanation": "Sozlamalar environment o'zgaruvchilaridan olinadi. Worker soni odatda `2 × CPU + 1` atrofida. Konteynerda jarayon menejeri sifatida gunicorn uvicorn worker'lari bilan keng tarqalgan. Statik fayllar ilova orqali emas, nginx/CDN orqali beriladi.",
       "reviewed": false
     },
     {

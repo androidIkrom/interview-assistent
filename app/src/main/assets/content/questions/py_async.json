@@ -10,7 +10,7 @@
       "options": [
         { "id": "a", "text": "CPython'da bir vaqtda faqat bitta oqim Python bayt-kodini bajarishiga ruxsat beradigan qulf", "correct": true },
         { "id": "b", "text": "Ma'lumotlar bazasi qulfi", "hint": "Bazaga aloqasi yo'q; interpretator ichidagi mexanizm." },
-        { "id": "c", "text": "Python'da ko'p oqimlilikni butunlay taqiqlaydigan qoida", "hint": "Oqimlar bor va ishlaydi; faqat Python kodi parallel bajarilmaydi." },
+        { "id": "c", "text": "Python'da ko'p oqimlilikni butunlay taqiqlaydigan qoida: bitta jarayonda faqat bitta oqim yaratiladi", "hint": "Oqimlar bor va ishlaydi; faqat Python kodi parallel bajarilmaydi." },
         { "id": "d", "text": "Faqat Python 2 da bo'lgan", "hint": "CPython'da hali ham bor (free-threaded build tajribaviy)." }
       ],
       "explanation": "GIL xotira boshqaruvini soddalashtiradi, lekin CPU-og'ir ishlarda oqimlar parallel ishlamaydi. I/O kutishda GIL bo'shatiladi, shuning uchun tarmoq va fayl ishlari uchun oqimlar baribir foydali.",
@@ -23,8 +23,8 @@
       "kind": "concept",
       "prompt": "`async def` funksiyani oddiy chaqirsangiz (`f()`, `await` siz) nima bo'ladi?",
       "options": [
-        { "id": "a", "text": "Tanasi bajarilmaydi; coroutine obyekti qaytadi va uni `await` qilish yoki event loop'ga berish kerak", "correct": true },
-        { "id": "b", "text": "Funksiya oddiy sinxron bajariladi", "hint": "`async def` har doim coroutine qaytaradi." },
+        { "id": "a", "text": "Tanasi bajarilmaydi — coroutine obyekti qaytadi, uni `await` qilish kerak", "correct": true },
+        { "id": "b", "text": "Funksiya oddiy sinxron funksiya kabi darhol oxirigacha bajariladi va natijani qaytaradi", "hint": "`async def` har doim coroutine qaytaradi." },
         { "id": "c", "text": "Xato chiqadi", "hint": "Xato emas, faqat `RuntimeWarning: coroutine was never awaited` ogohlantirishi." },
         { "id": "d", "text": "Funksiya fon oqimida ishlaydi", "hint": "Hech qanday oqim ochilmaydi." }
       ],
@@ -38,12 +38,12 @@
       "kind": "concept",
       "prompt": "Threading, multiprocessing va asyncio qachon ishlatiladi?",
       "options": [
-        { "id": "a", "text": "I/O kutish ko'p bo'lsa — asyncio (yoki thread'lar); CPU-og'ir hisob — multiprocessing (GIL'ni chetlab o'tadi); bloklovchi kutubxonalar bilan I/O — thread'lar", "correct": true },
+        { "id": "a", "text": "I/O kutish — asyncio yoki thread'lar; CPU-og'ir hisob — multiprocessing (GIL'ni chetlab o'tadi)", "correct": true },
         { "id": "b", "text": "Hamma narsa uchun threading", "hint": "CPU ishida GIL sabab tezlashuv bo'lmaydi." },
         { "id": "c", "text": "Hamma narsa uchun asyncio", "hint": "Asyncio CPU-og'ir ishni parallel qilmaydi va bloklovchi kutubxonalar bilan ishlamaydi." },
-        { "id": "d", "text": "Hamma narsa uchun multiprocessing", "hint": "Jarayonlar og'ir va ma'lumot almashish qimmat; I/O uchun ortiqcha." }
+        { "id": "d", "text": "Hamma narsa uchun multiprocessing, chunki u GIL'siz ishlaydi va har doim eng tez variant hisoblanadi", "hint": "Jarayonlar og'ir va ma'lumot almashish qimmat; I/O uchun ortiqcha." }
       ],
-      "explanation": "Qoida: \"kutyapmanmi yoki hisoblayapmanmi\". Minglab tarmoq ulanishi — asyncio; rasm qayta ishlash — `ProcessPoolExecutor`; eski sinxron SDK — `ThreadPoolExecutor`. Ularni aralashtirish mumkin: asyncio ichida `run_in_executor`.",
+      "explanation": "Bloklovchi kutubxonalar bilan I/O uchun thread'lar qulay. Qoida: \"kutyapmanmi yoki hisoblayapmanmi\". Minglab tarmoq ulanishi — asyncio; rasm qayta ishlash — `ProcessPoolExecutor`; eski sinxron SDK — `ThreadPoolExecutor`. Ularni aralashtirish mumkin: asyncio ichida `run_in_executor`.",
       "reviewed": false
     },
     {
@@ -82,12 +82,12 @@
       "kind": "concept",
       "prompt": "Oqimlar (thread) bilan umumiy o'zgaruvchini oshirishda nega `Lock` kerak, GIL bo'lsa ham?",
       "options": [
-        { "id": "a", "text": "`counter += 1` bir nechta bayt-kod amali; GIL ular orasida boshqa oqimga o'tishi mumkin va yangilanish yo'qoladi (race condition)", "correct": true },
-        { "id": "b", "text": "Kerak emas, GIL hamma narsani himoya qiladi", "hint": "GIL interpretatorni himoya qiladi, sizning mantiqingizni emas." },
+        { "id": "a", "text": "`counter += 1` bir nechta bayt-kod amali — GIL ular orasida oqimni almashtirishi mumkin", "correct": true },
+        { "id": "b", "text": "Kerak emas: GIL har bir Python qatorini atomik qiladi va umumiy o'zgaruvchilarni himoya qiladi", "hint": "GIL interpretatorni himoya qiladi, sizning mantiqingizni emas." },
         { "id": "c", "text": "Faqat `multiprocessing` da kerak", "hint": "Jarayonlar xotirani ulashmaydi; muammo oqimlarda." },
         { "id": "d", "text": "`Lock` kodni tezlashtiradi", "hint": "Aksincha, u ketma-ketlashtiradi; maqsad to'g'rilik." }
       ],
-      "explanation": "O'qish → qo'shish → yozish orasida boshqa oqim eski qiymatni o'qib, keyin ustiga yozadi. `with lock:` blokni atomik qiladi. Asyncio'da bitta oqim bo'lgani uchun oddiy amallar xavfsiz, lekin `await` o'rtasida bo'lsa, `asyncio.Lock` kerak bo'lishi mumkin.",
+      "explanation": "Natijada yangilanish yo'qoladi (race condition). O'qish → qo'shish → yozish orasida boshqa oqim eski qiymatni o'qib, keyin ustiga yozadi. `with lock:` blokni atomik qiladi. Asyncio'da bitta oqim bo'lgani uchun oddiy amallar xavfsiz, lekin `await` o'rtasida bo'lsa, `asyncio.Lock` kerak bo'lishi mumkin.",
       "reviewed": false
     },
     {
@@ -97,12 +97,12 @@
       "kind": "concept",
       "prompt": "`ThreadPoolExecutor` va `ProcessPoolExecutor` qanday tanlanadi?",
       "options": [
-        { "id": "a", "text": "I/O-og'ir vazifalar (so'rovlar, fayllar) — thread pool (yengil, xotira ulashiladi); CPU-og'ir vazifalar — process pool (har jarayon o'z GIL'i bilan, haqiqiy parallellik)", "correct": true },
+        { "id": "a", "text": "I/O-og'ir ish — thread pool (yengil); CPU-og'ir ish — process pool (har jarayonda o'z GIL'i)", "correct": true },
         { "id": "b", "text": "Process pool har doim tezroq", "hint": "Jarayon yaratish va ma'lumot uzatish (pickle) qimmat; I/O uchun thread'lar yetadi." },
-        { "id": "c", "text": "Thread pool CPU hisobni parallel qiladi", "hint": "GIL sabab yo'q." },
+        { "id": "c", "text": "Thread pool CPU hisobni ham barcha yadrolarda parallel bajaradi, shuning uchun har doim yetarli", "hint": "GIL sabab yo'q." },
         { "id": "d", "text": "Farqi faqat nomda", "hint": "Biri oqimlar, ikkinchisi alohida jarayonlar." }
       ],
-      "explanation": "`concurrent.futures` ikkalasiga bir xil API beradi: `executor.map(f, items)`. Process pool'ga uzatiladigan funksiya va ma'lumot pickle qilinadigan bo'lishi kerak (lambda emas). Asyncio bilan `loop.run_in_executor(pool, f)`.",
+      "explanation": "Thread'lar xotirani ulashadi; process pool haqiqiy parallellik beradi. `concurrent.futures` ikkalasiga bir xil API beradi: `executor.map(f, items)`. Process pool'ga uzatiladigan funksiya va ma'lumot pickle qilinadigan bo'lishi kerak (lambda emas). Asyncio bilan `loop.run_in_executor(pool, f)`.",
       "reviewed": false
     },
     {
@@ -112,12 +112,12 @@
       "kind": "concept",
       "prompt": "Asyncio'da yaratilgan task'ni (`asyncio.create_task`) havolasiz qoldirish nega xavfli?",
       "options": [
-        { "id": "a", "text": "Event loop task'larga kuchsiz havola saqlaydi; havola bo'lmasa GC uni tugamasdan o'chirishi mumkin va xatolar ham ko'rinmaydi; task'ni to'plamda saqlash yoki `TaskGroup` ishlatish kerak", "correct": true },
+        { "id": "a", "text": "Loop task'larga kuchsiz havola saqlaydi — GC uni tugamasdan o'chirishi mumkin, xatolar ham yo'qoladi", "correct": true },
         { "id": "b", "text": "Xavfi yo'q", "hint": "Hujjatning o'zi task havolasini saqlashni talab qiladi." },
-        { "id": "c", "text": "Task darhol bajariladi va natija yo'qoladi", "hint": "Task darhol emas, keyingi `await` da boshlanadi; muammo yo'qolishda." },
+        { "id": "c", "text": "Task darhol sinxron bajariladi va natijasi qaytarib olinmasa, u keyingi `await` da `RuntimeError` xatosini tashlaydi", "hint": "Task darhol emas, keyingi `await` da boshlanadi; muammo yo'qolishda." },
         { "id": "d", "text": "Task ikki marta bajariladi", "hint": "Hech qachon ikki marta emas." }
       ],
-      "explanation": "Python 3.11+ da `async with asyncio.TaskGroup() as tg: tg.create_task(...)` strukturaviy konkurentlik beradi: barcha task'lar blok tugaguncha kutiladi, xatolar tarqaladi va bekor qilish to'g'ri ishlaydi.",
+      "explanation": "Task'ni to'plamda saqlash yoki `TaskGroup` ishlatish kerak. Python 3.11+ da `async with asyncio.TaskGroup() as tg: tg.create_task(...)` strukturaviy konkurentlik beradi: barcha task'lar blok tugaguncha kutiladi, xatolar tarqaladi va bekor qilish to'g'ri ishlaydi.",
       "reviewed": false
     },
     {
@@ -128,9 +128,9 @@
       "prompt": "Bu kod 1000 ta URL'ni yuklashda `Too many open files` yoki server tomonidan bloklanish beradi. Nima yetishmaydi?",
       "code": "async def crawl(urls):\n    async with httpx.AsyncClient() as client:\n        tasks = [client.get(u) for u in urls]\n        return await asyncio.gather(*tasks)",
       "options": [
-        { "id": "a", "text": "Parallellik cheklanmagan: 1000 so'rov bir vaqtda; `asyncio.Semaphore(20)` bilan cheklash (yoki klient limitlari) kerak", "correct": true },
+        { "id": "a", "text": "Parallellik cheklanmagan: 1000 so'rov birdan ketadi; `asyncio.Semaphore(20)` bilan cheklash kerak", "correct": true },
         { "id": "b", "text": "`gather` o'rniga `for` sikli kerak", "hint": "Unda butunlay ketma-ket bo'lib, juda sekinlashadi; o'rtacha yo'l — cheklangan parallellik." },
-        { "id": "c", "text": "`AsyncClient` o'rniga `requests` kerak", "hint": "Sinxron klient event loop'ni bloklaydi." },
+        { "id": "c", "text": "`AsyncClient` o'rniga oddiy `requests` kerak, chunki u ulanishlarni avtomatik cheklaydi va qayta ishlatadi", "hint": "Sinxron klient event loop'ni bloklaydi." },
         { "id": "d", "text": "Kod to'g'ri, server xato", "hint": "Bir manbadan 1000 bir vaqtli so'rov odatda rate limit'ga tushadi." }
       ],
       "explanation": "`sem = asyncio.Semaphore(20); async def one(u): async with sem: return await client.get(u)`. Bu resurslarni (fayl deskriptorlari, ulanishlar) va serverga yukni cheklaydi; `httpx.Limits` ham ulanishlar sonini boshqaradi. Retry va timeout qo'shish ham shart.",
@@ -143,12 +143,12 @@
       "kind": "concept",
       "prompt": "Asyncio'da bekor qilish (cancellation) qanday ishlaydi va qanday xatolar bo'ladi?",
       "options": [
-        { "id": "a", "text": "`task.cancel()` keyingi `await` da `CancelledError` tashlaydi; uni yutib yuborish (`except Exception` ushlamaydi, lekin yalang'och `except:` ushlaydi) bekor qilishni buzadi; tozalash `finally` da", "correct": true },
-        { "id": "b", "text": "`cancel()` task'ni darhol to'xtatadi", "hint": "Kooperativ: faqat `await` nuqtasida." },
+        { "id": "a", "text": "`cancel()` keyingi `await` da `CancelledError` tashlaydi; uni yutish bekor qilishni buzadi", "correct": true },
+        { "id": "b", "text": "`cancel()` task'ni darhol, hatto `await` ga yetmasdan ham to'xtatadi va `finally` bajarilmaydi", "hint": "Kooperativ: faqat `await` nuqtasida." },
         { "id": "c", "text": "Bekor qilingan task xato bermaydi", "hint": "`CancelledError` ko'tariladi; bu `BaseException` vorisi." },
         { "id": "d", "text": "Bekor qilish faqat `gather` da ishlaydi", "hint": "Har qanday task uchun." }
       ],
-      "explanation": "`asyncio.timeout()` va `wait_for` ham bekor qilish orqali ishlaydi. `CancelledError` ni ushlab, qayta ko'tarmaslik \"o'lmas\" task'lar yaratadi: server to'xtamaydi. `finally` da resurs tozalash va kerak bo'lsa `asyncio.shield`.",
+      "explanation": "`except Exception` uni ushlamaydi, lekin yalang'och `except:` ushlaydi; tozalash `finally` da qilinadi. `asyncio.timeout()` va `wait_for` ham bekor qilish orqali ishlaydi. `CancelledError` ni ushlab, qayta ko'tarmaslik \"o'lmas\" task'lar yaratadi: server to'xtamaydi. `finally` da resurs tozalash va kerak bo'lsa `asyncio.shield`.",
       "reviewed": false
     },
     {
@@ -173,12 +173,12 @@
       "kind": "concept",
       "prompt": "Mavjud katta sinxron Django/Flask kod bazasida async'dan foyda olish strategiyasi qanday?",
       "options": [
-        { "id": "a", "text": "Tanlab: eng ko'p I/O kutadigan endpoint'lar yoki alohida servisni async qilish, sinxron va async chegarasini aniq boshqarish (`sync_to_async`), ORM va kutubxonalar async qo'llab-quvvatlashini tekshirish; hammasini qayta yozmaslik", "correct": true },
-        { "id": "b", "text": "Barcha funksiyalarga `async` qo'shib chiqish", "hint": "Ichida bloklovchi chaqiruv qolsa, async hech narsa bermaydi va hatto yomonlashtiradi." },
+        { "id": "a", "text": "Tanlab: eng ko'p I/O kutadigan endpoint yoki servisni async qilish, `sync_to_async` chegarasini boshqarish", "correct": true },
+        { "id": "b", "text": "Kod bazasidagi barcha funksiyalarga `async` qo'shib chiqish — shunda butun ilova o'z-o'zidan tezlashadi va kengayadi", "hint": "Ichida bloklovchi chaqiruv qolsa, async hech narsa bermaydi va hatto yomonlashtiradi." },
         { "id": "c", "text": "Async foydasiz, faqat worker sonini oshirish", "hint": "Worker'lar xotira oladi; minglab sekin ulanish uchun async ancha arzon." },
         { "id": "d", "text": "Freymvorkni butunlay almashtirish", "hint": "Qimmat va xavfli; Django o'zi ham ASGI va async view'larni qo'llaydi." }
       ],
-      "explanation": "Async faqat kutish ko'p bo'lgan joyda foyda beradi (tashqi API'lar, WebSocket, uzun ulanishlar). CPU-og'ir yoki bazaga bog'liq endpoint'larda foydasi kam. Aralash kodda eng katta xavf: async kontekstda bloklovchi chaqiruv — kuzatuv (`asyncio` debug rejimi) bilan topiladi.",
+      "explanation": "ORM va kutubxonalar async'ni qo'llashini tekshirish kerak; hammasini qayta yozmaslik. Async faqat kutish ko'p bo'lgan joyda foyda beradi (tashqi API'lar, WebSocket, uzun ulanishlar). CPU-og'ir yoki bazaga bog'liq endpoint'larda foydasi kam. Aralash kodda eng katta xavf: async kontekstda bloklovchi chaqiruv — kuzatuv (`asyncio` debug rejimi) bilan topiladi.",
       "reviewed": false
     },
     {

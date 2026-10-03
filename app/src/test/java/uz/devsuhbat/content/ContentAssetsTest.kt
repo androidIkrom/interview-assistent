@@ -183,6 +183,7 @@ class ContentAssetsTest {
     private val lengthFixedTopics = setOf(
         "android.kotlin", "android.components", "android.compose", "android.async", "android.data", "android.arch",
         "fe.js", "fe.htmlcss", "fe.react", "fe.ts", "fe.browser", "fe.arch",
+        "py.lang", "py.idioms", "py.web", "py.async", "py.db", "py.arch",
     )
 
     /**
