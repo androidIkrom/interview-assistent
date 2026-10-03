@@ -145,12 +145,12 @@
     { "id": "qa.auto", "title": "Avtomatlashtirish", "file": "qa_auto.json" },
     { "id": "qa.process", "title": "Strategiya, CI, jarayon", "file": "qa_process.json" },
 
-    { "id": "ops.linux", "title": "Linux va shell" },
-    { "id": "ops.docker", "title": "Docker va konteynerlar" },
-    { "id": "ops.cicd", "title": "CI/CD" },
-    { "id": "ops.k8s", "title": "Kubernetes" },
-    { "id": "ops.iac", "title": "Terraform, IaC, cloud" },
-    { "id": "ops.observability", "title": "Monitoring, SRE, xavfsizlik" },
+    { "id": "ops.linux", "title": "Linux va shell", "file": "ops_linux.json" },
+    { "id": "ops.docker", "title": "Docker va konteynerlar", "file": "ops_docker.json" },
+    { "id": "ops.cicd", "title": "CI/CD", "file": "ops_cicd.json" },
+    { "id": "ops.k8s", "title": "Kubernetes", "file": "ops_k8s.json" },
+    { "id": "ops.iac", "title": "Terraform, IaC, cloud", "file": "ops_iac.json" },
+    { "id": "ops.observability", "title": "Monitoring, SRE, xavfsizlik", "file": "ops_observability.json" },
 
     { "id": "ml.python", "title": "Python, pandas, numpy" },
     { "id": "ml.stats", "title": "Statistika va ehtimollik" },

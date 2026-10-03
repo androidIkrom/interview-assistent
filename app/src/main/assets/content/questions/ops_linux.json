@@ -1,0 +1,218 @@
+{
+  "topic": "ops.linux",
+  "questions": [
+    {
+      "id": "ops.linux.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Quyidagi buyruqlardan keyin `ls -l` faylning ruxsatlarini qanday ko'rsatadi?",
+      "code": "touch deploy.sh\nchmod 750 deploy.sh\nls -l deploy.sh",
+      "options": [
+        { "id": "a", "text": "-rwxr-x---", "correct": true },
+        { "id": "b", "text": "-rwxrwx---", "hint": "Ikkinchi raqam guruh uchun: 5 = 4 (r) + 1 (x), yozish (w) yo'q." },
+        { "id": "c", "text": "-rw-r-----", "hint": "7 = 4 + 2 + 1 — egasida bajarish (x) huquqi ham bor." },
+        { "id": "d", "text": "-rwxr-xr-x", "hint": "Uchinchi raqam (boshqalar) 0 — hech qanday huquq yo'q." }
+      ],
+      "explanation": "Uchta raqam: egasi / guruh / boshqalar; har biri r=4, w=2, x=1 yig'indisi. Kataloglar uchun x — ichiga kirish (`cd`) huquqi. Simvolik shakl: `chmod u+x,g-w,o= file`. Maxfiy fayllar (SSH kalit) uchun `600`; hammaga ochiq `777` deyarli har doim xato.",
+      "reviewed": false
+    },
+    {
+      "id": "ops.linux.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`kill <PID>` va `kill -9 <PID>` qanday farqlanadi?",
+      "options": [
+        { "id": "a", "text": "`kill` default SIGTERM (15) yuboradi — jarayon signalni ushlab, ishni chiroyli yakunlashi mumkin (ulanishlarni yopish, buferni yozish). `kill -9` — SIGKILL: yadro jarayonni darhol to'xtatadi, ushlab yoki rad etib bo'lmaydi, tozalash bo'lmaydi. Avval SIGTERM, javob bermasa — SIGKILL", "correct": true },
+        { "id": "b", "text": "Ikkalasi bir xil — `-9` faqat tezroq", "hint": "SIGKILL jarayonga tozalash imkonini bermaydi — ma'lumot yo'qolishi va yarim yozilgan fayllar mumkin." },
+        { "id": "c", "text": "`kill` jarayonni o'chirmaydi, faqat pauza qiladi", "hint": "Pauza — SIGSTOP; SIGTERM yakunlashni so'raydi." },
+        { "id": "d", "text": "`kill -9` faqat root uchun ishlaydi", "hint": "O'z jarayonlaringizga oddiy foydalanuvchi ham yubora oladi." }
+      ],
+      "explanation": "Jarayonlarni ko'rish: `ps aux`, `pgrep -a nginx`, `top`/`htop`. Konteyner va systemd ham to'xtatishda avval SIGTERM yuboradi, kutish muddatidan keyin SIGKILL — shuning uchun ilova SIGTERM'ni to'g'ri ishlashi (graceful shutdown) kerak.",
+      "reviewed": false
+    },
+    {
+      "id": "ops.linux.003",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "`app.log` faylida 5 qator bor. Buyruq nimani chop etadi?",
+      "code": "$ cat app.log\nINFO  server started\nERROR db timeout\nWARN  slow query\nerror cache miss\nERROR db timeout\n\n$ grep -c \"ERROR\" app.log",
+      "options": [
+        { "id": "a", "text": "2", "correct": true },
+        { "id": "b", "text": "3", "hint": "`grep` default'da registrga sezgir — kichik harfli \"error\" mos kelmaydi (buning uchun `-i`)." },
+        { "id": "c", "text": "1", "hint": "`-c` takrorlangan qatorlarni ham sanaydi — noyoblik tekshirilmaydi." },
+        { "id": "d", "text": "ERROR db timeout", "hint": "`-c` qatorlarni emas, mos qatorlar sonini chiqaradi." }
+      ],
+      "explanation": "Foydali bayroqlar: `-i` (registrsiz), `-v` (teskari), `-n` (qator raqami), `-r` (rekursiv), `-E` (kengaytirilgan regex), `-A/-B/-C` (kontekst). Takrorlanuvchi xatolarni sanash: `grep -i error app.log | sort | uniq -c | sort -rn`.",
+      "reviewed": false
+    },
+    {
+      "id": "ops.linux.004",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Serverga SSH orqali kalit bilan kirish qanday ishlaydi va nima uchun paroldan yaxshiroq?",
+      "options": [
+        { "id": "a", "text": "`ssh-keygen -t ed25519` bilan kalit juftligi yaratiladi; ochiq kalit serverdagi `~/.ssh/authorized_keys`ga qo'shiladi, maxfiy kalit faqat sizning kompyuteringizda qoladi (`600` ruxsat, parol bilan himoyalangan). Server maxfiy kalit borligini kriptografik tekshiradi — parol tarmoqdan o'tmaydi, brute-force amalda imkonsiz; keyin parolli kirishni o'chirib qo'yish mumkin", "correct": true },
+        { "id": "b", "text": "Maxfiy kalit serverga ko'chiriladi", "hint": "Serverga faqat ochiq kalit qo'yiladi; maxfiy kalit hech qachon kompyuteringizni tark etmaydi." },
+        { "id": "c", "text": "Kalit bilan kirish paroldan kam xavfsiz", "hint": "Uzun kriptografik kalitni taxmin qilib bo'lmaydi; parollar esa brute-force va phishing'ga zaif." },
+        { "id": "d", "text": "Bitta maxfiy kalitni butun jamoa bo'lishib ishlatishi to'g'ri", "hint": "Har kimning o'z kaliti bo'lsin — kim kirganini kuzatish va ketgan xodimning kirishini bekor qilish uchun." }
+      ],
+      "explanation": "Qo'shimcha xavfsizlik: `PermitRootLogin no`, `PasswordAuthentication no`, fail2ban, bastion host yoki SSM/Teleport kabi vositalar. `~/.ssh/config`da host aliaslari va `ProxyJump` qulaylik beradi.",
+      "reviewed": false
+    },
+    {
+      "id": "ops.linux.005",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Quyidagi buyruq nimani chop etadi?",
+      "code": "echo \"ali,25,Toshkent\" | awk -F',' '{print $3 \"-\" $2}'",
+      "options": [
+        { "id": "a", "text": "Toshkent-25", "correct": true },
+        { "id": "b", "text": "25-ali", "hint": "`awk`da maydonlar 1 dan sanaladi: `$1` — ali, `$2` — 25, `$3` — Toshkent." },
+        { "id": "c", "text": "ali,25,Toshkent", "hint": "`-F','` ajratuvchini vergul qiladi va `print` faqat tanlangan maydonlarni chiqaradi." },
+        { "id": "d", "text": "Toshkent 25", "hint": "Satrlar orasiga aniq `\"-\"` qo'yilgan, probel emas." }
+      ],
+      "explanation": "`awk` — ustunli matn bilan ishlash: `awk '{sum += $5} END {print sum}'` — yig'indi. `sed` — oqimli tahrirlash: `sed -i 's/8080/9090/g' config.ini`. `cut -d',' -f3` — oddiy holatlarda tezroq. Murakkab mantiq uchun Python yaxshiroq.",
+      "reviewed": false
+    },
+    {
+      "id": "ops.linux.006",
+      "level": "junior",
+      "type": "single",
+      "kind": "true_false",
+      "prompt": "Quyidagi fikr to'g'rimi?\n\nLinux'da fayl nomiga `.sh` kengaytmasini qo'shish uni `./script.sh` ko'rinishida ishga tushirish uchun yetarli.",
+      "options": [
+        { "id": "a", "text": "Ha", "hint": "Linux kengaytmaga qaramaydi: bajarish uchun `x` ruxsati (`chmod +x`) va to'g'ri shebang (`#!/usr/bin/env bash`) kerak." },
+        { "id": "b", "text": "Yo'q", "correct": true }
+      ],
+      "explanation": "`bash script.sh` ko'rinishida ishga tushirish `x` ruxsatisiz ham ishlaydi — interpreter faylni o'qiydi. Windows'da tahrirlangan skriptdagi CRLF qator oxirlari `/bin/bash^M: bad interpreter` xatosiga olib keladi — `dos2unix` yoki `.gitattributes`.",
+      "reviewed": false
+    },
+    {
+      "id": "ops.linux.007",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Ilovani systemd servisi sifatida ishga tushirish va loglarini ko'rish qanday amalga oshiriladi?",
+      "options": [
+        { "id": "a", "text": "`/etc/systemd/system/app.service` unit faylida `ExecStart`, `User`, `WorkingDirectory`, `Restart=on-failure`, `Environment`/`EnvironmentFile` va `[Install] WantedBy=multi-user.target` yoziladi; `systemctl daemon-reload`, `systemctl enable --now app`; holat — `systemctl status app`, loglar — `journalctl -u app -f` (yoki `--since \"1 hour ago\"`)", "correct": true },
+        { "id": "b", "text": "Ilovani `nohup ./app &` bilan ishga tushirish yetarli — server qayta yuklanganda ham avtomatik ishga tushadi", "hint": "`nohup` reboot'dan keyin ishga tushirmaydi, qulaganda qayta ishga tushirmaydi va loglarni tartibli boshqarmaydi." },
+        { "id": "c", "text": "Unit faylni o'zgartirgandan keyin hech narsa qilish shart emas", "hint": "systemd o'zgarishni ko'rishi uchun `daemon-reload`, keyin servisni qayta ishga tushirish kerak." },
+        { "id": "d", "text": "Servislarni har doim root foydalanuvchisidan ishga tushirish kerak", "hint": "Minimal huquqlar tamoyili: alohida tizim foydalanuvchisi (`User=app`)." }
+      ],
+      "explanation": "Foydali: `systemctl list-units --failed`, `journalctl -p err -b` (joriy yuklanishdagi xatolar), `systemd-analyze blame` (yuklanish vaqti). Unit'da xavfsizlik direktivalari: `ProtectSystem=strict`, `NoNewPrivileges=true`.",
+      "reviewed": false
+    },
+    {
+      "id": "ops.linux.008",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`df -h` disk 100% to'la deydi, lekin `du -sh /*` yig'indisi ancha kam. Eng ehtimolli sabab va yechim?",
+      "options": [
+        { "id": "a", "text": "O'chirilgan, lekin hali jarayon tomonidan ochiq turgan fayllar (masalan, `rm` qilingan katta log faylini ilova hamon yozyapti) — joy jarayon faylni yopmaguncha bo'shamaydi. `lsof +L1` (yoki `lsof | grep deleted`) bilan topib, jarayonni qayta ishga tushirish yoki faylni truncate qilish; kelajakda logrotate (`copytruncate` yoki signal bilan)", "correct": true },
+        { "id": "b", "text": "`df` buyrug'i noto'g'ri ishlaydi — unga ishonmaslik kerak", "hint": "`df` fayl tizimi darajasidagi haqiqiy bandlikni ko'rsatadi; farqni tushuntiruvchi sabab bor." },
+        { "id": "c", "text": "Diskni darhol kattalashtirish yagona yechim", "hint": "Joy aslida \"yashirin\" band — sababni topmasangiz, katta disk ham to'lib qoladi." },
+        { "id": "d", "text": "`du` faqat yashirin fayllarni ko'rsatadi", "hint": "`du` katalog daraxtidagi fayllarni sanaydi; o'chirilgan-ochiq fayllar daraxtda yo'q." }
+      ],
+      "explanation": "Boshqa sabablar: inode'lar tugashi (`df -i` — millionlab mayda fayllar), boshqa fayl tizimi ustiga mount qilingan katalog ostida qolgan fayllar, root uchun ajratilgan 5% zaxira. Katta fayllarni topish: `du -xh / | sort -h | tail`, `ncdu`.",
+      "reviewed": false
+    },
+    {
+      "id": "ops.linux.009",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "`/yoq` katalogi mavjud emas. Xato xabari qayerga tushadi?",
+      "code": "ls /yoq 2>&1 > out.txt",
+      "options": [
+        { "id": "a", "text": "Terminalga; `out.txt` bo'sh qoladi", "correct": true },
+        { "id": "b", "text": "`out.txt` fayliga", "hint": "Yo'naltirishlar chapdan o'ngga: `2>&1` paytida stdout hali terminal — stderr terminalga bog'lanadi, keyin faqat stdout faylga o'tadi." },
+        { "id": "c", "text": "Hech qayerga — xato yo'qoladi", "hint": "stderr stdout'ning eski manziliga (terminalga) nusxalangan." },
+        { "id": "d", "text": "Ham terminalga, ham faylga", "hint": "Ikki joyga yozish uchun `tee` kerak." }
+      ],
+      "explanation": "Ikkala oqimni faylga yozish: `cmd > out.txt 2>&1` (tartib muhim) yoki bash'da `cmd &> out.txt`. Xatolarni tashlab yuborish: `2>/dev/null`. Cron va systemd'da stderr'ni yo'qotmaslik — muammolarni tekshirishda juda muhim.",
+      "reviewed": false
+    },
+    {
+      "id": "ops.linux.010",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "4 yadroli serverda `uptime` load average'ni `12.3, 11.8, 9.5` ko'rsatyapti. Bu nimani anglatadi va keyingi qadam qaysi?",
+      "options": [
+        { "id": "a", "text": "Oxirgi 1, 5 va 15 daqiqada o'rtacha ~10–12 ta jarayon CPU'da ishlayotgan yoki navbatda turgan (Linux'da uzilmaydigan I/O kutishi — D holati — ham sanaladi) — 4 yadro uchun haddan tashqari yuklama va o'sish trendi. Keyin: `top`/`htop`da CPU'ni kim yeyapti, `%wa` (I/O wait) yuqorimi — `iostat -x`, `vmstat 1`; CPU yoki disk muammosini ajratish", "correct": true },
+        { "id": "b", "text": "CPU 12,3% band — hammasi joyida", "hint": "Load average foiz emas, ishlayotgan va kutayotgan jarayonlar soni; yadrolar soni bilan solishtiriladi." },
+        { "id": "c", "text": "Serverda 12 ta foydalanuvchi bor", "hint": "Foydalanuvchilar soni alohida ko'rsatiladi; load — jarayonlar navbati." },
+        { "id": "d", "text": "Load average faqat xotira yetishmasligini ko'rsatadi", "hint": "CPU navbati va I/O kutishini aks ettiradi; xotira — `free -h`, swap faolligi." }
+      ],
+      "explanation": "Load yuqori, CPU esa bo'sh bo'lsa — odatda disk yoki tarmoq fayl tizimi (NFS) kutishi. `pidstat`, `iotop` qaysi jarayon I/O qilayotganini ko'rsatadi. Trendni (1 → 15 daqiqa) o'qish: o'sayotganmi yoki pasayayotganmi.",
+      "reviewed": false
+    },
+    {
+      "id": "ops.linux.011",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Code review: deploy skripti `cp` muvaffaqiyatsiz bo'lsa ham davom etib, eski fayllarni o'chirib yuboradi. Nima tuzatiladi?",
+      "code": "#!/bin/bash\ncd $DEPLOY_DIR\ncp -r /tmp/build/* ./release/\nrm -rf $OLD_DIR/*\nsystemctl restart app",
+      "options": [
+        { "id": "a", "text": "Skript xatolarda to'xtamaydi: boshiga `set -euo pipefail` (xatoda chiqish, aniqlanmagan o'zgaruvchi — xato, pipe'dagi xato ham hisobga olinadi). O'zgaruvchilarni qo'shtirnoqqa olish (`\"$OLD_DIR\"`); ayniqsa `rm -rf $OLD_DIR/*` — o'zgaruvchi bo'sh bo'lsa `rm -rf /*` bo'ladi. `cd` muvaffaqiyatsizligini ham tekshirish", "correct": true },
+        { "id": "b", "text": "`#!/bin/bash` o'rniga `#!/bin/sh` yozish kerak", "hint": "Shebang tanlovi muammoni hal qilmaydi; asosiy xavf — xatolarni e'tiborsiz qoldirish va qo'shtirnoqsiz o'zgaruvchilar." },
+        { "id": "c", "text": "`systemctl restart` o'rniga `reboot` ishlatish kerak", "hint": "Butun serverni qayta yuklash ortiqcha va xatolarni hal qilmaydi." },
+        { "id": "d", "text": "Muammo yo'q — bash xatoda o'zi to'xtaydi", "hint": "Default'da bash xatoli buyruqdan keyin keyingi qatorga o'taveradi." }
+      ],
+      "explanation": "Qo'shimcha himoya: `rm -rf \"${OLD_DIR:?OLD_DIR bo'sh}\"/*` — bo'sh bo'lsa xato bilan to'xtaydi. ShellCheck skriptlardagi bunday xatolarni avtomatik topadi — CI'ga qo'shing. Murakkab deploy mantiqi uchun Ansible yoki tayyor deploy vositalari ishonchliroq.",
+      "reviewed": false
+    },
+    {
+      "id": "ops.linux.012",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Yuqori yuklamada servis log'ida `Too many open files` xatosi chiqmoqda. Sababi va yechimi?",
+      "options": [
+        { "id": "a", "text": "Jarayon ochiq file descriptor'lar chegarasiga yetdi (Linux'da socket'lar ham fayl). Tekshirish: `cat /proc/<pid>/limits`, `ls /proc/<pid>/fd | wc -l`. Yechim: avval oqishni (yopilmayotgan ulanish/fayl) istisno qilish, keyin chegarani oshirish — systemd'da `LimitNOFILE=65535`, konteynerda `ulimit` sozlamasi; tizim darajasida `fs.file-max`", "correct": true },
+        { "id": "b", "text": "Diskda bo'sh joy tugagan", "hint": "Joy tugasa `No space left on device` chiqadi; bu — descriptor'lar soni chegarasi." },
+        { "id": "c", "text": "`/etc/security/limits.conf`ni o'zgartirish systemd servislariga ham avtomatik ta'sir qiladi", "hint": "`limits.conf` PAM sessiyalariga (login) ta'sir qiladi; systemd servislari uchun unit'da `LimitNOFILE`." },
+        { "id": "d", "text": "Server RAM'i yetmayapti", "hint": "Xotira yetmasa OOM killer ishlaydi; bu xato aniq descriptor chegarasi haqida." }
+      ],
+      "explanation": "Descriptor soni vaqt bilan o'sib borsa — oqish (masalan, HTTP javob tanasi yopilmayapti, ulanishlar puli yo'q). Monitoring'da `process_open_fds` metrikasi va chegaraga nisbatan alert foydali.",
+      "reviewed": false
+    },
+    {
+      "id": "ops.linux.013",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Servis vaqti-vaqti bilan izsiz o'lib qolmoqda, `dmesg`da `Out of memory: Killed process 2314 (java)` yozuvi bor. Nima bo'lyapti va qanday tahlil qilinadi?",
+      "options": [
+        { "id": "a", "text": "Tizim xotirasi tugaganda yadroning OOM killer'i eng \"og'ir\" jarayonni (oom_score bo'yicha) SIGKILL bilan o'ldiradi — ilova log yozishga ulgurmaydi. Tahlil: `free -h` (available ustuni, page cache'ni band deb o'ylamaslik), jarayon xotirasi o'sishi (oqish yoki noto'g'ri heap chegarasi, masalan, JVM `-Xmx` + metaspace + native xotira), boshqa jarayonlar; yechim — oqishni tuzatish, chegaralarni to'g'ri sozlash, cgroup limitlari, monitoring", "correct": true },
+        { "id": "b", "text": "Java o'z-o'zidan to'xtadi — Linux'ga aloqasi yo'q", "hint": "`dmesg` yozuvi yadro jarayonni o'ldirganini aniq ko'rsatadi." },
+        { "id": "c", "text": "`free` buyrug'idagi `used` katta bo'lsa — xotira tugagan", "hint": "Linux bo'sh xotirani page cache uchun ishlatadi; haqiqiy zaxira — `available` ustuni." },
+        { "id": "d", "text": "Swap'ni cheksiz kattalashtirish yaxshi yechim", "hint": "Haddan tashqari swap ilovani juda sekinlashtiradi (thrashing) va asosiy sababni yashiradi." }
+      ],
+      "explanation": "Konteynerda xuddi shu hodisa `OOMKilled` (exit code 137) sifatida ko'rinadi — cgroup chegarasi oshganda. Muhim jarayonlarni himoyalash: `oom_score_adj`. Xotira trendini monitoring qilib, OOM'dan oldin alert berish.",
+      "reviewed": false
+    },
+    {
+      "id": "ops.linux.014",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Production server \"sekinlashdi\" degan shikoyat keldi, aniq belgi yo'q. Tizimli tahlilni qanday olib borasiz?",
+      "options": [
+        { "id": "a", "text": "Metodologiya bilan: USE metodi — har resurs (CPU, xotira, disk, tarmoq) uchun Utilization, Saturation, Errors; birinchi 60 soniya: `uptime`, `dmesg -T | tail`, `vmstat 1`, `mpstat -P ALL 1`, `pidstat 1`, `iostat -xz 1`, `free -m`, `sar -n DEV 1`, `ss -s`; keyin ilova darajasidagi metrikalar (RED: rate, errors, duration) va oxirgi o'zgarishlar (deploy, konfiguratsiya) bilan solishtirish; gipotezani ma'lumot bilan tasdiqlash", "correct": true },
+        { "id": "b", "text": "Darhol serverni qayta yuklash", "hint": "Belgi vaqtincha yo'qolishi mumkin, lekin sabab va dalillar ham yo'qoladi — muammo qaytadi." },
+        { "id": "c", "text": "Tasodifiy sozlamalarni birma-bir o'zgartirib ko'rish", "hint": "Tizimsiz o'zgarishlar yangi muammolar qo'shadi va sababni aniqlashni qiyinlashtiradi." },
+        { "id": "d", "text": "Faqat ilova log'larini o'qish yetarli", "hint": "Resurs to'yinishi (disk, tarmoq, CPU steal) log'da ko'rinmasligi mumkin — tizim metrikalari kerak." }
+      ],
+      "explanation": "Brendan Gregg'ning \"Linux Performance Analysis in 60 seconds\" — tayanch ro'yxat. Virtual mashinalarda `%st` (steal) — qo'shni VM'lar CPU'ni olayotgani. Chuqurroq: `perf`, eBPF vositalari (bcc, bpftrace). Natija va qadamlar incident hujjatiga yoziladi.",
+      "reviewed": false
+    }
+  ]
+}

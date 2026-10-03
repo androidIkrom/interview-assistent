@@ -1,0 +1,201 @@
+{
+  "topic": "ops.k8s",
+  "questions": [
+    {
+      "id": "ops.k8s.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Kubernetes'da Pod, Deployment va Service qanday bog'liq?",
+      "options": [
+        { "id": "a", "text": "Pod — eng kichik ishga tushirish birligi: bir yoki bir nechta container umumiy tarmoq va volume bilan. Deployment — kerakli nusxalar sonini (replicas) va versiyani deklarativ boshqaradi (ReplicaSet orqali), pod o'lsa yangisini yaratadi va yangilashni bajaradi. Service — o'zgaruvchan pod'lar to'plamiga label selector orqali barqaror nom va IP beradi va trafikni ular orasida taqsimlaydi", "correct": true },
+        { "id": "b", "text": "Service — container image'ni saqlaydigan joy", "hint": "Image'lar registry'da; Service — tarmoq abstraksiyasi." },
+        { "id": "c", "text": "Pod'larni har doim to'g'ridan-to'g'ri yaratish va IP manzili bilan murojaat qilish kerak", "hint": "Pod IP'lari qayta yaratilganda o'zgaradi; boshqaruv uchun Deployment, murojaat uchun Service." },
+        { "id": "d", "text": "Deployment faqat bitta pod'ni boshqara oladi", "hint": "`replicas` bilan istalgan sonni boshqaradi." }
+      ],
+      "explanation": "Deklarativ model: siz kerakli holatni yozasiz (`replicas: 3`, `image: app:1.4`), controller'lar haqiqiy holatni unga doimiy moslaydi. Holatli ilovalar (DB) uchun StatefulSet, har node'da bitta nusxa uchun DaemonSet, bir martalik vazifalar uchun Job/CronJob.",
+      "reviewed": false
+    },
+    {
+      "id": "ops.k8s.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Service turlari — ClusterIP, NodePort va LoadBalancer — qanday farqlanadi?",
+      "options": [
+        { "id": "a", "text": "ClusterIP (default) — faqat klaster ichidan kiriladigan virtual IP va DNS nom (servislar o'rtasidagi aloqa). NodePort — har node'ning ma'lum portini (30000–32767) ochadi. LoadBalancer — cloud provayderdan tashqi load balancer yaratib, servisni internetga chiqaradi. HTTP uchun ko'pincha bitta Ingress/Gateway + ClusterIP servislar", "correct": true },
+        { "id": "b", "text": "ClusterIP servisga internetdan to'g'ridan-to'g'ri kirish mumkin", "hint": "ClusterIP faqat klaster ichida; tashqariga chiqarish uchun LoadBalancer, NodePort yoki Ingress." },
+        { "id": "c", "text": "Har mikroservisga alohida LoadBalancer — eng arzon va qulay", "hint": "Har biri alohida cloud load balancer — qimmat; HTTP trafik uchun umumiy Ingress samaraliroq." },
+        { "id": "d", "text": "NodePort pod'ni boshqa node'ga ko'chiradi", "hint": "NodePort tarmoq kirish nuqtasi; pod joylashuvini scheduler hal qiladi." }
+      ],
+      "explanation": "Klaster ichida servis DNS orqali topiladi: `http://orders.shop.svc.cluster.local` yoki shu namespace'da qisqa `http://orders`. `kubectl port-forward svc/orders 8080:80` — lokal debug uchun.",
+      "reviewed": false
+    },
+    {
+      "id": "ops.k8s.003",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Pod ishga tushmayapti. Muammoni qidirishni qaysi buyruqlardan boshlash to'g'ri?",
+      "options": [
+        { "id": "a", "text": "`kubectl get pods` (holat: Pending, CrashLoopBackOff, ImagePullBackOff), `kubectl describe pod <nom>` (Events: scheduling, image pull, probe xatolari, OOMKilled), `kubectl logs <nom>` va `--previous` (oldingi qulagan container loglari), kerak bo'lsa `kubectl get events --sort-by=.lastTimestamp`", "correct": true },
+        { "id": "b", "text": "Darhol klasterni qayta o'rnatish", "hint": "Muammo odatda bitta pod konfiguratsiyasida; avval holat va hodisalarni ko'ring." },
+        { "id": "c", "text": "Faqat `kubectl delete pod` — yangi pod o'zi tuzatadi", "hint": "Sabab saqlanib qolsa, yangi pod ham xuddi shunday yiqiladi; avval tashxis." },
+        { "id": "d", "text": "Node'ga SSH bilan kirib, Docker loglarini qidirish birinchi qadam", "hint": "Ko'p ma'lumot `kubectl` orqali tezroq va xavfsizroq olinadi." }
+      ],
+      "explanation": "Tipik holatlar: `ImagePullBackOff` — image nomi/teg yoki registry ruxsati xato; `Pending` — resurs yetmaydi yoki node selector/taint mos emas; `CrashLoopBackOff` — ilova ishga tushib yiqilyapti (loglar, konfiguratsiya, probe).",
+      "reviewed": false
+    },
+    {
+      "id": "ops.k8s.004",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Kubernetes'da Namespace nima uchun ishlatiladi?",
+      "options": [
+        { "id": "a", "text": "Bitta klasterni mantiqiy bo'limlarga ajratish: jamoalar, muhitlar yoki ilovalar bo'yicha. Resurs nomlari namespace ichida noyob; RBAC ruxsatlari, ResourceQuota va NetworkPolicy namespace darajasida qo'llanadi", "correct": true },
+        { "id": "b", "text": "Namespace'lar pod'larni to'liq xavfsiz izolyatsiya qiladi — boshqa chora kerak emas", "hint": "Default'da tarmoq trafigi namespace'lar orasida ochiq; izolyatsiya uchun NetworkPolicy va RBAC kerak." },
+        { "id": "c", "text": "Har namespace alohida klaster", "hint": "Namespace'lar bitta klaster va bitta control plane'ni bo'lishadi." },
+        { "id": "d", "text": "Node'lar namespace'larga tegishli", "hint": "Node, PersistentVolume, StorageClass kabi resurslar klaster darajasida (namespace'siz)." }
+      ],
+      "explanation": "Muhitlarni (dev/prod) bitta klasterda namespace bilan ajratish arzon, lekin xato yoki resurs to'qnashuvi production'ga ta'sir qilishi mumkin — ko'p kompaniyalar production'ni alohida klasterda saqlaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "ops.k8s.005",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Liveness, readiness va startup probe'lari qanday farqlanadi?",
+      "options": [
+        { "id": "a", "text": "Readiness — pod trafik qabul qilishga tayyormi: yiqilsa, pod Service endpoint'laridan olib tashlanadi, lekin qayta ishga tushirilmaydi. Liveness — container \"tirikmi\": yiqilsa kubelet container'ni qayta ishga tushiradi (deadlock'dan chiqish). Startup — sekin ishga tushadigan ilova uchun: muvaffaqiyatli bo'lguncha liveness/readiness tekshirilmaydi", "correct": true },
+        { "id": "b", "text": "Uchalasi bir xil — faqat nomlari boshqa", "hint": "Natijasi farq qiladi: trafikdan chiqarish va qayta ishga tushirish." },
+        { "id": "c", "text": "Liveness probe'da DB va tashqi servislarning ishlashini tekshirish kerak", "hint": "DB vaqtincha ishlamasa, barcha pod'lar qayta ishga tushib kaskad nosozlik bo'ladi; liveness faqat jarayonning o'zini tekshirsin." },
+        { "id": "d", "text": "Readiness yiqilsa pod o'chiriladi", "hint": "Pod yashaydi, faqat trafik olmaydi; tayyor bo'lgach qaytariladi." }
+      ],
+      "explanation": "Noto'g'ri sozlangan liveness — o'z-o'zidan qayta ishga tushishlar sababi (masalan, `initialDelaySeconds` juda qisqa, GC pauzasida timeout). Graceful shutdown'da readiness'ni ataylab yiqitish yangi so'rovlarni to'xtatishga yordam beradi.",
+      "reviewed": false
+    },
+    {
+      "id": "ops.k8s.006",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "ConfigMap va Secret qanday farqlanadi?",
+      "options": [
+        { "id": "a", "text": "ConfigMap — maxfiy bo'lmagan konfiguratsiya (URL'lar, bayroqlar); Secret — parol, token, sertifikatlar. Ikkalasi env yoki fayl sifatida pod'ga ulanadi. Secret qiymatlari faqat base64 — shifrlash emas: etcd'da at-rest shifrlash yoqilishi, RBAC bilan kirish cheklanishi kerak; ko'pincha tashqi secret manager (External Secrets, Vault) bilan sinxronlanadi", "correct": true },
+        { "id": "b", "text": "Secret base64 bilan kodlangani uchun xavfsiz shifrlangan", "hint": "base64 — oddiy kodlash, `base64 -d` bilan bir zumda ochiladi." },
+        { "id": "c", "text": "ConfigMap o'zgarsa, env sifatida ulangan qiymatlar ishlayotgan pod'larda avtomatik yangilanadi", "hint": "Env qiymatlari pod ishga tushganda o'qiladi — yangilash uchun pod qayta ishga tushirilishi kerak (fayl sifatida ulanganlar esa kechikish bilan yangilanadi)." },
+        { "id": "d", "text": "Secret'larni Git'dagi manifestlarda ochiq saqlash normal", "hint": "Git tarixida ochiq qoladi; Sealed Secrets/SOPS yoki tashqi manba kerak." }
+      ],
+      "explanation": "Konfiguratsiya o'zgarganda rollout'ni majburlash: ConfigMap xeshini pod annotatsiyasiga qo'yish (Helm `checksum/config`) yoki immutable ConfigMap'lar versiya nomi bilan. Konfiguratsiyani image'dan ajratish — \"build once, deploy many\" uchun asos.",
+      "reviewed": false
+    },
+    {
+      "id": "ops.k8s.007",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Ingress nima uchun kerak?",
+      "options": [
+        { "id": "a", "text": "Tashqi HTTP(S) trafigini host va yo'l (path) qoidalari bo'yicha klaster ichidagi servislarga yo'naltirish: `api.shop.uz` → `api` servisi, `shop.uz/admin` → `admin` servisi. TLS terminatsiyasi va bitta tashqi load balancer orqali ko'p servis. Ishlashi uchun Ingress controller (ingress-nginx, Traefik va h.k.) o'rnatilgan bo'lishi kerak; yangi standart — Gateway API", "correct": true },
+        { "id": "b", "text": "Ingress — pod'lar orasidagi ichki trafikni shifrlaydi", "hint": "Ingress — tashqi kirish nuqtasi; ichki mTLS — service mesh vazifasi." },
+        { "id": "c", "text": "Ingress resursi controller'siz ham ishlaydi", "hint": "Ingress — faqat qoida; uni bajaradigan controller bo'lmasa hech narsa sodir bo'lmaydi." },
+        { "id": "d", "text": "Ingress TCP va UDP trafikni ham to'liq qo'llaydi", "hint": "Ingress asosan HTTP/HTTPS uchun; boshqa protokollar uchun LoadBalancer servisi yoki Gateway API." }
+      ],
+      "explanation": "TLS sertifikatlari uchun cert-manager (Let's Encrypt avtomatik yangilash). Rate limit, auth, CORS kabi xususiyatlar controller'ga bog'liq annotatsiyalar orqali — Gateway API ularni standartlashtirmoqda.",
+      "reviewed": false
+    },
+    {
+      "id": "ops.k8s.008",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Deployment'ning rolling update jarayoni qanday ishlaydi va muammo bo'lsa qanday qaytariladi?",
+      "options": [
+        { "id": "a", "text": "Yangi ReplicaSet bosqichma-bosqich ko'paytiriladi, eskisi kamaytiriladi: `maxSurge` — qo'shimcha ruxsat etilgan pod'lar, `maxUnavailable` — bir vaqtda ishlamay turishi mumkin bo'lganlar; yangi pod'lar readiness'dan o'tmaguncha eskisi o'chirilmaydi. Kuzatish — `kubectl rollout status`, qaytarish — `kubectl rollout undo deployment/app` (yoki GitOps'da oldingi versiyani qaytarish)", "correct": true },
+        { "id": "b", "text": "Barcha eski pod'lar birdan o'chirilib, keyin yangilari yaratiladi", "hint": "Bu `Recreate` strategiyasi — downtime bilan; default — RollingUpdate." },
+        { "id": "c", "text": "Rollback faqat image'ni qaytadan build qilib mumkin", "hint": "Deployment eski ReplicaSet'larni saqlaydi (`revisionHistoryLimit`) — oldingi versiyaga tez qaytish mumkin." },
+        { "id": "d", "text": "Readiness probe bo'lmasa ham rolling update xavfsiz", "hint": "Probe'siz Kubernetes pod tayyor deb hisoblaydi va ishga tushmagan ilovaga trafik yuboradi." }
+      ],
+      "explanation": "`progressDeadlineSeconds` — yangilash belgilangan vaqtda tugamasa, Deployment \"failed\" holatiga o'tadi (CI buni kuzatib rollback qilishi mumkin). Ilova SIGTERM'ni to'g'ri ishlashi va `preStop` kechikishi — deploy paytidagi 502 xatolarning oldini oladi.",
+      "reviewed": false
+    },
+    {
+      "id": "ops.k8s.009",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Resource `requests` va `limits` qanday ishlaydi va HPA ular bilan qanday bog'liq?",
+      "options": [
+        { "id": "a", "text": "`requests` — scheduler pod'ni joylashtirishda kafolatlangan deb hisoblaydigan miqdor; `limits` — yuqori chegara: CPU limitidan oshsa throttling (sekinlashish), xotira limitidan oshsa OOMKilled. HPA o'rtacha foydalanishni requests'ga nisbatan foizda hisoblaydi (masalan, CPU 70%) va replicas'ni o'zgartiradi — requests bo'lmasa CPU asosidagi HPA ishlamaydi", "correct": true },
+        { "id": "b", "text": "`requests` va `limits` faqat hujjat uchun — runtime'ga ta'siri yo'q", "hint": "Scheduling, throttling va OOM aynan shu qiymatlarga bog'liq." },
+        { "id": "c", "text": "CPU limitidan oshgan container darhol o'ldiriladi", "hint": "CPU \"siqiladigan\" resurs — throttling bo'ladi; o'ldirish xotira uchun." },
+        { "id": "d", "text": "Requests'ni juda katta qo'yish xavfsiz va arzon", "hint": "Node'lardagi joy band bo'lib, klaster kam yuklangan holda ham ko'p node talab qiladi — xarajat oshadi." }
+      ],
+      "explanation": "Amaliyot: xotira uchun requests = limits (bashorat qilinadigan), CPU limitlari esa ko'pincha olib tashlanadi yoki keng qo'yiladi (throttling latency'ni oshiradi). QoS sinflari: Guaranteed, Burstable, BestEffort — node xotirasi tugaganda evict tartibini belgilaydi. Haqiqiy foydalanishga qarab sozlash — VPA tavsiyalari.",
+      "reviewed": false
+    },
+    {
+      "id": "ops.k8s.010",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Pod `CrashLoopBackOff` holatida. `kubectl describe pod` chiqishiga qarab sabab va yechim qaysi?",
+      "code": "Containers:\n  api:\n    State:          Waiting\n      Reason:       CrashLoopBackOff\n    Last State:     Terminated\n      Reason:       OOMKilled\n      Exit Code:    137\n    Restart Count:  14\n    Limits:\n      memory:  256Mi\n    Requests:\n      memory:  128Mi",
+      "options": [
+        { "id": "a", "text": "Container xotira limitidan (256Mi) oshib, cgroup tomonidan o'ldirilmoqda (OOMKilled, 137 = SIGKILL) va qayta-qayta ishga tushmoqda. Haqiqiy xotira sarfini o'lchash (`kubectl top`, metrikalar), oqish bormi tekshirish, runtime heap chegarasini limitga moslash (masalan, JVM `MaxRAMPercentage`) va limitni asosli oshirish", "correct": true },
+        { "id": "b", "text": "Image registry'dan yuklab olinmayapti", "hint": "Unda `ImagePullBackOff` bo'lardi; container ishga tushib, keyin o'ldirilgan." },
+        { "id": "c", "text": "Liveness probe noto'g'ri — boshqa sabab yo'q", "hint": "Probe tufayli qayta ishga tushishda Reason `Error`/`Completed` va Events'da probe xatosi bo'ladi; bu yerda aniq OOMKilled." },
+        { "id": "d", "text": "Node'da CPU tugagan", "hint": "CPU yetishmasligi throttling beradi, o'ldirmaydi; sabab — xotira limiti." }
+      ],
+      "explanation": "CrashLoopBackOff — natija, sabab emas: `Last State` va `kubectl logs --previous` haqiqiy sababni ko'rsatadi. Boshqa tipik sabablar: noto'g'ri env/secret, ishga tushishda DB'ga ulana olmaslik, noto'g'ri `command`. Restart oralig'i eksponensial o'sadi (5 daqiqagacha).",
+      "reviewed": false
+    },
+    {
+      "id": "ops.k8s.011",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Node'larni yangilash uchun `kubectl drain` qilinganda servis vaqtincha to'liq ishlamay qoldi. PodDisruptionBudget (PDB) bunga qanday yordam beradi?",
+      "options": [
+        { "id": "a", "text": "PDB ixtiyoriy uzilishlar (drain, klaster upgrade, autoscaler) paytida bir vaqtda qancha pod mavjud bo'lishi kerakligini belgilaydi (`minAvailable: 2` yoki `maxUnavailable: 1`); drain eviction API orqali ishlaydi va PDB'ni buzadigan evict'ni kutadi. Bundan tashqari, nusxalar turli node/zonalarga tarqalishi kerak (topologySpreadConstraints, anti-affinity) — aks holda bitta node barcha nusxalarni olib ketadi", "correct": true },
+        { "id": "b", "text": "PDB node to'satdan ishdan chiqqanda ham pod'larni himoya qiladi", "hint": "PDB faqat ixtiyoriy (voluntary) uzilishlarga ta'sir qiladi; apparat nosozligidan nusxalar soni va tarqalish himoya qiladi." },
+        { "id": "c", "text": "`replicas: 1` bo'lgan deployment'ga `minAvailable: 1` qo'yish eng yaxshi yechim", "hint": "Bunday PDB drain'ni abadiy bloklaydi; avval nusxalar sonini oshirish kerak." },
+        { "id": "d", "text": "Drain'ni `--force` bilan bajarish PDB'ni hurmat qiladi", "hint": "`--disable-eviction` kabi bayroqlar PDB'ni chetlab o'tadi — himoya yo'qoladi." }
+      ],
+      "explanation": "Graceful drain uchun pod'lar SIGTERM'ni to'g'ri ishlashi, readiness va `terminationGracePeriodSeconds` mos bo'lishi kerak. Klaster upgrade'larini PDB + bir nechta zona + surge node'lar bilan nol downtime'da bajarish mumkin.",
+      "reviewed": false
+    },
+    {
+      "id": "ops.k8s.012",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Bitta klasterda 10 ta jamoa ishlaydi. Ularni bir-biridan himoyalash uchun qanday multi-tenancy choralari kerak?",
+      "options": [
+        { "id": "a", "text": "Har jamoa uchun namespace + RBAC (faqat o'z namespace'iga minimal huquq); ResourceQuota va LimitRange (bitta jamoa butun klasterni egallamasin); default-deny NetworkPolicy va faqat kerakli trafikni ochish; Pod Security Standards (restricted) va admission policy'lar (Kyverno/Gatekeeper: ishonchli registry, privileged taqiqi); audit loglar. Qat'iy izolyatsiya kerak bo'lsa — alohida klaster yoki virtual klaster", "correct": true },
+        { "id": "b", "text": "Barcha jamoalarga `cluster-admin` berish — tez ishlash uchun", "hint": "Har bir jamoa boshqalarning resurslari va sirlarini o'zgartira oladi — xato yoki buzilish butun klasterga tarqaladi." },
+        { "id": "c", "text": "Namespace'larning o'zi yetarli — tarmoq va resurslar avtomatik ajratiladi", "hint": "Default'da tarmoq ochiq va resurs chegaralari yo'q; ularni aniq sozlash kerak." },
+        { "id": "d", "text": "Har jamoaga alohida node berish yagona to'g'ri yo'l", "hint": "Taint/toleration bilan mumkin, lekin control plane va tarmoq umumiy qoladi; asosiy choralar RBAC, quota va policy'lar." }
+      ],
+      "explanation": "Platform engineering yondashuvi: jamoaga \"self-service\" namespace shabloni (quota, policy, monitoring tayyor) beriladi. Tahdid modeliga qarab: ichki ishonchli jamoalar uchun soft multi-tenancy yetarli, mijozlar kodi uchun hard (alohida klaster yoki sandbox runtime).",
+      "reviewed": false
+    },
+    {
+      "id": "ops.k8s.013",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Kubernetes klasteri bo'yicha cloud xarajatlari keskin oshdi, node'larning o'rtacha CPU foydalanishi esa 15%. Qanday optimallashtirasiz?",
+      "options": [
+        { "id": "a", "text": "Ko'rinish: namespace/jamoa bo'yicha xarajatni taqsimlash (Kubecost/OpenCost); right-sizing — haqiqiy foydalanishga qarab requests'ni kamaytirish (VPA tavsiyalari); HPA va klaster autoscaler (yoki Karpenter) bilan kerakli node sonini dinamik sozlash va bo'sh node'larni yig'ish; to'xtatilishi mumkin bo'lgan ishlar uchun spot/preemptible node'lar; dev muhitlarini tunda o'chirish; mos instance turlarini tanlash", "correct": true },
+        { "id": "b", "text": "Barcha pod'larning requests'ini olib tashlash", "hint": "Scheduler pod'larni bitta node'ga zichlab, OOM va throttling keltirib chiqaradi; HPA ham ishlamaydi." },
+        { "id": "c", "text": "Eng katta instance turlariga o'tish — kam node, kam xarajat", "hint": "Ortiqcha requests muammosi saqlanib qoladi va bitta node nosozligining ta'siri kattalashadi." },
+        { "id": "d", "text": "Production'ni to'liq spot node'larga o'tkazish", "hint": "Spot node'lar istalgan vaqtda olib qo'yiladi — holatli va kritik ishlar uchun xavfli; aralash strategiya kerak." }
+      ],
+      "explanation": "Past foydalanishning asosiy sababi — \"har ehtimolga\" katta qo'yilgan requests: scheduler joy band deb hisoblaydi va yangi node'lar ochiladi. FinOps — xarajatni jamoalarga ko'rinadigan qilish va muntazam ko'rib chiqish madaniyati.",
+      "reviewed": false
+    }
+  ]
+}
