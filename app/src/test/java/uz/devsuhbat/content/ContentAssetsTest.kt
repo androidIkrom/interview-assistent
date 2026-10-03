@@ -186,6 +186,7 @@ class ContentAssetsTest {
         "py.lang", "py.idioms", "py.web", "py.async", "py.db", "py.arch",
         "node.arch", "node.async", "node.db", "node.js", "node.runtime", "node.web",
         "java.arch", "java.collections", "java.concurrency", "java.data", "java.lang", "java.spring",
+        "flutter.arch", "flutter.async", "flutter.dart", "flutter.data", "flutter.state", "flutter.widgets",
     )
 
     /**

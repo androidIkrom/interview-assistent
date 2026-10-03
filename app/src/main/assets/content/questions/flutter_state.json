@@ -8,12 +8,12 @@
       "kind": "concept",
       "prompt": "Flutter'da \"state\" (holat) nima?",
       "options": [
-        { "id": "a", "text": "UI'ni chizish uchun kerak bo'lgan va vaqt o'tishi bilan o'zgaradigan har qanday ma'lumot — holat o'zgarsa, UI qayta chiziladi (UI = f(state))", "correct": true },
-        { "id": "b", "text": "Faqat `StatefulWidget` ichidagi o'zgaruvchilar", "hint": "Bu bir ko'rinishi; state ilova darajasida (foydalanuvchi, savat) ham bo'ladi." },
+        { "id": "a", "text": "UI'ni chizish uchun kerak va vaqt o'tishi bilan o'zgaradigan ma'lumot: UI = f(state)", "correct": true },
+        { "id": "b", "text": "Faqat `StatefulWidget` ichida e'lon qilingan o'zgaruvchilar, boshqa hech qanday ma'lumot emas", "hint": "Bu bir ko'rinishi; state ilova darajasida (foydalanuvchi, savat) ham bo'ladi." },
         { "id": "c", "text": "DB'dagi ma'lumot", "hint": "DB — manba; state — hozir UI'ga kerak bo'lgan nusxa." },
         { "id": "d", "text": "Widget'ning rangi", "hint": "Rang holatning bir misoli bo'lishi mumkin, lekin tushuncha kengroq." }
       ],
-      "explanation": "Deklarativ UI: siz \"nima ko'rsatish\"ni holat asosida tasvirlaysiz, framework \"qanday o'zgartirish\"ni hal qiladi. Holatni qayerda saqlash (widget ichida, yuqorida, global) — state management savoli.",
+      "explanation": "Holat o'zgarsa, UI qayta chiziladi. Deklarativ UI: siz \"nima ko'rsatish\"ni holat asosida tasvirlaysiz, framework \"qanday o'zgartirish\"ni hal qiladi. Holatni qayerda saqlash (widget ichida, yuqorida, global) — state management savoli.",
       "reviewed": false
     },
     {
@@ -23,12 +23,12 @@
       "kind": "concept",
       "prompt": "\"Lifting state up\" nimani anglatadi?",
       "options": [
-        { "id": "a", "text": "Ikki widget bitta holatni baham ko'rishi kerak bo'lsa, holatni ularning umumiy ota widget'iga ko'chirish va pastga parametr/callback orqali uzatish", "correct": true },
+        { "id": "a", "text": "Holatni uni baham ko'radigan widget'larning umumiy otasiga ko'chirib, pastga uzatish", "correct": true },
         { "id": "b", "text": "Holatni global o'zgaruvchiga chiqarish", "hint": "Global — oxirgi chora; birinchi qadam — eng yaqin umumiy ota." },
         { "id": "c", "text": "Holatni serverga yuborish", "hint": "Server bilan aloqasi yo'q." },
-        { "id": "d", "text": "Widget'ni daraxtda yuqoriga ko'chirish", "hint": "Widget emas, holat ko'chadi." }
+        { "id": "d", "text": "Widget'ni daraxtda yuqoriroq joyga ko'chirib, uni boshqa widget'larning otasiga aylantirish", "hint": "Widget emas, holat ko'chadi." }
       ],
-      "explanation": "Misol: `Counter` va `CounterDisplay` — holat `CounterPage`da, `onIncrement` callback pastga. Daraxt chuqur bo'lsa (\"prop drilling\") — `InheritedWidget`/Provider/Riverpod kerak bo'ladi. Qoida: holatni iloji boricha pastda, lekin baham ko'ruvchilarning ustida saqlang.",
+      "explanation": "Holat pastga parametr va callback orqali uzatiladi. Misol: `Counter` va `CounterDisplay` — holat `CounterPage`da, `onIncrement` callback pastga. Daraxt chuqur bo'lsa (\"prop drilling\") — `InheritedWidget`/Provider/Riverpod kerak bo'ladi. Qoida: holatni iloji boricha pastda, lekin baham ko'ruvchilarning ustida saqlang.",
       "reviewed": false
     },
     {
@@ -38,12 +38,12 @@
       "kind": "concept",
       "prompt": "Ephemeral (lokal) va app (global) state qanday farqlanadi?",
       "options": [
-        { "id": "a", "text": "Ephemeral — bitta widget'ga tegishli, boshqalar bilmaydi (tab indeksi, animatsiya, matn maydoni) — `setState` yetarli; app state — ko'p ekran/widget baham ko'radi (foydalanuvchi, savat, sozlamalar) — state management kerak", "correct": true },
-        { "id": "b", "text": "Ephemeral — xotirada, app — diskda", "hint": "Ikkalasi ham xotirada; farq kim ishlatishida." },
+        { "id": "a", "text": "Ephemeral — bitta widget'niki, `setState` yetarli; app state — ko'p ekran baham ko'radi, state management kerak", "correct": true },
+        { "id": "b", "text": "Ephemeral holat faqat xotirada yashaydi, app state esa har doim avtomatik diskka yoki ma'lumotlar bazasiga yoziladi", "hint": "Ikkalasi ham xotirada; farq kim ishlatishida." },
         { "id": "c", "text": "Hamma holat global bo'lishi kerak", "hint": "Lokal holatni global qilish — ortiqcha murakkablik va bog'liqlik." },
         { "id": "d", "text": "Farqi yo'q", "hint": "Tab indeksini Bloc'da saqlash — haddan tashqari." }
       ],
-      "explanation": "Rasmiy Flutter hujjatidagi bo'linish. Chegara qattiq emas: \"bu holatni boshqa ekran bilishi kerakmi? Ekran o'chirilsa saqlanishi kerakmi?\" — ha bo'lsa, app state. Boshlang'ich `setState`, kerak bo'lganda ko'tarish — amaliy yondashuv.",
+      "explanation": "Masalan: tab indeksi, animatsiya — ephemeral; foydalanuvchi, savat, sozlamalar — app state. Rasmiy Flutter hujjatidagi bo'linish. Chegara qattiq emas: \"bu holatni boshqa ekran bilishi kerakmi? Ekran o'chirilsa saqlanishi kerakmi?\" — ha bo'lsa, app state. Boshlang'ich `setState`, kerak bo'lganda ko'tarish — amaliy yondashuv.",
       "reviewed": false
     },
     {
@@ -53,12 +53,12 @@
       "kind": "concept",
       "prompt": "`InheritedWidget` nima uchun kerak?",
       "options": [
-        { "id": "a", "text": "Ma'lumotni daraxt bo'ylab pastga, har widget'ga parametr sifatida uzatmasdan yetkazish — avlodlar `context.dependOnInheritedWidgetOfExactType` orqali oladi va u o'zgarganda rebuild bo'ladi (`Theme.of`, `MediaQuery.of` shunday ishlaydi)", "correct": true },
+        { "id": "a", "text": "Ma'lumotni har widget'ga parametr qilmasdan pastga yetkazish; o'zgarganda bog'liq avlodlar rebuild bo'ladi", "correct": true },
         { "id": "b", "text": "Widget'dan meros olish uchun", "hint": "Klass merosi emas — daraxt bo'ylab ma'lumot." },
         { "id": "c", "text": "Holatni saqlash uchun", "hint": "O'zi holat saqlamaydi — yuqoridan berilgan qiymatni uzatadi." },
-        { "id": "d", "text": "Eskirgan, endi ishlatilmaydi", "hint": "Provider, Riverpod (qisman), Bloc — barchasi uning ustida." }
+        { "id": "d", "text": "Eskirgan mexanizm: Flutter 3 dan beri ishlatilmaydi va o'rniga faqat Provider paketini ishlatish shart", "hint": "Provider, Riverpod (qisman), Bloc — barchasi uning ustida." }
       ],
-      "explanation": "`updateShouldNotify` — qachon avlodlarni rebuild qilish. To'g'ridan-to'g'ri yozish noqulay (holat o'zgartirish uchun Stateful ota kerak) — shu sabab `provider` paketi uni o'rab beradi. `of(context)` konvensiyasi — statik metod.",
+      "explanation": "Avlodlar `dependOnInheritedWidgetOfExactType` orqali oladi; `Theme.of`, `MediaQuery.of` shunday ishlaydi. `updateShouldNotify` — qachon avlodlarni rebuild qilish. To'g'ridan-to'g'ri yozish noqulay (holat o'zgartirish uchun Stateful ota kerak) — shu sabab `provider` paketi uni o'rab beradi. `of(context)` konvensiyasi — statik metod.",
       "reviewed": false
     },
     {
@@ -68,12 +68,12 @@
       "kind": "concept",
       "prompt": "Provider, Riverpod va Bloc qanday farqlanadi?",
       "options": [
-        { "id": "a", "text": "Provider — `InheritedWidget` o'rami, sodda, `BuildContext`ga bog'liq; Riverpod — compile-safe, context'siz, provider'lar global e'lon qilinadi, avtomatik dispose, test oson; Bloc — event → state oqimi, qattiq tuzilma, ko'p boilerplate, lekin kuzatuv va katta jamoa uchun yaxshi", "correct": true },
+        { "id": "a", "text": "Provider — `InheritedWidget` o'rami; Riverpod — context'siz, compile-safe; Bloc — event → state, qat'iy tuzilma", "correct": true },
         { "id": "b", "text": "Bir xil, faqat sintaksis", "hint": "Falsafa farq qiladi: Bloc — event asosli, Riverpod — reaktiv graf." },
-        { "id": "c", "text": "Provider eskirgan, ishlatmaslik kerak", "hint": "Hali qo'llab-quvvatlanadi; muallif Riverpod'ni \"Provider 2.0\" deydi, lekin Provider kichik ilovalarda yetarli." },
+        { "id": "c", "text": "Provider eskirgan va Flutter jamoasi uni rasman taqiqlagan, shuning uchun yangi loyihada ishlatib bo'lmaydi", "hint": "Hali qo'llab-quvvatlanadi; muallif Riverpod'ni \"Provider 2.0\" deydi, lekin Provider kichik ilovalarda yetarli." },
         { "id": "d", "text": "Bloc faqat katta kompaniyalar uchun", "hint": "Hajm emas, jamoa va tuzilma afzalligi hal qiladi." }
       ],
-      "explanation": "Riverpod: `final userProvider = FutureProvider((ref) => repo.getUser())`, `ref.watch(userProvider)` — `AsyncValue` bilan loading/error/data. Bloc: `on<LoginPressed>((e, emit) async { emit(Loading()); ... })`, `BlocBuilder`. Cubit — Bloc'ning event'siz soddasi. Tanlov jamoa tajribasi va loyiha hajmiga qarab.",
+      "explanation": "Riverpod'da avtomatik dispose va oson test; Bloc'da boilerplate ko'p, lekin katta jamoa uchun kuzatuv yaxshi. Riverpod: `final userProvider = FutureProvider((ref) => repo.getUser())`, `ref.watch(userProvider)` — `AsyncValue` bilan loading/error/data. Bloc: `on<LoginPressed>((e, emit) async { emit(Loading()); ... })`, `BlocBuilder`. Cubit — Bloc'ning event'siz soddasi. Tanlov jamoa tajribasi va loyiha hajmiga qarab.",
       "reviewed": false
     },
     {
@@ -99,8 +99,8 @@
       "kind": "concept",
       "prompt": "Bloc'da `emit` chaqirilsa, lekin UI yangilanmasa — eng ko'p uchraydigan sabab nima?",
       "options": [
-        { "id": "a", "text": "Yangi state eski bilan `==` bo'yicha teng (Equatable yoki bir xil ob'ekt mutatsiya qilingan) — Bloc teng state'ni o'tkazib yuboradi; yangi immutable ob'ekt (`copyWith`) emit qilish kerak", "correct": true },
-        { "id": "b", "text": "`BlocBuilder` o'rniga `BlocListener` kerak", "hint": "`BlocListener` UI chizmaydi — yon ta'sirlar uchun; `BlocBuilder` to'g'ri." },
+        { "id": "a", "text": "Yangi state eskisiga `==` bo'yicha teng (mutatsiya qilingan) — Bloc uni o'tkazib yuboradi; `copyWith` kerak", "correct": true },
+        { "id": "b", "text": "`BlocBuilder` o'rniga `BlocListener` ishlatish kerak, chunki builder faqat eng birinchi state'ni bir marta chizadi", "hint": "`BlocListener` UI chizmaydi — yon ta'sirlar uchun; `BlocBuilder` to'g'ri." },
         { "id": "c", "text": "`emit` `async` bo'lishi kerak", "hint": "`emit` sinxron." },
         { "id": "d", "text": "Bloc provider topilmadi", "hint": "Bu holda exception bo'lardi, jim turmas edi." }
       ],
@@ -114,12 +114,12 @@
       "kind": "concept",
       "prompt": "Riverpod'da `ref.watch`, `ref.read` va `ref.listen` qanday farqlanadi?",
       "options": [
-        { "id": "a", "text": "`watch` — qiymatni oladi va o'zgarishda rebuild/qayta hisoblash (build va provider ichida); `read` — bir martalik o'qish, kuzatmaydi (callback'larda: `onPressed`); `listen` — o'zgarishga yon ta'sir (snackbar, navigatsiya), rebuild'siz", "correct": true },
+        { "id": "a", "text": "`watch` — kuzatadi va rebuild qiladi; `read` — bir martalik (callback'da); `listen` — yon ta'sir, rebuild'siz", "correct": true },
         { "id": "b", "text": "Hammasi bir xil", "hint": "`build`da `read` ishlatsangiz UI yangilanmaydi." },
-        { "id": "c", "text": "`read` `build`da ishlatilishi kerak", "hint": "Aksincha — `build`da `watch`, lint ogohlantiradi." },
+        { "id": "c", "text": "`read` aynan `build` metodida ishlatilishi kerak, `watch` esa faqat `onPressed` kabi tugma callback'lari ichida qo'llanadi", "hint": "Aksincha — `build`da `watch`, lint ogohlantiradi." },
         { "id": "d", "text": "`listen` rebuild qiladi", "hint": "Qilmaydi — yon ta'sir uchun." }
       ],
-      "explanation": "Riverpod lint (`riverpod_lint`) `build`da `read`ni, `onPressed`da `watch`ni ko'rsatadi. `ref.watch(provider.select((s) => s.field))` — nozik kuzatuv. `autoDispose` — kuzatuvchi qolmasa provider tozalanadi; `keepAlive` — saqlab qolish.",
+      "explanation": "`listen` snackbar va navigatsiya kabi yon ta'sirlar uchun. Riverpod lint (`riverpod_lint`) `build`da `read`ni, `onPressed`da `watch`ni ko'rsatadi. `ref.watch(provider.select((s) => s.field))` — nozik kuzatuv. `autoDispose` — kuzatuvchi qolmasa provider tozalanadi; `keepAlive` — saqlab qolish.",
       "reviewed": false
     },
     {
@@ -129,12 +129,12 @@
       "kind": "concept",
       "prompt": "`InheritedWidget` ichki ishlashi: avlod qanday ro'yxatdan o'tadi va qanday rebuild bo'ladi?",
       "options": [
-        { "id": "a", "text": "`dependOnInheritedWidgetOfExactType` Element'ni `InheritedElement`ning `_dependents` to'plamiga qo'shadi; InheritedWidget yangilanganda `updateShouldNotify` true bo'lsa, barcha dependent Element'lar `didChangeDependencies` + dirty bo'ladi. Qidirish O(1) — Element'da ota InheritedElement'lar map'i saqlanadi", "correct": true },
-        { "id": "b", "text": "Har frame'da daraxt yuqoriga skanerlanadi", "hint": "Skan emas — Element yaratilganda ota map'i nusxalanadi; O(1) lookup." },
+        { "id": "a", "text": "Element `InheritedElement` dependents'iga qo'shiladi; `updateShouldNotify` true bo'lsa, ular dirty bo'ladi", "correct": true },
+        { "id": "b", "text": "Har frame'da daraxt yuqoriga qarab to'liq skanerlanadi va topilgan barcha InheritedWidget'lar birma-bir tekshiriladi", "hint": "Skan emas — Element yaratilganda ota map'i nusxalanadi; O(1) lookup." },
         { "id": "c", "text": "Global event bus orqali", "hint": "Global emas — daraxt chegarasida, subtree'ga." },
         { "id": "d", "text": "Hamma widget rebuild bo'ladi", "hint": "Faqat ro'yxatdan o'tgan dependent'lar." }
       ],
-      "explanation": "Shu sabab `getInheritedWidgetOfExactType` (ro'yxatsiz o'qish) va `dependOn...` (kuzatuv) farq qiladi — `context.read` vs `context.watch`. `InheritedModel` — aspekt bo'yicha nozik kuzatuv (`MediaQuery.sizeOf` vs `MediaQuery.of` — faqat size o'zgarishida rebuild).",
+      "explanation": "Qidirish O(1): Element'da ota InheritedElement'lar map'i saqlanadi; dependent'larda `didChangeDependencies` chaqiriladi. Shu sabab `getInheritedWidgetOfExactType` (ro'yxatsiz o'qish) va `dependOn...` (kuzatuv) farq qiladi — `context.read` vs `context.watch`. `InheritedModel` — aspekt bo'yicha nozik kuzatuv (`MediaQuery.sizeOf` vs `MediaQuery.of` — faqat size o'zgarishida rebuild).",
       "reviewed": false
     },
     {
@@ -144,12 +144,12 @@
       "kind": "concept",
       "prompt": "Katta ilovada Bloc va Riverpod trade-off'lari qanday?",
       "options": [
-        { "id": "a", "text": "Bloc: event'lar aniq audit izi (logging, replay, `BlocObserver`), qattiq konvensiya katta jamoada izchillik, lekin boilerplate va provider'lar context'ga bog'liq; Riverpod: kam kod, provider grafi avtomatik bog'liqlik va dispose, test oson (`ProviderContainer`), kod generatsiya (`@riverpod`), lekin global e'lon va erkinlik — intizom talab qiladi", "correct": true },
+        { "id": "a", "text": "Bloc — aniq event izi va qat'iy konvensiya, lekin boilerplate; Riverpod — kam kod va oson test, lekin intizom kerak", "correct": true },
         { "id": "b", "text": "Riverpod doim yaxshi", "hint": "Event asosli audit kerak bo'lgan (fintech) joyda Bloc tuzilmasi afzallik." },
         { "id": "c", "text": "Bloc doim yaxshi", "hint": "Kichik/o'rta jamoa uchun Bloc boilerplate'i tezlikni pasaytiradi." },
-        { "id": "d", "text": "Ikkalasini aralashtirish — eng yaxshi", "hint": "Ikki paradigma bir ilovada — chalkashlik; birini tanlab, izchil bo'ling." }
+        { "id": "d", "text": "Bitta ilovada ikkalasini teng aralashtirib ishlatish — eng yaxshi va hamma joyda eng ko'p tavsiya etiladigan yondashuv", "hint": "Ikki paradigma bir ilovada — chalkashlik; birini tanlab, izchil bo'ling." }
       ],
-      "explanation": "2026 so'rovlarida Riverpod va Bloc taxminan teng mashhur. Arxitektura muhimroq: state management qatlami faqat UI ↔ domen ko'prigi; biznes mantiq use case/repository'da, qaysi kutubxona bo'lsa ham. Migratsiya qiyin — qaror boshida, jamoa bilan.",
+      "explanation": "Bloc: `BlocObserver`, replay; Riverpod: `ProviderContainer`, `@riverpod` kod generatsiya, global e'lon. 2026 so'rovlarida Riverpod va Bloc taxminan teng mashhur. Arxitektura muhimroq: state management qatlami faqat UI ↔ domen ko'prigi; biznes mantiq use case/repository'da, qaysi kutubxona bo'lsa ham. Migratsiya qiyin — qaror boshida, jamoa bilan.",
       "reviewed": false
     },
     {
@@ -175,12 +175,12 @@
       "kind": "concept",
       "prompt": "Flutter ilovasida state management qatlamini clean architecture bilan qanday birlashtirish kerak?",
       "options": [
-        { "id": "a", "text": "Presentation (widget + Bloc/Notifier — faqat UI holati va use case chaqiruvi) → Domain (entity, use case, repository interfeysi — Flutter'dan mustaqil, sof Dart) → Data (repository implementatsiya, API/DB manbalar, DTO ↔ entity mapping); bog'liqlik ichkariga, DI (Riverpod/get_it) chekkada", "correct": true },
+        { "id": "a", "text": "Presentation (UI + Bloc) → Domain (sof Dart: entity, use case) → Data (repository, API, mapping); DI chekkada", "correct": true },
         { "id": "b", "text": "Barcha mantiq Bloc ichida", "hint": "Bloc semiradi, test qiyin, Flutter'ga bog'liq." },
         { "id": "c", "text": "Barcha mantiq widget ichida", "hint": "`build` ichida API chaqiruv — testlab va qayta ishlatib bo'lmaydi." },
-        { "id": "d", "text": "Qatlamlar kerak emas — Flutter o'zi arxitektura", "hint": "Flutter — UI framework; ilova arxitekturasi dasturchida." }
+        { "id": "d", "text": "Qatlamlar kerak emas: Flutter widget daraxtining o'zi tayyor arxitektura bo'lib, barcha qatlamlarni o'zi almashtiradi", "hint": "Flutter — UI framework; ilova arxitekturasi dasturchida." }
       ],
-      "explanation": "Feature-first papka tuzilmasi (`features/cart/{presentation,domain,data}`) qatlam-first'dan ko'ra o'sishga yaxshi. Domain sof Dart — unit testlar millisekundlarda. Kichik ilova uchun 3 qatlam ortiqcha — presentation + data yetarli, domain kerak bo'lganda ajratiladi.",
+      "explanation": "Bog'liqlik ichkariga yo'naladi; Riverpod yoki get_it bilan DI. Feature-first papka tuzilmasi (`features/cart/{presentation,domain,data}`) qatlam-first'dan ko'ra o'sishga yaxshi. Domain sof Dart — unit testlar millisekundlarda. Kichik ilova uchun 3 qatlam ortiqcha — presentation + data yetarli, domain kerak bo'lganda ajratiladi.",
       "reviewed": false
     },
     {

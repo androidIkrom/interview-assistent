@@ -8,12 +8,12 @@
       "kind": "concept",
       "prompt": "Dart'da `final` va `const` qanday farqlanadi?",
       "options": [
-        { "id": "a", "text": "`final` — bir marta qiymat beriladi, runtime'da hisoblanishi mumkin; `const` — compile-time konstanta, qiymat kompilyatsiyada ma'lum bo'lishi shart va ob'ekt kanonik (bir xil const ob'ektlar bitta instansiya)", "correct": true },
+        { "id": "a", "text": "`final` — bir marta, runtime'da hisoblanishi mumkin; `const` — compile-time, qiymat kompilyatsiyada ma'lum", "correct": true },
         { "id": "b", "text": "Bir xil narsa", "hint": "`final now = DateTime.now()` ishlaydi, `const now = DateTime.now()` — xato." },
-        { "id": "c", "text": "`const` o'zgartirilishi mumkin, `final` yo'q", "hint": "Ikkalasi ham qayta tayinlanmaydi." },
+        { "id": "c", "text": "`const` o'zgaruvchini keyinroq qayta tayinlash mumkin, `final` esa e'lon qilingan zahoti abadiy qotib qoladi", "hint": "Ikkalasi ham qayta tayinlanmaydi." },
         { "id": "d", "text": "`final` faqat klass maydonlari uchun", "hint": "Lokal o'zgaruvchilarda ham ishlaydi." }
       ],
-      "explanation": "`const` kolleksiya chuqur immutable: `const [1, 2]`ga `add` — runtime xato. Flutter'da `const Text('Hi')` — widget qayta yaratilmaydi, rebuild'da o'tkazib yuboriladi — performance uchun muhim. Linter `prefer_const_constructors` shuni eslatadi.",
+      "explanation": "Bir xil const ob'ektlar bitta kanonik instansiya bo'ladi. `const` kolleksiya chuqur immutable: `const [1, 2]`ga `add` — runtime xato. Flutter'da `const Text('Hi')` — widget qayta yaratilmaydi, rebuild'da o'tkazib yuboriladi — performance uchun muhim. Linter `prefer_const_constructors` shuni eslatadi.",
       "reviewed": false
     },
     {
@@ -23,12 +23,12 @@
       "kind": "concept",
       "prompt": "Dart null-safety'da `String?` va `String` qanday farqlanadi?",
       "options": [
-        { "id": "a", "text": "`String` — hech qachon null bo'lolmaydi (kompilyator kafolatlaydi); `String?` — null bo'lishi mumkin, ishlatishdan oldin tekshirish (`?.`, `??`, `if`, `!`) kerak", "correct": true },
-        { "id": "b", "text": "`String?` — ixtiyoriy parametr belgisi", "hint": "Ixtiyoriy parametr `[String s]` yoki `{String? s}` — tur belgisi alohida." },
+        { "id": "a", "text": "`String` — hech qachon null emas; `String?` — null bo'lishi mumkin, ishlatishdan oldin tekshiriladi", "correct": true },
+        { "id": "b", "text": "`String?` — funksiyaning ixtiyoriy parametri belgisi, uni chaqirishda butunlay tushirib qoldirish mumkin", "hint": "Ixtiyoriy parametr `[String s]` yoki `{String? s}` — tur belgisi alohida." },
         { "id": "c", "text": "Farqi yo'q, `?` — eski sintaksis", "hint": "Dart 2.12+ da bu asosiy tur tizimi qismi." },
         { "id": "d", "text": "`String?` — bo'sh satr", "hint": "Bo'sh satr `''` — null emas." }
       ],
-      "explanation": "`!` (bang) — \"null emasligiga kafolat beraman\" — xato bo'lsa runtime exception; iloji boricha `?.`/`??` yoki flow analysis (`if (s != null) s.length` — promotion). `late` — keyinroq initsializatsiya, lekin o'qishdan oldin — `LateInitializationError`.",
+      "explanation": "Tekshirish: `?.`, `??`, `if` yoki `!`. `!` (bang) — \"null emasligiga kafolat beraman\" — xato bo'lsa runtime exception; iloji boricha `?.`/`??` yoki flow analysis (`if (s != null) s.length` — promotion). `late` — keyinroq initsializatsiya, lekin o'qishdan oldin — `LateInitializationError`.",
       "reviewed": false
     },
     {
@@ -54,12 +54,12 @@
       "kind": "concept",
       "prompt": "Dart'da `static` nimani anglatadi?",
       "options": [
-        { "id": "a", "text": "A'zo instansiyaga emas, klassga tegishli — `ClassName.member` orqali kiriladi, barcha instansiyalar uchun bitta; konstantalar va utility metodlar uchun", "correct": true },
+        { "id": "a", "text": "A'zo instansiyaga emas, klassga tegishli: `ClassName.member`, hammasi uchun bitta", "correct": true },
         { "id": "b", "text": "O'zgaruvchi o'zgarmaydi", "hint": "Bu `final`/`const`; `static` o'zgaruvchi o'zgarishi mumkin." },
-        { "id": "c", "text": "Metod override qilinmaydi", "hint": "Dart'da bunday modifikator yo'q (`@nonVirtual` annotatsiya bor)." },
+        { "id": "c", "text": "Metod `static` bo'lsa, uni voris klasslarda override qilib bo'lmaydi, boshqa ta'siri yo'q", "hint": "Dart'da bunday modifikator yo'q (`@nonVirtual` annotatsiya bor)." },
         { "id": "d", "text": "Widget qayta chizilmaydi", "hint": "Widget rebuild bilan aloqasi yo'q." }
       ],
-      "explanation": "`static const defaultPadding = 16.0;` — tipik ishlatish. Static metod `this`ga kira olmaydi. Dart'da top-level funksiya va o'zgaruvchilar ham bor — utility uchun ko'pincha static klass o'rniga ular ishlatiladi.",
+      "explanation": "Konstantalar va utility metodlar uchun qulay. `static const defaultPadding = 16.0;` — tipik ishlatish. Static metod `this`ga kira olmaydi. Dart'da top-level funksiya va o'zgaruvchilar ham bor — utility uchun ko'pincha static klass o'rniga ular ishlatiladi.",
       "reviewed": false
     },
     {
@@ -69,12 +69,12 @@
       "kind": "concept",
       "prompt": "Dart'da `async`/`await` va `Future` qanday ishlaydi?",
       "options": [
-        { "id": "a", "text": "`Future<T>` — keyinroq tayyor bo'ladigan qiymat; `async` funksiya avtomatik `Future` qaytaradi; `await` — Future tugashini kutadi, lekin thread'ni bloklamaydi (event loop boshqa ishlarni bajaradi)", "correct": true },
+        { "id": "a", "text": "`Future` — keyin tayyor bo'ladigan qiymat; `await` uni kutadi, lekin thread'ni bloklamaydi", "correct": true },
         { "id": "b", "text": "`await` yangi thread yaratadi", "hint": "Dart bir thread'li (isolate ichida); `await` — event loop'ga qaytish." },
-        { "id": "c", "text": "`async` funksiya darhol natija qaytaradi", "hint": "Natija emas, `Future` qaytaradi." },
+        { "id": "c", "text": "`async` funksiya darhol natija qaytaradi, `await` esa faqat sintaksis bezagi, kutish bo'lmaydi", "hint": "Natija emas, `Future` qaytaradi." },
         { "id": "d", "text": "`Future` faqat tarmoq so'rovlari uchun", "hint": "Har qanday asinxron ish: fayl, timer, DB." }
       ],
-      "explanation": "`await`siz `Future` chaqirish — \"fire and forget\", xato unutiladi (`unawaited_futures` lint). Xato ishlov — `try/catch` `await` atrofida. `Future.wait([...])` — parallel kutish. UI thread'ni bloklash — faqat og'ir sinxron hisob (isolate kerak).",
+      "explanation": "`async` funksiya avtomatik `Future` qaytaradi; event loop kutish paytida boshqa ishlarni bajaradi. `await`siz `Future` chaqirish — \"fire and forget\", xato unutiladi (`unawaited_futures` lint). Xato ishlov — `try/catch` `await` atrofida. `Future.wait([...])` — parallel kutish. UI thread'ni bloklash — faqat og'ir sinxron hisob (isolate kerak).",
       "reviewed": false
     },
     {
@@ -84,12 +84,12 @@
       "kind": "concept",
       "prompt": "Hot reload va hot restart qanday farqlanadi?",
       "options": [
-        { "id": "a", "text": "Hot reload — o'zgargan kodni ishlayotgan ilovaga yuklaydi, holat (state) saqlanadi, bir soniyadan kam; hot restart — ilovani noldan qayta ishga tushiradi, holat yo'qoladi, lekin `main()`, global/static o'zgarishlar va `initState` qayta ishlaydi", "correct": true },
+        { "id": "a", "text": "Hot reload — kodni ishlayotgan ilovaga yuklaydi, holat saqlanadi; hot restart — noldan, holat yo'qoladi", "correct": true },
         { "id": "b", "text": "Bir xil narsa", "hint": "Holat saqlanishi va nima qayta ishlashi farq qiladi." },
-        { "id": "c", "text": "Hot reload release build'da ishlaydi", "hint": "Faqat debug (JIT VM) rejimida." },
+        { "id": "c", "text": "Hot reload release build'da ham ishlaydi, shuning uchun foydalanuvchi telefonidagi ilovani ham jonli yangilaydi", "hint": "Faqat debug (JIT VM) rejimida." },
         { "id": "d", "text": "Hot restart tezroq", "hint": "Reload tezroq — faqat o'zgargan kod." }
       ],
-      "explanation": "Hot reload ishlamaydigan holatlar: `main()` o'zgarishi, `initState` mantiqi (widget allaqachon yaratilgan), enum/generic tur o'zgarishi, static initializer. \"O'zgarish ko'rinmayapti\" — hot restart qiling. Release build AOT kompilyatsiya — reload yo'q.",
+      "explanation": "Hot restart'da `main()`, global/static o'zgarishlar va `initState` qayta ishlaydi. Hot reload ishlamaydigan holatlar: `main()` o'zgarishi, `initState` mantiqi (widget allaqachon yaratilgan), enum/generic tur o'zgarishi, static initializer. \"O'zgarish ko'rinmayapti\" — hot restart qiling. Release build AOT kompilyatsiya — reload yo'q.",
       "reviewed": false
     },
     {
@@ -99,12 +99,12 @@
       "kind": "concept",
       "prompt": "Dart'da mixin nima va qachon ishlatiladi?",
       "options": [
-        { "id": "a", "text": "Klasslarga meros ierarxiyasisiz xatti-harakat qo'shish usuli (`with`): kodni bir nechta klassda qayta ishlatish; `on` bilan qaysi klasslarga qo'llanishini cheklash mumkin", "correct": true },
+        { "id": "a", "text": "Klassga meros ierarxiyasisiz xatti-harakat qo'shish (`with`); `on` bilan cheklash mumkin", "correct": true },
         { "id": "b", "text": "Interfeysning yangi nomi", "hint": "Interfeys — kontrakt; mixin — tayyor implementatsiya." },
-        { "id": "c", "text": "Ko'p meros (multiple inheritance)", "hint": "Dart'da ko'p meros yo'q; mixin — uning nazorat qilingan muqobili." },
+        { "id": "c", "text": "Dart'dagi ko'p meros (multiple inheritance): klass bir nechta klassdan to'liq meros oladi", "hint": "Dart'da ko'p meros yo'q; mixin — uning nazorat qilingan muqobili." },
         { "id": "d", "text": "Widget'ni animatsiya qilish vositasi", "hint": "`SingleTickerProviderStateMixin` — bir misol, lekin mixin umumiy til xususiyati." }
       ],
-      "explanation": "Flutter'da: `class _MyState extends State<MyWidget> with SingleTickerProviderStateMixin`. Mixin konstruktorsiz. Linearizatsiya: `with A, B` — B ustun (oxirgi). Dart 3: `mixin class` — ham mixin, ham klass sifatida ishlatiladi.",
+      "explanation": "Kodni bir nechta klassda qayta ishlatish uchun. Flutter'da: `class _MyState extends State<MyWidget> with SingleTickerProviderStateMixin`. Mixin konstruktorsiz. Linearizatsiya: `with A, B` — B ustun (oxirgi). Dart 3: `mixin class` — ham mixin, ham klass sifatida ishlatiladi.",
       "reviewed": false
     },
     {
@@ -130,12 +130,12 @@
       "kind": "concept",
       "prompt": "Dart 3 record va pattern matching nima beradi?",
       "options": [
-        { "id": "a", "text": "Record — anonim, immutable tuple (`(int, String)`, nomlangan maydonlar `({int x, int y})`), ko'p qiymat qaytarish uchun; pattern matching — destructuring (`var (a, b) = pair`), `switch` ifodalari, `sealed class` bilan exhaustive tekshiruv", "correct": true },
+        { "id": "a", "text": "Record — anonim immutable tuple; pattern matching — destructuring, `switch` ifodalari, exhaustive tekshiruv", "correct": true },
         { "id": "b", "text": "Record — DB yozuvi", "hint": "Til darajasidagi qiymat turi, DB bilan aloqasi yo'q." },
-        { "id": "c", "text": "Faqat `switch` sintaksisi o'zgardi", "hint": "`switch` — bir qism; destructuring, `if-case`, record — alohida." },
+        { "id": "c", "text": "Faqat `switch` sintaksisi qisqardi, ma'lumot tuzilmalari va tip tizimida esa hech qanday yangi narsa qo'shilmadi", "hint": "`switch` — bir qism; destructuring, `if-case`, record — alohida." },
         { "id": "d", "text": "Dart 3'da bu yo'q", "hint": "Dart 3.0 (2023 may) asosiy yangiligi." }
       ],
-      "explanation": "`(int, String) parse(String s) => (1, 'a');` — alohida klass yozmasdan. `sealed class Result` + `switch (r) { case Success(:final data): ...; case Failure(:final error): ...; }` — kompilyator barcha holatlar qamralganini tekshiradi. Freezed paketi bu bilan birga ishlaydi.",
+      "explanation": "Masalan: `(int, String)`, `var (a, b) = pair`, `sealed class` bilan exhaustive switch. `(int, String) parse(String s) => (1, 'a');` — alohida klass yozmasdan. `sealed class Result` + `switch (r) { case Success(:final data): ...; case Failure(:final error): ...; }` — kompilyator barcha holatlar qamralganini tekshiradi. Freezed paketi bu bilan birga ishlaydi.",
       "reviewed": false
     },
     {
@@ -145,12 +145,12 @@
       "kind": "concept",
       "prompt": "Dart'da `==` operatori va `hashCode`ni override qilish qachon kerak va Flutter'da bu nega muhim?",
       "options": [
-        { "id": "a", "text": "Qiymat ob'ektlari (model, state) uchun — default `==` havolani solishtiradi; Flutter'da state management (`Provider`, `Bloc`, `Riverpod`) va `const` widget'lar tenglik bilan \"o'zgardimi\"ni aniqlaydi — override'siz keraksiz rebuild yoki yangilanmaslik", "correct": true },
-        { "id": "b", "text": "Hech qachon — Dart avtomatik qiladi", "hint": "Default — identity; `Point(1,2) == Point(1,2)` false." },
+        { "id": "a", "text": "Qiymat ob'ektlari uchun: default `==` havolani solishtiradi, state management esa tenglikka tayanadi", "correct": true },
+        { "id": "b", "text": "Hech qachon kerak emas — Dart barcha klasslar uchun maydonlar bo'yicha `==` va `hashCode` ni avtomatik yaratadi", "hint": "Default — identity; `Point(1,2) == Point(1,2)` false." },
         { "id": "c", "text": "Faqat `Set`da saqlash uchun", "hint": "Bu bir holat; state solishtirish — Flutter'da asosiy." },
         { "id": "d", "text": "Faqat `hashCode` yetarli", "hint": "Ikkalasi birga — kontrakt." }
       ],
-      "explanation": "Qo'lda yozish xatoga moyil — `equatable` paketi (`props` ro'yxati) yoki `freezed` (kod generatsiya: `==`, `hashCode`, `copyWith`, `toString`). Bloc'da state `==` bo'lsa `emit` UI'ni yangilamaydi — `copyWith` bilan yangi ob'ekt.",
+      "explanation": "Override'siz keraksiz rebuild yoki yangilanmaslik bo'ladi (`Provider`, `Bloc`, `Riverpod`, `const` widget'lar). Qo'lda yozish xatoga moyil — `equatable` paketi (`props` ro'yxati) yoki `freezed` (kod generatsiya: `==`, `hashCode`, `copyWith`, `toString`). Bloc'da state `==` bo'lsa `emit` UI'ni yangilamaydi — `copyWith` bilan yangi ob'ekt.",
       "reviewed": false
     },
     {
