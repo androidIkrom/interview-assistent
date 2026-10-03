@@ -1,0 +1,429 @@
+{
+  "topic": "core.aicode",
+  "questions": [
+    {
+      "id": "core.aicode.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "AI (Copilot, ChatGPT, Claude) yozgan kodni nima uchun har doim tekshirish kerak?",
+      "options": [
+        { "id": "a", "text": "AI ishonchli ko'rinadigan, lekin noto'g'ri, eskirgan yoki mavjud bo'lmagan API ishlatgan kod yozishi mumkin; mas'uliyat kodni commit qilgan dasturchida qoladi", "correct": true },
+        { "id": "b", "text": "Tekshirish shart emas — AI kompilyatsiya qilib, test qilib beradi", "hint": "Ko'p vositalar kodni bajarmaydi; kompilyatsiya o'tsa ham mantiq xato bo'lishi mumkin." },
+        { "id": "c", "text": "Faqat formatlashni tekshirish kerak", "hint": "Formatlash — eng kichik muammo; mantiq, xavfsizlik, chekka holatlar muhim." },
+        { "id": "d", "text": "AI kodi doim xato, ishlatmaslik kerak", "hint": "Ko'pincha foydali; gap ishonchda emas, tekshiruvda." }
+      ],
+      "explanation": "AI — tajribali, lekin kontekstni to'liq bilmaydigan hamkasb kabi: loyihangiz konvensiyalari, biznes qoidalari, mavjud funksiyalar unga ko'rinmasligi mumkin. Review mezoni o'zgarmaydi: \"men bu kodni tushunaman va himoya qila olamanmi?\"",
+      "reviewed": false
+    },
+    {
+      "id": "core.aicode.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "AI vositasiga prompt yozishda nimani hech qachon bermaslik kerak?",
+      "options": [
+        { "id": "a", "text": "Maxfiy ma'lumotlar: API kalitlar, parollar, mijozlarning shaxsiy ma'lumotlari, kompaniyaning yopiq kodi (ruxsatsiz) — ular uchinchi tomon serveriga ketadi va saqlanishi mumkin", "correct": true },
+        { "id": "b", "text": "Xato xabarining matnini", "hint": "Xato matni — aksincha, eng foydali kontekst (sirlar bo'lmasa)." },
+        { "id": "c", "text": "Kod qanday ishlashi kerakligi tavsifini", "hint": "Tavsif — yaxshi prompt'ning asosi." },
+        { "id": "d", "text": "Dasturlash tili nomini", "hint": "Til — zarur kontekst." }
+      ],
+      "explanation": "Ko'p kompaniyada siyosat: faqat tasdiqlangan vositalar, enterprise rejim (ma'lumot o'rgatishga ishlatilmaydi), sirlarni `.env`dan nusxalamaslik. Prompt'ga stack trace joylashdan oldin ichidagi token/URL'larni tozalash odat bo'lsin.",
+      "reviewed": false
+    },
+    {
+      "id": "core.aicode.003",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Code review'da birinchi navbatda nimaga qaraladi?",
+      "options": [
+        { "id": "a", "text": "Kod talabni to'g'ri bajaradimi, chekka holatlar va xatolar ishlanganmi, o'qilishi va tushunilishi osonmi, testlar bormi", "correct": true },
+        { "id": "b", "text": "Faqat bo'sh joylar va qavslar joylashuvi", "hint": "Formatlash — linter/formatter ishi, odam vaqtini sarflamaslik kerak." },
+        { "id": "c", "text": "Kod muallifi kim ekani", "hint": "Review kod haqida, muallif haqida emas." },
+        { "id": "d", "text": "O'zgartirilgan qatorlar soni", "hint": "Hajm — signal (katta PR qiyin), lekin mezon emas." }
+      ],
+      "explanation": "Ustuvorlik: to'g'rilik → xavfsizlik → dizayn/o'qiluvchanlik → testlar → uslub. Review — bilim almashish ham: \"nega shunday?\" degan savol ikkala tomonni o'rgatadi. Fikrlar kodga qaratilgan, shaxsga emas.",
+      "reviewed": false
+    },
+    {
+      "id": "core.aicode.004",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "AI quyidagi funksiyani yozdi. Uni qabul qilishdan oldin nima qilish kerak?",
+      "code": "fun average(numbers: List<Int>): Double {\n    return numbers.sum().toDouble() / numbers.size\n}",
+      "options": [
+        { "id": "a", "text": "Bo'sh ro'yxat uchun nima qaytarishini tekshirish — hozir `0/0 = NaN` qaytaradi; talabga qarab xato tashlash yoki `0.0`/`null` qaytarish kerak", "correct": true },
+        { "id": "b", "text": "Hech narsa — kod to'g'ri va qisqa", "hint": "`average(emptyList())` nimani qaytaradi?" },
+        { "id": "c", "text": "`Double` o'rniga `Int` qaytarish", "hint": "O'rtacha kasr bo'lishi mumkin." },
+        { "id": "d", "text": "Funksiya nomini o'zgartirish", "hint": "Nom aniq; muammo chekka holatda." }
+      ],
+      "explanation": "AI ko'pincha \"baxtli yo'l\"ni yozadi, chekka holatlarni (bo'sh, null, manfiy, juda katta) tashlab ketadi. Review odati: har kirish parametri uchun \"bo'sh/nol/null bo'lsa?\" deb so'rash. Yana: `Int.sum()` katta ro'yxatda overflow — `sumOf { it.toLong() }`.",
+      "reviewed": false
+    },
+    {
+      "id": "core.aicode.005",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Yaxshi prompt (AI'ga topshiriq) qanday bo'ladi?",
+      "options": [
+        { "id": "a", "text": "Aniq kontekst (til, versiya, framework, mavjud kod), kutilgan natija, cheklovlar (kutubxona ishlatmaslik, uslub) va chekka holatlar ko'rsatilgan", "correct": true },
+        { "id": "b", "text": "Iloji boricha qisqa: \"login qil\"", "hint": "Kontekstsiz prompt — umumiy, loyihaga mos kelmaydigan kod." },
+        { "id": "c", "text": "Bir prompt'da butun loyihani so'rash", "hint": "Katta topshiriq — ko'p xato va tekshirib bo'lmaydigan hajm; kichik qadamlar afzal." },
+        { "id": "d", "text": "Prompt sifati ahamiyatsiz, AI o'zi tushunadi", "hint": "Chiqish sifati kirish sifatiga to'g'ridan-to'g'ri bog'liq." }
+      ],
+      "explanation": "Misol: \"Kotlin 2.x, Retrofit 2.11. Quyidagi `ApiService` interfeysiga `getUser(id)` qo'sh, `Result<User>` qaytarsin, 404'da `UserNotFound` tashlasin, mavjud `ApiException` ierarxiyasini ishlat.\" Mavjud kod parchasi — eng kuchli kontekst.",
+      "reviewed": false
+    },
+    {
+      "id": "core.aicode.006",
+      "level": "junior",
+      "type": "single",
+      "kind": "true_false",
+      "prompt": "Quyidagi fikr to'g'rimi?\n\nAI yozgan kodni tushunmasam ham, u ishlasa, commit qilish mumkin.",
+      "options": [
+        { "id": "a", "text": "Ha", "hint": "Keyin xato chiqsa kim tuzatadi? Tushunmagan kodni qo'llab-quvvatlab bo'lmaydi." },
+        { "id": "b", "text": "Yo'q", "correct": true }
+      ],
+      "explanation": "Qoida: commit qilgan odam kodni tushuntira olishi kerak. Tushunmasangiz — AI'dan tushuntirishni so'rang, soddalashtirishni so'rang yoki o'zingiz yozing. \"Ishlayapti\" — faqat sinab ko'rilgan holatlar uchun.",
+      "reviewed": false
+    },
+    {
+      "id": "core.aicode.007",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Quyidagi kodda qanday xato bor?",
+      "code": "fun lastThree(items: List<String>): List<String> {\n    val result = mutableListOf<String>()\n    for (i in items.size - 3..items.size) {\n        result.add(items[i])\n    }\n    return result\n}",
+      "options": [
+        { "id": "a", "text": "Off-by-one: `..items.size` oxirgi indeksdan bitta oshib ketadi (`IndexOutOfBounds`), va 3 tadan kam elementda boshlang'ich manfiy bo'ladi", "correct": true },
+        { "id": "b", "text": "`mutableListOf` o'rniga `listOf` kerak", "hint": "Qo'shish uchun mutable kerak; muammo diapazonda." },
+        { "id": "c", "text": "Qaytarish turi noto'g'ri", "hint": "Tur to'g'ri." },
+        { "id": "d", "text": "Xato yo'q", "hint": "5 elementli ro'yxatda `i` 2 dan 5 gacha — indeks 5 bormi?" }
+      ],
+      "explanation": "To'g'ri: `until items.size` yoki soddasi `items.takeLast(3)` — standart kutubxona chekka holatlarni (3 tadan kam) o'zi hal qiladi. Review signali: qo'lda indeks hisoblash bor joyda off-by-one ehtimoli yuqori; standart funksiya bormi, deb so'rang.",
+      "reviewed": false
+    },
+    {
+      "id": "core.aicode.008",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Quyidagi kodda qaysi resurs muammosi bor?",
+      "code": "fun readConfig(path: String): String {\n    val reader = File(path).bufferedReader()\n    val text = reader.readText()\n    reader.close()\n    return text\n}",
+      "options": [
+        { "id": "a", "text": "`readText()` exception tashlasa `close()` chaqirilmaydi — fayl deskriptori sizadi; `use { }` bloki kerak", "correct": true },
+        { "id": "b", "text": "`bufferedReader` sekin, `FileInputStream` kerak", "hint": "Buffer aksincha tezlashtiradi; muammo yopishda." },
+        { "id": "c", "text": "`String` o'rniga `ByteArray` qaytarish kerak", "hint": "Konfiguratsiya matn; tur mos." },
+        { "id": "d", "text": "Muammo yo'q — `close()` chaqirilgan", "hint": "`readText()` va `close()` orasida xato bo'lsa, ijro qayerga boradi?" }
+      ],
+      "explanation": "`File(path).bufferedReader().use { it.readText() }` — xato bo'lsa ham yopiladi. Yoki `File(path).readText()`. Java'da try-with-resources. AI ko'pincha \"ochdi–ishlatdi–yopdi\" chiziqli yozadi — exception yo'lini unutadi. Review'da har `open/acquire` uchun \"xatoda yopiladimi?\" so'rang.",
+      "reviewed": false
+    },
+    {
+      "id": "core.aicode.009",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Quyidagi kod qayerda yiqilishi mumkin?",
+      "code": "data class Order(val customer: Customer?, val items: List<Item>)\n\nfun shippingCity(order: Order): String {\n    return order.customer!!.address.city.uppercase()\n}",
+      "options": [
+        { "id": "a", "text": "`customer` null bo'lishi mumkin (`Customer?`), `!!` NPE tashlaydi; `?.` zanjiri va default qiymat yoki aniq xato kerak", "correct": true },
+        { "id": "b", "text": "`uppercase()` null qaytaradi", "hint": "`String.uppercase()` hech qachon null qaytarmaydi." },
+        { "id": "c", "text": "`items` ishlatilmagani xato", "hint": "Ishlatilmagan maydon — xato emas." },
+        { "id": "d", "text": "Hech qayerda — Kotlin null-safe", "hint": "`!!` aynan null-safety'ni o'chiradi." }
+      ],
+      "explanation": "`!!` — \"men null bo'lmasligini kafolatlayman\" degani; AI buni kompilyatorni tinchitish uchun qo'yadi. Variantlar: `order.customer?.address?.city?.uppercase() ?: \"UNKNOWN\"`, yoki `requireNotNull(order.customer) { \"Order ${order.id} has no customer\" }` — aniq xabar bilan. Review'da har `!!` asoslanishi kerak.",
+      "reviewed": false
+    },
+    {
+      "id": "core.aicode.010",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Quyidagi kodning o'qiluvchanligini qanday yaxshilash kerak?",
+      "code": "fun p(l: List<Int>, t: Int): Boolean {\n    for (i in l.indices) for (j in i + 1 until l.size) if (l[i] + l[j] == t) return true\n    return false\n}",
+      "options": [
+        { "id": "a", "text": "Ma'noli nomlar (`hasPairWithSum`, `numbers`, `target`), har blok uchun qavs va alohida qator, murakkablik haqida izoh yoki `Set` bilan O(n) yechim", "correct": true },
+        { "id": "b", "text": "Kod yetarlicha qisqa, o'zgartirish kerak emas", "hint": "`p`, `l`, `t` — bir oydan keyin hech kim (muallif ham) tushunmaydi." },
+        { "id": "c", "text": "Faqat izoh qo'shish: `// juftlikni tekshiradi`", "hint": "Izoh yomon nomni oqlamaydi; nomning o'zi hujjat bo'lsin." },
+        { "id": "d", "text": "Hammasini bitta qatorga yig'ish", "hint": "Qisqalik ≠ o'qiluvchanlik." }
+      ],
+      "explanation": "Kod bir marta yoziladi, o'n marta o'qiladi. Nomlash — eng arzon va eng kuchli hujjat. Bir qatorda ikki `for` va `if` — xatoni ko'rish qiyin. `Set` yechimi: har son uchun `target - n` ko'rilganmi — O(n) va niyat aniqroq.",
+      "reviewed": false
+    },
+    {
+      "id": "core.aicode.011",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "AI quyidagi kodni taklif qildi. Nima ortiqcha?",
+      "code": "interface GreetingStrategy { fun greet(name: String): String }\nclass DefaultGreetingStrategy : GreetingStrategy {\n    override fun greet(name: String) = \"Hello, $name\"\n}\nclass GreetingStrategyFactory {\n    fun create(): GreetingStrategy = DefaultGreetingStrategy()\n}\nclass Greeter(private val factory: GreetingStrategyFactory) {\n    fun greet(name: String) = factory.create().greet(name)\n}",
+      "options": [
+        { "id": "a", "text": "Bitta implementatsiya uchun interfeys + factory + o'rama — ortiqcha abstraksiya; `fun greet(name: String) = \"Hello, $name\"` yetarli, ikkinchi variant paydo bo'lganda kengaytiriladi", "correct": true },
+        { "id": "b", "text": "Hech narsa — SOLID'ga mos, kengaytiriladigan", "hint": "Mavjud bo'lmagan talab uchun 4 klass — speculative generality." },
+        { "id": "c", "text": "Factory singleton bo'lishi kerak", "hint": "Yana bir qatlam qo'shish muammoni kuchaytiradi." },
+        { "id": "d", "text": "Interfeysga yana bir metod qo'shish kerak", "hint": "Kengaytirish emas, soddalashtirish kerak." }
+      ],
+      "explanation": "AI pattern'larni \"to'g'ri ko'rinish\" uchun qo'shishga moyil. YAGNI: hozirgi talabga minimal yechim. Har qatlam — o'qish, navigatsiya, test yuki. Review savoli: \"bu abstraksiyani olib tashlasam, nima yo'qotamiz?\" Javob \"hech narsa\" bo'lsa — olib tashlang.",
+      "reviewed": false
+    },
+    {
+      "id": "core.aicode.012",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Quyidagi kodda qanday mantiqiy xato bor?",
+      "code": "fun isValidAge(age: Int): Boolean {\n    if (age < 0 || age > 150) {\n        return true\n    }\n    return false\n}",
+      "options": [
+        { "id": "a", "text": "Shart teskari: noto'g'ri yoshda `true`, to'g'ri yoshda `false` qaytaradi; to'g'risi `return age in 0..150`", "correct": true },
+        { "id": "b", "text": "150 juda kichik chegara", "hint": "Chegara qiymati munozarali, lekin asosiy xato mantiqda." },
+        { "id": "c", "text": "`Int` o'rniga `Long` kerak", "hint": "Yosh uchun `Int` yetarli." },
+        { "id": "d", "text": "Xato yo'q", "hint": "`isValidAge(25)` nimani qaytaradi? Qadam-baqadam o'ting." }
+      ],
+      "explanation": "Funksiya nomi va tanasi zid — eng xavfli xato turi, chunki kompilyatsiya o'tadi, kod \"mantiqiy\" ko'rinadi. Test (`assertTrue(isValidAge(25))`) darhol ushlaydi. AI kodiga birinchi savol: \"nom va'da qilganini qaytaradimi?\"",
+      "reviewed": false
+    },
+    {
+      "id": "core.aicode.013",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "AI yozgan kodni qabul qilishning eng ishonchli usuli qanday?",
+      "options": [
+        { "id": "a", "text": "Kutilgan xatti-harakatni testlar bilan ifodalash (chekka holatlar bilan) va kodni testlardan o'tkazish — kod o'zini \"to'g'ri\" deya olmaydi, test isbotlaydi", "correct": true },
+        { "id": "b", "text": "AI'dan \"bu kod to'g'rimi?\" deb so'rash", "hint": "AI o'z kodini ko'pincha tasdiqlaydi; mustaqil tekshiruv kerak." },
+        { "id": "c", "text": "Kod kompilyatsiya qilinsa yetarli", "hint": "Kompilyatsiya — sintaksis; mantiq emas." },
+        { "id": "d", "text": "Bir marta qo'lda ishga tushirib ko'rish", "hint": "Baxtli yo'l o'tadi, chekka holatlar tekshirilmaydi, takrorlab bo'lmaydi." }
+      ],
+      "explanation": "Samarali oqim: avval test yozing (yoki AI'dan test yozdirib, uni o'zingiz tekshiring), keyin kod. Test yiqilsa — AI'ga xato xabarini bering. Testni ham AI yozsa — assertion'lar haqiqatan talabni ifodalayaptimi, diqqat bilan o'qing (AI test'ni kodga moslashtirishi mumkin).",
+      "reviewed": false
+    },
+    {
+      "id": "core.aicode.014",
+      "level": "middle",
+      "type": "single",
+      "kind": "true_false",
+      "prompt": "Quyidagi fikr to'g'rimi?\n\nAI generatsiya qilgan test o'tsa, kod to'g'ri deb hisoblash mumkin.",
+      "options": [
+        { "id": "a", "text": "Ha", "hint": "Test kodning hozirgi xatti-harakatini qayd qilgan bo'lishi mumkin — xato bilan birga. Assertion'lar talabga mosmi?" },
+        { "id": "b", "text": "Yo'q", "correct": true }
+      ],
+      "explanation": "Xavf: AI kodga qarab test yozadi — `assertEquals(NaN, average(emptyList()))` kabi \"xatoni qotiruvchi\" test. Testni spetsifikatsiya sifatida o'qing: har assertion \"shunday bo'lishi kerakmi?\" degan savolga javob bersin. Test birinchi, kod keyin — bu xavfni kamaytiradi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.aicode.015",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Quyidagi AI kodida qaysi muammo bor?",
+      "code": "import kotlinx.coroutines.flow.*\n\nsuspend fun loadUsers(api: Api): List<User> {\n    return api.getUsers()\n        .asFlow()\n        .retryWithBackoff(maxRetries = 3, initialDelay = 500)\n        .toList()\n}",
+      "options": [
+        { "id": "a", "text": "`retryWithBackoff` kotlinx.coroutines'da mavjud emas — AI \"mantiqan bo'lishi kerak\" degan API'ni o'ylab topgan (hallucination); `retryWhen` bilan o'zingiz yozish kerak", "correct": true },
+        { "id": "b", "text": "`toList()` sekin", "hint": "`toList()` real; muammo boshqa chaqiruvda." },
+        { "id": "c", "text": "`suspend` kerak emas", "hint": "`api.getUsers()` va `toList()` suspend — kerak." },
+        { "id": "d", "text": "Muammo yo'q — kompilyatsiya o'tadi", "hint": "Kompilyatsiya qilib ko'ring — unresolved reference." }
+      ],
+      "explanation": "Hallucinated API — AI kodining eng tipik muammosi: nom tabiiy, imzo ishonchli, lekin mavjud emas (yoki boshqa versiyada/kutubxonada). Tekshiruv: IDE autocomplete, rasmiy hujjat, kutubxona versiyasi. Bundan tashqari, `List`ni `Flow`ga aylantirib retry qilish ma'nosiz — retry `api.getUsers()` chaqiruvining o'zida bo'lishi kerak.",
+      "reviewed": false
+    },
+    {
+      "id": "core.aicode.016",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Quyidagi AI yozgan endpoint'da qanday xavfsizlik teshigi bor?",
+      "code": "@PostMapping(\"/users/{id}/avatar\")\nfun uploadAvatar(@PathVariable id: Long, @RequestParam file: MultipartFile) {\n    val target = File(\"/var/app/avatars/\" + file.originalFilename)\n    file.transferTo(target)\n    userRepo.updateAvatar(id, target.name)\n}",
+      "options": [
+        { "id": "a", "text": "Path traversal — `originalFilename` `../../etc/cron.d/x` bo'lishi mumkin; fayl nomini server o'zi generatsiya qilishi kerak. Qo'shimcha: `id` joriy foydalanuvchi bilan tekshirilmaydi (IDOR), fayl turi/hajmi tekshirilmaydi", "correct": true },
+        { "id": "b", "text": "`MultipartFile` eskirgan", "hint": "Standart Spring turi." },
+        { "id": "c", "text": "`File` o'rniga `Path` kerak", "hint": "API tanlovi muammoning mohiyatini o'zgartirmaydi." },
+        { "id": "d", "text": "Teshik yo'q", "hint": "Fayl nomini kim boshqaradi? Klient." }
+      ],
+      "explanation": "AI xavfsizlik tekshiruvlarini ko'pincha tashlab ketadi — \"ishlaydigan\" kodga e'tibor beradi. Review checklist: foydalanuvchi kiritgan har qiymat (path, SQL, HTML, shell) qayerga boradi? Egalik tekshirilganmi? Hajm/tur cheklanganmi? Yechim: `UUID.randomUUID()` + ruxsat etilgan kengaytma, `id == principal.id`, content-type va magic bytes tekshiruvi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.aicode.017",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Quyidagi kodda qaysi chekka holat ishlanmagan?",
+      "code": "fun parseAmount(input: String): Long {\n    // \"12.34\" -> 1234 (tiyin)\n    val parts = input.split(\".\")\n    val whole = parts[0].toLong()\n    val fraction = parts[1].toLong()\n    return whole * 100 + fraction\n}",
+      "options": [
+        { "id": "a", "text": "Kasr qismi bo'lmasa (`\"12\"`) `parts[1]` yo'q; `\"12.5\"` 1205 beradi (1250 o'rniga); `\"12.345\"` noto'g'ri; manfiy son, bo'sh satr, harflar — exception; vergul ajratuvchi lokali", "correct": true },
+        { "id": "b", "text": "`Long` o'rniga `Int` kerak", "hint": "Pul uchun `Long` to'g'ri tanlov." },
+        { "id": "c", "text": "`split` sekin", "hint": "Tezlik muammo emas." },
+        { "id": "d", "text": "Hamma holat ishlangan", "hint": "`parseAmount(\"12.5\")` ni qo'lda hisoblang." }
+      ],
+      "explanation": "Pul parsing — chekka holatlar koni. AI izohdagi bitta misol uchun kod yozdi. Yaxshiroq: `BigDecimal(input).movePointRight(2).longValueExact()` yoki regex validatsiya + aniq xatolar. Review'da: har kirish formati uchun jadval tuzing (bo'sh, kasrsiz, 1 raqam, 3 raqam, manfiy, bo'sh joy).",
+      "reviewed": false
+    },
+    {
+      "id": "core.aicode.018",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "AI yozgan katta PR'ni (500+ qator) review qilishda qanday ustuvorlik to'g'ri?",
+      "options": [
+        { "id": "a", "text": "Avval arxitektura va ma'lumot oqimi (to'g'ri yo'nalishmi?), keyin xavfsizlik va ma'lumot yo'qotish nuqtalari, keyin chekka holatlar/xato ishlovi, keyin testlar, oxirida uslub; iloji bo'lsa PR'ni bo'lishni so'rash", "correct": true },
+        { "id": "b", "text": "Yuqoridan pastga har qatorni ketma-ket o'qish", "hint": "Tafsilotlarda yo'qolasiz; umumiy yondashuv noto'g'ri bo'lsa, qator-qator izohlar behuda." },
+        { "id": "c", "text": "Faqat testlar o'tganini tekshirish", "hint": "AI testlari kodga moslashgan bo'lishi mumkin." },
+        { "id": "d", "text": "Katta PR'ni ko'rmay tasdiqlash — AI yozgan, ishonchli", "hint": "Hajm xavfni oshiradi, kamaytirmaydi." }
+      ],
+      "explanation": "AI tez katta hajm chiqaradi — review bottleneck bo'ladi. Himoya: kichik, bir maqsadli PR'lar; PR tavsifida \"nima, nega, qanday tekshirildi\"; avtomatik tekshiruvlar (lint, static analysis, SAST) odamdan oldin. Odam vaqti — dizayn va xavfga, mashina — uslubga.",
+      "reviewed": false
+    },
+    {
+      "id": "core.aicode.019",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Quyidagi AI kodida concurrency muammosi bormi?",
+      "code": "class Counter {\n    private var count = 0\n\n    suspend fun increment() {\n        withContext(Dispatchers.Default) {\n            count++\n        }\n    }\n\n    fun get() = count\n}\n\n// 1000 coroutine parallel increment() chaqiradi",
+      "options": [
+        { "id": "a", "text": "Ha — `count++` atomik emas (o'qish, oshirish, yozish), ko'p thread'da race condition; natija 1000 dan kam bo'lishi mumkin. `AtomicInteger`, `Mutex` yoki bitta thread'ga cheklash kerak", "correct": true },
+        { "id": "b", "text": "Yo'q — `withContext` sinxronizatsiya qiladi", "hint": "`withContext` dispatcher'ni almashtiradi, qulf bermaydi." },
+        { "id": "c", "text": "Yo'q — `suspend` funksiyalar thread-safe", "hint": "`suspend` — to'xtatish imkoni, sinxronizatsiya emas." },
+        { "id": "d", "text": "Muammo faqat `get()` da", "hint": "`get()` ham visibility muammosiga ega, lekin asosiy race `increment` da." }
+      ],
+      "explanation": "AI concurrency primitivlarini ishlatadi, lekin ularning ma'nosini aralashtiradi (`withContext` = qulf deb o'ylash). Review'da: umumiy mutable holat + ko'p coroutine/thread = har doim sinxronizatsiya savoli. Yechim: `AtomicInteger`, `Mutex.withLock`, yoki holatni bitta `actor`/`StateFlow.update` ga jamlash.",
+      "reviewed": false
+    },
+    {
+      "id": "core.aicode.020",
+      "level": "strong_middle",
+      "type": "multi",
+      "kind": "concept",
+      "prompt": "AI yozgan kodda qaysi muammolar eng ko'p uchraydi? (bir nechta javob)",
+      "options": [
+        { "id": "a", "text": "Mavjud bo'lmagan yoki eskirgan API/kutubxona metodlari", "correct": true },
+        { "id": "b", "text": "Chekka holatlar va xato yo'llarining ishlanmasligi", "correct": true },
+        { "id": "c", "text": "Loyihada allaqachon mavjud funksiyani qayta yozish (duplikatsiya)", "correct": true },
+        { "id": "d", "text": "Sintaksis xatolari ko'pligi", "hint": "Sintaksis — AI'ning kuchli tomoni; muammolar semantikada." }
+      ],
+      "explanation": "Yana: ortiqcha abstraksiya, loyiha konvensiyasiga mos kelmaslik, xavfsizlik tekshiruvlari yo'qligi, \"ishonchli\" lekin noto'g'ri izohlar, zaif/eskirgan bog'liqlik qo'shish. Duplikatsiya — AI mavjud `utils`ni ko'rmaydi; review'da \"bu funksiya bizda bormi?\" so'rang.",
+      "reviewed": false
+    },
+    {
+      "id": "core.aicode.021",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "AI quyidagi SQL'ni generatsiya qildi. Review'da nimani tekshirish kerak?",
+      "code": "SELECT u.name, COUNT(o.id) AS orders\nFROM users u\nLEFT JOIN orders o ON o.user_id = u.id\nWHERE o.created_at > NOW() - INTERVAL '30 days'\nGROUP BY u.name;",
+      "options": [
+        { "id": "a", "text": "`WHERE` `LEFT JOIN`ni amalda `INNER JOIN`ga aylantiradi (buyurtmasiz foydalanuvchilar tushib qoladi — ular 0 bilan chiqishi kerak edi); shart `ON`ga ko'chirilsin. `GROUP BY u.name` — bir xil ismlilar birlashadi, `u.id` kerak", "correct": true },
+        { "id": "b", "text": "`COUNT(*)` ishlatish kerak", "hint": "`COUNT(o.id)` aynan to'g'ri — null (buyurtmasiz) hisoblanmaydi." },
+        { "id": "c", "text": "SQL to'g'ri", "hint": "Buyurtmasi bo'lmagan foydalanuvchi natijada chiqadimi? `WHERE o.created_at` null uchun nima beradi?" },
+        { "id": "d", "text": "`INTERVAL` sintaksisi noto'g'ri", "hint": "PostgreSQL'da to'g'ri." }
+      ],
+      "explanation": "Klassik tuzoq: `LEFT JOIN` + o'ng jadval ustuni `WHERE`da. AI so'rovni \"to'g'ri ko'rinishda\" yozadi, lekin semantika buziladi. Review: so'rovni kichik test ma'lumotida ishga tushiring (buyurtmasiz foydalanuvchi, bir xil ismli ikki foydalanuvchi) — kutilganni beradimi?",
+      "reviewed": false
+    },
+    {
+      "id": "core.aicode.022",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "true_false",
+      "prompt": "Quyidagi fikr to'g'rimi?\n\nAI kodidagi hallucinated API'ni aniqlashning eng ishonchli usuli — kodni kompilyatsiya qilish va rasmiy hujjat bilan solishtirish.",
+      "options": [
+        { "id": "a", "text": "Ha", "correct": true },
+        { "id": "b", "text": "Yo'q", "hint": "Nom qanchalik tabiiy jaranglasa ham, mavjudligini kompilyator va hujjat hal qiladi, taxmin emas." }
+      ],
+      "explanation": "Kompilyator mavjud bo'lmagan metodni darhol ko'rsatadi; lekin mavjud, lekin boshqacha ishlaydigan API (masalan, parametr tartibi, default xatti-harakat) kompilyatsiyadan o'tadi — hujjat va test kerak. Dinamik tillarda (Python, JS) kompilyator yo'q — runtime'gacha yashirin; linter/type checker (mypy, TS) yordam beradi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.aicode.023",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Jamoada AI kod vositalari siyosatini belgilashda senior nimalarni hal qilishi kerak?",
+      "options": [
+        { "id": "a", "text": "Ruxsat etilgan vositalar va rejimlar (ma'lumot qayerga ketadi), maxfiy ma'lumot qoidalari, AI kodi uchun review talablari (muallif tushunishi, testlar), litsenziya xavfi, qaysi ishlarda ishlatiladi/ishlatilmaydi, o'rganish ta'siri (junior'lar fundamentalni yo'qotmasligi)", "correct": true },
+        { "id": "b", "text": "AI'ni butunlay taqiqlash", "hint": "Taqiq — yashirin foydalanishga olib keladi; boshqariladigan foydalanish xavfsizroq." },
+        { "id": "c", "text": "Hech qanday qoida — har kim xohlagancha", "hint": "Mijoz ma'lumoti tashqi serverga ketishi — huquqiy va reputatsion xavf." },
+        { "id": "d", "text": "Faqat qaysi vosita arzonroq ekanini tanlash", "hint": "Narx — bitta omil; ma'lumot xavfsizligi va sifat muhimroq." }
+      ],
+      "explanation": "Amaliy qoidalar: enterprise rejim (ma'lumot o'rgatishga ketmaydi), sirlar va PII prompt'ga kirmaydi, AI kodi uchun bir xil review standarti (\"AI yozdi\" — oqlov emas), kritik modullar (auth, to'lov) uchun qo'shimcha ko'z, junior'lar uchun \"avval o'zing yoz, keyin AI bilan solishtir\" amaliyoti.",
+      "reviewed": false
+    },
+    {
+      "id": "core.aicode.024",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "AI yordamida yozilgan kodning litsenziya xavfi nimada?",
+      "options": [
+        { "id": "a", "text": "Model ochiq kodda o'rgatilgan — GPL kabi \"yuqumli\" litsenziyali kod parchasini so'zma-so'z qaytarishi mumkin; bu tijorat mahsulotga huquqiy xavf. Himoya: vositaning ochiq kod mosligini filtrlash rejimi, katta bloklarni ko'r-ko'rona qabul qilmaslik, provayder indemnifikatsiyasi", "correct": true },
+        { "id": "b", "text": "AI kodi avtomatik AI kompaniyasiga tegishli bo'ladi", "hint": "Odatda shartnoma chiqishni foydalanuvchiga beradi; xavf manbada." },
+        { "id": "c", "text": "Xavf yo'q — AI yangi kod yaratadi", "hint": "Taniqli algoritmlar/kutubxona kodini yaqin yoki aynan takrorlash holatlari hujjatlashtirilgan." },
+        { "id": "d", "text": "AI kodini faqat GPL ostida chiqarish kerak", "hint": "Bunday talab yo'q; gap xavfni boshqarishda." }
+      ],
+      "explanation": "Qo'shimcha xavf: AI tavsiya qilgan kutubxona litsenziyasi (AGPL kutubxona SaaS'da) — bog'liqlik qo'shilganda litsenziya tekshiruvi (CI'da license scanner). Yuridik holat davlatlarda farq qiladi va o'zgaryapti — kompaniya yuristi bilan siyosat.",
+      "reviewed": false
+    },
+    {
+      "id": "core.aicode.025",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Suhbatda \"nega bu arxitekturani tanladingiz?\" savoliga kuchli javob qanday tuziladi?",
+      "options": [
+        { "id": "a", "text": "Kontekst va cheklovlar (jamoa, muddat, masshtab, mavjud tizim) → ko'rib chiqilgan alternativalar → tanlov va uning trade-off'lari → nima noto'g'ri bo'lishi mumkin va qanday o'zgartirish mumkin — qaror \"to'g'ri\" emas, \"asoslangan\" ko'rinishi kerak", "correct": true },
+        { "id": "b", "text": "\"Bu eng zamonaviy yondashuv\"", "hint": "Moda — asos emas; suhbatchi kontekstga bog'liq fikrlashni kutadi." },
+        { "id": "c", "text": "\"Oldingi loyihada shunday qilgan edik\"", "hint": "Tajriba foydali, lekin bu loyihaga nega mosligini aytish kerak." },
+        { "id": "d", "text": "\"AI shuni tavsiya qildi\"", "hint": "AI — manba, mas'uliyat emas; qarorni o'zingiz himoya qilishingiz kerak." }
+      ],
+      "explanation": "Senior farqi — alternativalarni bilish va nega rad etganini aytish. \"Modulli monolit tanladik: 4 kishilik jamoa, 6 oy muddat, mikroservis operatsion yuki oqlanmaydi; modul chegaralari aniq, keyin kerak bo'lsa ajratamiz. Xavf — DB umumiy, shu sabab sxemalarni modul bo'yicha ajratdik.\" ADR (Architecture Decision Record) yozish shu fikrlashni hujjatlashtiradi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.aicode.026",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Texnik qarzni baholash va ustuvorlashtirishda senior qanday yondashadi?",
+      "options": [
+        { "id": "a", "text": "Qarzni biznes tiliga tarjima qilish: bu qarz qanchaga tushadi (sekinlashgan feature, incident, onboarding vaqti), tuzatish narxi qancha, xavf qancha — va yuqori ta'sir/past narx birinchi; qarzni feature ishi bilan birga, kichik qismlarda to'lash", "correct": true },
+        { "id": "b", "text": "Barcha qarzni bir sprintda to'lash", "hint": "Biznes to'xtaydi; qarz hech qachon to'liq to'lanmaydi, boshqariladi." },
+        { "id": "c", "text": "Qarzga e'tibor bermaslik — feature muhimroq", "hint": "Qarz foizi o'sadi: har feature sekinroq, incident ko'proq." },
+        { "id": "d", "text": "Faqat kod sifati metrikalariga (coverage, complexity) qarash", "hint": "Metrika — signal; ta'sir biznes oqibatida o'lchanadi." }
+      ],
+      "explanation": "AI davrida yangi qarz turi: tez generatsiya qilingan, tushunilmagan kod hajmi. Baholash: qarz reestri (nima, qayerda, ta'siri, narxi), har sprintda ~20% barqarorlik ishi, \"boy scout rule\" (teggan kodni biroz yaxshilab qoldir). Qarzni ko'rinadigan qilish (dashboard, incident bog'lash) — resurs olish uchun kalit.",
+      "reviewed": false
+    },
+    {
+      "id": "core.aicode.027",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "AI vositalari jamoaning o'rganishi va junior'lar o'sishiga qanday ta'sir qilishi mumkin va bunga qanday munosabatda bo'lish kerak?",
+      "options": [
+        { "id": "a", "text": "Xavf — tayyor javob fundamental tushunish va debugging ko'nikmasini o'stirmaydi; junior AI kodini baholay olmaydi. Yondashuv: AI'ni tushuntiruvchi sifatida ishlatish, avval o'zi urinish, review'da \"nega\" savollari, mentorlik — AI almashtirmaydi", "correct": true },
+        { "id": "b", "text": "Ta'sir yo'q — kod kod", "hint": "Tushunmay nusxa olish ko'nikma o'stirmaydi — bu Stack Overflow davrida ham ma'lum edi, hozir kuchaygan." },
+        { "id": "c", "text": "Junior'larga AI'ni taqiqlash", "hint": "Vosita bilan ishlash — kelajak ko'nikmasi; taqiq emas, to'g'ri ishlatish o'rgatiladi." },
+        { "id": "d", "text": "Junior'lar endi kerak emas", "hint": "Bugungi junior — ertangi senior; bu zanjir uzilsa, 5 yildan keyin AI kodini baholovchi odam qolmaydi." }
+      ],
+      "explanation": "Amaliyot: pair programming AI bilan — junior yozadi, AI/senior izohlaydi; \"AI javobini tanqid qil\" mashqlari; code review'da muallif kodni tushuntirsin; debugging'ni AI'siz o'rgatish. Senior mas'uliyati — jamoa kompetensiyasi, faqat bugungi velocity emas.",
+      "reviewed": false
+    },
+    {
+      "id": "core.aicode.028",
+      "level": "senior",
+      "type": "single",
+      "kind": "true_false",
+      "prompt": "Quyidagi fikr to'g'rimi?\n\nKritik modullar (autentifikatsiya, to'lov, shifrlash) uchun AI yozgan kodga oddiy koddan qattiqroq review va test talabi qo'yish asosli.",
+      "options": [
+        { "id": "a", "text": "Ha", "correct": true },
+        { "id": "b", "text": "Yo'q", "hint": "Xato narxi modulga qarab farq qiladi; AI xavfsizlik tekshiruvlarini tashlab ketishga moyil — xavf yuqori joyda nazorat ham yuqori." }
+      ],
+      "explanation": "Risk-based review: xato narxi × ehtimol. Kritik modullarda — ikki reviewer, xavfsizlik checklist, SAST, penetration test, standart kutubxona (o'zingiz kripto yozmaslik — AI ham). Boshqa joyda (admin panel UI) — yengilroq. Bir xil standart hamma joyda — yo juda sekin, yo juda xavfli.",
+      "reviewed": false
+    }
+  ]
+}

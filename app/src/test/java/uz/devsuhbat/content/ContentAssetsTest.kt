@@ -108,6 +108,8 @@ class ContentAssetsTest {
         "core.oop" to listOf(16, 14, 10, 6),
         "core.security" to listOf(8, 10, 8, 6),
         "core.testing" to listOf(10, 10, 8, 4),
+        "core.sysdesign" to listOf(0, 10, 16, 22),
+        "core.aicode" to listOf(6, 8, 8, 6),
     )
 
     @Test

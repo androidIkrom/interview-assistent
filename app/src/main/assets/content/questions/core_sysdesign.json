@@ -1,0 +1,719 @@
+{
+  "topic": "core.sysdesign",
+  "questions": [
+    {
+      "id": "core.sysdesign.001",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Stateless servis nima va u masshtablashga qanday yordam beradi?",
+      "options": [
+        { "id": "a", "text": "Servis so'rovlar orasida foydalanuvchi holatini o'zida saqlamaydi (holat DB/cache'da) — istalgan instansiya istalgan so'rovga xizmat qiladi, instansiyalarni erkin qo'shish/olib tashlash mumkin", "correct": true },
+        { "id": "b", "text": "Servis umuman ma'lumot saqlamaydi, hatto DB'da ham", "hint": "Holat saqlanadi, lekin servis jarayonidan tashqarida." },
+        { "id": "c", "text": "Servis faqat bitta instansiyada ishlaydi", "hint": "Aksincha — maqsad ko'p instansiya." },
+        { "id": "d", "text": "Servis sessiyani o'z xotirasida saqlaydi", "hint": "Bu stateful — ikkinchi so'rov boshqa instansiyaga tushsa, sessiya yo'qoladi." }
+      ],
+      "explanation": "Stateful servisda load balancer foydalanuvchini doim bir instansiyaga yo'naltirishi kerak (sticky session) — instansiya o'lsa, sessiya yo'q. Stateless: sessiya Redis'da yoki JWT'da, instansiyalar bir xil — autoscaling va deploy oson.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sysdesign.002",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Vertikal va gorizontal masshtablash qanday farqlanadi?",
+      "options": [
+        { "id": "a", "text": "Vertikal — bitta serverga ko'proq CPU/RAM; gorizontal — ko'proq server qo'shish. Vertikal sodda, lekin chegarali va yagona nuqsun nuqtasi; gorizontal cheksizroq, lekin tizim taqsimlangan bo'lishini talab qiladi", "correct": true },
+        { "id": "b", "text": "Vertikal — ko'proq server; gorizontal — kattaroq server", "hint": "Teskari." },
+        { "id": "c", "text": "Vertikal faqat DB uchun, gorizontal faqat ilova uchun", "hint": "Ikkalasi har qatlamda qo'llaniladi, lekin DB'ni gorizontal masshtablash qiyinroq." },
+        { "id": "d", "text": "Farqi yo'q", "hint": "Narx egri chizig'i va yuqori chegara jiddiy farq qiladi." }
+      ],
+      "explanation": "Vertikal: bugun eng oson, lekin eng katta server ham chegarali va narxi chiziqsiz oshadi. Gorizontal: stateless servis + load balancer bilan oson; DB uchun replika/sharding kerak. Odatda avval vertikal, keyin gorizontal.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sysdesign.003",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Load balancer qanday vazifani bajaradi?",
+      "options": [
+        { "id": "a", "text": "Kiruvchi so'rovlarni bir nechta server instansiyasi orasida taqsimlaydi, sog'lom bo'lmagan instansiyalarni chiqarib tashlaydi (health check) va yagona kirish nuqtasi beradi", "correct": true },
+        { "id": "b", "text": "DB so'rovlarini tezlashtiradi", "hint": "DB bilan to'g'ridan-to'g'ri ishlamaydi." },
+        { "id": "c", "text": "Statik fayllarni cache qiladi", "hint": "Bu CDN vazifasi." },
+        { "id": "d", "text": "Kodni serverlarga deploy qiladi", "hint": "Deploy — CI/CD vazifasi." }
+      ],
+      "explanation": "Algoritmlar: round robin, least connections, IP hash. L4 (TCP) va L7 (HTTP — path/header bo'yicha yo'naltirish, TLS termination). Load balancer o'zi ham yagona nuqta bo'lmasligi uchun juftlikda yoki boshqariladigan servis sifatida (ALB, Cloud LB) ishlaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sysdesign.004",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Cache qatlami tizimga qanday foyda beradi va qanday narx to'lanadi?",
+      "options": [
+        { "id": "a", "text": "Foyda — tez-tez o'qiladigan ma'lumotni xotirada saqlab latency va DB yukini kamaytirish; narx — eskirgan ma'lumot (staleness), invalidatsiya murakkabligi, qo'shimcha infratuzilma", "correct": true },
+        { "id": "b", "text": "Cache har doim ma'lumotni yangi saqlaydi, narxi yo'q", "hint": "Cache'dagi ma'lumot DB'dagidan orqada qolishi mumkin." },
+        { "id": "c", "text": "Cache yozishni tezlashtiradi, o'qishga ta'sir qilmaydi", "hint": "Asosiy foyda aynan o'qishda." },
+        { "id": "d", "text": "Cache DB'ni to'liq almashtiradi", "hint": "Cache — o'zgaruvchan, yo'qolishi mumkin; haqiqat manbai DB." }
+      ],
+      "explanation": "Qatlamlar: brauzer/klient cache, CDN, ilova darajasi (in-memory), taqsimlangan (Redis/Memcached), DB buffer. Mos ma'lumot: ko'p o'qiladigan, kam o'zgaradigan. Kalit savol har doim: \"eskirgan qiymat ko'rsatilsa nima bo'ladi?\"",
+      "reviewed": false
+    },
+    {
+      "id": "core.sysdesign.005",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Message queue (RabbitMQ, SQS, Kafka) tizimga nima uchun kiritiladi?",
+      "options": [
+        { "id": "a", "text": "Ishlab chiqaruvchi va iste'molchini ajratish (decoupling), yuk cho'qqilarini yumshatish (buffer), sekin ishni asinxron bajarish va iste'molchi yiqilganda xabarni yo'qotmaslik", "correct": true },
+        { "id": "b", "text": "So'rovlarga darhol javob berish tezligini oshirish", "hint": "Navbat orqali ish asinxron bo'ladi — natija darhol tayyor bo'lmaydi." },
+        { "id": "c", "text": "DB'ni almashtirish", "hint": "Navbat — tranzit, saqlash joyi emas." },
+        { "id": "d", "text": "Faqat loglarni yig'ish uchun", "hint": "Loglar — bitta qo'llanish; umumiy maqsad kengroq." }
+      ],
+      "explanation": "Misol: buyurtma yaratildi → \"OrderCreated\" navbatga → email servisi, ombor servisi, analitika mustaqil o'qiydi. Email serveri yotsa, buyurtma yaratish to'xtamaydi. Narx: eventual consistency, takroriy xabarlar (idempotentlik kerak), kuzatish murakkabligi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sysdesign.006",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "CDN (Content Delivery Network) nima uchun kerak?",
+      "options": [
+        { "id": "a", "text": "Statik kontentni (rasm, JS, video) foydalanuvchiga geografik yaqin edge serverlarda cache qilib, latency va asosiy server yukini kamaytirish", "correct": true },
+        { "id": "b", "text": "DB so'rovlarini taqsimlash", "hint": "CDN DB bilan ishlamaydi." },
+        { "id": "c", "text": "Serverlar orasida load balancing", "hint": "Load balancer — alohida komponent; CDN kontentni foydalanuvchiga yaqinlashtiradi." },
+        { "id": "d", "text": "Kodni kompilyatsiya qilish", "hint": "Build bilan aloqasi yo'q." }
+      ],
+      "explanation": "Toshkentdagi foydalanuvchi Frankfurt'dagi serverdan rasm olishi ~50–100 ms; CDN edge yaqinroq. Qo'shimcha: DDoS himoyasi, TLS termination, dinamik kontent uchun ham edge caching. Cache busting — fayl nomida hash (`app.a1b2c3.js`).",
+      "reviewed": false
+    },
+    {
+      "id": "core.sysdesign.007",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Latency va throughput tushunchalari qanday farqlanadi?",
+      "options": [
+        { "id": "a", "text": "Latency — bitta so'rovning boshidan javobigacha vaqt; throughput — vaqt birligida bajariladigan so'rovlar soni. Ular mustaqil: tizim yuqori throughput'da ham yuqori latency'ga ega bo'lishi mumkin", "correct": true },
+        { "id": "b", "text": "Bir xil narsa", "hint": "Biri vaqt (ms), ikkinchisi tezlik (req/s)." },
+        { "id": "c", "text": "Latency — so'rovlar soni; throughput — javob vaqti", "hint": "Teskari." },
+        { "id": "d", "text": "Throughput oshsa, latency doim kamayadi", "hint": "Batching throughput'ni oshiradi, lekin har so'rov kutadi — latency oshadi." }
+      ],
+      "explanation": "Latency uchun o'rtacha emas, percentile (p50, p95, p99) qaraladi — p99 \"100 so'rovdan eng sekini\". Throughput chegarasi — bottleneck (CPU, DB ulanishlar). Dizaynda ikkalasiga alohida maqsad qo'yiladi (SLO).",
+      "reviewed": false
+    },
+    {
+      "id": "core.sysdesign.008",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Nima uchun API javoblarida pagination ishlatiladi?",
+      "options": [
+        { "id": "a", "text": "Katta ro'yxatni qismlarga bo'lib qaytarish — javob hajmi, DB yuki va latency cheklanadi, klient kerak bo'lganda keyingisini so'raydi", "correct": true },
+        { "id": "b", "text": "Ma'lumotni shifrlash uchun", "hint": "Xavfsizlik bilan aloqasi yo'q." },
+        { "id": "c", "text": "Faqat UI chiroyli ko'rinishi uchun", "hint": "UI — oqibat; asosiy sabab resurs cheklovi." },
+        { "id": "d", "text": "DB indekslarini yaratish uchun", "hint": "Indeks — alohida mexanizm." }
+      ],
+      "explanation": "Offset (`?page=5&size=20`) — sodda, lekin katta offset'da sekin va yangi qator qo'shilsa siljiydi. Cursor/keyset (`?after=<last_id>`) — barqaror va tez, lekin \"5-sahifaga sakrash\" yo'q. Infinite scroll uchun cursor afzal.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sysdesign.009",
+      "level": "middle",
+      "type": "multi",
+      "kind": "concept",
+      "prompt": "Qaysilar tizimda yagona nuqsun nuqtasi (single point of failure) bo'lishi mumkin? (bir nechta javob)",
+      "options": [
+        { "id": "a", "text": "Bitta instansiyadagi DB", "correct": true },
+        { "id": "b", "text": "Bitta load balancer", "correct": true },
+        { "id": "c", "text": "Replikalari bo'lgan stateless servis", "hint": "Bir instansiya yiqilsa, boshqalari davom etadi — bu aynan SPOF'dan qochish usuli." },
+        { "id": "d", "text": "Bitta DNS provayder", "correct": true }
+      ],
+      "explanation": "SPOF tahlili: \"shu komponent o'lsa, tizim ishlaydimi?\" Yechim — redundancy: DB replica + failover, LB juftligi, ko'p DNS provayder, ko'p availability zone. Har qo'shimcha nusxa — narx; tanlov biznes talabiga (SLA) qarab.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sysdesign.010",
+      "level": "middle",
+      "type": "single",
+      "kind": "true_false",
+      "prompt": "Quyidagi fikr to'g'rimi?\n\nCache qo'shilsa, DB'dagi ma'lumot o'zgarganda cache'dagi nusxa avtomatik yangilanadi.",
+      "options": [
+        { "id": "a", "text": "Ha", "hint": "Cache va DB alohida tizimlar — ularni sinxron saqlash dasturchi zimmasida." },
+        { "id": "b", "text": "Yo'q", "correct": true }
+      ],
+      "explanation": "Cache invalidatsiya — \"informatikadagi ikki qiyin masaladan biri\". Strategiyalar: TTL (muddat), yozishda o'chirish (write-invalidate), yozishda yangilash (write-through). Har birida eskirish oynasi yoki murakkablik bor.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sysdesign.011",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Cache-aside va write-through strategiyalari qanday farqlanadi?",
+      "options": [
+        { "id": "a", "text": "Cache-aside — ilova avval cache'ga qaraydi, yo'q bo'lsa DB'dan o'qib cache'ga yozadi (lazy); write-through — har yozish cache va DB'ga birga boradi, cache doim yangi, lekin yozish sekinroq", "correct": true },
+        { "id": "b", "text": "Cache-aside yozishda, write-through o'qishda ishlaydi", "hint": "Cache-aside aynan o'qish yo'li haqida." },
+        { "id": "c", "text": "Bir xil narsa", "hint": "Biri o'qishda to'ldiradi, ikkinchisi yozishda." },
+        { "id": "d", "text": "Write-through cache'ga umuman yozmaydi", "hint": "Nomidan ko'rinib turibdi — yozish cache orqali o'tadi." }
+      ],
+      "explanation": "Cache-aside: oddiy, faqat so'ralgan ma'lumot cache'da, lekin birinchi so'rov sekin (cache miss) va DB o'zgarganda invalidatsiya kerak. Write-through: o'qish doim tez, lekin hech o'qilmaydigan ma'lumot ham cache'da. Write-behind — cache'ga yozib, DB'ga keyinroq (yo'qotish xavfi).",
+      "reviewed": false
+    },
+    {
+      "id": "core.sysdesign.012",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Cache stampede (thundering herd) nima va qanday oldini olinadi?",
+      "options": [
+        { "id": "a", "text": "Mashhur kalit muddati tugaganda minglab so'rov bir vaqtda DB'ga yopiriladi; yechim — qulflash (bitta so'rov to'ldiradi, qolgani kutadi), muddatni tasodifiy siljitish (jitter), oldindan yangilash (refresh-ahead)", "correct": true },
+        { "id": "b", "text": "Cache xotirasi to'lib ketishi", "hint": "To'lish — eviction siyosati (LRU) hal qiladi; stampede — bir vaqtda miss." },
+        { "id": "c", "text": "Cache serveri yiqilishi", "hint": "Yiqilish — availability masalasi; stampede sog'lom cache'da ham bo'ladi." },
+        { "id": "d", "text": "Noto'g'ri kalitlar bilan so'rov", "hint": "Bu alohida muammo (cache penetration), bo'sh qiymatni cache'lash bilan hal qilinadi." }
+      ],
+      "explanation": "Bosh sahifa ma'lumoti TTL=60s, 10 000 req/s: muddat tugagan soniyada 10 000 so'rov DB'ga — DB yiqiladi, cache to'ldirilmaydi, zanjir. Yechimlar birga ishlatiladi: mutex + jitter + stale-while-revalidate (eskisini qaytarib, fonda yangilash).",
+      "reviewed": false
+    },
+    {
+      "id": "core.sysdesign.013",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "DB replikatsiyasi (primary-replica) qanday muammoni hal qiladi va qanday yangi muammo keltiradi?",
+      "options": [
+        { "id": "a", "text": "Hal qiladi — o'qish yukini replikalarga taqsimlash va primary yiqilsa failover; keltiradi — replication lag: yozilgan ma'lumot replikada bir muddat ko'rinmasligi (read-your-writes buzilishi)", "correct": true },
+        { "id": "b", "text": "Yozish throughput'ini oshiradi", "hint": "Yozish hali ham bitta primary'ga boradi; yozishni masshtablash — sharding." },
+        { "id": "c", "text": "Ma'lumotni shifrlaydi", "hint": "Xavfsizlik bilan aloqasi yo'q." },
+        { "id": "d", "text": "Hech qanday yangi muammo keltirmaydi", "hint": "Asinxron replikatsiyada doim kechikish bor." }
+      ],
+      "explanation": "Foydalanuvchi profilini yangilaydi (primary), sahifani qayta yuklaydi (replica) — eski ism ko'rinadi. Yechimlar: yozgandan keyin qisqa vaqt primary'dan o'qish, sinxron replikatsiya (sekinroq), versiya/timestamp bilan tekshirish. Failover avtomatlashtirilsa, split-brain xavfi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sysdesign.014",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Rate limiter nima uchun kerak va token bucket algoritmi qanday ishlaydi?",
+      "options": [
+        { "id": "a", "text": "Klientni so'rov chegarasidan oshirmaslik (suiiste'mol, adolatli taqsimot, himoya). Token bucket: idishga doimiy tezlikda token qo'shiladi (sig'imgacha), har so'rov token oladi, token yo'q — rad (429); qisqa portlashlarga ruxsat beradi", "correct": true },
+        { "id": "b", "text": "Serverni tezlashtirish uchun; algoritm so'rovlarni cache'laydi", "hint": "Rate limiter cheklaydi, tezlashtirmaydi." },
+        { "id": "c", "text": "Faqat DDoS uchun; algoritm IP'ni bloklaydi", "hint": "DDoS — bitta holat; API kvotalari ham. IP bloklash — alohida vosita." },
+        { "id": "d", "text": "DB ulanishlarini cheklash uchun", "hint": "Bu connection pool vazifasi." }
+      ],
+      "explanation": "Boshqa algoritmlar: fixed window (sodda, chegarada 2x portlash), sliding window log/counter (aniqroq, qimmatroq), leaky bucket (tekis chiqish). Taqsimlangan tizimda hisoblagich Redis'da (atomik INCR + TTL yoki Lua skript). Javobda `Retry-After` va `X-RateLimit-*` header'lar.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sysdesign.015",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "URL shortener dizaynida qisqa kod qanday generatsiya qilinadi va kolliziya qanday hal qilinadi?",
+      "options": [
+        { "id": "a", "text": "Variantlar: global counter/ID generator → base62 (kolliziyasiz, lekin ketma-ketlik oshkor); yoki hash (MD5/SHA) ning birinchi 7 belgisi + kolliziyada qayta urinish/suffiks. 62^7 ≈ 3.5 trillion kombinatsiya yetarli", "correct": true },
+        { "id": "b", "text": "Uzun URL'ni to'g'ridan-to'g'ri base64 qilish", "hint": "Natija asl URL'dan uzunroq bo'ladi — maqsadga zid." },
+        { "id": "c", "text": "Tasodifiy UUID (36 belgi)", "hint": "36 belgi — qisqa emas." },
+        { "id": "d", "text": "URL'ni DB'da auto-increment ID bilan saqlab, ID'ni o'nlik ko'rsatish", "hint": "Yaqin, lekin o'nlik raqam uzun; base62 kodlash qisqartiradi. Yana ketma-ketlik taxmin qilinadi." }
+      ],
+      "explanation": "Klassik suhbat masalasi. Qo'shimcha: o'qish yozishdan 100:1 — cache (Redis) muhim; redirect 301 (brauzer cache, analitika yo'qoladi) vs 302 (har safar server, hisob mumkin); taqsimlangan ID — Snowflake yoki oldindan ajratilgan diapazonlar; eskirish (TTL) va suiiste'mol tekshiruvi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sysdesign.016",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Real-time chat tizimida xabarlarni yetkazish uchun qaysi transport va nima uchun?",
+      "options": [
+        { "id": "a", "text": "WebSocket (yoki shunga o'xshash doimiy ulanish) — server xabarni darhol push qiladi; HTTP polling kechikish va ortiqcha yuk beradi. Ulanishlar gateway qatlamida, foydalanuvchi→server mapping Redis'da, xabarlar message broker orqali", "correct": true },
+        { "id": "b", "text": "Har 5 soniyada HTTP polling", "hint": "5 s kechikish chat uchun yomon; millionlab foydalanuvchida bo'sh so'rovlar yuki katta." },
+        { "id": "c", "text": "Email orqali", "hint": "Soniyalar/minutlar kechikish." },
+        { "id": "d", "text": "Har xabar uchun yangi TCP ulanish", "hint": "Handshake narxi va latency har xabarda takrorlanadi." }
+      ],
+      "explanation": "Oqim: A yuboradi → gateway-1 → broker → B ulangan gateway-2 → push. Offline bo'lsa — DB'da saqlash + push notification. Tartib (per-chat sequence), yetkazilganlik (sent/delivered/read), idempotentlik (client message id), fan-out guruhlar uchun. 1:1 va katta guruh dizayni farq qiladi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sysdesign.017",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Ijtimoiy tarmoq feed'ini yaratishda fan-out on write va fan-out on read qanday farqlanadi?",
+      "options": [
+        { "id": "a", "text": "On write — post yaratilganda har obunachining feed cache'iga yoziladi (o'qish tez, yozish qimmat, mashhur foydalanuvchida portlash); on read — feed so'ralganda obunalar postlari yig'iladi (yozish arzon, o'qish sekin). Gibrid: oddiylar uchun on write, mashhurlar uchun on read", "correct": true },
+        { "id": "b", "text": "On write — o'qishda yig'ish; on read — yozishda tarqatish", "hint": "Teskari." },
+        { "id": "c", "text": "Faqat on write to'g'ri yondashuv", "hint": "100 million obunachili akkaunt uchun bir post = 100 million yozish." },
+        { "id": "d", "text": "Ikkalasi bir xil natija beradi, farq yo'q", "hint": "Latency va yozish yuki jiddiy farq qiladi." }
+      ],
+      "explanation": "Twitter/X klassik yondashuv: push model ko'pchilik uchun, mashhurlar (celebrity problem) uchun pull va o'qishda birlashtirish. Feed cache — Redis list/sorted set, oxirgi N post. Ranking (ML) qo'shilsa — oldindan hisoblangan nomzodlar + real-time skoring.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sysdesign.018",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Strong consistency va eventual consistency qanday farqlanadi?",
+      "options": [
+        { "id": "a", "text": "Strong — yozish tasdiqlangandan keyin har qanday o'qish yangi qiymatni ko'radi; eventual — bir muddat eski qiymat ko'rinishi mumkin, oxir-oqibat barcha nusxalar bir xil bo'ladi. Strong — kechikish/availability narxi, eventual — mantiq murakkabligi", "correct": true },
+        { "id": "b", "text": "Strong — ma'lumot hech qachon o'zgarmaydi", "hint": "Consistency o'zgarmaslik haqida emas, nusxalar mosligi haqida." },
+        { "id": "c", "text": "Eventual — ma'lumot oxir-oqibat yo'qoladi", "hint": "Yo'qolish emas, sinxronlashish." },
+        { "id": "d", "text": "Bir xil narsa, turli nom", "hint": "Bank balansi va \"like\" soni uchun talab turlicha — farq amaliy." }
+      ],
+      "explanation": "Bank o'tkazmasi — strong (ikki marta yechilmasin). Like soni, feed, ko'rishlar — eventual yetarli. Taqsimlangan DB'lar ko'pincha tanlov beradi (quorum read/write, `consistency level`). Oraliq modellar: read-your-writes, monotonic reads, causal consistency.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sysdesign.019",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "CAP teoremasi amalda nimani anglatadi?",
+      "options": [
+        { "id": "a", "text": "Tarmoq bo'linishi (partition) sodir bo'lganda tizim consistency yoki availability'dan birini qurbon qilishga majbur; partition'dan qochib bo'lmaydi, shu sabab haqiqiy tanlov CP yoki AP xatti-harakati — va bu butun tizim emas, har operatsiya darajasida qaror", "correct": true },
+        { "id": "b", "text": "Uchtadan istalgan ikkitasini tanlash mumkin, jumladan CA", "hint": "Taqsimlangan tizimda partition baribir bo'ladi — \"CA\" real emas." },
+        { "id": "c", "text": "Consistency doim availability'dan muhim", "hint": "Teorema ustuvorlik bermaydi; biznes talabi hal qiladi." },
+        { "id": "d", "text": "Teorema faqat NoSQL uchun", "hint": "Har qanday taqsimlangan ma'lumot tizimiga tegishli, SQL klasterlari ham." }
+      ],
+      "explanation": "Partition vaqtida: CP — javob bermaslik/xato (bank), AP — eski ma'lumot bilan javob (savat, feed). Normal holatda esa latency vs consistency muvozanati (PACELC). Suhbatda \"bu tizim CP yoki AP?\" o'rniga \"qaysi operatsiya qanday\" deyish kuchli javob.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sysdesign.020",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Idempotent API nima va u taqsimlangan tizimda nima uchun muhim?",
+      "options": [
+        { "id": "a", "text": "Bir xil so'rovni bir necha marta bajarish bitta bajarish bilan bir xil natija beradi; tarmoq xatosida klient xavfsiz qayta urinishi va navbat xabari takrorlansa ikki marta ishlov berilmasligi uchun — idempotency key bilan amalga oshiriladi", "correct": true },
+        { "id": "b", "text": "API har doim bir xil javob qaytaradi", "hint": "Javob emas, holatga ta'sir bir xil bo'lishi kerak." },
+        { "id": "c", "text": "API faqat GET so'rovlardan iborat", "hint": "GET tabiatan idempotent, lekin POST'ni ham idempotent qilish mumkin." },
+        { "id": "d", "text": "API hech qachon xato qaytarmaydi", "hint": "Xato qaytarish idempotentlikka zid emas." }
+      ],
+      "explanation": "To'lov: klient `POST /payments` yuboradi, timeout — to'lov o'tdimi? Qayta yuborsa ikki marta yechiladimi? `Idempotency-Key: <uuid>` header: server kalitni saqlaydi, takror kelsa oldingi javobni qaytaradi. Navbat iste'molchilarida ham: xabar ID bo'yicha \"ko'rilgan\" jadvali. At-least-once + idempotentlik = amaliy exactly-once.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sysdesign.021",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Timeout, retry va circuit breaker qanday birga ishlaydi?",
+      "options": [
+        { "id": "a", "text": "Timeout — sekin servisni cheksiz kutmaslik; retry (exponential backoff + jitter bilan) — vaqtinchalik xatoni yengish; circuit breaker — servis ketma-ket yiqilsa so'rovlarni to'xtatib, uning tiklanishiga imkon berish va kaskadli yiqilishni oldini olish", "correct": true },
+        { "id": "b", "text": "Retry darhol va cheksiz bo'lishi kerak", "hint": "Cheksiz darhol retry yiqilayotgan servisni butunlay bostiradi (retry storm)." },
+        { "id": "c", "text": "Circuit breaker — elektr himoyasi, dasturga aloqasi yo'q", "hint": "Metafora, lekin Hystrix/Resilience4j kabi kutubxonalar aynan shu patternni beradi." },
+        { "id": "d", "text": "Timeout kerak emas — servis javob berguncha kutish to'g'ri", "hint": "Osilib qolgan ulanishlar thread pool'ni to'ldiradi — chaqiruvchi ham yiqiladi." }
+      ],
+      "explanation": "Kaskad: C sekin → B thread'lari kutadi → B ham sekin → A yiqiladi. Circuit breaker holatlari: closed (normal) → open (xato chegarasi oshdi, darhol xato/fallback) → half-open (sinov so'rovi). Retry faqat idempotent operatsiyalarga. Bulkhead — har bog'liqlik uchun alohida pool.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sysdesign.022",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Consistent hashing taqsimlangan cache'da qanday muammoni hal qiladi?",
+      "options": [
+        { "id": "a", "text": "Oddiy `hash(key) % N` da server qo'shilsa/olib tashlansa deyarli barcha kalitlar ko'chadi; consistent hashing'da serverlar va kalitlar halqaga joylashadi — faqat qo'shni diapazon (~1/N kalit) ko'chadi", "correct": true },
+        { "id": "b", "text": "Hash kolliziyalarini yo'q qiladi", "hint": "Kolliziya haqida emas, qayta taqsimlash haqida." },
+        { "id": "c", "text": "Kalitlarni shifrlaydi", "hint": "Xavfsizlik bilan aloqasi yo'q." },
+        { "id": "d", "text": "Hamma kalitni bitta serverga yig'adi", "hint": "Aksincha — tekis taqsimlash." }
+      ],
+      "explanation": "10 serverdan 11 ga o'tganda `% N` ~90% cache miss beradi — DB'ga portlash. Halqa: kalit soat yo'nalishida birinchi serverga tushadi. Virtual node'lar (har server 100–200 nuqta) taqsimotni tekislaydi. Memcached klientlar, Cassandra, DynamoDB shu g'oyada.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sysdesign.023",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Tizim dizayn suhbatida hajmni baholash (back-of-the-envelope) nima uchun kerak?",
+      "options": [
+        { "id": "a", "text": "Yuk (QPS), saqlash (GB/TB), tarmoq (bandwidth) taxminlari qaysi komponentlar kerakligini belgilaydi — 100 QPS uchun bitta server yetadi, 100 000 QPS uchun sharding va cache; raqamsiz dizayn — taxmin", "correct": true },
+        { "id": "b", "text": "Suhbatchini matematika bilan hayratlantirish uchun", "hint": "Maqsad aniq hisob emas, tartib (order of magnitude) va qarorga ta'sir." },
+        { "id": "c", "text": "Kerak emas — doim eng kuchli infratuzilma tanlanadi", "hint": "Ortiqcha infratuzilma — narx va murakkablik; dizayn talabga mos bo'lishi kerak." },
+        { "id": "d", "text": "Faqat saqlash hajmini hisoblash uchun", "hint": "QPS va bandwidth ham muhim." }
+      ],
+      "explanation": "Namuna: 10M DAU, har biri 10 so'rov/kun → 100M/kun ≈ 1 200 QPS o'rtacha, cho'qqi ~3x = 3 600 QPS. Har yozuv 1 KB, 1M yozuv/kun → 1 GB/kun → 365 GB/yil. Bu raqamlar \"bitta PostgreSQL yetadi\" yoki \"sharding kerak\" degan qarorni asoslaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sysdesign.024",
+      "level": "strong_middle",
+      "type": "multi",
+      "kind": "concept",
+      "prompt": "Taqsimlangan tizimda unikal ID generatsiyasi uchun qaysi yondashuvlar ishlaydi? (bir nechta javob)",
+      "options": [
+        { "id": "a", "text": "Snowflake uslubi: timestamp + machine id + sequence — vaqt bo'yicha saralanadigan 64-bit ID", "correct": true },
+        { "id": "b", "text": "UUID v4 — koordinatsiyasiz, lekin 128 bit va tartibsiz (indeks fragmentatsiyasi)", "correct": true },
+        { "id": "c", "text": "Har servisga DB'dan oldindan ajratilgan ID diapazonlari (range allocation)", "correct": true },
+        { "id": "d", "text": "Bitta DB'ning auto-increment'ini barcha shard'lar uchun ishlatish", "hint": "Bu yagona nuqsun nuqtasi va bottleneck — taqsimlangan dizaynga zid." }
+      ],
+      "explanation": "Tanlov mezonlari: koordinatsiya kerakmi, saralanadimi, hajmi, oshkor qiladimi (ketma-ket ID — hajm va tezlikni fosh qiladi). UUID v7 / ULID — vaqt bo'yicha saralanadigan UUID, zamonaviy murosa. Snowflake'da soat orqaga ketsa (clock skew) — maxsus ishlov kerak.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sysdesign.025",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Search funksiyasi uchun nima uchun relyatsion DB `LIKE '%so'z%'` o'rniga alohida search engine (Elasticsearch) ishlatiladi?",
+      "options": [
+        { "id": "a", "text": "`LIKE '%...%'` indeksdan foydalana olmaydi (full scan); search engine inverted index, tokenizatsiya, relevance ranking, fuzzy/typo tolerance, facet'lar beradi — lekin alohida tizim: sinxronizatsiya va eventual consistency narxi", "correct": true },
+        { "id": "b", "text": "Relyatsion DB matn saqlay olmaydi", "hint": "Saqlaydi; muammo qidirish samaradorligida." },
+        { "id": "c", "text": "Elasticsearch barcha DB'ni almashtiradi", "hint": "Search engine haqiqat manbai sifatida mos emas (tranzaksiya, konsistentlik)." },
+        { "id": "d", "text": "Farq yo'q, ikkalasi bir xil tez", "hint": "Million qatorda `LIKE` soniyalar, inverted index — millisekundlar." }
+      ],
+      "explanation": "Oraliq variant: PostgreSQL full-text search (`tsvector`, GIN indeks) — kichik/o'rta hajm uchun alohida tizimsiz yetadi. Elasticsearch'ga ma'lumot CDC (Debezium) yoki event orqali oqadi; indeks orqada qolishi mumkin — UI bunga tayyor bo'lishi kerak.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sysdesign.026",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "true_false",
+      "prompt": "Quyidagi fikr to'g'rimi?\n\nMikroservislarga o'tish har qanday loyihada masshtab va ishlab chiqish tezligini oshiradi.",
+      "options": [
+        { "id": "a", "text": "Ha", "hint": "Tarmoq chaqiruvlari, taqsimlangan tranzaksiya, deploy va kuzatish murakkabligi — kichik jamoada bu foydadan ko'p." },
+        { "id": "b", "text": "Yo'q", "correct": true }
+      ],
+      "explanation": "Mikroservislar tashkiliy masshtab muammosini hal qiladi: ko'p jamoa mustaqil deploy qilishi. 5 kishilik jamoada modulli monolit tezroq va ishonchliroq. Oldindan kerak bo'lgan narsalar: CI/CD, observability, kontrakt testlar, DevOps madaniyati. \"Monolith first\" — keng tarqalgan maslahat.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sysdesign.027",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "DB sharding'da shard key tanlashda qaysi omillar hal qiluvchi?",
+      "options": [
+        { "id": "a", "text": "Yuk va ma'lumotning tekis taqsimlanishi (hot shard'dan qochish), eng ko'p so'rovlar bitta shard'ga tushishi (cross-shard so'rov va join'lardan qochish), kalitning o'zgarmasligi; keyin o'zgartirish juda qimmat", "correct": true },
+        { "id": "b", "text": "Faqat alifbo tartibida bo'lishi", "hint": "Alifbo/diapazon bo'yicha sharding ko'pincha hot spot beradi (barcha yangi yozuvlar oxirgi shard'da)." },
+        { "id": "c", "text": "Eng qisqa ustun bo'lishi", "hint": "Uzunlik ahamiyatsiz; taqsimot va so'rov shakli muhim." },
+        { "id": "d", "text": "Shard key tanlash muhim emas, keyin o'zgartirish oson", "hint": "Resharding — ma'lumotni ko'chirish, ikki tomonlama yozish, oylab ish." }
+      ],
+      "explanation": "`user_id` bo'yicha: foydalanuvchi ma'lumotlari bir joyda — profil so'rovlari tez, lekin \"barcha foydalanuvchilar bo'yicha hisobot\" scatter-gather. `created_at` bo'yicha — yozish hot spot. Hash(user_id) — tekis, lekin diapazon so'rovi yo'q. Celebrity user — bitta shard'ni yuklaydi, alohida ishlov kerak.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sysdesign.028",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Partitioning (bir DB ichida) va sharding (ko'p DB server) qanday farqlanadi va qachon biri yetarli?",
+      "options": [
+        { "id": "a", "text": "Partitioning — bitta serverda jadvalni mantiqiy bo'laklarga ajratish (so'rov va saqlash boshqaruvi osonlashadi, lekin bitta server resursi); sharding — bo'laklar turli serverlarda (yozish va hajm masshtablanadi, lekin ilova darajasida murakkablik). Bitta server sig'imi yetsa — partitioning yetarli", "correct": true },
+        { "id": "b", "text": "Bir xil narsa", "hint": "Biri bitta server ichida, ikkinchisi serverlar orasida." },
+        { "id": "c", "text": "Partitioning faqat NoSQL'da", "hint": "PostgreSQL, MySQL — native partitioning bor." },
+        { "id": "d", "text": "Sharding doim birinchi qadam bo'lishi kerak", "hint": "Sharding — oxirgi chora; avval indeks, cache, replica, partitioning, vertikal." }
+      ],
+      "explanation": "Masshtab tartibi: so'rov optimizatsiyasi → indeks → cache → read replica → vertikal → partitioning → sharding. Partitioning misoli: `events` jadvali oy bo'yicha — eski bo'lakni `DROP` qilish soniyalar. Sharding'dan oldin boshqariladigan yechimlar (Vitess, Citus, CockroachDB) ko'rib chiqiladi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sysdesign.029",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Event-driven arxitekturaning asosiy afzalliklari va xavflari nimada?",
+      "options": [
+        { "id": "a", "text": "Afzallik — servislar vaqt va joy bo'yicha ajratilgan (loose coupling), yangi iste'molchi qo'shish oson, portlashlarga bardoshli; xavf — oqimni kuzatish qiyin, eventual consistency, event sxemasi evolyutsiyasi, takroriy/tartibsiz xabarlar", "correct": true },
+        { "id": "b", "text": "Afzallik — kuchli konsistentlik; xavf — yo'q", "hint": "Event'lar asinxron — konsistentlik aksincha zaiflashadi." },
+        { "id": "c", "text": "Faqat UI hodisalari uchun qo'llaniladi", "hint": "Servislar orasidagi arxitektura uslubi haqida." },
+        { "id": "d", "text": "Request-response'ni butunlay almashtirishi kerak", "hint": "Sinxron javob kerak joylarda (login, to'lov tasdiqi) request-response qoladi; aralash tizim odatiy." }
+      ],
+      "explanation": "Event notification (\"nima bo'ldi\") vs event-carried state transfer (ma'lumot ham ichida) vs event sourcing (event'lar — haqiqat manbai). Schema registry (Avro/Protobuf) bilan moslik, correlation id bilan trassalash, dead letter queue bilan xato ishlov — majburiy infratuzilma.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sysdesign.030",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Saga pattern taqsimlangan tranzaksiyani qanday hal qiladi?",
+      "options": [
+        { "id": "a", "text": "Uzun tranzaksiyani har servisdagi lokal tranzaksiyalar ketma-ketligiga bo'ladi; biri yiqilsa, oldingilarini bekor qiluvchi kompensatsiya amallari bajariladi. Orkestratsiya (markaziy koordinator) yoki xoreografiya (event'lar orqali) ko'rinishida", "correct": true },
+        { "id": "b", "text": "Barcha servislar uchun bitta global DB tranzaksiyasi (2PC) ochadi", "hint": "2PC — bloklovchi, koordinator SPOF; Saga aynan 2PC'dan qochish uchun." },
+        { "id": "c", "text": "Xatoni e'tiborsiz qoldiradi", "hint": "Kompensatsiya — Saga'ning yadrosi." },
+        { "id": "d", "text": "Tranzaksiyani bitta servisga ko'chiradi", "hint": "Ba'zan to'g'ri yechim (chegaralarni qayta ko'rish), lekin bu Saga emas." }
+      ],
+      "explanation": "Buyurtma: zaxira → to'lov → yetkazish. To'lov yiqilsa — zaxirani bekor qilish (kompensatsiya). Kompensatsiya — \"undo\" emas, yangi biznes amal (pul qaytarish). Idempotentlik va qayta urinish majburiy. Orkestratsiya — kuzatish oson, koordinator murakkab; xoreografiya — ajratilgan, oqimni ko'rish qiyin.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sysdesign.031",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Transactional outbox pattern qanday muammoni hal qiladi?",
+      "options": [
+        { "id": "a", "text": "\"DB'ga yozish va event yuborish\" ikki alohida tizimga atomik bo'lmaydi (dual write) — biri o'tib, ikkinchisi yiqilishi mumkin. Outbox: event DB'dagi `outbox` jadvaliga bitta tranzaksiyada yoziladi, alohida relay (yoki CDC) uni broker'ga yetkazadi", "correct": true },
+        { "id": "b", "text": "Chiquvchi emaillarni navbatga qo'yish", "hint": "Nom o'xshash, lekin bu umumiy atomiklik masalasi." },
+        { "id": "c", "text": "Broker'ni DB bilan almashtirish", "hint": "Broker qoladi; DB vaqtinchalik ishonchli bufer." },
+        { "id": "d", "text": "Event'larni shifrlash", "hint": "Xavfsizlik bilan aloqasi yo'q." }
+      ],
+      "explanation": "Dual write muammosi: `INSERT order` o'tdi, `kafka.send()` tarmoq xatosi — ombor hech qachon bilmaydi. Outbox: ikkalasi bitta ACID tranzaksiyada. Relay at-least-once yetkazadi — iste'molchi idempotent bo'lishi kerak. Debezium outbox jadvalini CDC bilan o'qiydi — polling kerak emas.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sysdesign.032",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Ko'p regionli (multi-region) tizim dizaynida eng qiyin masala nima?",
+      "options": [
+        { "id": "a", "text": "Ma'lumot konsistentligi: regionlar orasida 100+ ms latency bilan sinxron yozish sekin, asinxron esa konflikt beradi. Yechimlar: active-passive (bir region yozadi), region bo'yicha ma'lumot egaligi (user home region), yoki konflikt yechuvchi (CRDT, last-write-wins) bilan active-active", "correct": true },
+        { "id": "b", "text": "Serverlarni turli joyga o'rnatish", "hint": "Bu infratuzilma; bulut provayderda bir tugma. Qiyinlik ma'lumotda." },
+        { "id": "c", "text": "Vaqt zonalarini ko'rsatish", "hint": "UI darajasidagi masala, arxitektura emas." },
+        { "id": "d", "text": "Qiyin masala yo'q — replikatsiya hammasini hal qiladi", "hint": "Ikki region bir qatorni bir vaqtda o'zgartirsa, replikatsiya qaysisini oladi?" }
+      ],
+      "explanation": "Sabablar: kam latency (foydalanuvchiga yaqin), region yiqilishiga bardosh, ma'lumot lokalizatsiya qonunlari. Active-active'da hatto DNS/trafik yo'naltirish, sessiya, cache koherentligi ham murakkab. Ko'p kompaniya: read — hamma regionda, write — bitta (yoki tenant bo'yicha) regionda.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sysdesign.033",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Observability'ning uch ustuni nima va ular nimaga javob beradi?",
+      "options": [
+        { "id": "a", "text": "Metrics (agregat raqamlar — \"nima bo'lyapti?\", alert uchun), logs (hodisa tafsiloti — \"nima bo'ldi?\"), traces (so'rovning servislar bo'ylab yo'li — \"qayerda sekin?\"); ularni correlation/trace id bog'laydi", "correct": true },
+        { "id": "b", "text": "CPU, RAM, disk", "hint": "Bu infratuzilma metrikalarining bir qismi, uch ustun emas." },
+        { "id": "c", "text": "Unit, integration, E2E testlar", "hint": "Bu test piramidasi." },
+        { "id": "d", "text": "Faqat loglar yetarli", "hint": "100 servisda so'rovning qaysi servisda sekinlashganini logdan topish — soatlab ish; trace buni soniyada ko'rsatadi." }
+      ],
+      "explanation": "Monitoring — ma'lum muammolarni kuzatish (dashboard, alert); observability — noma'lum muammoni tashqi signallardan tushunish. Vositalar: Prometheus/Grafana, ELK/Loki, Jaeger/Tempo, OpenTelemetry (yagona standart). Yuqori kardinallik (user_id bo'yicha metrika) — narx tuzog'i.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sysdesign.034",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "SLI, SLO va SLA qanday farqlanadi va dizaynga qanday ta'sir qiladi?",
+      "options": [
+        { "id": "a", "text": "SLI — o'lchanadigan ko'rsatkich (p99 latency, muvaffaqiyat %); SLO — ichki maqsad (99.9% so'rov < 300 ms); SLA — mijoz bilan shartnoma, buzilsa jarima. SLO dizayn qarorlarini belgilaydi: 99.99% uchun ko'p region, 99% uchun bitta server yetarli", "correct": true },
+        { "id": "b", "text": "Bir xil narsa, turli bo'limlar ishlatadi", "hint": "O'lchov, maqsad va shartnoma — uch daraja." },
+        { "id": "c", "text": "SLA — texnik, SLO — yuridik", "hint": "Teskari." },
+        { "id": "d", "text": "Dizaynga ta'sir qilmaydi — doim 100% maqsad", "hint": "100% imkonsiz va cheksiz qimmat; har 9 ~10x narx." }
+      ],
+      "explanation": "Error budget: 99.9% SLO = oyda ~43 daqiqa ruxsat etilgan downtime. Budjet qolsa — tez deploy, xavfli o'zgarish; tugasa — barqarorlik ishi. Bu mahsulot va ishonchlilik o'rtasidagi muvozanatni raqamga aylantiradi. SLO'siz \"tizim sekin\" — sub'ektiv bahs.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sysdesign.035",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "RAG (Retrieval-Augmented Generation) servisi dizaynida asosiy komponentlar va oqim qanday?",
+      "options": [
+        { "id": "a", "text": "Indekslash: hujjatlar → chunk'lar → embedding → vector DB. So'rov: savol → embedding → yaqin chunk'larni topish (top-k) → prompt'ga kontekst sifatida qo'shish → LLM javob. Qo'shimcha: reranking, metadata filtr, cache, baholash", "correct": true },
+        { "id": "b", "text": "LLM'ni kompaniya ma'lumotida qayta o'rgatish (fine-tune)", "hint": "Fine-tune — boshqa yondashuv: qimmat, ma'lumot yangilansa qayta o'rgatish kerak; RAG kontekstni runtime'da beradi." },
+        { "id": "c", "text": "Barcha hujjatlarni har so'rovda prompt'ga joylash", "hint": "Kontekst oynasi va narx chegarasi; million hujjat sig'maydi." },
+        { "id": "d", "text": "LLM'ga DB'ga to'g'ridan-to'g'ri kirish berish", "hint": "Xavfsizlik va aniqlik muammosi; RAG tanlangan kontekstni nazorat qiladi." }
+      ],
+      "explanation": "Qarorlar: chunk hajmi va overlap (kichik — aniq, katta — kontekst), embedding modeli, hybrid search (vector + BM25), top-k va reranker, prompt'da manba ko'rsatish (hallucination kamayadi). Hujjat yangilanishi — indeksni inkremental yangilash pipeline'i.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sysdesign.036",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Vector search uchun nima uchun oddiy DB indeksi yetmaydi va ANN indekslari qanday muroza qiladi?",
+      "options": [
+        { "id": "a", "text": "Yuqori o'lchamli (768–3072) vektorlar uchun B-tree ishlamaydi; aniq eng yaqin qo'shni qidirish — barcha vektorlarni skanerlash (O(n)). ANN (HNSW, IVF) aniqlikdan (recall ~95–99%) ozgina voz kechib, millisekundlarda qidiradi; xotira va indeks qurish vaqti — narx", "correct": true },
+        { "id": "b", "text": "Vektorlarni matn sifatida saqlab, `LIKE` bilan qidirish", "hint": "Vektor o'xshashligi (cosine/dot) — matn mosligi emas." },
+        { "id": "c", "text": "Hash indeks yetarli", "hint": "Hash aniq moslikni topadi, \"yaqin\"ni emas." },
+        { "id": "d", "text": "ANN 100% aniq natija beradi, hech qanday muroza yo'q", "hint": "\"Approximate\" nomida — recall va tezlik muvozanati parametrlarga bog'liq." }
+      ],
+      "explanation": "Tanlov: pgvector (PostgreSQL ichida, bitta tizim, o'rta hajm) vs maxsus vector DB (Pinecone, Qdrant, Milvus — milliardlab vektor, filtrlash, shard). HNSW — graf, tez qidirish, ko'p RAM; IVF — klaster, kamroq xotira, sekinroq. Metadata filtr + vector — pre/post-filtering muammosi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sysdesign.037",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "LLM'ga asoslangan servisda latency va xarajatni kamaytirish uchun qaysi usullar ishlaydi?",
+      "options": [
+        { "id": "a", "text": "Streaming (birinchi token tez), semantik cache (o'xshash savolga tayyor javob), kichik model oddiy so'rovlarga (routing), prompt qisqartirish va prompt caching, batch'lash offline ishlar uchun, chiqish uzunligini cheklash", "correct": true },
+        { "id": "b", "text": "Doim eng katta modelni ishlatish — sifat muhim", "hint": "Oddiy klassifikatsiya uchun katta model — 10–50x ortiqcha narx va latency." },
+        { "id": "c", "text": "Javobni to'liq generatsiya bo'lguncha kutish", "hint": "Foydalanuvchi 10 soniya bo'sh ekran ko'radi; streaming sezilgan latency'ni keskin kamaytiradi." },
+        { "id": "d", "text": "Har so'rovda butun suhbat tarixini to'liq yuborish", "hint": "Token narxi chiziqli o'sadi; tarixni qisqartirish/summarizatsiya kerak." }
+      ],
+      "explanation": "Metrikalar: TTFT (time to first token), tokens/s, so'rov narxi. Narx — token soniga bog'liq, shu sabab prompt engineering = xarajat engineering. Fallback: provayder yiqilsa boshqa model. Rate limit va kvota — provayder tomonida ham bor, navbat/backpressure kerak.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sysdesign.038",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Mikroservis chegaralarini qanday aniqlash kerak?",
+      "options": [
+        { "id": "a", "text": "Biznes imkoniyatlari va bounded context'lar bo'yicha — bir servis o'z ma'lumotiga egalik qiladi, o'zgarishlar ko'pincha bitta servis ichida qoladi, jamoa chegarasiga mos; texnik qatlam (\"DB servisi\", \"validatsiya servisi\") bo'yicha emas", "correct": true },
+        { "id": "b", "text": "Har DB jadvali — alohida servis", "hint": "Natija — har so'rov uchun o'nlab tarmoq chaqiruvi (distributed monolith)." },
+        { "id": "c", "text": "Har klass — alohida servis", "hint": "Nano-servislar — ortiqcha tarmoq va deploy yuki." },
+        { "id": "d", "text": "Dasturchilar soniga bo'lib", "hint": "Jamoa chegarasi muhim omil, lekin domen mantig'iga mos bo'lmasa — chatty servislar." }
+      ],
+      "explanation": "Belgi: ikki servis har o'zgarishda birga deploy qilinsa — chegara noto'g'ri, birlashtirish kerak. Ma'lumot egaligi: `Order` servisi `orders` jadvalining yagona yozuvchisi, boshqalar API/event orqali. Conway qonuni: arxitektura jamoa tuzilmasini aks ettiradi — ikkalasini birga loyihalash.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sysdesign.039",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "API gateway mikroservis arxitekturasida qanday rol o'ynaydi va qanday xavfi bor?",
+      "options": [
+        { "id": "a", "text": "Yagona kirish nuqtasi: autentifikatsiya, rate limiting, routing, TLS, so'rovlarni birlashtirish (aggregation), versiyalash. Xavf — biznes-mantiq gateway'ga ko'chib, u yangi monolit va bottleneck bo'lishi", "correct": true },
+        { "id": "b", "text": "Servislar orasidagi barcha ichki trafikni boshqaradi", "hint": "Ichki trafik — service mesh (Istio, Linkerd); gateway tashqi kirish uchun." },
+        { "id": "c", "text": "DB'ga kirishni ta'minlaydi", "hint": "DB bilan aloqasi yo'q." },
+        { "id": "d", "text": "Xavfi yo'q", "hint": "Gateway'da `if (client == mobile) ...` mantig'i ko'paysa — hamma jamoa bir faylga yozadi." }
+      ],
+      "explanation": "BFF (Backend for Frontend) — har klient turi (mobil, web) uchun alohida gateway: ekranga mos javob, kamroq chaqiruv. Gateway yiqilsa — hamma yiqiladi: redundant, stateless, tez. Kesishgan funksiyalarni (auth, retry, metrics) gateway/mesh'ga chiqarish servislarni soddalashtiradi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sysdesign.040",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Backpressure nima va u tizimda nima uchun kerak?",
+      "options": [
+        { "id": "a", "text": "Iste'molchi ishlab chiqaruvchiga \"sekinlash\" signalini berish mexanizmi — ishlab chiqaruvchi tezroq bo'lsa, cheklanmagan bufer xotirani to'ldirib tizimni yiqitadi; yechim: chegaralangan navbat, so'rovni rad etish (429/503), load shedding, pull-based oqim", "correct": true },
+        { "id": "b", "text": "Serverga bosimni oshirib tezlashtirish", "hint": "Aksincha — oqimni cheklash." },
+        { "id": "c", "text": "DB zaxira nusxasi", "hint": "Backup bilan aloqasi yo'q." },
+        { "id": "d", "text": "Kerak emas — bufer cheksiz bo'lishi kerak", "hint": "Cheksiz bufer = kechiktirilgan OOM; tizim \"ishlayapti\", lekin kechikish daqiqalarga o'sadi." }
+      ],
+      "explanation": "Misol: Kafka iste'molchisi sekin — lag o'sadi, lekin broker diski bufer (bu ham chegarali). HTTP: thread pool to'lsa, navbatda kutish o'rniga tez 503 — klient retry/degrade qiladi. Reactive Streams, Kotlin Flow — til darajasida backpressure. Graceful degradation > to'liq yiqilish.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sysdesign.041",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Yuqori yuklanishli tizimda hot key (bitta kalitga haddan tashqari so'rov) muammosi qanday hal qilinadi?",
+      "options": [
+        { "id": "a", "text": "Kalitni nusxalash (key replication: `key#1..N`, tasodifiy tanlash), lokal in-process cache (eng tez qatlam), so'rovlarni birlashtirish (request coalescing), yozish uchun hisoblagichni bo'lib keyin yig'ish (sharded counter)", "correct": true },
+        { "id": "b", "text": "Cache'ni o'chirish", "hint": "Bu DB'ga yukni ko'chiradi — yomonroq." },
+        { "id": "c", "text": "Kattaroq Redis server", "hint": "Bitta kalit bitta node'da — vertikal chegara tez tugaydi." },
+        { "id": "d", "text": "Hot key muammosi real emas, taqsimlangan cache uni o'zi hal qiladi", "hint": "Consistent hashing kalitlarni taqsimlaydi, lekin bitta kalit baribir bitta node'da." }
+      ],
+      "explanation": "Misol: mashhur post, flash sale mahsuloti, global konfiguratsiya. Aniqlash — kalit bo'yicha so'rov metrikasi (sampling). Yozish hot key (like soni): 100 ta sub-counter, o'qishda yig'ish; yoki agregatsiyani navbatda batch qilish. Lokal cache — bir necha soniya staleness evaziga 100x yengillik.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sysdesign.042",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Blue-green va canary deploy strategiyalari qanday farqlanadi?",
+      "options": [
+        { "id": "a", "text": "Blue-green — ikki to'liq muhit, trafik bir vaqtda to'liq almashtiriladi (tez rollback, 2x resurs); canary — yangi versiya kichik foiz trafikka, metrikalar kuzatiladi, bosqichma-bosqich oshiriladi (xavf cheklangan, lekin ikki versiya birga ishlaydi — moslik kerak)", "correct": true },
+        { "id": "b", "text": "Bir xil narsa", "hint": "Biri to'liq almashtirish, ikkinchisi bosqichli." },
+        { "id": "c", "text": "Canary — rangli tema, blue-green — deploy", "hint": "Canary — \"kanareyka\" metaforasi: xavfni erta sezish." },
+        { "id": "d", "text": "Blue-green'da rollback mumkin emas", "hint": "Aksincha — eski muhit tayyor turadi, rollback bir tugma." }
+      ],
+      "explanation": "Ikkalasida ham: DB migratsiyasi ikki versiya bilan mos bo'lishi kerak (expand-contract: avval ustun qo'sh, keyin kodni o'zgartir, keyin eskisini olib tashla). Feature flag — deploy'dan mustaqil release. Kubernetes'da rolling update default; canary — Argo Rollouts/Flagger bilan avtomatlashtiriladi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sysdesign.043",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Taqsimlangan tizimda \"exactly-once\" yetkazish haqida nimani bilish kerak?",
+      "options": [
+        { "id": "a", "text": "Tarmoq darajasida exactly-once imkonsiz (xabar yetdi, tasdiq yo'qoldi — qayta yuborish yoki yo'qotish); amaliy yechim at-least-once yetkazish + idempotent ishlov (dedup kalit, tranzaksion ofset) — \"effectively once\"", "correct": true },
+        { "id": "b", "text": "Kafka buni to'liq kafolatlaydi, dasturchi hech narsa qilmaydi", "hint": "Kafka tranzaksiyalari Kafka ichida ishlaydi; tashqi tizimga (DB, email) yozish baribir idempotentlik talab qiladi." },
+        { "id": "c", "text": "At-most-once eng xavfsiz variant", "hint": "At-most-once xabar yo'qotadi — to'lov uchun qabul qilib bo'lmaydi." },
+        { "id": "d", "text": "Retry'ni o'chirish exactly-once beradi", "hint": "Retry'siz — at-most-once, yo'qotish bilan." }
+      ],
+      "explanation": "Ikki general muammosi — fundamental cheklov. Amaliyot: xabar ID → \"processed\" jadvali (yoki unique constraint) bir tranzaksiyada biznes yozuv bilan. Ofset commit'ni ishlov tugagach qilish. Natija: takror kelsa — sezib tashlanadi. Dizaynda \"bu amal ikki marta bo'lsa nima?\" — har iste'molchi uchun savol.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sysdesign.044",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Fayl/rasm yuklash tizimida (masalan, 10 MB gacha rasmlar, millionlab foydalanuvchi) qanday dizayn qo'llaniladi?",
+      "options": [
+        { "id": "a", "text": "Klient faylni to'g'ridan-to'g'ri object storage'ga (S3) presigned URL bilan yuklaydi — ilova serveri orqali o'tmaydi; metadata DB'da; qayta ishlash (resize, thumbnail) asinxron (event → worker); yetkazish CDN orqali", "correct": true },
+        { "id": "b", "text": "Faylni DB'da BLOB sifatida saqlash", "hint": "DB hajmi va backup portlaydi, o'qish qimmat; DB — metadata uchun." },
+        { "id": "c", "text": "Ilova serveri faylni qabul qilib, o'z diskiga yozadi", "hint": "Server stateful bo'ladi, disk chegarali, masshtab yo'q." },
+        { "id": "d", "text": "Faylni Base64 qilib JSON API orqali yuborish", "hint": "+33% hajm, server xotirasida butun fayl, API server band." }
+      ],
+      "explanation": "Presigned URL: server ruxsat va cheklovlarni (hajm, tur, muddat) imzolaydi, klient S3'ga yuklaydi, tugagach serverga xabar beradi (yoki S3 event). Katta fayllar — multipart upload, resumable. Dedup — content hash. Xavfsizlik: tur tekshiruvi serverda, virus skan asinxron.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sysdesign.045",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Notification tizimi (push, SMS, email) dizaynida asosiy qarorlar qaysilar?",
+      "options": [
+        { "id": "a", "text": "Navbat orqali asinxron (API tez javob beradi), kanal bo'yicha alohida worker va provayder abstraksiyasi (fallback), foydalanuvchi afzalliklari va rate limit (spam'dan himoya), dedup va idempotentlik, yetkazilganlik kuzatuvi, prioritet navbatlar (OTP > marketing)", "correct": true },
+        { "id": "b", "text": "Har bildirishnomani API so'rovi ichida sinxron yuborish", "hint": "Provayder sekin bo'lsa — foydalanuvchi so'rovi osilib qoladi; millionlab yuborish imkonsiz." },
+        { "id": "c", "text": "Faqat bitta provayderga bog'lanish", "hint": "Provayder yiqilsa — OTP kelmaydi, login ishlamaydi." },
+        { "id": "d", "text": "Hamma bildirishnomani bir xil ustuvorlikda", "hint": "Marketing kampaniyasi navbatni to'ldirsa, OTP 10 daqiqa kechikadi." }
+      ],
+      "explanation": "Template'lar va lokalizatsiya, batching/digest (10 like → 1 bildirishnoma), quiet hours, unsubscribe (qonun talabi). Qurilma token'lari eskiradi — tozalash. Ko'p tizimda eng ko'p \"ikki marta keldi\" shikoyati — idempotency key har bildirishnomaga.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sysdesign.046",
+      "level": "senior",
+      "type": "multi",
+      "kind": "concept",
+      "prompt": "Tizim dizayn suhbatida kuchli nomzodni nima ajratib turadi? (bir nechta javob)",
+      "options": [
+        { "id": "a", "text": "Dizayndan oldin talablar va cheklovlarni (funksional, masshtab, latency, consistency) aniqlashtirish", "correct": true },
+        { "id": "b", "text": "Har qarorning trade-off'ini aytish va alternativani nega rad etganini tushuntirish", "correct": true },
+        { "id": "c", "text": "Bottleneck va yiqilish stsenariylarini o'zi topib, yechim taklif qilish", "correct": true },
+        { "id": "d", "text": "Darhol eng murakkab arxitekturani (Kafka, Kubernetes, 20 mikroservis) chizish", "hint": "Talabsiz murakkablik — ortiqcha dizayn signali; suhbatchi \"nega?\" deb so'raydi." }
+      ],
+      "explanation": "Tuzilma: talablar (5 daqiqa) → hajm baholash → yuqori darajali dizayn → chuqurlashish (suhbatchi tanlagan komponent) → bottleneck va kengaytirish. \"Bu bog'liq...\" deb boshlanib, nimaga bog'liqligini aytish — senior fikrlash. Oddiy boshlash, keyin asosli murakkablashtirish.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sysdesign.047",
+      "level": "senior",
+      "type": "single",
+      "kind": "true_false",
+      "prompt": "Quyidagi fikr to'g'rimi?\n\nEvent sourcing'da tizimning joriy holati saqlanmaydi — u barcha event'larni qayta o'ynatish orqali tiklanadi, shu sabab snapshot'lar unumdorlik uchun qo'shiladi.",
+      "options": [
+        { "id": "a", "text": "Ha", "correct": true },
+        { "id": "b", "text": "Yo'q", "hint": "Event sourcing'da haqiqat manbai — event logi; 10 000 event'ni har o'qishda o'ynatish sekin, shu sabab oraliq snapshot saqlanadi." }
+      ],
+      "explanation": "Afzallik: to'liq audit, vaqtda orqaga qaytish, yangi proyeksiyalar (read model) tarixdan qurish. Narx: event sxemasi evolyutsiyasi (upcasting), so'rovlar uchun alohida read model (CQRS), o'rganish egri chizig'i. Bank hisoblari, buyurtma tarixi — mos; oddiy CRUD — ortiqcha.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sysdesign.048",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Legacy monolitni mikroservislarga bo'lishda eng xavfsiz yondashuv qanday?",
+      "options": [
+        { "id": "a", "text": "Strangler fig: yangi funksiyalarni alohida servis sifatida yozish, mavjud funksiyalarni birma-bir chiqarish, trafikni proxy/gateway orqali asta yo'naltirish; monolit kichrayib boradi, big-bang qayta yozish yo'q. Avval chegarasi aniq, bog'liqligi kam modullar", "correct": true },
+        { "id": "b", "text": "Hammasini noldan qayta yozib, bir kunda almashtirish", "hint": "Big-bang rewrite — ko'p yillik loyiha, bu vaqtda eski tizim ham o'zgaradi; muvaffaqiyatsizlik darajasi juda yuqori." },
+        { "id": "c", "text": "Monolit DB'sini barcha yangi servislarga ulash", "hint": "Umumiy DB — distributed monolith: sxema o'zgarishi hammani buzadi." },
+        { "id": "d", "text": "Monolitni bo'lmaslik — doim monolit qolish", "hint": "Ba'zan to'g'ri (kichik jamoa), lekin savol bo'lish kerak bo'lgan holat haqida." }
+      ],
+      "explanation": "Qadamlar: modul chegaralarini monolit ichida aniqlash (modulli monolit), ma'lumot egaligini ajratish (alohida sxema → alohida DB), anti-corruption layer, ikki tomonlama sinxronizatsiya o'tish davrida. Har qadam mustaqil qiymat berishi va orqaga qaytarilishi mumkin bo'lishi kerak.",
+      "reviewed": false
+    }
+  ]
+}
