@@ -103,12 +103,12 @@
     { "id": "py.db", "title": "ORM va DB", "file": "py_db.json" },
     { "id": "py.arch", "title": "Arxitektura, caching, queue", "file": "py_arch.json" },
 
-    { "id": "node.js", "title": "JavaScript/TypeScript asoslari" },
-    { "id": "node.runtime", "title": "Event loop va runtime" },
-    { "id": "node.web", "title": "Express va NestJS" },
-    { "id": "node.async", "title": "Promise, stream, worker" },
-    { "id": "node.db", "title": "DB, ORM, caching" },
-    { "id": "node.arch", "title": "Arxitektura va masshtab" },
+    { "id": "node.js", "title": "JavaScript/TypeScript asoslari", "file": "node_js.json" },
+    { "id": "node.runtime", "title": "Event loop va runtime", "file": "node_runtime.json" },
+    { "id": "node.web", "title": "Express va NestJS", "file": "node_web.json" },
+    { "id": "node.async", "title": "Promise, stream, worker", "file": "node_async.json" },
+    { "id": "node.db", "title": "DB, ORM, caching", "file": "node_db.json" },
+    { "id": "node.arch", "title": "Arxitektura va masshtab", "file": "node_arch.json" },
 
     { "id": "java.lang", "title": "Java tili va OOP" },
     { "id": "java.collections", "title": "Collections va Stream API" },
