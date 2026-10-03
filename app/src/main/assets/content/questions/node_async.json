@@ -1,0 +1,201 @@
+{
+  "topic": "node.async",
+  "questions": [
+    {
+      "id": "node.async.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Promise'ning uchta holati qaysilar?",
+      "options": [
+        { "id": "a", "text": "Pending (kutilmoqda), fulfilled (muvaffaqiyatli), rejected (rad etilgan); holat bir marta o'zgaradi va qaytmaydi", "correct": true },
+        { "id": "b", "text": "Start, running, done", "hint": "Bular promise atamalari emas." },
+        { "id": "c", "text": "True, false, null", "hint": "Promise mantiqiy qiymat emas." },
+        { "id": "d", "text": "Promise'ning holati yo'q, u shunchaki callback", "hint": "Promise aynan holatni saqlaydigan obyekt." }
+      ],
+      "explanation": "Promise bir martalik natija konteyneri: `then` muvaffaqiyat, `catch` xato, `finally` ikkalasida. Ko'p marta qiymat beradigan oqimlar uchun event emitter, stream yoki async iterator.",
+      "reviewed": false
+    },
+    {
+      "id": "node.async.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Bu kod nima chiqaradi?",
+      "code": "async function f() {\n  return 1;\n}\nconsole.log(f());\nf().then(v => console.log(v));",
+      "options": [
+        { "id": "a", "text": "Promise { 1 } keyin 1", "correct": true },
+        { "id": "b", "text": "1 keyin 1", "hint": "`async` funksiya har doim promise qaytaradi, qiymatning o'zini emas." },
+        { "id": "c", "text": "1 keyin Promise { 1 }", "hint": "Birinchi `console.log` promise obyektini chiqaradi." },
+        { "id": "d", "text": "undefined keyin 1", "hint": "`return 1` promise'ni 1 bilan to'ldiradi." }
+      ],
+      "explanation": "`async` funksiyadan qiymat olish uchun `await f()` yoki `.then`. Shuning uchun `async` funksiyani oddiy joyda chaqirib natijasini ishlatish (masalan, `if (isValid())`) har doim truthy promise beradi — klassik xato.",
+      "reviewed": false
+    },
+    {
+      "id": "node.async.003",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Callback hell nima va undan qanday qutuliladi?",
+      "options": [
+        { "id": "a", "text": "Ichma-ich callback'lar piramidasi; promise zanjiri va `async/await` kodni chiziqli qiladi, `util.promisify` eski API'larni promise'ga aylantiradi", "correct": true },
+        { "id": "b", "text": "Callback juda ko'p argument olishi", "hint": "Argumentlar emas, ichma-ichlik muammo." },
+        { "id": "c", "text": "Node'da callback ishlatish taqiqlangani", "hint": "Taqiqlanmagan; faqat o'qilishi qiyin." },
+        { "id": "d", "text": "Qutulib bo'lmaydi", "hint": "`async/await` aynan shu uchun kiritilgan." }
+      ],
+      "explanation": "Node'ning eski API'lari `(err, result)` callback uslubida. `fs.promises`, `util.promisify(fn)` va zamonaviy kutubxonalar promise beradi. `async/await` bilan `try/catch` ham oddiy sinxron koddagidek ishlaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "node.async.004",
+      "level": "junior",
+      "type": "single",
+      "kind": "true_false",
+      "prompt": "Quyidagi fikr to'g'rimi?\n\n`await` faqat kutish nuqtasi: u event loop'ni bloklamaydi, boshqa so'rovlar shu paytda ishlashda davom etadi.",
+      "options": [
+        { "id": "a", "text": "Ha", "correct": true },
+        { "id": "b", "text": "Yo'q", "hint": "`await` joriy funksiyani to'xtatib, boshqaruvni event loop'ga qaytaradi. Promise tayyor bo'lgach, funksiya microtask sifatida davom etadi. Bloklaydigan narsa `await` emas, sinxron uzoq kod." }
+      ],
+      "explanation": "Shuning uchun `await` bilan yozilgan server minglab so'rovni bir vaqtda kutib tura oladi. Lekin `await` ketma-ketlashtiradi: mustaqil ishlar uchun `Promise.all` kerak.",
+      "reviewed": false
+    },
+    {
+      "id": "node.async.005",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Ikkala funksiya ham 1 soniya kutsa, bu kod taxminan qancha vaqt oladi?",
+      "code": "const a = await getA();\nconst b = await getB();\nreturn a + b;",
+      "options": [
+        { "id": "a", "text": "Taxminan 2 soniya: ikkinchi `await` birinchisi tugagandan keyin boshlanadi; `Promise.all([getA(), getB()])` 1 soniya qiladi", "correct": true },
+        { "id": "b", "text": "Taxminan 1 soniya", "hint": "`getB()` `getA()` tugaguncha chaqirilmaydi." },
+        { "id": "c", "text": "Darhol", "hint": "`await` natijani kutadi." },
+        { "id": "d", "text": "Noma'lum, tasodifiy", "hint": "Ketma-ketlik aniq: avval A, keyin B." }
+      ],
+      "explanation": "Mustaqil asinxron ishlar `Promise.all` bilan parallel boshlanadi. Ba'zi natijalar bir-biriga bog'liq bo'lsa (B A'ning natijasini talab qilsa), ketma-ketlik majburiy. `Promise.allSettled` xatolarda ham barcha natijalarni beradi.",
+      "reviewed": false
+    },
+    {
+      "id": "node.async.006",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Stream nima va u nega katta fayllar uchun kerak?",
+      "options": [
+        { "id": "a", "text": "Ma'lumotni bo'laklab (chunk) qayta ishlash: butun fayl xotiraga yuklanmaydi, o'qish va yozish `pipe` orqali ulanadi; backpressure tezlikni moslaydi", "correct": true },
+        { "id": "b", "text": "Video uzatish uchun maxsus protokol", "hint": "Umumiy abstraksiya: fayl, HTTP tana, zip, baza natijasi." },
+        { "id": "c", "text": "Tezroq o'qish usuli", "hint": "Disk tezligi bir xil; farq xotira va boshlanish vaqtida." },
+        { "id": "d", "text": "Faqat matn uchun", "hint": "Binar ma'lumot bilan ham ishlaydi." }
+      ],
+      "explanation": "`fs.createReadStream(src).pipe(zlib.createGzip()).pipe(res)` — 10 GB faylni bir necha MB xotira bilan siqib yuboradi. Zamonaviy usul: `stream/promises` dan `pipeline`, u xatolarni to'g'ri tarqatadi va tozalaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "node.async.007",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Bu kod 10 000 ta yozuvni bazaga yuboradi va baza ulanishlari tugaydi. Nega?",
+      "code": "await Promise.all(\n  records.map(r => db.insert(r))\n);",
+      "options": [
+        { "id": "a", "text": "10 000 so'rov bir vaqtda boshlanadi: parallellik cheklanmagan; partiyalab (chunk) yoki `p-limit` kabi cheklov bilan, yoki bitta bulk insert bilan yuborish kerak", "correct": true },
+        { "id": "b", "text": "`Promise.all` sekin", "hint": "U tez; muammo bir vaqtdagi so'rovlar sonida." },
+        { "id": "c", "text": "`map` o'rniga `forEach` kerak", "hint": "`forEach` promise'larni yig'maydi; xatolar yo'qoladi." },
+        { "id": "d", "text": "`await` ni olib tashlash kerak", "hint": "Unda xatolar ushlanmaydi va funksiya natijani kutmaydi." }
+      ],
+      "explanation": "Cheklangan parallellik: `for (const chunk of chunks(records, 100)) await Promise.all(chunk.map(insert))`. Baza uchun eng yaxshisi — bitta `INSERT ... VALUES (...), (...)` bulk so'rov. Tarmoq API'lari uchun rate limit'ni ham hisobga olish kerak.",
+      "reviewed": false
+    },
+    {
+      "id": "node.async.008",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`EventEmitter` nima va qanday xatolar bo'ladi?",
+      "options": [
+        { "id": "a", "text": "Node'ning hodisa (pub/sub) mexanizmi; xatolar: `error` hodisasiga listener bo'lmasa jarayon yiqiladi, listener'lar tozalanmasa leak, hodisalar sinxron chaqiriladi", "correct": true },
+        { "id": "b", "text": "Brauzer DOM hodisalari bilan bir xil", "hint": "O'xshash g'oya, lekin boshqa API va Node'ga xos qoidalar." },
+        { "id": "c", "text": "Faqat HTTP server uchun", "hint": "Stream, process, o'z klasslaringiz — hammasi emitter bo'lishi mumkin." },
+        { "id": "d", "text": "Hodisalar har doim asinxron", "hint": "`emit` listener'larni darhol, sinxron chaqiradi." }
+      ],
+      "explanation": "`emitter.emit('error', err)` listener'siz bo'lsa — uncaught exception. Stream'lar emitter; shuning uchun har stream'da `error` ishlovi yoki `pipeline` kerak. `once` bir martalik, `off`/`removeListener` tozalash uchun.",
+      "reviewed": false
+    },
+    {
+      "id": "node.async.009",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Backpressure nima va u qachon muammo bo'ladi?",
+      "options": [
+        { "id": "a", "text": "Iste'molchi ishlab chiqaruvchidan sekin bo'lganda bufer o'sib ketishi; `pipe`/`pipeline` buni avtomatik boshqaradi (`write` false qaytarsa `drain` kutiladi); qo'lda `write` siklida esa xotira to'lib ketadi", "correct": true },
+        { "id": "b", "text": "Tarmoq kechikishi", "hint": "Kechikish emas, tezlik nomuvofiqligi." },
+        { "id": "c", "text": "Faqat TCP darajasidagi tushuncha", "hint": "Node stream'larida ham bor va dasturchi uni buzishi mumkin." },
+        { "id": "d", "text": "Hech qachon muammo bo'lmaydi", "hint": "Tez o'qib, sekin yozilsa, bufer gigabaytlarga yetadi." }
+      ],
+      "explanation": "Misol: bazadan tez o'qib, sekin HTTP klientga yozish. `readable.pipe(writable)` o'qishni to'xtatib turadi. Async iterator bilan `for await (const chunk of readable) await writable.write(chunk)` ham to'g'ri (`write` promise qaytarmaydi; `drain` ni kutish kerak yoki `pipeline`).",
+      "reviewed": false
+    },
+    {
+      "id": "node.async.010",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`worker_threads` qachon ishlatiladi va qanday cheklovlari bor?",
+      "options": [
+        { "id": "a", "text": "CPU-og'ir ish (rasm, kriptografiya, katta JSON) uchun asosiy oqimni bo'shatish; har worker alohida V8 izolyatsiyasi, ma'lumot nusxalab uzatiladi (`SharedArrayBuffer` bundan mustasno), yaratish qimmat — pool kerak", "correct": true },
+        { "id": "b", "text": "I/O (tarmoq, fayl) ni tezlashtirish uchun", "hint": "I/O allaqachon asinxron; worker'lar unga yordam bermaydi." },
+        { "id": "c", "text": "Ular xotirani asosiy oqim bilan to'liq ulashadi", "hint": "Odatda xabar almashish (nusxa); ulashish faqat maxsus buferlar bilan." },
+        { "id": "d", "text": "Har so'rov uchun yangi worker yaratish to'g'ri", "hint": "Worker yaratish o'nlab millisekund; pool (piscina) ishlatiladi." }
+      ],
+      "explanation": "Worker va `cluster` farqi: cluster alohida jarayonlar va port ulashish (butun serverni masshtablash), worker bitta jarayon ichidagi oqimlar (bitta so'rov ichidagi og'ir hisob). Ko'p hollarda og'ir ishni butunlay alohida servisga chiqarish ham variant.",
+      "reviewed": false
+    },
+    {
+      "id": "node.async.011",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`AbortController` Node'da nima uchun ishlatiladi?",
+      "options": [
+        { "id": "a", "text": "Asinxron ishni bekor qilish uchun umumiy signal: `fetch`, taymerlar, stream'lar va o'z funksiyalaringiz `signal` ni qabul qiladi; so'rov timeout'i va klient uzilganda ishni to'xtatish", "correct": true },
+        { "id": "b", "text": "Jarayonni to'xtatish uchun", "hint": "Bu `process.exit`; AbortController aniq bir ishni bekor qiladi." },
+        { "id": "c", "text": "Faqat brauzerda ishlaydi", "hint": "Node'da ham standart." },
+        { "id": "d", "text": "Promise'ni majburan reject qiladi", "hint": "Promise'ni tashqaridan bekor qilib bo'lmaydi; signal kooperativ: ish o'zi tekshiradi." }
+      ],
+      "explanation": "`AbortSignal.timeout(5000)` tayyor timeout signal beradi. Klient ulanishni uzsa (`req.on('close')`), orqadagi qimmat ishni (baza, tashqi API) bekor qilish resurs tejaydi. Signal'ni funksiyalar zanjiri bo'ylab uzatish yaxshi amaliyot.",
+      "reviewed": false
+    },
+    {
+      "id": "node.async.012",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Node servisida timeout, retry va circuit breaker'ni tashqi API chaqiruvlari uchun qanday tashkil qilish kerak?",
+      "options": [
+        { "id": "a", "text": "Har chaqiruvda timeout (signal), faqat idempotent va vaqtinchalik xatolarda retry, exponential backoff + jitter, cheklangan urinish, ketma-ket xatolarda breaker ochilib tez xato qaytarish; umumiy so'rov byudjeti (deadline)", "correct": true },
+        { "id": "b", "text": "Cheksiz retry, oxir-oqibat ishlaydi", "hint": "Yiqilayotgan servisni yana yiqitadi va o'z resurslaringizni band qiladi." },
+        { "id": "c", "text": "Timeout qo'ymaslik, javobni kutish", "hint": "Osilgan ulanishlar to'planib, server to'xtaydi." },
+        { "id": "d", "text": "Har xatoda retry, POST'da ham", "hint": "Idempotent bo'lmagan POST takrorlansa, ikki marta bajariladi." }
+      ],
+      "explanation": "`undici` (Node'ning `fetch` i) timeout va retry interceptor'lariga ega; `cockatiel`, `opossum` kutubxonalari breaker beradi. Kaskadli nosozlik — mikroservislarning asosiy xavfi; har tashqi chaqiruv \"u yiqilsa nima bo'ladi\" degan savolga javob bo'lishi kerak.",
+      "reviewed": false
+    },
+    {
+      "id": "node.async.013",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`AsyncLocalStorage` nima uchun ishlatiladi?",
+      "options": [
+        { "id": "a", "text": "So'rov konteksti (request id, foydalanuvchi, trace) ni asinxron chaqiruvlar zanjiri bo'ylab argument sifatida uzatmasdan saqlash; loglash va tracing uchun", "correct": true },
+        { "id": "b", "text": "Brauzer `localStorage` ning Node varianti", "hint": "Doimiy saqlash emas, bitta asinxron oqim ichidagi kontekst." },
+        { "id": "c", "text": "Global o'zgaruvchilar uchun", "hint": "Global emas: har so'rov o'z qiymatini ko'radi." },
+        { "id": "d", "text": "Keshlash uchun", "hint": "Keshga aloqasi yo'q." }
+      ],
+      "explanation": "Thread-local'ning asinxron ekvivalenti. Middleware `als.run({ requestId }, next)` qiladi; chuqur joydagi logger `als.getStore()` dan id'ni oladi. OpenTelemetry shu mexanizmda trace kontekstini tarqatadi. Narxi: biroz performance va yashirin bog'liqlik — faqat kesishuvchi ma'lumot uchun.",
+      "reviewed": false
+    }
+  ]
+}

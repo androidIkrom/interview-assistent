@@ -1,0 +1,157 @@
+{
+  "topic": "node.db",
+  "questions": [
+    {
+      "id": "node.db.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Bu kodda qanday xavf bor?",
+      "code": "const rows = await pool.query(\n  `SELECT * FROM users WHERE email = '${req.body.email}'`\n);",
+      "options": [
+        { "id": "a", "text": "SQL injection: `pool.query('SELECT * FROM users WHERE email = $1', [email])` kerak", "correct": true },
+        { "id": "b", "text": "Template literal sekin", "hint": "Tezlik emas, xavfsizlik." },
+        { "id": "c", "text": "`await` keraksiz", "hint": "`query` promise qaytaradi; `await` to'g'ri." },
+        { "id": "d", "text": "Xavf yo'q", "hint": "`' OR 1=1 --` kiritilsa, butun jadval qaytadi." }
+      ],
+      "explanation": "Parametrlangan so'rovda qiymat SQL matnidan alohida yuboriladi. ORM va query builder'lar (Prisma, Knex, Drizzle) buni avtomatik qiladi, lekin `$queryRawUnsafe` kabi \"xom\" usullarda yana e'tibor kerak.",
+      "reviewed": false
+    },
+    {
+      "id": "node.db.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Node'da baza bilan ishlashda connection pool nima uchun kerak?",
+      "options": [
+        { "id": "a", "text": "Har so'rovda yangi ulanish ochish qimmat; pool bir nechta ochiq ulanishni saqlab, so'rovlarga navbat bilan beradi", "correct": true },
+        { "id": "b", "text": "So'rovlarni keshlash uchun", "hint": "Pool natijani emas, ulanishni qayta ishlatadi." },
+        { "id": "c", "text": "Faqat PostgreSQL uchun kerak", "hint": "Har qanday baza (MySQL, Mongo) klientida bor." },
+        { "id": "d", "text": "Pool so'rovlarni tezlashtirmaydi, faqat log yozadi", "hint": "Ulanish ochishdan qutqarish aynan tezlashtiradi." }
+      ],
+      "explanation": "Pool ilova boshida bir marta yaratiladi (modul darajasida) va hamma joyda ulashiladi. Har so'rovda `new Client()` yaratish ulanish limitini tez tugatadi. Tranzaksiya bir ulanishda bajarilishi kerak: `pool.connect()` bilan klient olib, oxirida `release()`.",
+      "reviewed": false
+    },
+    {
+      "id": "node.db.003",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Prisma, TypeORM, Drizzle kabi ORM/query builder'lar nima beradi?",
+      "options": [
+        { "id": "a", "text": "Tiplangan so'rovlar (natija tipi avtomatik), migratsiyalar, injection'dan himoya; narxi: murakkab so'rovlarda cheklov va yashirin N+1", "correct": true },
+        { "id": "b", "text": "SQL bilishni keraksiz qiladi", "hint": "Optimizatsiya va murakkab so'rovlar uchun SQL baribir kerak." },
+        { "id": "c", "text": "Bazani tezlashtiradi", "hint": "Qo'shimcha qatlam; qulaylik uchun." },
+        { "id": "d", "text": "Faqat NoSQL uchun", "hint": "Asosan relyatsion bazalar uchun." }
+      ],
+      "explanation": "Prisma sxema fayldan klient generatsiya qiladi va `findMany({ include: { posts: true } })` tipli natija beradi. Drizzle SQL'ga yaqinroq va yengil. Tanlov jamoa afzalligi va so'rovlar murakkabligiga bog'liq.",
+      "reviewed": false
+    },
+    {
+      "id": "node.db.004",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Bu kod 100 ta post uchun 101 ta so'rov yuboradi. Yechim?",
+      "code": "const posts = await prisma.post.findMany({ take: 100 });\nfor (const post of posts) {\n  post.author = await prisma.user.findUnique({\n    where: { id: post.authorId },\n  });\n}",
+      "options": [
+        { "id": "a", "text": "`findMany({ take: 100, include: { author: true } })`: muallif bitta so'rovda (yoki `in` so'rov) bilan keladi", "correct": true },
+        { "id": "b", "text": "Siklni `Promise.all` qilish", "hint": "So'rovlar parallel bo'ladi, lekin soni o'sha 101 ta." },
+        { "id": "c", "text": "`findUnique` o'rniga `findFirst`", "hint": "So'rovlar soni o'zgarmaydi." },
+        { "id": "d", "text": "`take` ni kamaytirish", "hint": "Muammo yashirinadi, hal bo'lmaydi." }
+      ],
+      "explanation": "N+1 ORM'larda eng ko'p uchraydigan muammo. Prisma `include`/`select`, TypeORM `relations`, GraphQL'da DataLoader. So'rov logini yoqib (`log: ['query']`) sonini ko'rish odatga aylanishi kerak.",
+      "reviewed": false
+    },
+    {
+      "id": "node.db.005",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Node'da baza tranzaksiyasi qanday to'g'ri yoziladi?",
+      "options": [
+        { "id": "a", "text": "Bitta ulanishda `BEGIN` → amallar → `COMMIT`, xatoda `ROLLBACK`, `finally` da ulanishni qaytarish; ORM'da `prisma.$transaction` yoki `dataSource.transaction` callback'i", "correct": true },
+        { "id": "b", "text": "`pool.query('BEGIN')` va keyin `pool.query(...)` lar", "hint": "Pool har so'rovga boshqa ulanish berishi mumkin; tranzaksiya bitta ulanishga bog'liq." },
+        { "id": "c", "text": "Tranzaksiya kerak emas, Node bitta oqimli", "hint": "Oqim soni emas, baza amallarining atomikligi masala." },
+        { "id": "d", "text": "Har so'rovdan keyin `COMMIT`", "hint": "Unda bu tranzaksiya emas, alohida so'rovlar." }
+      ],
+      "explanation": "Tranzaksiya ichida tashqi API chaqirish yoki uzoq kutish qulflarni ushlab turadi; tranzaksiya qisqa bo'lsin. Interaktiv tranzaksiya (Prisma `$transaction(async tx => ...)`) ichida `tx` ni ishlatish shart, `prisma` ni emas — aks holda amal tranzaksiyadan tashqarida ketadi.",
+      "reviewed": false
+    },
+    {
+      "id": "node.db.006",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Redis'ni Node backend'da nima uchun ishlatish mumkin?",
+      "options": [
+        { "id": "a", "text": "Kesh, sessiya saqlash, rate limiting hisoblagichlari, navbat (BullMQ), pub/sub, taqsimlangan qulf — tez, xotirada, ko'p jarayon orasida ulashiladigan holat", "correct": true },
+        { "id": "b", "text": "Asosiy baza sifatida, PostgreSQL o'rniga", "hint": "Doimiylik va so'rovlar relyatsion bazadek emas; u yordamchi saqlagich." },
+        { "id": "c", "text": "Faqat kesh uchun", "hint": "Kesh bitta qo'llanish; navbat va pub/sub ham keng tarqalgan." },
+        { "id": "d", "text": "Statik fayllarni saqlash uchun", "hint": "Fayllar obyekt saqlagichda (S3) yoki CDN'da." }
+      ],
+      "explanation": "Node ko'p jarayonda ishlagani uchun jarayon xotirasidagi holat (sessiya, hisoblagich) ulashilmaydi; Redis umumiy joy. TTL, atomik amallar (`INCR`, `SET NX`) va Lua skriptlari race condition'siz mantiq yozish imkonini beradi.",
+      "reviewed": false
+    },
+    {
+      "id": "node.db.007",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "MongoDB'da sxema dizayni (embedding vs referencing) qanday tanlanadi?",
+      "options": [
+        { "id": "a", "text": "Birga o'qiladigan, cheklangan hajmli ma'lumot ichiga joylanadi (buyurtma ichida satrlar); mustaqil o'sadigan yoki ko'p joydan ishlatiladigan ma'lumot alohida hujjat va havola; 16 MB hujjat limiti va yangilanish naqshlari hisobga olinadi", "correct": true },
+        { "id": "b", "text": "Har doim relyatsion bazadagidek normallashtirish", "hint": "Mongo'da `JOIN` (`$lookup`) qimmat; birga o'qiladigan ma'lumot birga saqlanadi." },
+        { "id": "c", "text": "Hamma narsani bitta hujjatga joylash", "hint": "Cheksiz o'sadigan massivlar (izohlar) hujjatni limitga yetkazadi va yangilashni sekinlashtiradi." },
+        { "id": "d", "text": "Sxema kerak emas, Mongo sxemasiz", "hint": "Baza majburlamaydi, lekin ilova sxemasiz yashay olmaydi; Mongoose/validator bilan belgilanadi." }
+      ],
+      "explanation": "Qoida: \"birga ishlatiladigan ma'lumot birga saqlanadi\". Hujjatli model so'rovlar shakliga qarab loyihalanadi, munosabatlarga qarab emas. Indekslar va `explain()` relyatsion bazadagidek muhim.",
+      "reviewed": false
+    },
+    {
+      "id": "node.db.008",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Cache-aside bilan ishlaganda \"cache stampede\" (thundering herd) nima va qanday oldini olinadi?",
+      "options": [
+        { "id": "a", "text": "Mashhur kalit muddati tugaganda yuzlab so'rov bir vaqtda bazaga tushadi; yechim: bitta so'rov hisoblab, qolganlar kutadi (qulf yoki in-flight promise dedup), muddatni tasodifiy yoyish, eskirgan qiymatni berib fonda yangilash", "correct": true },
+        { "id": "b", "text": "Kesh juda katta bo'lib ketishi", "hint": "Bu hajm muammosi; stampede — bir vaqtdagi qayta hisoblash." },
+        { "id": "c", "text": "Oldini olib bo'lmaydi", "hint": "Request coalescing va stale-while-revalidate standart yechimlar." },
+        { "id": "d", "text": "TTL'ni olib tashlash", "hint": "Unda ma'lumot hech qachon yangilanmaydi." }
+      ],
+      "explanation": "Node'da bitta jarayon ichida oson: `Map<key, Promise>` — birinchi so'rov promise'ni saqlaydi, qolganlar o'sha promise'ni kutadi. Ko'p jarayon uchun Redis `SET NX` qulfi yoki \"probabilistic early expiration\".",
+      "reviewed": false
+    },
+    {
+      "id": "node.db.009",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Node servislari ko'payganda (50 jarayon, har biri pool 10) PostgreSQL ulanishlar limiti tugaydi. Yechim?",
+      "options": [
+        { "id": "a", "text": "Tashqi pooler (PgBouncer transaction rejimida) orqali minglab klient ulanishini o'nlab baza ulanishiga multiplekslash; har servis pool'ini kichraytirish; prepared statement va sessiya holatiga tayanadigan kodni moslash", "correct": true },
+        { "id": "b", "text": "`max_connections` ni 5000 qilish", "hint": "Har ulanish jarayon va xotira; baza sekinlashadi." },
+        { "id": "c", "text": "Pool'ni butunlay o'chirish", "hint": "Har so'rovda ulanish ochish yanada yomon." },
+        { "id": "d", "text": "Servislar sonini kamaytirish", "hint": "Masshtabdan voz kechish yechim emas." }
+      ],
+      "explanation": "Transaction rejimida PgBouncer ulanishni faqat tranzaksiya davomida beradi, shuning uchun `SET` sessiya o'zgaruvchilari va ba'zi prepared statement'lar ishlamaydi (Prisma, pg kutubxonalari uchun maxsus sozlamalar). Serverless muhitda (Lambda) bu muammo yanada keskin.",
+      "reviewed": false
+    },
+    {
+      "id": "node.db.010",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Node ilovasida baza migratsiyalari deploy jarayonida qanday boshqarilishi kerak?",
+      "options": [
+        { "id": "a", "text": "Migratsiyalar versiyalangan fayllar (Prisma Migrate, Knex, Drizzle Kit), CI'da tekshiriladi, deploy'dan oldin alohida qadam sifatida bajariladi (ilova startida emas), orqaga mos va qaytariladigan; bir vaqtda bir nechta nusxa ishga tushganda qulf", "correct": true },
+        { "id": "b", "text": "Har ilova nusxasi startda `migrate` chaqirsin", "hint": "10 ta pod bir vaqtda migratsiya qilishga urinadi; race va qisman qo'llangan sxema xavfi." },
+        { "id": "c", "text": "Sxemani production'da qo'lda o'zgartirish", "hint": "Takrorlanmaydi va hujjatsiz." },
+        { "id": "d", "text": "ORM `synchronize: true` bilan avtomatik", "hint": "TypeORM'ning bu rejimi production'da ma'lumot yo'qotishi mumkin; faqat development." }
+      ],
+      "explanation": "Deploy tartibi: migratsiya (expand) → yangi kod → eski ustunlarni o'chirish (contract) keyingi relizda. Kubernetes'da migratsiya alohida Job yoki init konteyner. Rollback rejasi: kod qaytarilsa, sxema eski kod bilan ham ishlashi kerak.",
+      "reviewed": false
+    }
+  ]
+}

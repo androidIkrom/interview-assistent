@@ -1,0 +1,217 @@
+{
+  "topic": "node.js",
+  "questions": [
+    {
+      "id": "node.js.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "CommonJS (`require`) va ES modullar (`import`) farqi nima?",
+      "options": [
+        { "id": "a", "text": "CommonJS sinxron, dinamik va Node'ning tarixiy tizimi; ES modullar standart, statik tahlil qilinadi (tree shaking) va asinxron yuklanadi", "correct": true },
+        { "id": "b", "text": "`import` faqat brauzerda ishlaydi", "hint": "Node.js ES modullarni to'liq qo'llaydi (`\"type\": \"module\"` yoki `.mjs`)." },
+        { "id": "c", "text": "Farqi faqat sintaksisda", "hint": "Yuklanish modeli va statik tahlil imkoniyati farq qiladi." },
+        { "id": "d", "text": "`require` eskirgan va ishlamaydi", "hint": "Hali ko'p paketlar CommonJS; Node ikkalasini qo'llaydi." }
+      ],
+      "explanation": "Aralash loyihada tuzoqlar bor: ESM'dan CommonJS'ni `import` qilish mumkin, aksincha `require(esm)` faqat yangi Node versiyalarida. Yangi loyihalar ESM bilan boshlanadi; TypeScript'da `module` sozlamasi shuni belgilaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "node.js.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Bu kod nima chiqaradi?",
+      "code": "const user = { name: 'Ali' };\nconst copy = { ...user, age: 20 };\ncopy.name = 'Vali';\nconsole.log(user.name, copy.age);",
+      "options": [
+        { "id": "a", "text": "Ali 20", "correct": true },
+        { "id": "b", "text": "Vali 20", "hint": "Spread yangi obyekt yaratadi; `copy` ni o'zgartirish `user` ga ta'sir qilmaydi." },
+        { "id": "c", "text": "Ali undefined", "hint": "`age` spread'dan keyin qo'shilgan va `copy` da bor." },
+        { "id": "d", "text": "Xato", "hint": "Spread sintaksisi obyektlar uchun to'g'ri." }
+      ],
+      "explanation": "`{ ...obj }` sayoz (shallow) nusxa: birinchi daraja maydonlar nusxalanadi, ichki obyektlar esa umumiy qoladi. Chuqur nusxa uchun `structuredClone(obj)`.",
+      "reviewed": false
+    },
+    {
+      "id": "node.js.003",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`package.json` dagi `dependencies` va `devDependencies` farqi nima?",
+      "options": [
+        { "id": "a", "text": "`dependencies` production'da kerak (express, pg); `devDependencies` faqat ishlab chiqish va build uchun (typescript, jest, eslint)", "correct": true },
+        { "id": "b", "text": "Farqi yo'q, ikkalasi ham o'rnatiladi", "hint": "`npm install --omit=dev` (production) `devDependencies` ni o'tkazib yuboradi." },
+        { "id": "c", "text": "`devDependencies` tezroq o'rnatiladi", "hint": "Tezlikka aloqasi yo'q." },
+        { "id": "d", "text": "`dependencies` faqat global paketlar", "hint": "Ikkalasi ham lokal `node_modules` ga o'rnatiladi." }
+      ],
+      "explanation": "Production image'da `devDependencies` bo'lmasligi hajm va hujum yuzasini kamaytiradi. `package-lock.json` aniq versiyalarni qotiradi; CI'da `npm ci` lock faylga qat'iy amal qiladi.",
+      "reviewed": false
+    },
+    {
+      "id": "node.js.004",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Bu kod nima chiqaradi?",
+      "code": "const nums = [3, 1, 10, 2];\nnums.sort();\nconsole.log(nums);",
+      "options": [
+        { "id": "a", "text": "[1, 10, 2, 3]", "correct": true },
+        { "id": "b", "text": "[1, 2, 3, 10]", "hint": "Standart `sort` elementlarni satrga aylantirib solishtiradi; `'10' < '2'`." },
+        { "id": "c", "text": "[10, 3, 2, 1]", "hint": "Kamayish tartibi uchun comparator kerak." },
+        { "id": "d", "text": "Xato", "hint": "`sort` ishlaydi, faqat kutilmagan tartibda." }
+      ],
+      "explanation": "Sonlar uchun `nums.sort((a, b) => a - b)`. `sort` massivni joyida o'zgartiradi; o'zgartirmaydigan varianti `toSorted()`. Bu JavaScript'dagi klassik tuzoqlardan biri.",
+      "reviewed": false
+    },
+    {
+      "id": "node.js.005",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`null` va `undefined` farqi nima?",
+      "options": [
+        { "id": "a", "text": "`undefined` — qiymat berilmagan (e'lon qilingan, lekin tayinlanmagan, yo'q xususiyat); `null` — ataylab \"bo'sh\" deb qo'yilgan qiymat", "correct": true },
+        { "id": "b", "text": "Bir xil narsa", "hint": "`null === undefined` false; `typeof` lari ham har xil." },
+        { "id": "c", "text": "`null` faqat obyektlar uchun, `undefined` faqat sonlar uchun", "hint": "Ikkalasi ham istalgan joyda uchraydi." },
+        { "id": "d", "text": "`undefined` xato degani", "hint": "Xato emas, oddiy qiymat." }
+      ],
+      "explanation": "`??` (nullish coalescing) ikkalasini ham ushlaydi: `value ?? 'default'`. `||` dan farqi: `0` va `''` ni almashtirmaydi. API javoblarida `null` \"ma'lumot yo'q\", maydonning yo'qligi esa `undefined`.",
+      "reviewed": false
+    },
+    {
+      "id": "node.js.006",
+      "level": "junior",
+      "type": "single",
+      "kind": "true_false",
+      "prompt": "Quyidagi fikr to'g'rimi?\n\nNode.js'da `process.env` orqali environment o'zgaruvchilari o'qiladi va ularning qiymati har doim satr (string) bo'ladi.",
+      "options": [
+        { "id": "a", "text": "Ha", "correct": true },
+        { "id": "b", "text": "Yo'q", "hint": "`PORT=3000` bo'lsa, `process.env.PORT` — `'3000'` satri. Son yoki boolean kerak bo'lsa, qo'lda o'zgartirish va tekshirish kerak (`Number(...)`, `=== 'true'`)." }
+      ],
+      "explanation": "Shuning uchun sozlamalarni ishga tushishda bir joyda o'qib, tiplab va tekshirib olish (zod bilan sxema) tavsiya etiladi: noto'g'ri yoki yo'q o'zgaruvchi darhol xato bersin, so'rov paytida emas.",
+      "reviewed": false
+    },
+    {
+      "id": "node.js.007",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Bu kod nima chiqaradi?",
+      "code": "const obj = {\n  name: 'Ali',\n  regular() { return this.name; },\n  arrow: () => this.name,\n};\nconsole.log(obj.regular(), obj.arrow());",
+      "options": [
+        { "id": "a", "text": "Ali undefined", "correct": true },
+        { "id": "b", "text": "Ali Ali", "hint": "Arrow funksiya `this` ni obyektdan emas, tashqi doiradan oladi; modul darajasida u `obj` emas." },
+        { "id": "c", "text": "undefined undefined", "hint": "Oddiy metod `obj.regular()` deb chaqirilganda `this` — `obj`." },
+        { "id": "d", "text": "Xato", "hint": "Kod ishlaydi; `this.name` noma'lum obyektda `undefined`." }
+      ],
+      "explanation": "Obyekt literalida arrow funksiya metod sifatida yaramaydi: uning `this` i obyekt yaratilgan joydagi `this` (ESM modulda `undefined`, CommonJS'da `module.exports`). Metodlar uchun qisqa sintaksis `name() {}`.",
+      "reviewed": false
+    },
+    {
+      "id": "node.js.008",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Node.js loyihasida TypeScript qanday ishga tushiriladi va production'da nima bo'ladi?",
+      "options": [
+        { "id": "a", "text": "Development'da `tsx`/`ts-node` yoki Node'ning o'z type stripping'i; production'da `tsc` (yoki esbuild/swc) bilan JavaScript'ga kompilyatsiya qilinib, tayyor `dist/` ishga tushiriladi", "correct": true },
+        { "id": "b", "text": "Node TypeScript'ni to'liq tekshirib bajaradi", "hint": "Node tiplarni tekshirmaydi; yangi versiyalar faqat tip annotatsiyalarini olib tashlab bajaradi." },
+        { "id": "c", "text": "TypeScript Node'da ishlamaydi", "hint": "Zamonaviy backend loyihalarning ko'pi TypeScript'da." },
+        { "id": "d", "text": "Production'da ham `ts-node` ishlatiladi", "hint": "Startup sekin va xotira ko'p; production uchun oldindan kompilyatsiya." }
+      ],
+      "explanation": "Tip tekshiruvi (`tsc --noEmit`) CI'da alohida qadam; bajarish uchun tez transpiler yetadi. Source map'lar production stack trace'larini TypeScript qatorlariga bog'laydi.",
+      "reviewed": false
+    },
+    {
+      "id": "node.js.009",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`Object.freeze`, `const` va `readonly` (TypeScript) o'zgarmaslikni qanday darajada beradi?",
+      "options": [
+        { "id": "a", "text": "`const` faqat qayta tayinlashni taqiqlaydi; `readonly` compile vaqtida yozishni taqiqlaydi, runtime'da yo'q; `Object.freeze` runtime'da sayoz (birinchi daraja) muzlatadi", "correct": true },
+        { "id": "b", "text": "`const` obyektni to'liq o'zgarmas qiladi", "hint": "`const o = {}; o.x = 1` ishlaydi." },
+        { "id": "c", "text": "`Object.freeze` chuqur muzlatadi", "hint": "Ichki obyektlar o'zgaruvchan qoladi; chuqur uchun rekursiya kerak." },
+        { "id": "d", "text": "`readonly` runtime'da xato tashlaydi", "hint": "TypeScript tiplari runtime'da yo'q." }
+      ],
+      "explanation": "Haqiqiy o'zgarmaslik intizom va vositalar bilan keladi: `as const`, `Readonly<T>`, immutable yangilash (spread, Immer). `Object.freeze` strict rejimda yozishda xato beradi, oddiy rejimda jim e'tiborsiz qoldiradi.",
+      "reviewed": false
+    },
+    {
+      "id": "node.js.010",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`Map` oddiy obyektdan (`{}`) kalit-qiymat saqlash uchun qachon afzal?",
+      "options": [
+        { "id": "a", "text": "Kalitlar satr bo'lmaganda (obyekt, son), tez-tez qo'shish/o'chirish bo'lganda, o'lcham (`size`) va kiritish tartibi kerak bo'lganda; prototip kalitlari (`__proto__`) muammosi ham yo'q", "correct": true },
+        { "id": "b", "text": "Hech qachon, obyekt har doim tezroq", "hint": "Tez-tez o'zgaradigan lug'at uchun `Map` optimallashtirilgan." },
+        { "id": "c", "text": "`Map` JSON'ga to'g'ridan-to'g'ri aylanadi", "hint": "Aksincha: `JSON.stringify(map)` `{}` beradi; obyektga aylantirish kerak." },
+        { "id": "d", "text": "`Map` faqat satr kalitlarni qabul qiladi", "hint": "Istalgan qiymat kalit bo'la oladi." }
+      ],
+      "explanation": "Foydalanuvchi kiritgan kalitlar bilan oddiy obyekt prototype pollution'ga olib kelishi mumkin (`__proto__` kaliti). `Map` va `Object.create(null)` bundan himoya qiladi. Zaif havolali kesh uchun `WeakMap`.",
+      "reviewed": false
+    },
+    {
+      "id": "node.js.011",
+      "level": "middle",
+      "type": "multi",
+      "kind": "concept",
+      "prompt": "Quyidagilardan qaysilari JavaScript'da \"falsy\" qiymatlar?",
+      "options": [
+        { "id": "a", "text": "`0`", "correct": true },
+        { "id": "b", "text": "`''` (bo'sh satr)", "correct": true },
+        { "id": "c", "text": "`[]` (bo'sh massiv)", "hint": "Bo'sh massiv ham, bo'sh obyekt ham truthy." },
+        { "id": "d", "text": "`'0'` (satr)", "hint": "Bo'sh bo'lmagan har qanday satr truthy." }
+      ],
+      "explanation": "Falsy: `false`, `0`, `-0`, `0n`, `''`, `null`, `undefined`, `NaN`. Qolgan hamma narsa truthy, shu jumladan `[]`, `{}`, `'false'`. Shuning uchun `if (count)` 0 da ishlamaydi va `??` `||` dan xavfsizroq bo'lishi mumkin.",
+      "reviewed": false
+    },
+    {
+      "id": "node.js.012",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Bu funksiya katta massivlarda sekin. Nega?",
+      "code": "function unique(items) {\n  return items.filter((x, i) => items.indexOf(x) === i);\n}",
+      "options": [
+        { "id": "a", "text": "`indexOf` har element uchun massivni boshidan qidiradi: O(n²); `[...new Set(items)]` O(n) beradi", "correct": true },
+        { "id": "b", "text": "`filter` sekin", "hint": "`filter` bir marta o'tadi; ichidagi `indexOf` muammo." },
+        { "id": "c", "text": "Arrow funksiya sekin", "hint": "Funksiya turi murakkablikka ta'sir qilmaydi." },
+        { "id": "d", "text": "`===` o'rniga `==` kerak", "hint": "Taqqoslash operatori tezlikni o'zgartirmaydi." }
+      ],
+      "explanation": "Obyektlarni maydon bo'yicha unique qilish uchun `Map` kalit bilan: `[...new Map(items.map(x => [x.id, x])).values()]`. Qoida: ichma-ich qidiruv ko'rinsa, `Set`/`Map` haqida o'ylash.",
+      "reviewed": false
+    },
+    {
+      "id": "node.js.013",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`JSON.parse` tashqi ma'lumot bilan ishlashda qanday xavflar bor va qanday himoyalanadi?",
+      "options": [
+        { "id": "a", "text": "Noto'g'ri JSON exception tashlaydi (ushlash kerak), natija tipi noma'lum (sxema bilan tekshirish), juda katta tana xotirani yeydi (hajm cheklovi), `__proto__` kaliti prototype pollution xavfi", "correct": true },
+        { "id": "b", "text": "Xavf yo'q, JSON xavfsiz format", "hint": "Format xavfsiz, lekin mazmun va hajm nazoratsiz." },
+        { "id": "c", "text": "`JSON.parse` kod bajaradi", "hint": "Bajarmaydi (bu `eval` bo'lardi); xavf boshqa joyda." },
+        { "id": "d", "text": "Faqat `try/catch` yetarli", "hint": "Sintaksis xatosini ushlaydi, lekin tip va hajmni tekshirmaydi." }
+      ],
+      "explanation": "Express'da `express.json({ limit: '100kb' })` hajmni cheklaydi. Natijani zod kabi sxema bilan tekshirish `unknown` dan tiplangan obyektga o'tkazadi. Kelgan obyektni to'g'ridan-to'g'ri `Object.assign` bilan birlashtirish prototype pollution'ga yo'l ochadi.",
+      "reviewed": false
+    },
+    {
+      "id": "node.js.014",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Node.js backend'da bog'liqliklar (npm paketlari) xavfsizligini qanday boshqarish kerak?",
+      "options": [
+        { "id": "a", "text": "Lock fayl va `npm ci`, muntazam `npm audit`/Dependabot, kam va ishonchli paketlar, `postinstall` skriptlarni cheklash, provenance tekshiruvi, production'da `devDependencies` siz, versiyalarni ko'r-ko'rona `latest` qilmaslik", "correct": true },
+        { "id": "b", "text": "Har doim eng yangi versiyani o'rnatish", "hint": "Yangi versiya zararli bo'lishi mumkin (supply chain hujumlari); lock va ko'rib chiqish kerak." },
+        { "id": "c", "text": "Bog'liqliklarni hech qachon yangilamaslik", "hint": "Eski versiyalarda ma'lum zaifliklar qoladi." },
+        { "id": "d", "text": "`node_modules` ni git'ga qo'shish", "hint": "Hajm va tozalik muammosi; lock fayl shu vazifani bajaradi." }
+      ],
+      "explanation": "npm ekotizimida supply chain hujumlari (event-stream, ua-parser-js, 2025 dagi to'lqinlar) real xavf. Har paket tranzitiv yuzlab bog'liqlik olib keladi. Siyosat: minimal bog'liqlik, kuzatuv, CI'da audit, va kichik vazifa uchun paket emas, 20 qator kod.",
+      "reviewed": false
+    }
+  ]
+}

@@ -99,6 +99,12 @@ class ContentAssetsTest {
         "py.async" to listOf(4, 4, 3, 2),
         "py.db" to listOf(3, 3, 2, 2),
         "py.arch" to listOf(2, 2, 2, 2),
+        "node.js" to listOf(6, 5, 2, 1),
+        "node.runtime" to listOf(5, 4, 2, 1),
+        "node.web" to listOf(4, 4, 3, 2),
+        "node.async" to listOf(4, 4, 3, 2),
+        "node.db" to listOf(3, 3, 2, 2),
+        "node.arch" to listOf(2, 2, 2, 2),
     )
 
     @Test
