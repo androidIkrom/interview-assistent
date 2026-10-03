@@ -1,0 +1,882 @@
+{
+  "topic": "core.sql",
+  "questions": [
+    {
+      "id": "core.sql.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Jadvaldan ma'lumot o'qish uchun qaysi buyruq ishlatiladi?",
+      "options": [
+        { "id": "a", "text": "SELECT", "correct": true },
+        { "id": "b", "text": "INSERT", "hint": "U yangi qator qo'shadi." },
+        { "id": "c", "text": "UPDATE", "hint": "U mavjud qatorlarni o'zgartiradi." },
+        { "id": "d", "text": "CREATE", "hint": "U jadval yoki boshqa obyekt yaratadi." }
+      ],
+      "explanation": "Asosiy to'rt amal: o'qish, qo'shish (`INSERT`), o'zgartirish (`UPDATE`), o'chirish (`DELETE`). Jadval tuzilmasi bilan `CREATE`, `ALTER`, `DROP` ishlaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`WHERE` nima qiladi?",
+      "options": [
+        { "id": "a", "text": "Qatorlarni shart bo'yicha filtrlaydi", "correct": true },
+        { "id": "b", "text": "Natijani saralaydi", "hint": "Saralash `ORDER BY` ishi." },
+        { "id": "c", "text": "Qatorlarni guruhlaydi", "hint": "Guruhlash `GROUP BY` ishi." },
+        { "id": "d", "text": "Jadvallarni bog'laydi", "hint": "Bog'lash `JOIN` ishi." }
+      ],
+      "explanation": "`WHERE` shartga mos kelmaydigan qatorlarni natijadan chiqarib tashlaydi. U `SELECT`, `UPDATE` va `DELETE` da ishlatiladi; `UPDATE`/`DELETE` da uni unutish butun jadvalga ta'sir qiladi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.003",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Bu so'rov nima qaytaradi?",
+      "code": "SELECT COUNT(*) FROM users WHERE age >= 18;",
+      "options": [
+        { "id": "a", "text": "18 va undan katta yoshli foydalanuvchilar soni", "correct": true },
+        { "id": "b", "text": "18 yoshdan katta foydalanuvchilar ro'yxati", "hint": "`COUNT(*)` qatorlarni emas, ularning sonini qaytaradi." },
+        { "id": "c", "text": "Barcha foydalanuvchilar soni", "hint": "`WHERE` sharti sanashdan oldin qo'llanadi." },
+        { "id": "d", "text": "Faqat 18 yoshli foydalanuvchilar soni", "hint": "`>=` belgisi tenglikdan tashqari kattalikni ham qamraydi." }
+      ],
+      "explanation": "`COUNT(*)` shartdan o'tgan qatorlar sonini bitta son sifatida qaytaradi. `COUNT(ustun)` esa shu ustuni `NULL` bo'lmagan qatorlarni sanaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.004",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Birlamchi kalit (PRIMARY KEY) nima?",
+      "options": [
+        { "id": "a", "text": "Har bir qatorni yagona aniqlaydigan ustun (yoki ustunlar); `NULL` bo'lmaydi va takrorlanmaydi", "correct": true },
+        { "id": "b", "text": "Jadvaldagi birinchi ustun", "hint": "O'rni ahamiyatsiz; muhimi yagonalik." },
+        { "id": "c", "text": "Boshqa jadvalga ishora qiluvchi ustun", "hint": "Bu tashqi kalit (FOREIGN KEY)." },
+        { "id": "d", "text": "Eng ko'p ishlatiladigan ustun", "hint": "Ishlatish chastotasiga aloqasi yo'q." }
+      ],
+      "explanation": "Birlamchi kalit qatorning manzili: boshqa jadvallar unga tashqi kalit orqali ishora qiladi. Odatda `id` ustuni (avtoinkrement yoki UUID) tanlanadi va u avtomatik indekslanadi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.005",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Tashqi kalit (FOREIGN KEY) nima uchun kerak?",
+      "options": [
+        { "id": "a", "text": "Boshqa jadvalning birlamchi kalitiga ishora qilib, jadvallar orasidagi bog'lanishni va ma'lumot yaxlitligini ta'minlash uchun", "correct": true },
+        { "id": "b", "text": "Jadvalning zaxira kaliti sifatida", "hint": "U zaxira emas, boshqa jadvalga havola." },
+        { "id": "c", "text": "Ma'lumotni shifrlash uchun", "hint": "Xavfsizlikka aloqasi yo'q." },
+        { "id": "d", "text": "Faqat `JOIN` tezligi uchun indeks sifatida", "hint": "U indeks emas, cheklov (constraint); indeks alohida qo'shiladi." }
+      ],
+      "explanation": "`orders.user_id` → `users.id` tashqi kaliti mavjud bo'lmagan foydalanuvchiga buyurtma yozishga yo'l qo'ymaydi va foydalanuvchi o'chirilganda nima bo'lishini (`CASCADE`, `RESTRICT`, `SET NULL`) belgilaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.006",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`INNER JOIN` qanday qatorlarni qaytaradi?",
+      "options": [
+        { "id": "a", "text": "Faqat ikkala jadvalda ham mos keladigan qatorlarni", "correct": true },
+        { "id": "b", "text": "Chap jadvalning barcha qatorlarini", "hint": "Bu `LEFT JOIN`." },
+        { "id": "c", "text": "Ikkala jadvalning barcha qatorlarini", "hint": "Bu `FULL OUTER JOIN`." },
+        { "id": "d", "text": "Faqat mos kelmaydigan qatorlarni", "hint": "Aksincha: mos kelganlar qoladi." }
+      ],
+      "explanation": "`users INNER JOIN orders ON users.id = orders.user_id` buyurtmasi yo'q foydalanuvchilarni ham, egasi yo'q buyurtmalarni ham tashlab yuboradi. Faqat juftlik topilgan qatorlar qoladi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.007",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`LEFT JOIN` qanday qatorlarni qaytaradi?",
+      "options": [
+        { "id": "a", "text": "Chap jadvalning barcha qatorlarini; o'ng tomonda mos qator bo'lmasa, uning ustunlari `NULL` bo'ladi", "correct": true },
+        { "id": "b", "text": "Faqat mos keladigan qatorlarni", "hint": "Bu `INNER JOIN`." },
+        { "id": "c", "text": "O'ng jadvalning barcha qatorlarini", "hint": "Bu `RIGHT JOIN`." },
+        { "id": "d", "text": "Chap jadvaldan faqat mos kelmaganlarni", "hint": "Mos kelganlar ham kiradi; faqat mos kelmaganlar uchun `WHERE right.id IS NULL` qo'shiladi." }
+      ],
+      "explanation": "`LEFT JOIN` \"hamma foydalanuvchilar va bor bo'lsa buyurtmalari\" degan savolga javob beradi. Buyurtmasi yo'q foydalanuvchilarni topish uchun `WHERE orders.id IS NULL` qo'shiladi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.008",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Bu so'rov nima qaytaradi?",
+      "code": "SELECT name FROM products ORDER BY price DESC LIMIT 3;",
+      "options": [
+        { "id": "a", "text": "Eng qimmat 3 ta mahsulot nomi", "correct": true },
+        { "id": "b", "text": "Eng arzon 3 ta mahsulot nomi", "hint": "`DESC` kamayish tartibi: katta qiymatlar birinchi." },
+        { "id": "c", "text": "Narxi 3 dan katta mahsulotlar", "hint": "`LIMIT` qatorlar sonini cheklaydi, qiymatni emas." },
+        { "id": "d", "text": "Birinchi kiritilgan 3 ta mahsulot", "hint": "Tartib `price` bo'yicha, kiritish vaqti bo'yicha emas." }
+      ],
+      "explanation": "`ORDER BY price DESC` narx bo'yicha kamayish tartibida saralaydi, `LIMIT 3` birinchi uchtasini qoldiradi. `ORDER BY` siz `LIMIT` natijasi tasodifiy bo'lishi mumkin.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.009",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "SQL'da `NULL` nimani bildiradi?",
+      "options": [
+        { "id": "a", "text": "Qiymat yo'q yoki noma'lum", "correct": true },
+        { "id": "b", "text": "Nol (0)", "hint": "0 aniq son; bu esa qiymatning yo'qligi." },
+        { "id": "c", "text": "Bo'sh satr ('')", "hint": "Bo'sh satr ham aniq qiymat." },
+        { "id": "d", "text": "`false`", "hint": "Bu mantiqiy qiymat, yo'qlik emas." }
+      ],
+      "explanation": "`NULL` uch qiymatli mantiq kiritadi: `NULL = NULL` ham `true` emas, `NULL` (noma'lum). Shuning uchun `IS NULL`, `COALESCE` va agregatlarda `NULL` ni e'tiborsiz qoldirish qoidalarini bilish kerak.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.010",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`WHERE email = NULL` so'rovi nega hech narsa qaytarmaydi?",
+      "options": [
+        { "id": "a", "text": "`NULL` bilan taqqoslash `NULL` (noma'lum) beradi; `IS NULL` ishlatish kerak", "correct": true },
+        { "id": "b", "text": "`email` ustuni indekslanmagan", "hint": "Indeks natijaga ta'sir qilmaydi, faqat tezlikka." },
+        { "id": "c", "text": "`NULL` ni qo'shtirnoqqa olish kerak", "hint": "`'NULL'` oddiy satr bo'lib qoladi." },
+        { "id": "d", "text": "Bunday qatorlar jadvalda yo'q", "hint": "Qatorlar bo'lsa ham bu so'rov ularni topa olmaydi." }
+      ],
+      "explanation": "`WHERE` faqat `true` bo'lgan qatorlarni o'tkazadi; `email = NULL` har qator uchun noma'lum, shuning uchun hech biri o'tmaydi. To'g'ri yozuv: `WHERE email IS NULL`.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.011",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Bu so'rov nima qaytaradi?",
+      "code": "SELECT city, COUNT(*) FROM users GROUP BY city;",
+      "options": [
+        { "id": "a", "text": "Har bir shahar va undagi foydalanuvchilar soni", "correct": true },
+        { "id": "b", "text": "Barcha foydalanuvchilarning umumiy soni", "hint": "`GROUP BY` natijani shahar bo'yicha bo'ladi." },
+        { "id": "c", "text": "Shaharlar ro'yxati, takrorlar bilan", "hint": "Guruhlash har shaharni bir marta qaytaradi." },
+        { "id": "d", "text": "Xato: `COUNT` bilan `GROUP BY` birga ishlatilmaydi", "hint": "Ular aynan birga ishlatiladi." }
+      ],
+      "explanation": "`GROUP BY city` bir xil shaharli qatorlarni bitta guruhga yig'adi, `COUNT(*)` har guruhdagi qatorlarni sanaydi. `SELECT` da faqat guruhlash ustunlari va agregatlar bo'lishi mumkin.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.012",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Jadvalga yangi qator qo'shish uchun to'g'ri so'rov qaysi?",
+      "options": [
+        { "id": "a", "text": "`INSERT INTO users (name, age) VALUES ('Ali', 25);`", "correct": true },
+        { "id": "b", "text": "`ADD INTO users (name, age) VALUES ('Ali', 25);`", "hint": "Bunday buyruq SQL'da yo'q." },
+        { "id": "c", "text": "`INSERT users SET name = 'Ali', age = 25;`", "hint": "`SET` `UPDATE` da ishlatiladi." },
+        { "id": "d", "text": "`CREATE ROW users ('Ali', 25);`", "hint": "`CREATE` jadval va boshqa obyektlar uchun." }
+      ],
+      "explanation": "Ustunlar ro'yxatini yozish tavsiya etiladi: jadvalga yangi ustun qo'shilganda so'rov buzilmaydi. Bir nechta qatorni `VALUES (...), (...)` bilan bitta so'rovda qo'shish mumkin.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.013",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`UPDATE users SET active = 0;` so'rovi nima qiladi?",
+      "options": [
+        { "id": "a", "text": "Jadvaldagi barcha qatorlarda `active` ni 0 qiladi", "correct": true },
+        { "id": "b", "text": "Faqat bitta qatorni o'zgartiradi", "hint": "Cheklov yo'q; `WHERE` bo'lmasa, hammasi o'zgaradi." },
+        { "id": "c", "text": "Xato beradi, chunki `WHERE` yo'q", "hint": "Standart SQL'da bu ruxsat etilgan va shuning uchun xavfli." },
+        { "id": "d", "text": "`active` ustunini o'chiradi", "hint": "Ustun o'chirish `ALTER TABLE ... DROP COLUMN`." }
+      ],
+      "explanation": "`WHERE` siz `UPDATE` va `DELETE` butun jadvalga qo'llanadi. Production'da bunday so'rovni avval `SELECT` bilan tekshirish va tranzaksiya ichida bajarish odat qilinadi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.014",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`DELETE FROM t` va `DROP TABLE t` o'rtasidagi farq nima?",
+      "options": [
+        { "id": "a", "text": "`DELETE` qatorlarni o'chiradi, jadval qoladi; `DROP` jadvalning o'zini o'chiradi", "correct": true },
+        { "id": "b", "text": "Farqi yo'q", "hint": "Biridan keyin jadval bor, ikkinchisidan keyin yo'q." },
+        { "id": "c", "text": "`DROP` faqat ma'lumotni, `DELETE` jadvalni o'chiradi", "hint": "Aksincha." },
+        { "id": "d", "text": "`DELETE` ni qaytarib bo'lmaydi, `DROP` ni qaytarish mumkin", "hint": "Tranzaksiya ichida `DELETE` ni `ROLLBACK` qilish mumkin." }
+      ],
+      "explanation": "`DELETE` qatorma-qator ishlaydi va `WHERE` qabul qiladi; `TRUNCATE` barcha qatorlarni tez o'chiradi; `DROP` jadval, uning indekslari va cheklovlarini butunlay yo'q qiladi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.015",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`SELECT DISTINCT city FROM users` nima qaytaradi?",
+      "options": [
+        { "id": "a", "text": "Takrorlanmas shaharlar ro'yxati", "correct": true },
+        { "id": "b", "text": "Faqat birinchi shahar", "hint": "Hamma har xil qiymatlar qaytadi." },
+        { "id": "c", "text": "Shaharlar soni", "hint": "Soni uchun `COUNT(DISTINCT city)`." },
+        { "id": "d", "text": "Shaharlar alifbo tartibida", "hint": "Tartib uchun `ORDER BY` kerak." }
+      ],
+      "explanation": "`DISTINCT` natijadagi takroriy qatorlarni olib tashlaydi. Bir nechta ustun berilsa, ustunlar kombinatsiyasi bo'yicha takrorlar olib tashlanadi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.016",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`WHERE name LIKE 'A%'` qanday qatorlarni topadi?",
+      "options": [
+        { "id": "a", "text": "Nomi `A` bilan boshlanadiganlarni", "correct": true },
+        { "id": "b", "text": "Nomida istalgan joyda `A` bo'lganlarni", "hint": "Buning uchun `'%A%'` kerak." },
+        { "id": "c", "text": "Nomi `A` bilan tugaydiganlarni", "hint": "Buning uchun `'%A'` kerak." },
+        { "id": "d", "text": "Nomi aynan `A%` bo'lganlarni", "hint": "`%` maxsus belgi: istalgan belgilar ketma-ketligi." }
+      ],
+      "explanation": "`LIKE` da `%` istalgan uzunlikdagi, `_` bitta belgini bildiradi. Prefiks bo'yicha qidiruv (`'A%'`) indeksdan foydalana oladi, `'%A%'` esa yo'q.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.017",
+      "level": "junior",
+      "type": "multi",
+      "kind": "concept",
+      "prompt": "Quyidagilardan qaysilari agregat funksiya?",
+      "options": [
+        { "id": "a", "text": "`SUM`", "correct": true },
+        { "id": "b", "text": "`AVG`", "correct": true },
+        { "id": "c", "text": "`UPPER`", "hint": "U bitta qiymatni o'zgartiradi, ko'p qatorni yig'maydi." },
+        { "id": "d", "text": "`WHERE`", "hint": "Bu kalit so'z, funksiya emas." }
+      ],
+      "explanation": "Agregat funksiyalar (`COUNT`, `SUM`, `AVG`, `MIN`, `MAX`) ko'p qatordan bitta qiymat hosil qiladi. `UPPER`, `LENGTH` kabi skalyar funksiyalar har qatorga alohida qo'llanadi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.018",
+      "level": "junior",
+      "type": "single",
+      "kind": "true_false",
+      "prompt": "Quyidagi fikr to'g'rimi?\n\nRelyatsion bazada jadval ustunlari oldindan belgilangan tipga ega va har bir qator shu sxemaga mos bo'lishi kerak.",
+      "options": [
+        { "id": "a", "text": "Ha", "correct": true },
+        { "id": "b", "text": "Yo'q", "hint": "Relyatsion bazalarda sxema qat'iy: ustun tipi va cheklovlariga mos kelmaydigan qator rad etiladi. Erkin tuzilma hujjatli NoSQL bazalarga xos." }
+      ],
+      "explanation": "Qat'iy sxema ma'lumot sifatini kafolatlaydi va so'rovlarni optimallashtirishga yordam beradi. Evaziga sxemani o'zgartirish migratsiya talab qiladi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.019",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Indeks nima uchun kerak?",
+      "options": [
+        { "id": "a", "text": "Ustun bo'yicha qidirish va saralashni tezlashtirish uchun", "correct": true },
+        { "id": "b", "text": "Ma'lumotni shifrlash uchun", "hint": "Xavfsizlikka aloqasi yo'q." },
+        { "id": "c", "text": "Jadval hajmini kamaytirish uchun", "hint": "Aksincha, indeks qo'shimcha joy oladi." },
+        { "id": "d", "text": "Takrorlanishning oldini olish uchun", "hint": "Buni `UNIQUE` cheklovi qiladi; oddiy indeks takrorga ruxsat beradi." }
+      ],
+      "explanation": "Indeks kitob oxiridagi ko'rsatkichga o'xshaydi: butun jadvalni o'qish o'rniga baza kerakli qatorlarni daraxt (B-tree) bo'yicha tez topadi. Evaziga har yozishda indeks ham yangilanadi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.020",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Bu so'rov nima qaytaradi?",
+      "code": "SELECT * FROM orders WHERE status IN ('new', 'paid');",
+      "options": [
+        { "id": "a", "text": "Statusi `new` yoki `paid` bo'lgan buyurtmalar", "correct": true },
+        { "id": "b", "text": "Statusi ham `new`, ham `paid` bo'lgan buyurtmalar", "hint": "Bitta qator bir vaqtda ikki qiymatga ega bo'lmaydi; `IN` \"ulardan biri\" degani." },
+        { "id": "c", "text": "Statusi bu ikkitasidan boshqa bo'lganlar", "hint": "Bu `NOT IN`." },
+        { "id": "d", "text": "Xato: `IN` faqat sonlar bilan ishlaydi", "hint": "Satrlar bilan ham ishlaydi." }
+      ],
+      "explanation": "`IN (a, b)` — `status = a OR status = b` ning qisqa yozuvi. Ro'yxat o'rniga ichki so'rov ham bo'lishi mumkin: `IN (SELECT ...)`.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.021",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`WHERE` va `HAVING` farqi nima?",
+      "options": [
+        { "id": "a", "text": "`WHERE` guruhlashdan oldin qatorlarni, `HAVING` guruhlashdan keyin guruhlarni filtrlaydi", "correct": true },
+        { "id": "b", "text": "Farqi yo'q, `HAVING` eskirgan yozuv", "hint": "Ikkalasi ham kerak va boshqa bosqichda ishlaydi." },
+        { "id": "c", "text": "`HAVING` faqat `JOIN` bilan ishlatiladi", "hint": "U `GROUP BY` bilan bog'liq, `JOIN` bilan emas." },
+        { "id": "d", "text": "`WHERE` agregat funksiyalar bilan ishlaydi, `HAVING` esa yo'q", "hint": "Aksincha: agregat bo'yicha shart faqat `HAVING` da." }
+      ],
+      "explanation": "Bajarilish tartibi: `FROM` → `WHERE` → `GROUP BY` → `HAVING` → `SELECT` → `ORDER BY`. Shuning uchun `WHERE COUNT(*) > 5` xato, `HAVING COUNT(*) > 5` to'g'ri.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.022",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Bu so'rov nima qaytaradi?",
+      "code": "SELECT city, COUNT(*) AS n\nFROM users\nGROUP BY city\nHAVING COUNT(*) > 100;",
+      "options": [
+        { "id": "a", "text": "100 dan ortiq foydalanuvchisi bor shaharlar va ularning soni", "correct": true },
+        { "id": "b", "text": "Birinchi 100 ta shahar", "hint": "Soni cheklash `LIMIT` ishi; bu yerda guruh bo'yicha shart." },
+        { "id": "c", "text": "Yoshi 100 dan katta foydalanuvchilar", "hint": "`COUNT(*)` yoshni emas, guruhdagi qatorlar sonini bildiradi." },
+        { "id": "d", "text": "Xato: `HAVING` da agregat ishlatib bo'lmaydi", "hint": "`HAVING` aynan agregat bo'yicha shart uchun." }
+      ],
+      "explanation": "Avval shahar bo'yicha guruhlanadi, keyin har guruh soni hisoblanadi, so'ng `HAVING` kichik guruhlarni tashlab yuboradi. `AS n` taxallusini ba'zi bazalarda `HAVING n > 100` deb ham ishlatish mumkin.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.023",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`email` ustunida indeks bor, lekin `WHERE LOWER(email) = 'a@b.c'` so'rovi sekin. Nega?",
+      "options": [
+        { "id": "a", "text": "Ustunga funksiya qo'llanganda oddiy indeks ishlatilmaydi; funksional indeks yoki qiymatni oldindan normallashtirish kerak", "correct": true },
+        { "id": "b", "text": "Indeks faqat sonli ustunlarda ishlaydi", "hint": "Matnli ustunlar ham indekslanadi." },
+        { "id": "c", "text": "`=` operatori indeksdan foydalanmaydi", "hint": "Tenglik indeks uchun eng qulay shart." },
+        { "id": "d", "text": "Jadval juda kichik", "hint": "Kichik jadvalda sekinlik sezilmas edi." }
+      ],
+      "explanation": "Indeks `email` qiymatlari bo'yicha qurilgan, `LOWER(email)` bo'yicha emas. Yechimlar: `CREATE INDEX ON users (LOWER(email))`, saqlashda kichik harfga keltirish yoki `citext` kabi registrsiz tip.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.024",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`WHERE id IN (SELECT user_id FROM orders)` ni `JOIN` bilan almashtirish qachon foydali?",
+      "options": [
+        { "id": "a", "text": "Ikkala jadvaldan ustunlar kerak bo'lganda yoki optimizator ichki so'rovni yomon rejalashtirganda; faqat mavjudlikni tekshirish uchun `EXISTS` ham mos", "correct": true },
+        { "id": "b", "text": "Har doim: ichki so'rovlar taqiqlangan", "hint": "Ichki so'rovlar to'liq qonuniy va ko'pincha o'qish uchun aniqroq." },
+        { "id": "c", "text": "Hech qachon: `JOIN` har doim sekinroq", "hint": "Zamonaviy optimizatorlar ko'pincha ikkalasini bir xil rejaga keltiradi." },
+        { "id": "d", "text": "Faqat `NULL` lar bo'lmasa", "hint": "`NULL` muammosi `NOT IN` ga tegishli, `IN` ga emas." }
+      ],
+      "explanation": "`JOIN` da bitta foydalanuvchi bir nechta buyurtmasi bo'lsa takrorlanadi (`DISTINCT` kerak), `IN`/`EXISTS` da yo'q. Tanlov semantika va `EXPLAIN` natijasiga qarab qilinadi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.025",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Uchinchi normal shakl (3NF) ning asosiy talabi nima?",
+      "options": [
+        { "id": "a", "text": "Kalit bo'lmagan ustunlar faqat birlamchi kalitga bog'liq bo'lishi, bir-biriga emas (tranzitiv bog'liqlik yo'q)", "correct": true },
+        { "id": "b", "text": "Har bir katakda bitta atomar qiymat bo'lishi", "hint": "Bu 1NF talabi." },
+        { "id": "c", "text": "Jadvalda 3 tadan ortiq ustun bo'lmasligi", "hint": "Ustunlar soni cheklanmagan." },
+        { "id": "d", "text": "Barcha jadvallar bir-biriga `JOIN` qilinishi", "hint": "Normal shakllar bog'lanish soni haqida emas." }
+      ],
+      "explanation": "Misol: `orders(id, customer_id, customer_city)` 3NF ni buzadi, chunki `customer_city` `customer_id` ga bog'liq. Shahar `customers` jadvaliga ko'chiriladi; aks holda mijoz ko'chganda minglab buyurtmani yangilash kerak.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.026",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Qachon ataylab denormalizatsiya qilinadi?",
+      "options": [
+        { "id": "a", "text": "O'qish ko'p va `JOIN` lar qimmat bo'lganda, ma'lumot takrorlanishi narxini bilgan holda", "correct": true },
+        { "id": "b", "text": "Har doim, chunki normal shakllar eskirgan", "hint": "Normalizatsiya hali ham standart boshlang'ich nuqta." },
+        { "id": "c", "text": "Yozish ko'p bo'lganda", "hint": "Yozishda takrorlangan ma'lumotni hamma joyda yangilash kerak; bu aksincha qiyinlashadi." },
+        { "id": "d", "text": "Jadval kichik bo'lganda", "hint": "Kichik jadvalda `JOIN` arzon; denormalizatsiya kerak emas." }
+      ],
+      "explanation": "Denormalizatsiya — ongli savdo: o'qish tezlashadi, yozish va izchillik murakkablashadi. Odatda hisobot jadvallari, keshlangan hisoblar (`order_count`) yoki materialized view ko'rinishida qilinadi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.027",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "ACID'dagi atomarlik (A) nimani bildiradi?",
+      "options": [
+        { "id": "a", "text": "Tranzaksiyadagi barcha amallar yoki to'liq bajariladi, yoki umuman bajarilmaydi", "correct": true },
+        { "id": "b", "text": "Tranzaksiya boshqalardan ajratilgan holda bajariladi", "hint": "Bu izolyatsiya (I)." },
+        { "id": "c", "text": "Natija commit'dan keyin diskda saqlanib qoladi", "hint": "Bu bardoshlilik (D)." },
+        { "id": "d", "text": "Ma'lumot cheklovlarga mos holatda qoladi", "hint": "Bu izchillik (C)." }
+      ],
+      "explanation": "Pul o'tkazmasi: bir hisobdan ayirish va boshqasiga qo'shish bitta tranzaksiyada bo'lishi kerak. Ikkinchisi muvaffaqiyatsiz bo'lsa, birinchisi ham bekor qilinadi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.028",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Bu ketma-ketlikdan keyin hisoblar holati qanday bo'ladi?",
+      "code": "BEGIN;\nUPDATE accounts SET balance = balance - 100 WHERE id = 1;\nUPDATE accounts SET balance = balance + 100 WHERE id = 2;\nROLLBACK;",
+      "options": [
+        { "id": "a", "text": "Ikkala hisob ham o'zgarmaydi", "correct": true },
+        { "id": "b", "text": "Faqat birinchi hisobdan 100 ayriladi", "hint": "Tranzaksiya qisman bekor qilinmaydi; hammasi yoki hech narsa." },
+        { "id": "c", "text": "Ikkala o'zgarish saqlanadi", "hint": "Saqlash `COMMIT` bilan bo'ladi." },
+        { "id": "d", "text": "Xato: `ROLLBACK` dan oldin `COMMIT` shart", "hint": "`ROLLBACK` aynan `COMMIT` o'rniga ishlatiladi." }
+      ],
+      "explanation": "`BEGIN` dan `COMMIT` gacha bo'lgan o'zgarishlar vaqtinchalik. `ROLLBACK` ularni bekor qiladi; ilova xatosi yoki ulanish uzilishi ham odatda avtomatik rollback'ga olib keladi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.029",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Bitta jadvalda nechta `PRIMARY KEY` va nechta `UNIQUE` cheklov bo'lishi mumkin?",
+      "options": [
+        { "id": "a", "text": "Bitta birlamchi kalit (bir yoki bir nechta ustundan), `UNIQUE` esa istalgancha", "correct": true },
+        { "id": "b", "text": "Ikkalasi ham faqat bittadan", "hint": "Yagonalik cheklovlari bir nechta bo'lishi mumkin (masalan, `email` va `username`)." },
+        { "id": "c", "text": "Birlamchi kalit istalgancha", "hint": "Qatorning \"asosiy manzili\" bitta bo'ladi." },
+        { "id": "d", "text": "`UNIQUE` faqat bitta", "hint": "Cheklov yo'q." }
+      ],
+      "explanation": "Birlamchi kalit `NULL` qabul qilmaydi; `UNIQUE` ustun esa (ko'p bazalarda) bir nechta `NULL` ga ruxsat beradi. Ikkalasi ham avtomatik indeks yaratadi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.030",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`(last_name, first_name)` tarkibli indeks `WHERE first_name = 'Ali'` so'rovida ishlaydimi?",
+      "options": [
+        { "id": "a", "text": "Odatda yo'q: tarkibli indeks chapdan o'ngga ishlaydi, birinchi ustun shartda yo'q", "correct": true },
+        { "id": "b", "text": "Ha, har qanday ustun uchun", "hint": "Indeks avval birinchi ustun bo'yicha tartiblangan; ikkinchisi faqat uning ichida." },
+        { "id": "c", "text": "Ha, lekin faqat `ORDER BY` bo'lsa", "hint": "`ORDER BY` buni o'zgartirmaydi." },
+        { "id": "d", "text": "Yo'q, tarkibli indeks faqat ikkala ustun ham shartda bo'lganda ishlaydi", "hint": "Faqat birinchi ustun (`last_name`) bo'lsa ham ishlaydi." }
+      ],
+      "explanation": "Tarkibli indeks telefon kitobiga o'xshaydi: familiya bo'yicha, keyin ism bo'yicha tartiblangan. Faqat ism bo'yicha qidirish butun kitobni varaqlashni talab qiladi. Ustunlar tartibi so'rovlarga qarab tanlanadi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.031",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "ORM'da 100 ta buyurtma uchun har birining mijozini alohida so'rov bilan yuklash qanday muammo?",
+      "options": [
+        { "id": "a", "text": "N+1 so'rov: 101 ta so'rov o'rniga `JOIN` yoki oldindan yuklash (eager loading) bilan 1–2 ta so'rov kerak", "correct": true },
+        { "id": "b", "text": "Muammo yo'q, ORM shunday ishlashi kerak", "hint": "ORM'lar aynan bu holat uchun `select_related`, `fetch join`, `include` kabi vositalar beradi." },
+        { "id": "c", "text": "Xotira yetishmaydi", "hint": "Muammo xotirada emas, bazaga borib-kelishlar sonida." },
+        { "id": "d", "text": "Tranzaksiya buziladi", "hint": "Tranzaksiya to'g'ri qoladi, faqat sekin." }
+      ],
+      "explanation": "Har so'rov tarmoq orqali borib-kelish; 101 ta so'rov bir nechta yuz millisekund olishi mumkin. Lazy loading'ni siklda ishlatish N+1 ning klassik manbai; so'rovlar logini kuzatish uni oshkor qiladi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.032",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Dirty read nima?",
+      "options": [
+        { "id": "a", "text": "Bir tranzaksiya boshqa tranzaksiyaning hali commit qilinmagan o'zgarishini o'qishi", "correct": true },
+        { "id": "b", "text": "Indekssiz jadvaldan o'qish", "hint": "Tezlik masalasi; izchillikka aloqasi yo'q." },
+        { "id": "c", "text": "Bir xil qatorni ikki marta o'qib, har xil natija olish", "hint": "Bu non-repeatable read; dirty read commit qilinmagan ma'lumot haqida." },
+        { "id": "d", "text": "`NULL` qiymatlarni o'qish", "hint": "`NULL` oddiy holat, anomaliya emas." }
+      ],
+      "explanation": "Agar o'sha tranzaksiya keyin `ROLLBACK` qilsa, siz hech qachon mavjud bo'lmagan ma'lumotni ko'rgan bo'lasiz. `READ COMMITTED` va undan yuqori izolyatsiya darajalari buni oldini oladi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.033",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`EXPLAIN` nima beradi?",
+      "options": [
+        { "id": "a", "text": "So'rovning bajarilish rejasini: qaysi indekslar ishlatiladi, jadvallar qanday tartibda va usulda skanerlanadi", "correct": true },
+        { "id": "b", "text": "So'rovni tezlashtiradi", "hint": "U faqat ko'rsatadi, hech narsani o'zgartirmaydi." },
+        { "id": "c", "text": "So'rov sintaksisini tekshiradi", "hint": "Sintaksis xatosi bo'lsa, oddiy xato chiqadi; reja boshqa narsa." },
+        { "id": "d", "text": "Jadval tuzilmasini chiqaradi", "hint": "Tuzilma uchun `DESCRIBE` yoki `\\d` kabi buyruqlar bor." }
+      ],
+      "explanation": "`EXPLAIN ANALYZE` so'rovni haqiqatan bajarib, taxminiy va haqiqiy qator sonlarini solishtiradi. Katta farq statistika eskirganini (`ANALYZE` kerak) bildiradi; `Seq Scan` katta jadvalda indeks yetishmasligiga ishora.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.034",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`LIMIT 20 OFFSET 100000` nega sekin?",
+      "options": [
+        { "id": "a", "text": "Baza avval 100020 qatorni o'qib, 100000 tasini tashlab yuboradi; katta offset'da keyset (cursor) sahifalash yaxshiroq", "correct": true },
+        { "id": "b", "text": "`LIMIT` indeksni o'chiradi", "hint": "`LIMIT` indeksga ta'sir qilmaydi." },
+        { "id": "c", "text": "20 ta qator ko'p", "hint": "20 qator arzimas; muammo o'tkazib yuboriladiganlarda." },
+        { "id": "d", "text": "`OFFSET` har doim butun jadvalni saralaydi", "hint": "Indeks bo'lsa saralash arzon; muammo tashlab yuboriladigan qatorlarda." }
+      ],
+      "explanation": "Keyset sahifalash: `WHERE id > :last_id ORDER BY id LIMIT 20`. Baza to'g'ridan-to'g'ri kerakli joydan boshlaydi, shuning uchun 1000-sahifa ham 1-sahifa kabi tez.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.035",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "View nima?",
+      "options": [
+        { "id": "a", "text": "Saqlangan so'rov; unga jadvaldek murojaat qilinadi, lekin ma'lumot asosiy jadvallarda turadi", "correct": true },
+        { "id": "b", "text": "Jadvalning nusxasi", "hint": "Oddiy view ma'lumot saqlamaydi; nusxa saqlaydigani materialized view." },
+        { "id": "c", "text": "Indeks turi", "hint": "U qidiruvni tezlashtirmaydi." },
+        { "id": "d", "text": "Tranzaksiya logi", "hint": "Logga aloqasi yo'q." }
+      ],
+      "explanation": "View murakkab `JOIN` ni nom bilan yashiradi va ruxsatlarni cheklashga yordam beradi (foydalanuvchi faqat view'ni ko'radi). Materialized view natijani saqlaydi va vaqti-vaqti bilan yangilanadi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.036",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Pul summasini saqlash uchun qaysi tip to'g'ri?",
+      "options": [
+        { "id": "a", "text": "`DECIMAL`/`NUMERIC`: aniq o'nlik; `FLOAT` yaxlitlash xatosi beradi", "correct": true },
+        { "id": "b", "text": "`FLOAT`", "hint": "Ikkilik kasr 0.1 ni aniq ifodalay olmaydi; summalarda tiyinlar yo'qoladi." },
+        { "id": "c", "text": "`VARCHAR`", "hint": "Matn bilan arifmetika va saralash noto'g'ri ishlaydi." },
+        { "id": "d", "text": "`INT`, chunki tezroq", "hint": "Tiyinlarda `INT` saqlash ham uchraydi, lekin bu alohida kelishuv talab qiladi; standart javob boshqa." }
+      ],
+      "explanation": "`DECIMAL(12, 2)` 10 ta butun va 2 ta kasr xona bilan summani aniq saqlaydi. `0.1 + 0.2` `FLOAT` da `0.30000000000000004` bo'lishi mumkin; moliyada bu qabul qilinmaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.037",
+      "level": "middle",
+      "type": "multi",
+      "kind": "concept",
+      "prompt": "Qaysi holatlarda indeks qo'shish foydali?",
+      "options": [
+        { "id": "a", "text": "`WHERE` da tez-tez ishlatiladigan ustunga", "correct": true },
+        { "id": "b", "text": "`JOIN` shartidagi tashqi kalit ustuniga", "correct": true },
+        { "id": "c", "text": "Jadvaldagi har bir ustunga", "hint": "Har indeks yozishni sekinlashtiradi va joy oladi." },
+        { "id": "d", "text": "Faqat 2–3 xil qiymatli ustunga (masalan, `gender`)", "hint": "Past selektivlikda indeks deyarli yordam bermaydi: baribir jadvalning yarmi o'qiladi." }
+      ],
+      "explanation": "Indeks selektiv ustunlarda (ko'p har xil qiymat) va tez-tez filtrlanadigan, bog'lanadigan yoki saralanadigan ustunlarda foyda beradi. Tashqi kalitlar ko'p bazalarda avtomatik indekslanmaydi, buni unutish N+1 kabi sekinlikka olib keladi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.038",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Bu kodda qanday muammo bor?",
+      "code": "String sql = \"SELECT * FROM users WHERE name = '\" + userName + \"'\";\nstatement.executeQuery(sql);",
+      "options": [
+        { "id": "a", "text": "SQL injection: foydalanuvchi kiritgan matn so'rovga qo'shib yuborilgan; parametrlangan so'rov (`?` yoki `:name`) kerak", "correct": true },
+        { "id": "b", "text": "`SELECT *` sekin", "hint": "Uslub masalasi, xavfsizlik emas." },
+        { "id": "c", "text": "`name` ustunida indeks yo'q", "hint": "Indeks haqida koddan hech narsa ma'lum emas; muammo boshqa joyda." },
+        { "id": "d", "text": "Qo'shtirnoqlar noto'g'ri qo'yilgan", "hint": "Sintaktik jihatdan ishlaydi; muammo chuqurroq." }
+      ],
+      "explanation": "`userName = \"' OR '1'='1\"` bo'lsa, so'rov barcha foydalanuvchilarni qaytaradi; `'; DROP TABLE users; --` bundan ham yomon. Parametrlangan so'rovda qiymat kod sifatida emas, ma'lumot sifatida uzatiladi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.039",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`READ COMMITTED` va `REPEATABLE READ` izolyatsiya darajalari farqi nima?",
+      "options": [
+        { "id": "a", "text": "`REPEATABLE READ` da tranzaksiya ichida bir xil qatorni qayta o'qish bir xil natija beradi; `READ COMMITTED` da boshqa tranzaksiyaning commit'i ko'rinib qolishi mumkin", "correct": true },
+        { "id": "b", "text": "`READ COMMITTED` dirty read'ga ruxsat beradi", "hint": "Yo'q, u faqat commit qilinganni ko'rsatadi; dirty read `READ UNCOMMITTED` da." },
+        { "id": "c", "text": "Farqi faqat tezlikda", "hint": "Farq ko'rinadigan ma'lumotda." },
+        { "id": "d", "text": "`REPEATABLE READ` barcha anomaliyalarni yo'qotadi", "hint": "Phantom read (standart bo'yicha) va write skew qolishi mumkin; to'liq kafolat `SERIALIZABLE` da." }
+      ],
+      "explanation": "Ko'p bazalarda standart daraja `READ COMMITTED`. `REPEATABLE READ` tranzaksiya boshidagi snapshot'ni ko'rsatadi (PostgreSQL'da phantom'larni ham to'xtatadi). `SERIALIZABLE` ketma-ket bajarilgandek kafolat beradi, lekin konflikt xatolari chiqishi mumkin.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.040",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Deadlock qanday yuzaga keladi va qanday kamaytiriladi?",
+      "options": [
+        { "id": "a", "text": "Ikki tranzaksiya bir-biri ushlab turgan qulfni kutadi; qatorlarni bir xil tartibda yangilash va tranzaksiyalarni qisqa tutish yordam beradi", "correct": true },
+        { "id": "b", "text": "Indeks yetishmasligidan; indeks qo'shish hal qiladi", "hint": "Indeks sekinlikni kamaytiradi, lekin o'zaro kutish qulflar tartibidan kelib chiqadi." },
+        { "id": "c", "text": "Faqat `SELECT` so'rovlarida", "hint": "Oddiy `SELECT` qulf qo'ymaydi; deadlock yozuvlar orasida bo'ladi." },
+        { "id": "d", "text": "Baza uni hech qachon aniqlamaydi", "hint": "Zamonaviy bazalar deadlock'ni aniqlab, tranzaksiyalardan birini bekor qiladi." }
+      ],
+      "explanation": "T1 A qatorini, T2 B qatorini qulflaydi; keyin T1 B ni, T2 A ni kutadi. Baza bittasini xato bilan bekor qiladi; ilova uni qayta urinishi kerak. Oldini olish: resurslarni doim bir xil tartibda olish, tranzaksiyada foydalanuvchi kiritishini kutmaslik.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.041",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Optimistik qulflash qanday ishlaydi?",
+      "options": [
+        { "id": "a", "text": "Qator versiyasi (yoki `updated_at`) o'qiladi; yangilashda `WHERE version = ?` tekshiriladi, mos kelmasa konflikt deb qabul qilinadi", "correct": true },
+        { "id": "b", "text": "`SELECT ... FOR UPDATE` bilan qator oldindan qulflanadi", "hint": "Bu pessimistik yondashuv." },
+        { "id": "c", "text": "Tranzaksiya `SERIALIZABLE` qilinadi", "hint": "Bu izolyatsiya darajasi, qulflash strategiyasi emas." },
+        { "id": "d", "text": "Konfliktlar e'tiborga olinmaydi", "hint": "Aksincha, konflikt aniq aniqlanadi; faqat qulf oldindan qo'yilmaydi." }
+      ],
+      "explanation": "Optimistik qulflash konflikt kam bo'lganda mos: qulf ushlab turilmaydi, foydalanuvchi formani uzoq to'ldirsa ham boshqalar bloklanmaydi. `UPDATE ... WHERE id = ? AND version = ?` 0 qator o'zgartirsa, ilova \"ma'lumot o'zgargan, qayta yuklang\" deydi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.042",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Bu so'rov nima qaytaradi?",
+      "code": "SELECT name, salary,\n       RANK() OVER (ORDER BY salary DESC) AS r\nFROM employees;",
+      "options": [
+        { "id": "a", "text": "Har bir xodim, maoshi va maosh bo'yicha o'rni (bir xil maoshda bir xil o'rin, keyingi o'rin o'tkazib yuboriladi)", "correct": true },
+        { "id": "b", "text": "Faqat eng yuqori maoshli xodim", "hint": "Window funksiya qatorlarni filtrlamaydi." },
+        { "id": "c", "text": "Xodimlar maosh bo'yicha guruhlangan", "hint": "Window funksiya qatorlarni yig'maydi, har qatorni saqlaydi." },
+        { "id": "d", "text": "Xato: `OVER` dan keyin `GROUP BY` shart", "hint": "`OVER` aynan `GROUP BY` siz ishlaydi." }
+      ],
+      "explanation": "Window funksiyalar har qator uchun \"oyna\" bo'yicha hisob qiladi, qatorlarni birlashtirmaydi. `RANK` teng qiymatlarga bir xil o'rin berib, keyingisini o'tkazib yuboradi (1, 1, 3); `DENSE_RANK` o'tkazmaydi (1, 1, 2); `ROW_NUMBER` har doim ketma-ket.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.043",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`EXPLAIN` katta jadvalda `Seq Scan` ko'rsatdi, so'rovda `WHERE user_id = 5` bor. Nima qilish kerak?",
+      "options": [
+        { "id": "a", "text": "`user_id` da indeks bor-yo'qligini va statistika yangiligini tekshirish; indeks qo'shish yoki `ANALYZE` bajarish", "correct": true },
+        { "id": "b", "text": "`SELECT *` ni `SELECT id` ga almashtirish", "hint": "Ustunlar soni skanerlash usulini o'zgartirmaydi." },
+        { "id": "c", "text": "Jadvalni qayta yaratish", "hint": "Tuzilma muammosi emas." },
+        { "id": "d", "text": "`LIMIT` qo'shish", "hint": "`LIMIT` qidirishni emas, qaytariladigan sonni cheklaydi." }
+      ],
+      "explanation": "Optimizator indeks bo'lsa ham `Seq Scan` tanlashi mumkin: statistika eskirgan bo'lsa yoki shart jadvalning katta qismini qamrasa. `EXPLAIN ANALYZE` dagi taxminiy va haqiqiy qator sonlarini solishtirish sababni ko'rsatadi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.044",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Covering (qamrab oluvchi) indeks nima?",
+      "options": [
+        { "id": "a", "text": "So'rovga kerakli barcha ustunlarni o'z ichiga olgan indeks; baza jadvalga murojaat qilmaydi (index-only scan)", "correct": true },
+        { "id": "b", "text": "Jadvalning barcha ustunlarini qamragan indeks", "hint": "Hamma ustun emas, aynan shu so'rovga kerakli ustunlar." },
+        { "id": "c", "text": "Bir nechta jadvalni qamrab oluvchi indeks", "hint": "Indeks bitta jadvalga tegishli." },
+        { "id": "d", "text": "Avtomatik yaratiladigan indeks", "hint": "Uni aniq maqsad bilan qo'lda yaratishadi." }
+      ],
+      "explanation": "`SELECT email FROM users WHERE status = 'active'` uchun `(status, email)` indeksi yoki `(status) INCLUDE (email)` yetarli: natija indeksning o'zidan olinadi. Bu og'ir, tez-tez bajariladigan so'rovlar uchun katta yutuq.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.045",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`WHERE id NOT IN (SELECT user_id FROM orders)` ba'zan bo'sh natija qaytaradi, garchi buyurtmasiz foydalanuvchilar bo'lsa ham. Nega?",
+      "options": [
+        { "id": "a", "text": "Ichki so'rovda bitta `NULL` bo'lsa, `NOT IN` butun shart uchun noma'lum beradi; `NOT EXISTS` ishlatish kerak", "correct": true },
+        { "id": "b", "text": "`NOT IN` katta ro'yxatlar bilan ishlamaydi", "hint": "Hajm cheklovi emas; muammo `NULL` semantikasida." },
+        { "id": "c", "text": "`orders` jadvali bo'sh", "hint": "Bo'sh ro'yxatda aksincha hamma qator qaytadi." },
+        { "id": "d", "text": "Indeks yo'q", "hint": "Indeks natijaga ta'sir qilmaydi." }
+      ],
+      "explanation": "`id NOT IN (1, NULL)` → `id <> 1 AND id <> NULL` → ikkinchi qism noma'lum → butun ifoda noma'lum. `NOT EXISTS (SELECT 1 FROM orders o WHERE o.user_id = u.id)` `NULL` dan ta'sirlanmaydi va ko'pincha tezroq.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.046",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Katta jadvalga `NOT NULL` ustun production'da downtime'siz qanday qo'shiladi?",
+      "options": [
+        { "id": "a", "text": "Avval nullable ustun qo'shish, ma'lumotni partiyalab to'ldirish, keyin `NOT NULL` cheklovini qo'yish", "correct": true },
+        { "id": "b", "text": "Bitta `ALTER TABLE ... NOT NULL` bilan, jadvalni qulflab", "hint": "Katta jadvalda uzoq qulf xizmatni to'xtatadi (bazaga va versiyaga qarab farq qiladi)." },
+        { "id": "c", "text": "Jadvalni o'chirib, qaytadan yaratish", "hint": "Ma'lumot va xizmat yo'qoladi." },
+        { "id": "d", "text": "Ustunni bazada emas, ilovada emulyatsiya qilish", "hint": "Bu sxemani ilovaga yashiradi va boshqa iste'molchilar uchun ishlamaydi." }
+      ],
+      "explanation": "Qoida: har migratsiya qadami tez va qaytariladigan bo'lsin. Ba'zi bazalarda `DEFAULT` bilan ustun qo'shish arzon, lekin mavjud qatorlarni yangilash va cheklovni tekshirish baribir partiyalab qilinadi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.047",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Backend'da ma'lumotlar bazasiga connection pool nima uchun kerak va o'lchami qanday tanlanadi?",
+      "options": [
+        { "id": "a", "text": "Ulanish ochish qimmat, pool ularni qayta ishlatadi; o'lchami baza imkoniyati va CPU'dan kelib chiqadi, \"qancha ko'p, shuncha yaxshi\" emas", "correct": true },
+        { "id": "b", "text": "Pool bazani tezlashtiradi, shuning uchun 1000 ta ulanish yaxshi", "hint": "Haddan ortiq ulanish bazani sekinlashtiradi: kontekst almashish va qulflar ko'payadi." },
+        { "id": "c", "text": "Har so'rov uchun yangi ulanish ochish arzonroq", "hint": "Ulanish TCP, autentifikatsiya va jarayon/oqim ajratishni talab qiladi." },
+        { "id": "d", "text": "Pool faqat tranzaksiyalar uchun kerak", "hint": "U barcha so'rovlar uchun ishlatiladi." }
+      ],
+      "explanation": "Keng tarqalgan boshlang'ich formula: `yadrolar * 2 + disklar soni` atrofida, keyin o'lchov bilan sozlash. Juda katta pool navbatni bazaga ko'chiradi, xolos; ilovada kutish bazada kutishdan arzon.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.048",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`WHERE description LIKE '%telefon%'` katta jadvalda sekin. Yechim nima?",
+      "options": [
+        { "id": "a", "text": "Oldida `%` bo'lgan `LIKE` oddiy indeksdan foydalana olmaydi; to'liq matnli qidiruv (full-text yoki trigram indeks) kerak", "correct": true },
+        { "id": "b", "text": "`description` ga oddiy B-tree indeks qo'shish", "hint": "Prefiks noma'lum bo'lgani uchun B-tree yordam bermaydi." },
+        { "id": "c", "text": "`LIKE` ni `=` ga almashtirish", "hint": "Unda qidiruv ma'nosi o'zgaradi: faqat aynan `telefon` topiladi." },
+        { "id": "d", "text": "Jadvalni ikkiga bo'lish", "hint": "Ikkala yarmini ham to'liq skanerlashga to'g'ri keladi." }
+      ],
+      "explanation": "PostgreSQL'da `pg_trgm` kengaytmasi bilan GIN indeks `%...%` qidiruvni tezlashtiradi; `tsvector` to'liq matnli qidiruv so'z shakllarini ham tushunadi. Katta hajmda Elasticsearch kabi alohida qidiruv tizimi ishlatiladi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.049",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "10 000 ta foydalanuvchi uchun bu kod juda sekin. Yechim nima?",
+      "code": "for user in users:\n    db.execute(\n        \"UPDATE users SET active = 1 WHERE id = %s\",\n        (user.id,),\n    )",
+      "options": [
+        { "id": "a", "text": "Bitta so'rovda yangilash (`WHERE id IN (...)` yoki partiyalab); har so'rov alohida borib-kelish (round trip)", "correct": true },
+        { "id": "b", "text": "`for` ni `while` ga almashtirish", "hint": "Sikl turi so'rovlar sonini o'zgartirmaydi." },
+        { "id": "c", "text": "Har iteratsiyada `COMMIT` qo'shish", "hint": "Bu yanada sekinlashtiradi: har commit disk yozuvi." },
+        { "id": "d", "text": "`id` ustuniga indeks qo'shish", "hint": "`id` birlamchi kalit, indeks allaqachon bor; muammo so'rovlar sonida." }
+      ],
+      "explanation": "10 000 so'rov × ~1 ms tarmoq = 10 soniya. `UPDATE users SET active = 1 WHERE id = ANY(%s)` bitta so'rovda bajaradi. Juda katta ro'yxatlar 1000 talik partiyalarga bo'linadi, qulf vaqtini cheklash uchun.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.050",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Milliard qatorli jadvalda `created_at` bo'yicha oylik hisobotlar sekin. Qaysi yondashuv to'g'ri?",
+      "options": [
+        { "id": "a", "text": "Jadvalni sana bo'yicha partitsiyalash va/yoki oldindan hisoblangan agregat jadval", "correct": true },
+        { "id": "b", "text": "Har safar to'liq jadvalni skanerlash, lekin kuchliroq serverda", "hint": "Hajm o'sgan sari bu yana sekinlashadi; muammo hal bo'lmaydi." },
+        { "id": "c", "text": "`created_at` ni matn sifatida saqlash", "hint": "Matn bilan sana bo'yicha oraliq qidiruv yomonlashadi." },
+        { "id": "d", "text": "Indekslarni o'chirish", "hint": "Bu o'qishni yanada sekinlashtiradi." }
+      ],
+      "explanation": "Partitsiyalash oy bo'yicha so'rovni faqat kerakli bo'limga yo'naltiradi (partition pruning) va eski ma'lumotni o'chirishni arzon qiladi. Hisobotlar uchun kunlik agregatlarni alohida jadvalda saqlash so'rovni millionlab qatordan yuzlab qatorga tushiradi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.051",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Master-replica replikatsiyada foydalanuvchi profilni yangilagach, darhol eski ma'lumotni ko'rdi. Sabab va yechim nima?",
+      "options": [
+        { "id": "a", "text": "Replikatsiya kechikishi: o'qish replikadan ketgan; yozgan foydalanuvchining keyingi o'qishlarini qisqa muddat masterdan qilish (read-your-writes)", "correct": true },
+        { "id": "b", "text": "Kesh muammosi, bazaga aloqasi yo'q", "hint": "Kesh bo'lmasa ham asinxron replika kechikadi." },
+        { "id": "c", "text": "Tranzaksiya commit bo'lmagan", "hint": "Commit bo'lgan; replika hali uni olmagan." },
+        { "id": "d", "text": "Indeks eskirgan", "hint": "Indeks ma'lumot yangiligiga ta'sir qilmaydi." }
+      ],
+      "explanation": "Asinxron replikatsiya yuqori o'qish yukini ko'tarishga yordam beradi, lekin oxir-oqibat izchillik (eventual consistency) beradi. Yechimlar: yozuvdan keyin bir necha soniya masterdan o'qish, sessiyaga LSN/vaqt belgisini bog'lab replika yetib kelganini tekshirish, yoki sinxron replika.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.052",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Shard kalitini tanlashda eng muhim mezon nima?",
+      "options": [
+        { "id": "a", "text": "Ma'lumot va yuk shardlar orasida teng taqsimlanishi va ko'p so'rovlar bitta shard ichida bajarilishi", "correct": true },
+        { "id": "b", "text": "Kalit har doim avtoinkrement id bo'lishi", "hint": "Ketma-ket id oxirgi shardga issiq nuqta (hotspot) yaratadi." },
+        { "id": "c", "text": "Eng kichik ustun bo'lishi", "hint": "Hajm emas, taqsimot va so'rovlar shakli muhim." },
+        { "id": "d", "text": "Alifbo tartibidagi birinchi ustun", "hint": "Tartibning ahamiyati yo'q." }
+      ],
+      "explanation": "Yomon shard kaliti ikki muammo beradi: notekis yuk (bitta mijoz butun shardni band qiladi) va cross-shard so'rovlar (`JOIN`, tranzaksiya qiyinlashadi). Odatda `tenant_id` yoki `user_id` kabi so'rovlar tabiiy ravishda bo'linadigan kalit tanlanadi; keyin uni o'zgartirish juda qimmat.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.053",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "CAP teoremasi tarmoq bo'linishi (partition) paytida nimani tanlashga majbur qiladi?",
+      "options": [
+        { "id": "a", "text": "Izchillik (consistency) yoki mavjudlik (availability) dan birini", "correct": true },
+        { "id": "b", "text": "Tezlik yoki xavfsizlikni", "hint": "CAP bu ikkisi haqida emas." },
+        { "id": "c", "text": "SQL yoki NoSQL'ni", "hint": "Teorema baza turiga emas, taqsimlangan tizim xatti-harakatiga tegishli." },
+        { "id": "d", "text": "Uchalasidan ham voz kechishni", "hint": "Bo'linish paytida ikkitadan bittasi saqlanadi." }
+      ],
+      "explanation": "Tarmoq bo'linganda tugunlar bir-birini ko'rmaydi: yoki javob berishni to'xtatib izchillikni saqlash (CP), yoki eskirgan bo'lsa ham javob berish (AP). Amalda PACELC kengaytmasi ham muhim: bo'linish bo'lmaganda ham kechikish va izchillik orasida tanlov bor.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.054",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Qachon hujjatli NoSQL baza (MongoDB kabi) relyatsion bazadan mosroq?",
+      "options": [
+        { "id": "a", "text": "Sxema tez o'zgaradigan, ichma-ich hujjatlar bilan ishlanadigan va ko'p jadvalli tranzaksiya kam bo'lgan holatlarda", "correct": true },
+        { "id": "b", "text": "Har doim, chunki u tezroq", "hint": "Tezlik ish yukiga bog'liq; universal g'olib yo'q." },
+        { "id": "c", "text": "Murakkab `JOIN` va qat'iy izchillik kerak bo'lganda", "hint": "Bu aynan relyatsion bazaning kuchli tomoni." },
+        { "id": "d", "text": "Ma'lumot kichik bo'lganda", "hint": "Kichik ma'lumotda ikkalasi ham bemalol ishlaydi; hajm hal qiluvchi emas." }
+      ],
+      "explanation": "Hujjatli model \"bitta agregat = bitta hujjat\" bo'lganda tabiiy: mahsulot kartochkasi, foydalanuvchi profili, hodisa logi. Ko'p jadvalga tarqalgan munosabatlar va hisobotlar uchun relyatsion baza va SQL hali ham eng kuchli vosita.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.055",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Ustun nomini production'da downtime'siz qanday o'zgartirish mumkin?",
+      "options": [
+        { "id": "a", "text": "Expand-contract: yangi ustun qo'shish, ikkala ustunga yozish, ma'lumotni ko'chirish, ilovani yangi ustunga o'tkazish, eskisini o'chirish", "correct": true },
+        { "id": "b", "text": "`ALTER TABLE RENAME COLUMN` va ilovani bir vaqtda deploy qilish", "hint": "Deploy bir zumda bo'lmaydi; oraliqda eski kod yangi nomni topa olmaydi (yoki aksincha)." },
+        { "id": "c", "text": "Jadvalni nusxalab, almashtirish", "hint": "Nusxalash paytidagi yozuvlar yo'qoladi va almashtirish qulf talab qiladi." },
+        { "id": "d", "text": "Ustun nomini hech qachon o'zgartirmaslik", "hint": "Ba'zan haqiqatan shunday qilinadi, lekin bu yechim emas, undan qochish." }
+      ],
+      "explanation": "Har bosqichda eski va yangi kod bir vaqtda ishlay olishi kerak (bir nechta server, bosqichma-bosqich deploy). Expand-contract shu talabni qondiradi: sxema o'zgarishi bir nechta kichik, qaytariladigan qadamga bo'linadi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.056",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Yozish juda ko'p bo'lgan jadvalda 12 ta indeks bor. Buning oqibati nima?",
+      "options": [
+        { "id": "a", "text": "Har yozishda barcha indekslar yangilanadi: yozish sekinlashadi, WAL va disk hajmi oshadi; ishlatilmaydigan indekslarni topib o'chirish kerak", "correct": true },
+        { "id": "b", "text": "Oqibati yo'q, indekslar faqat o'qishga ta'sir qiladi", "hint": "Har `INSERT`/`UPDATE` indekslarni ham o'zgartiradi." },
+        { "id": "c", "text": "Faqat o'qish sekinlashadi", "hint": "O'qish aksincha tezlashishi mumkin; narx yozishda." },
+        { "id": "d", "text": "Baza ortiqcha indekslarni avtomatik o'chiradi", "hint": "Baza buni qilmaydi; ishlatilish statistikasi (`pg_stat_user_indexes`) odam tomonidan tahlil qilinadi." }
+      ],
+      "explanation": "Indeks o'qishni sotib olish uchun yozishni sotishdir. Yuqori yozish yukida indekslar soni minimal bo'lishi, bir xil ustunlarni qamragan indekslar birlashtirilishi va vaqti-vaqti bilan ishlatilmaganlari o'chirilishi kerak.",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.057",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Baza yozuvi va message broker'ga xabar yuborish atomik bo'lishi kerak. Yechim nima?",
+      "options": [
+        { "id": "a", "text": "Transactional outbox: xabar baza tranzaksiyasida `outbox` jadvaliga yoziladi, alohida jarayon uni broker'ga yetkazadi", "correct": true },
+        { "id": "b", "text": "Avval broker'ga yuborish, keyin bazaga yozish", "hint": "Baza yozuvi muvaffaqiyatsiz bo'lsa, xabar allaqachon ketgan bo'ladi." },
+        { "id": "c", "text": "Ikkalasini bitta `try/catch` ga olish", "hint": "Ikki mustaqil tizim orasida atomiklikni `try/catch` bera olmaydi." },
+        { "id": "d", "text": "Har doim ikki fazali commit (2PC)", "hint": "2PC og'ir, sekin va ko'p broker'lar uni qo'llamaydi." }
+      ],
+      "explanation": "Outbox yozuvi va biznes yozuvi bitta tranzaksiyada: yoki ikkalasi, yoki hech biri. Relay jarayon (yoki CDC, masalan Debezium) outbox'ni o'qib broker'ga yuboradi; iste'molchi takroriy xabarga tayyor bo'lishi kerak (at-least-once).",
+      "reviewed": false
+    },
+    {
+      "id": "core.sql.058",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Zaxira nusxa strategiyasida RPO va RTO nima?",
+      "options": [
+        { "id": "a", "text": "RPO — yo'qotish mumkin bo'lgan maksimal ma'lumot vaqti; RTO — tiklash uchun ruxsat etilgan maksimal vaqt; ular zaxira chastotasi va usulini belgilaydi", "correct": true },
+        { "id": "b", "text": "Ikkalasi ham zaxira nusxa hajmini bildiradi", "hint": "Hajm emas, vaqt ko'rsatkichlari." },
+        { "id": "c", "text": "RPO — replikalar soni, RTO — jadvallar soni", "hint": "Sonlar emas, biznes talablari." },
+        { "id": "d", "text": "Bular faqat bulutli bazalarga tegishli", "hint": "Har qanday ma'lumot saqlash tizimiga tegishli." }
+      ],
+      "explanation": "RPO 5 daqiqa bo'lsa, kunlik dump yetmaydi: uzluksiz WAL arxivi (point-in-time recovery) kerak. RTO 15 daqiqa bo'lsa, zaxiradan qayta tiklash emas, tayyor replika (failover) kerak. Zaxira nusxa muntazam tiklab sinalmasa, u yo'q deb hisoblanadi.",
+      "reviewed": false
+    }
+  ]
+}
