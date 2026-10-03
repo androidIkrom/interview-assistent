@@ -75,12 +75,12 @@
     { "id": "android.data", "title": "Ma'lumot qatlami", "file": "android_data.json" },
     { "id": "android.arch", "title": "Arxitektura, DI, performance", "file": "android_arch.json" },
 
-    { "id": "ios.swift", "title": "Swift tili" },
-    { "id": "ios.ui", "title": "UIKit va view lifecycle" },
-    { "id": "ios.swiftui", "title": "SwiftUI" },
-    { "id": "ios.concurrency", "title": "GCD, async/await, actors" },
-    { "id": "ios.data", "title": "Tarmoq va saqlash" },
-    { "id": "ios.arch", "title": "Xotira, arxitektura, performance" },
+    { "id": "ios.swift", "title": "Swift tili", "file": "ios_swift.json" },
+    { "id": "ios.ui", "title": "UIKit va view lifecycle", "file": "ios_ui.json" },
+    { "id": "ios.swiftui", "title": "SwiftUI", "file": "ios_swiftui.json" },
+    { "id": "ios.concurrency", "title": "GCD, async/await, actors", "file": "ios_concurrency.json" },
+    { "id": "ios.data", "title": "Tarmoq va saqlash", "file": "ios_data.json" },
+    { "id": "ios.arch", "title": "Xotira, arxitektura, performance", "file": "ios_arch.json" },
 
     { "id": "flutter.dart", "title": "Dart tili", "file": "flutter_dart.json" },
     { "id": "flutter.widgets", "title": "Widgetlar va lifecycle", "file": "flutter_widgets.json" },

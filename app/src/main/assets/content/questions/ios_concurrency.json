@@ -1,0 +1,201 @@
+{
+  "topic": "ios.concurrency",
+  "questions": [
+    {
+      "id": "ios.concurrency.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Tarmoqdan ma'lumot kelgach label'ni yangilash kerak. GCD bilan qanday to'g'ri yoziladi?",
+      "options": [
+        { "id": "a", "text": "Tarmoq va parsing fon queue'da (URLSession callback'i allaqachon fon thread'da keladi), UI yangilash — `DispatchQueue.main.async { self.label.text = text }` ichida", "correct": true },
+        { "id": "b", "text": "Hammasini main thread'da bajarish — shunda thread muammosi bo'lmaydi", "hint": "Main thread'da sinxron tarmoq so'rovi UI'ni qotiradi; watchdog ilovani o'ldirishi mumkin." },
+        { "id": "c", "text": "UI'ni callback ichida to'g'ridan-to'g'ri, fon thread'da yangilash", "hint": "UIKit thread-safe emas — UI faqat main thread'da yangilanadi." },
+        { "id": "d", "text": "`DispatchQueue.global().async { label.text = text }`", "hint": "Global queue — fon thread; UI uchun main queue kerak." }
+      ],
+      "explanation": "Main queue — serial, main thread'da ishlaydi. Global queue'lar — concurrent, QoS bo'yicha (`.userInitiated`, `.utility`, `.background`). Zamonaviy kodda bu `@MainActor` va `async/await` bilan ifodalanadi.",
+      "reviewed": false
+    },
+    {
+      "id": "ios.concurrency.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Swift'da `async`/`await` qanday ishlaydi?",
+      "options": [
+        { "id": "a", "text": "`async` funksiya o'z ishini to'xtatib (suspend) turishi mumkin; `await` — shunday nuqta: natija tayyor bo'lguncha thread bloklanmaydi, boshqa ishga beriladi, tayyor bo'lgach funksiya davom etadi (ehtimol boshqa thread'da). Callback'larsiz chiziqli kod: `let user = try await api.fetchUser()`", "correct": true },
+        { "id": "b", "text": "`await` thread'ni natija kelguncha bloklaydi", "hint": "Bloklash emas — suspend: thread bo'shatiladi." },
+        { "id": "c", "text": "`async` funksiyani oddiy sinxron funksiyadan to'g'ridan-to'g'ri chaqirish mumkin", "hint": "Sinxron kontekstdan `Task { await ... }` orqali chaqiriladi." },
+        { "id": "d", "text": "`async/await` faqat iOS 17 dan keyin mavjud", "hint": "Swift 5.5 bilan keldi va iOS 13 gacha back-deploy qilinadi." }
+      ],
+      "explanation": "Suspension nuqtalari faqat `await`da — kodni o'qiganda qayerda boshqa ish aralashishi mumkinligi ko'rinib turadi. Xatolar oddiy `try/catch` bilan. Eski callback API'larini `withCheckedThrowingContinuation` bilan o'rash mumkin.",
+      "reviewed": false
+    },
+    {
+      "id": "ios.concurrency.003",
+      "level": "junior",
+      "type": "single",
+      "kind": "true_false",
+      "prompt": "Quyidagi fikr to'g'rimi?\n\n`async` deb belgilangan har qanday funksiya avtomatik ravishda fon thread'da bajariladi, shuning uchun uning ichida og'ir hisob-kitob UI'ni hech qachon qotirmaydi.",
+      "options": [
+        { "id": "a", "text": "Ha", "hint": "`async` funksiya qaysi aktorda (masalan, `@MainActor`) e'lon qilingan bo'lsa yoki shu kontekstdan meros olsa, o'sha yerda ishlaydi; `await`siz og'ir sikl main thread'ni band qiladi." },
+        { "id": "b", "text": "Yo'q", "correct": true }
+      ],
+      "explanation": "`@MainActor` view model ichidagi `async` metod main thread'da ishlaydi — faqat `await` paytlarida thread bo'shaydi. Og'ir CPU ishi uchun: `nonisolated` funksiya, alohida actor yoki `Task.detached`. Swift 6.2 dagi \"approachable concurrency\" o'zgarishlari default izolyatsiyani yana ham main actor tomon siljitadi.",
+      "reviewed": false
+    },
+    {
+      "id": "ios.concurrency.004",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Main thread'da ishlayotgan kod. Konsolda nima chiqadi?",
+      "code": "print(\"1\", terminator: \"\")\nDispatchQueue.main.async {\n    print(\"2\", terminator: \"\")\n}\nprint(\"3\", terminator: \"\")",
+      "options": [
+        { "id": "a", "text": "132", "correct": true },
+        { "id": "b", "text": "123", "hint": "`async` blokni navbatga qo'yadi va darhol qaytadi; blok joriy kod tugagach, main run loop'ning keyingi aylanishida bajariladi." },
+        { "id": "c", "text": "13", "hint": "Navbatga qo'yilgan blok yo'qolmaydi — keyinroq albatta bajariladi." },
+        { "id": "d", "text": "Deadlock", "hint": "Deadlock `main.sync`da bo'ladi; `async` kutmaydi." }
+      ],
+      "explanation": "`DispatchQueue.main.async` ko'pincha \"keyingi siklga qoldirish\" uchun ishlatiladi (masalan, layout tugagach). Lekin buni tartib muammolarini yamash uchun ishlatish — kod hidi; aniq lifecycle nuqtasini toping.",
+      "reviewed": false
+    },
+    {
+      "id": "ios.concurrency.005",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Code review: tugma bosilganda ilova qotib (yoki crash bo'lib) qoladi. Kod main thread'da chaqiriladi. Sabab?",
+      "code": "@objc func saveTapped() {\n    DispatchQueue.main.sync {\n        self.statusLabel.text = \"Saqlanmoqda...\"\n    }\n    storage.save(form)\n}",
+      "options": [
+        { "id": "a", "text": "Main thread o'zidan main queue'ga `sync` yuboradi: blok main queue bo'shashini kutadi, main queue esa shu blokni kutayotgan joriy kodni bajaryapti — deadlock (libdispatch buni ko'pincha crash bilan to'xtatadi). Main'da bo'lsak — to'g'ridan-to'g'ri yangilash; fon thread'dan — `main.async`", "correct": true },
+        { "id": "b", "text": "`statusLabel` weak bo'lgani uchun", "hint": "Label havolasi turi bilan bog'liq emas; muammo — serial queue'ga o'zidan sinxron yuborish." },
+        { "id": "c", "text": "`sync` blok fon thread'da bajariladi va UI'ni buzadi", "hint": "`main.sync` bloki main thread'da bajariladi — lekin hech qachon boshlana olmaydi." },
+        { "id": "d", "text": "`storage.save` deadlock beradi", "hint": "Ijro unga yetib bormaydi — oldingi qatorda to'xtaydi." }
+      ],
+      "explanation": "Umumiy qoida: serial queue'da ishlayotgan kod shu queue'ga `sync` yubormasin. `sync` — kamdan-kam kerak (masalan, o'z private serial queue'ingiz orqali sinxron o'qish). Shuningdek, `storage.save` main thread'da sinxron I/O — fon queue yoki actor'ga ko'chirish kerak.",
+      "reviewed": false
+    },
+    {
+      "id": "ios.concurrency.006",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Ikki mustaqil so'rovni parallel bajarish uchun `async let` va `TaskGroup` qachon ishlatiladi?",
+      "options": [
+        { "id": "a", "text": "`async let` — oldindan ma'lum, oz sonli, turli tipdagi vazifalar: `async let user = api.user(); async let feed = api.feed(); let (u, f) = try await (user, feed)`. `TaskGroup` — dinamik son (masalan, ID'lar ro'yxati bo'yicha) bir xil tipdagi vazifalar. Ikkalasi structured: doira tugaganda bolalar kutiladi, xato bo'lsa qolganlari bekor qilinadi", "correct": true },
+        { "id": "b", "text": "`async let` vazifalarni ketma-ket bajaradi", "hint": "`async let` e'lon qilinganda vazifa darhol parallel boshlanadi; `await`da natija olinadi." },
+        { "id": "c", "text": "`TaskGroup` faqat bitta vazifa uchun", "hint": "Guruh — o'zgaruvchan sondagi bola vazifalar uchun." },
+        { "id": "d", "text": "Parallel so'rovlar uchun har biriga `Task.detached` yaratish eng yaxshi usul", "hint": "Detached vazifalar unstructured: bekor qilish, priority va xatolarni qo'lda boshqarish kerak." }
+      ],
+      "explanation": "Ketma-ket `let a = try await x(); let b = try await y()` — umumiy vaqt yig'indi; `async let` bilan — eng sekiniga teng. Guruhda parallellikni cheklash: avval N ta vazifa qo'shib, har tugaganida bittadan qo'shish (`group.next()`).",
+      "reviewed": false
+    },
+    {
+      "id": "ios.concurrency.007",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Swift Concurrency'da vazifani bekor qilish (cancellation) qanday ishlaydi?",
+      "options": [
+        { "id": "a", "text": "Kooperativ: `task.cancel()` faqat bayroq qo'yadi; kod `try Task.checkCancellation()` yoki `Task.isCancelled` bilan tekshiradi, ko'p tizim API'lari (`URLSession`, `Task.sleep`) o'zi `CancellationError` tashlaydi. Structured vazifada bekor qilish bola vazifalarga avtomatik tarqaladi", "correct": true },
+        { "id": "b", "text": "`cancel()` vazifani darhol majburan to'xtatadi", "hint": "Majburiy to'xtatish yo'q — vazifa bayroqni tekshirib o'zi chiqadi." },
+        { "id": "c", "text": "Bekor qilingan vazifa natija sifatida doim `nil` qaytaradi", "hint": "Odatiy konvensiya — `CancellationError` tashlash yoki qisman natija; bu kodga bog'liq." },
+        { "id": "d", "text": "Bola vazifalarni har birini alohida bekor qilish shart", "hint": "Structured concurrency'da ota bekor qilinsa, bolalar ham bekor bo'ladi." }
+      ],
+      "explanation": "Uzoq CPU siklida vaqti-vaqti bilan `try Task.checkCancellation()` qo'ying. Bekor qilishda tozalash — `withTaskCancellationHandler`. SwiftUI `.task` view yo'qolganda bekor qiladi — `CancellationError`ni foydalanuvchiga xato sifatida ko'rsatmang.",
+      "reviewed": false
+    },
+    {
+      "id": "ios.concurrency.008",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Eski completion handler API'sini (`func load(completion: @escaping (Result<Data, Error>) -> Void)`) `async` funksiyaga qanday aylantirish mumkin?",
+      "options": [
+        { "id": "a", "text": "`withCheckedThrowingContinuation { cont in load { result in cont.resume(with: result) } }` — continuation aynan bir marta resume qilinishi kerak: ikki marta — crash, hech qachon — vazifa abadiy osilib qoladi (checked variant buni debug'da ogohlantiradi)", "correct": true },
+        { "id": "b", "text": "Completion ichida semaphore bilan kutib, natijani sinxron qaytarish", "hint": "Thread'ni bloklaydi; Swift Concurrency'ning kooperativ thread pool'ida bu deadlock va starvation xavfi." },
+        { "id": "c", "text": "Funksiya nomiga `async` qo'shish kifoya", "hint": "Callback API ichki ravishda o'zgarmaydi — uni continuation bilan ko'prik qilish kerak." },
+        { "id": "d", "text": "Continuation'ni xohlagancha resume qilish mumkin — keyingilari e'tiborsiz qoladi", "hint": "`resume` aynan bir marta: ikkinchi chaqiruv runtime xatosi." }
+      ],
+      "explanation": "Barcha kod yo'llarida (xato, bekor qilish, erta return) resume chaqirilishini tekshiring. Ko'p qiymat beruvchi callback/delegate uchun — `AsyncStream` (continuation.yield / finish). `Unsafe` variantlar faqat o'lchangan performance sababi bo'lsa.",
+      "reviewed": false
+    },
+    {
+      "id": "ios.concurrency.009",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Code review: bir xil URL uchun bir vaqtda 5 ta so'rov kelsa, rasm 5 marta yuklanadi. Actor bo'lsa ham nega?",
+      "code": "actor ImageCache {\n    private var cache: [URL: UIImage] = [:]\n\n    func image(for url: URL) async throws -> UIImage {\n        if let cached = cache[url] { return cached }\n        let image = try await downloader.download(url)\n        cache[url] = image\n        return image\n    }\n}",
+      "options": [
+        { "id": "a", "text": "Actor reentrancy: `await` nuqtasida actor boshqa chaqiruvlarni qabul qiladi — 5 ta chaqiruv ham keshni bo'sh ko'rib yuklashni boshlaydi. Yechim: davom etayotgan yuklashlarni saqlash (`[URL: Task<UIImage, Error>]`), keyingi chaqiruvlar o'sha `Task`ni `await` qiladi; `await`dan keyin holatni qayta tekshirish", "correct": true },
+        { "id": "b", "text": "Actor metodlari parallel bajariladi — actor data race'dan himoya qilmaydi", "hint": "Actor holatiga kirish ketma-ket; muammo — `await`da to'xtab turganda boshqa chaqiruvlar aralashishi." },
+        { "id": "c", "text": "`cache` `let` bo'lishi kerak", "hint": "Unda yozib bo'lmaydi; muammo — suspension paytidagi interleaving." },
+        { "id": "d", "text": "Actor o'rniga `DispatchQueue.main` ishlatish kerak", "hint": "Main thread'ga yuklama qo'shiladi va dublikat yuklash baribir hal bo'lmaydi." }
+      ],
+      "explanation": "Actor faqat bir vaqtda bitta kod bo'lagi uning holatini o'zgartirishini kafolatlaydi; `await` orasida invariantlar o'zgarishi mumkin. Qoida: `await`dan oldin o'qilgan holatga keyin ishonmang; holat o'zgarishlarini sinxron qismlarda tugating.",
+      "reviewed": false
+    },
+    {
+      "id": "ios.concurrency.010",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`Sendable` nima va Swift 6 strict concurrency rejimi nimani tekshiradi?",
+      "options": [
+        { "id": "a", "text": "`Sendable` — tip izolyatsiya chegaralari (actor'lar, vazifalar) orqali xavfsiz uzatilishi mumkinligini bildiradi: immutable value type'lar, actor'lar, ichki sinxronizatsiyali `final class`. Swift 6 rejimida kompilyator non-Sendable qiymatni boshqa izolyatsiya domeniga uzatish va global o'zgaruvchan holatni kompilyatsiya xatosi deb hisoblaydi — data race'larni kompilyatsiyada ushlaydi", "correct": true },
+        { "id": "b", "text": "`Sendable` — tarmoq orqali yuborish uchun serializatsiya protokoli", "hint": "Tarmoq bilan aloqasi yo'q — bu thread/actor chegaralari haqida (serializatsiya — `Codable`)." },
+        { "id": "c", "text": "Har qanday class'ni `@unchecked Sendable` deb belgilash xavfsiz yechim", "hint": "`@unchecked` tekshiruvni o'chiradi — thread-safety'ni o'zingiz (lock va h.k.) kafolatlashingiz kerak." },
+        { "id": "d", "text": "Strict concurrency faqat runtime'da ishlaydi", "hint": "Asosiy qiymati — kompilyatsiya vaqtidagi statik tekshiruv." }
+      ],
+      "explanation": "Migratsiya: avval Swift 5 rejimida `-strict-concurrency=complete` warning'lari bilan, modulma-modul Swift 6 ga. Ko'p muammolar `@MainActor` izolyatsiyasini aniq qo'yish bilan hal bo'ladi. Thread Sanitizer — runtime'da data race'larni ushlash uchun qo'shimcha vosita.",
+      "reviewed": false
+    },
+    {
+      "id": "ios.concurrency.011",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "View model'ni `@MainActor` bilan belgilash nima beradi?",
+      "options": [
+        { "id": "a", "text": "Class'ning barcha xususiyat va metodlari main actor'ga izolyatsiya qilinadi: UI bog'langan holat faqat main thread'da o'zgaradi, kompilyator boshqa kontekstdan kirishni `await` talab qilib tekshiradi. Ichidagi `await` paytlarida main thread bloklanmaydi; og'ir ishni `nonisolated` funksiya yoki boshqa actor'ga chiqarish kerak", "correct": true },
+        { "id": "b", "text": "View model'ning barcha ishini fon thread'ga ko'chiradi", "hint": "Teskari: main actor — main thread." },
+        { "id": "c", "text": "Faqat runtime'da tekshiradi va xato bo'lsa crash beradi", "hint": "Asosan kompilyatsiya vaqtidagi tekshiruv (`await`siz kirish xatosi)." },
+        { "id": "d", "text": "`@MainActor` bilan `DispatchQueue.main.async` umuman kerak bo'lmaydi va hech qachon ishlatilmaydi", "hint": "Eski callback API'lar bilan ishlaganda baribir kerak bo'lishi mumkin; lekin async kodda `@MainActor` uni almashtiradi." }
+      ],
+      "explanation": "SwiftUI `View` protokoli `@MainActor` — view model ham odatda shunday. Delegate callback'lari va Combine `sink`lar ixtiyoriy thread'da kelishi mumkin — `MainActor.assumeIsolated` yoki `Task { @MainActor in ... }` bilan ko'prik.",
+      "reviewed": false
+    },
+    {
+      "id": "ios.concurrency.012",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`Task { }` va `Task.detached { }` qanday farqlanadi va ulardan foydalanishning xavflari nima?",
+      "options": [
+        { "id": "a", "text": "Ikkalasi unstructured. `Task {}` joriy kontekstdan actor izolyatsiyasi, priority va task-local qiymatlarni meros oladi; `Task.detached` hech narsani meros olmaydi. Xavflar: bekor qilish avtomatik tarqalmaydi (handle saqlab `cancel()` qilish kerak), `self`ni kuchli ushlab umrni cho'zadi, xatolar `await task.value`siz yo'qoladi. Iloji bo'lsa structured (`async let`, `TaskGroup`, `.task`)", "correct": true },
+        { "id": "b", "text": "`Task {}` har doim fon thread'da ishlaydi", "hint": "`@MainActor` kontekstida yaratilgan `Task {}` main actor'da ishlaydi." },
+        { "id": "c", "text": "`Task.detached` ota vazifa bekor qilinganda avtomatik bekor bo'ladi", "hint": "Detached vazifa hech qanday otaga bog'lanmagan." },
+        { "id": "d", "text": "Unstructured vazifalar hech qachon kerak emas", "hint": "Sinxron kontekstdan (masalan, UIKit action) async'ga ko'prik uchun `Task {}` kerak." }
+      ],
+      "explanation": "Senior qoida: unstructured vazifalar ilova chegaralarida (UI event, lifecycle) va handle bilan boshqariladi; ichki logika structured. `Task.detached` — kontekstdan ataylab uzilish kerak bo'lganda (masalan, past priority fon ishi main actor'dan).",
+      "reviewed": false
+    },
+    {
+      "id": "ios.concurrency.013",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "iOS'da fon (background) ishlarini rejalashtirishda qanday cheklovlarni hisobga olish kerak?",
+      "options": [
+        { "id": "a", "text": "Ilova fonga o'tgach tez to'xtatiladi; ishni yakunlash uchun qisqa vaqt — `beginBackgroundTask`. Davriy ish — `BGTaskScheduler` (`BGAppRefreshTask` qisqa, `BGProcessingTask` uzoqroq, ko'pincha zaryadda) — vaqtni tizim hal qiladi, kafolat yo'q. Katta yuklash/yuborish — background `URLSession` (tizim davom ettiradi). Server tomondan uyg'otish — silent push (cheklangan)", "correct": true },
+        { "id": "b", "text": "`Timer` fonda ham soatlab ishlayveradi", "hint": "Ilova suspend qilinganda taymerlar to'xtaydi." },
+        { "id": "c", "text": "`BGAppRefreshTask` aniq belgilangan vaqtda bajariladi", "hint": "`earliestBeginDate` — eng erta vaqt; haqiqiy vaqtni tizim foydalanish odatlari va batareyaga qarab tanlaydi." },
+        { "id": "d", "text": "Fonda cheklovsiz ishlash uchun audio yoki location rejimini yoqish normal", "hint": "Tegishli funksiyasiz bu rejimlarni ishlatish App Review tomonidan rad etiladi." }
+      ],
+      "explanation": "Dizayn: ishni idempotent va bo'linadigan qilish (to'xtatilsa keyin davom etsin), `expirationHandler`da tozalash. Sinxronizatsiyani ilova old planga qaytganda ham bajarish (fon vazifasiga to'liq ishonmaslik). Debug — Xcode'da `_simulateLaunchForTaskWithIdentifier`.",
+      "reviewed": false
+    }
+  ]
+}

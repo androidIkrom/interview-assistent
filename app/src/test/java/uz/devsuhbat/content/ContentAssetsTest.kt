@@ -140,6 +140,12 @@ class ContentAssetsTest {
         "net.async" to listOf(4, 4, 3, 2),
         "net.data" to listOf(3, 3, 2, 2),
         "net.arch" to listOf(2, 2, 2, 2),
+        "ios.swift" to listOf(6, 5, 2, 1),
+        "ios.ui" to listOf(5, 4, 2, 1),
+        "ios.swiftui" to listOf(4, 4, 3, 2),
+        "ios.concurrency" to listOf(4, 4, 3, 2),
+        "ios.data" to listOf(3, 3, 2, 2),
+        "ios.arch" to listOf(2, 2, 2, 2),
     )
 
     @Test

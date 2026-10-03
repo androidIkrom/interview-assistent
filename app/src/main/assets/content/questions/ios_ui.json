@@ -1,0 +1,188 @@
+{
+  "topic": "ios.ui",
+  "questions": [
+    {
+      "id": "ios.ui.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Ekran (A) birinchi marta ko'rsatiladi, keyin ustiga boshqa ekran push qilinadi, so'ng foydalanuvchi orqaga (A ga) qaytadi. Konsolda nima chiqadi?",
+      "code": "class AViewController: UIViewController {\n    override func viewDidLoad() {\n        super.viewDidLoad(); print(\"L\", terminator: \"\")\n    }\n    override func viewWillAppear(_ animated: Bool) {\n        super.viewWillAppear(animated); print(\"W\", terminator: \"\")\n    }\n    override func viewDidAppear(_ animated: Bool) {\n        super.viewDidAppear(animated); print(\"D\", terminator: \"\")\n    }\n    override func viewDidDisappear(_ animated: Bool) {\n        super.viewDidDisappear(animated); print(\"X\", terminator: \"\")\n    }\n}",
+      "options": [
+        { "id": "a", "text": "LWDXWD", "correct": true },
+        { "id": "b", "text": "LWDXLWD", "hint": "`viewDidLoad` view xotiraga bir marta yuklanganda chaqiriladi; push qilingan ekran ostidagi A ning view'i saqlanib qoladi." },
+        { "id": "c", "text": "LWDX", "hint": "Orqaga qaytganda A yana ko'rinadi — appear metodlari qayta chaqiriladi." },
+        { "id": "d", "text": "LWD", "hint": "Ustiga boshqa ekran push qilinganda A ekrandan yo'qoladi — disappear metodi ishlaydi." }
+      ],
+      "explanation": "`viewDidLoad` — bir martalik sozlash (subview'lar, constraint'lar). `viewWillAppear` — har ko'rinishdan oldin ma'lumotni yangilash. `viewDidAppear` — animatsiya, analytics. iOS 17+ da `viewIsAppearing` — geometriya va trait'lar tayyor bo'lgan paytda yangilash uchun qulay joy.",
+      "reviewed": false
+    },
+    {
+      "id": "ios.ui.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Auto Layout nima va kod orqali constraint qo'shishda nimani unutmaslik kerak?",
+      "options": [
+        { "id": "a", "text": "Auto Layout view'lar o'lchami va joylashuvini qoidalar (constraint) orqali hisoblaydi: turli ekran o'lchamlari, aylantirish, Dynamic Type'ga moslashadi. Koddan: `translatesAutoresizingMaskIntoConstraints = false` qo'yish, view'ni avval superview'ga qo'shish, so'ng `NSLayoutConstraint.activate([...])` bilan x, y, kenglik va balandlikni to'liq aniqlash", "correct": true },
+        { "id": "b", "text": "Auto Layout faqat Storyboard'da ishlaydi", "hint": "Koddan anchor API (`leadingAnchor.constraint(...)`) bilan ham to'liq ishlaydi." },
+        { "id": "c", "text": "Constraint'lar view superview'ga qo'shilishidan oldin faollashtirilishi kerak", "hint": "Umumiy ajdod bo'lmasa crash — avval `addSubview`, keyin activate." },
+        { "id": "d", "text": "Har bir view uchun faqat kenglik va balandlik yetarli", "hint": "Joylashuv (x va y) ham aniqlanishi kerak — aks holda ambiguous layout." }
+      ],
+      "explanation": "Muammolar: yetarli bo'lmagan constraint — ambiguous (view noto'g'ri joyda), qarama-qarshi — \"Unable to simultaneously satisfy constraints\" logi. Debug: View Debugger, constraint'larga `identifier` berish. `UIStackView` ko'p constraint'larni o'zi boshqaradi.",
+      "reviewed": false
+    },
+    {
+      "id": "ios.ui.003",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`UITableView`da `dequeueReusableCell(withIdentifier:for:)` nima uchun ishlatiladi?",
+      "options": [
+        { "id": "a", "text": "Hujayra (cell) qayta ishlatish: ekrandan chiqqan hujayralar navbatga qaytadi va yangi qatorlar uchun qayta ishlatiladi — minglab qator bo'lsa ham xotirada faqat ekranga sig'adigan miqdordagi hujayra yashaydi, scroll silliq bo'ladi", "correct": true },
+        { "id": "b", "text": "Jadvaldan hujayrani o'chirish uchun", "hint": "O'chirish — `deleteRows`; dequeue — qayta ishlatiladigan hujayra olish." },
+        { "id": "c", "text": "Har qator uchun yangi hujayra yaratishni majburlaydi", "hint": "Aksincha — mavjud hujayrani qayta ishlatadi, yangi yaratish faqat navbat bo'sh bo'lsa." },
+        { "id": "d", "text": "Faqat Storyboard'dagi hujayralar uchun ishlaydi", "hint": "Koddan `register(_:forCellReuseIdentifier:)` bilan ro'yxatdan o'tkazib ham ishlatiladi." }
+      ],
+      "explanation": "Qayta ishlatilgan hujayra eski holatni olib keladi — `cellForRowAt`da barcha maydonlarni har safar o'rnatish kerak, `prepareForReuse`da asinxron vazifalarni bekor qilish va holatni tozalash. `UICollectionView`da ham xuddi shu mexanizm.",
+      "reviewed": false
+    },
+    {
+      "id": "ios.ui.004",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Nega UI'ni faqat main thread'da yangilash kerak?",
+      "options": [
+        { "id": "a", "text": "UIKit thread-safe emas: view ierarxiyasi, layout va chizish main thread'dagi run loop'ga bog'langan. Fon thread'dan UI'ni o'zgartirish kechikkan yangilanish, g'alati artefaktlar yoki crash beradi. Tarmoq javobidan keyin `DispatchQueue.main.async { ... }` yoki `@MainActor` / `await MainActor.run`", "correct": true },
+        { "id": "b", "text": "Fon thread'lar sekinroq bo'lgani uchun", "hint": "Tezlik emas — UIKit'ning ichki holati sinxronlashtirilmagan." },
+        { "id": "c", "text": "Bu qoida faqat eski iOS versiyalari uchun", "hint": "Hozir ham amal qiladi; Xcode Main Thread Checker buni runtime'da ushlaydi." },
+        { "id": "d", "text": "Main thread'da og'ir hisob-kitoblarni ham bajarish tavsiya etiladi", "hint": "Og'ir ish main thread'ni band qiladi — UI qotadi. Faqat UI yangilash main'da." }
+      ],
+      "explanation": "Main thread 16 ms (60 Hz) yoki 8 ms (120 Hz) ichida kadrni tayyorlashi kerak — og'ir ish (JSON parsing, rasm dekodlash) fon thread'ga. Main Thread Checker Xcode'da default yoqilgan.",
+      "reviewed": false
+    },
+    {
+      "id": "ios.ui.005",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "View'ning `frame` va `bounds` xususiyatlari qanday farqlanadi?",
+      "options": [
+        { "id": "a", "text": "`frame` — view'ning superview koordinatalar tizimidagi joyi va o'lchami; `bounds` — view'ning o'z koordinatalar tizimi (odatda origin (0,0)). View aylantirilsa (`transform`), `frame` uni o'rab turgan to'rtburchakka aylanadi, `bounds` esa o'zgarmaydi; `UIScrollView` scroll qilganda `bounds.origin` siljiydi", "correct": true },
+        { "id": "b", "text": "Ikkalasi har doim bir xil qiymatga ega", "hint": "Origin odatda farq qiladi va transform qo'llanganda o'lcham ham farq qilishi mumkin." },
+        { "id": "c", "text": "`bounds` — ekran koordinatalari", "hint": "Ekran (window) koordinatalari uchun `convert(_:to:)` ishlatiladi; `bounds` — view'ning o'ziniki." },
+        { "id": "d", "text": "`frame` faqat Auto Layout'siz ishlaydi", "hint": "Auto Layout ham oxirida `frame`ni o'rnatadi — uni `layoutSubviews`dan keyin o'qish mumkin." }
+      ],
+      "explanation": "Auto Layout bilan `frame`ni qo'lda o'zgartirish keyingi layout'da yo'qoladi. Subview'larni o'z ichida joylashtirishda `bounds`dan foydalaning (masalan, `layoutSubviews`da). Koordinatalarni o'tkazish: `view.convert(point, to: otherView)`.",
+      "reviewed": false
+    },
+    {
+      "id": "ios.ui.006",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Code review: tez scroll qilganda ba'zi qatorlarda boshqa foydalanuvchining avatari ko'rinib qoladi. Sabab nima?",
+      "code": "func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {\n    let cell = tableView.dequeueReusableCell(withIdentifier: \"User\", for: indexPath) as! UserCell\n    let user = users[indexPath.row]\n    cell.nameLabel.text = user.name\n    URLSession.shared.dataTask(with: user.avatarURL) { data, _, _ in\n        guard let data else { return }\n        DispatchQueue.main.async {\n            cell.avatarView.image = UIImage(data: data)\n        }\n    }.resume()\n    return cell\n}",
+      "options": [
+        { "id": "a", "text": "Hujayra qayta ishlatiladi: rasm yuklanguncha hujayra boshqa qatorga berilgan bo'lishi mumkin, eski so'rov esa yangi qatorning hujayrasiga rasm qo'yadi. Tuzatish: `prepareForReuse`da rasmni tozalash va vazifani bekor qilish, javob kelganda hujayra hali shu foydalanuvchini ko'rsatayotganini tekshirish (masalan, saqlangan URL/ID), kesh ishlatish", "correct": true },
+        { "id": "b", "text": "`DispatchQueue.main.async` keraksiz — UI fon thread'da yangilanishi kerak", "hint": "Main'ga qaytish to'g'ri; muammo — javob qaysi hujayraga tushishida." },
+        { "id": "c", "text": "`as!` cast sabab", "hint": "Cast muvaffaqiyatsiz bo'lsa crash bo'lardi; noto'g'ri rasm — qayta ishlatish poygasi (race)." },
+        { "id": "d", "text": "`URLSession.shared` bir nechta parallel so'rovni qo'llamaydi", "hint": "Parallel so'rovlar qo'llanadi; muammo javob va hujayra mosligida." }
+      ],
+      "explanation": "Bundan tashqari: har scroll'da qayta yuklash — `NSCache` yoki Kingfisher/Nuke kabi kutubxonalar (kesh, bekor qilish, downsampling). Katta rasmlarni fon thread'da hujayra o'lchamiga kichraytirish xotira va scroll silliqligi uchun muhim.",
+      "reviewed": false
+    },
+    {
+      "id": "ios.ui.007",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "UIKit'da delegate pattern va closure callback'ni qachon tanlash kerak?",
+      "options": [
+        { "id": "a", "text": "Delegate — bir ob'ekt bilan ko'p bog'liq hodisalar va so'rovlar (`UITableViewDelegate`, `DataSource`): protokol kontraktni hujjatlaydi, `weak var delegate` bilan retain cycle bo'lmaydi. Closure — bitta, qisqa javob (tugma bosildi, operatsiya tugadi): yozish qisqa, lekin `[weak self]`ni unutsa retain cycle", "correct": true },
+        { "id": "b", "text": "Delegate xususiyati `strong` bo'lishi kerak, aks holda nil bo'lib qoladi", "hint": "Delegate odatda egasiga qaraydi — `strong` bo'lsa retain cycle; shu sabab `weak` (protokol `AnyObject` bilan cheklanadi)." },
+        { "id": "c", "text": "Closure har doim delegate'dan yaxshiroq", "hint": "O'nlab callback'li API (masalan, table view) uchun closure'lar to'plami tartibsiz bo'ladi." },
+        { "id": "d", "text": "Delegate faqat Apple framework'larida ishlatiladi", "hint": "O'z komponentlaringizda ham keng tarqalgan pattern (masalan, coordinator'ga xabar berish)." }
+      ],
+      "explanation": "Uchinchi variant — Combine/async sequence yoki NotificationCenter (bir-ko'p, bo'sh bog'lanish). Delegate protokolini `AnyObject` bilan cheklash: `protocol FormViewDelegate: AnyObject`. Ixtiyoriy metodlar uchun protocol extension'da bo'sh default implementatsiya.",
+      "reviewed": false
+    },
+    {
+      "id": "ios.ui.008",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Content hugging va compression resistance priority nima uchun kerak?",
+      "options": [
+        { "id": "a", "text": "Ichki o'lchami (`intrinsicContentSize`) bor view'lar (label, button) uchun: hugging — view o'z kontentidan kattaroq cho'zilishga qarshilik; compression resistance — kontentdan kichikroq siqilishga qarshilik. Yonma-yon ikki label'dan qaysi biri cho'zilishi yoki qisqarishi (\"...\") shu priority'lar bilan hal qilinadi", "correct": true },
+        { "id": "b", "text": "Ular animatsiya tezligini belgilaydi", "hint": "Animatsiyaga aloqasi yo'q — joy yetmaganda yoki ortiqcha bo'lganda layout qarori." },
+        { "id": "c", "text": "Faqat `UIImageView` uchun ishlaydi", "hint": "Intrinsic size'ga ega har qanday view uchun, ayniqsa `UILabel`." },
+        { "id": "d", "text": "Priority 1000 dan yuqori qo'yilsa constraint majburiy bo'ladi", "hint": "Priority 1...1000; 1000 = required, undan yuqori qiymat yo'q." }
+      ],
+      "explanation": "Klassik holat: chapda nom (cho'zilsin, kerak bo'lsa qisqarsin), o'ngda sana (to'liq ko'rinsin) — sana label'iga yuqoriroq hugging va compression resistance. Ambiguity ogohlantirishlari ko'pincha aynan teng priority'lardan.",
+      "reviewed": false
+    },
+    {
+      "id": "ios.ui.009",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`pushViewController` va `present` qanday farqlanadi?",
+      "options": [
+        { "id": "a", "text": "`push` — `UINavigationController` stack'iga qo'shadi: ierarxik navigatsiya, orqaga tugmasi va swipe-back, faqat navigation controller ichida ishlaydi. `present` — modal ko'rsatish: mustaqil vazifa (forma, tanlash), `dismiss` bilan yopiladi, iOS 13+ da default sheet uslubida (pastga tortib yopish mumkin)", "correct": true },
+        { "id": "b", "text": "Ikkalasi bir xil, faqat animatsiya farq qiladi", "hint": "Navigatsiya modeli farq qiladi: stack vs modal kontekst." },
+        { "id": "c", "text": "`present` qilingan ekranga orqaga tugmasi avtomatik qo'shiladi", "hint": "Modal ekranda navigatsiya stack'i yo'q — yopish tugmasini o'zingiz qo'shasiz (yoki uni navigation controller'ga o'raysiz)." },
+        { "id": "d", "text": "`push` istalgan view controller'dan navigation controller'siz ishlaydi", "hint": "`navigationController` nil bo'lsa push hech narsa qilmaydi." }
+      ],
+      "explanation": "Sheet uslubida pastga tortib yopilganda `viewWillAppear` ostidagi ekranda chaqirilmasligi mumkin — `presentationControllerDidDismiss` delegate'i bilan kuzatish. Katta ilovalarda navigatsiya Coordinator pattern'ga chiqariladi — view controller'lar bir-birini bilmaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "ios.ui.010",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`setNeedsLayout()`, `layoutIfNeeded()` va `layoutSubviews()` qanday bog'liq?",
+      "options": [
+        { "id": "a", "text": "`setNeedsLayout` — view'ni \"layout kerak\" deb belgilaydi, yangilash keyingi render siklida (arzon, bir nechta chaqiruv birlashadi). `layoutIfNeeded` — belgilangan bo'lsa layout'ni darhol bajaradi (masalan, constraint o'zgarishini animatsiya blokida). `layoutSubviews` — tizim chaqiradigan override nuqtasi, uni o'zingiz to'g'ridan-to'g'ri chaqirmaysiz", "correct": true },
+        { "id": "b", "text": "`layoutSubviews`ni constraint o'zgargandan keyin qo'lda chaqirish kerak", "hint": "Tizim chaqiradi; qo'lda — `setNeedsLayout` yoki `layoutIfNeeded`." },
+        { "id": "c", "text": "`setNeedsLayout` layout'ni darhol, sinxron bajaradi", "hint": "U faqat belgilaydi — haqiqiy layout keyingi siklda." },
+        { "id": "d", "text": "Uchalasi ham ekranni qayta chizadi (`draw(_:)`)", "hint": "Chizish alohida: `setNeedsDisplay` → `draw(_:)`. Layout faqat o'lcham va joylashuv." }
+      ],
+      "explanation": "Constraint animatsiyasi: `heightConstraint.constant = 200; UIView.animate(withDuration: 0.3) { self.view.layoutIfNeeded() }` — superview'da chaqiriladi. `layoutSubviews`da og'ir ish yoki constraint qo'shish — layout sikli va performance muammolari.",
+      "reviewed": false
+    },
+    {
+      "id": "ios.ui.011",
+      "level": "strong_middle",
+      "type": "multi",
+      "kind": "concept",
+      "prompt": "Uzun ro'yxat scroll qilinganda kadrlar tushib qolmoqda (hitches). Qaysi choralar to'g'ri? (bir nechta javob)",
+      "options": [
+        { "id": "a", "text": "Rasmlarni fon thread'da hujayra o'lchamiga downsample qilib dekodlash va keshlash", "correct": true },
+        { "id": "b", "text": "Offscreen rendering beradigan effektlarni (shadow'da `shadowPath`siz soya, `cornerRadius` + `masksToBounds` ko'p qatlamlarda) kamaytirish", "correct": true },
+        { "id": "c", "text": "Diffable data source va `prefetchDataSource` bilan ma'lumotni oldindan tayyorlash, `reloadData` o'rniga snapshot qo'llash", "correct": true },
+        { "id": "d", "text": "`cellForRowAt` ichida JSON parsing va matn o'lchamlarini hisoblash", "hint": "Bu main thread'ni har hujayrada band qiladi — aynan hitch sababi." },
+        { "id": "e", "text": "Har scroll hodisasida `tableView.reloadData()` chaqirish", "hint": "Barcha ko'rinadigan hujayralar qayta konfiguratsiya qilinadi — keraksiz ish va animatsiyalar yo'qoladi." }
+      ],
+      "explanation": "Diagnostika: Instruments → Animation Hitches, Time Profiler (main thread), Core Animation (offscreen-rendered layers). Maqsad — har kadr 8–16 ms ichida. Hujayra konfiguratsiyasini yengil qilish va og'ir hisobni oldindan (view model'da) bajarish asosiy yo'l.",
+      "reviewed": false
+    },
+    {
+      "id": "ios.ui.012",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Katta UIKit ilovasiga SwiftUI'ni bosqichma-bosqich kiritishda chegaralarni qanday tuzish to'g'ri?",
+      "options": [
+        { "id": "a", "text": "Yangi, nisbatan mustaqil ekranlarni SwiftUI'da yozib `UIHostingController` orqali mavjud navigatsiyaga (coordinator) ulash; aksincha, UIKit komponentlarini `UIViewRepresentable`/`UIViewControllerRepresentable` bilan o'rash. Navigatsiya bitta tizimda (odatda UIKit coordinator) qoladi, ma'lumot va biznes logika framework'dan mustaqil qatlamda (view model, servislar) — ikkala UI ham shu qatlamni ishlatadi", "correct": true },
+        { "id": "b", "text": "Butun ilovani bir release'da SwiftUI'ga qayta yozish", "hint": "Katta risk va uzoq muzlatish: funksiyalar to'xtaydi, regressiyalar ko'payadi. Bosqichma-bosqich migratsiya xavfsizroq." },
+        { "id": "c", "text": "Har ekranda navigatsiyani ham UIKit, ham SwiftUI orqali aralash boshqarish", "hint": "Ikki navigatsiya tizimi holatni bo'lishadi — orqaga qaytish va deep link'lar chalkashadi." },
+        { "id": "d", "text": "SwiftUI view'lar to'g'ridan-to'g'ri UIKit view controller'lar ichidagi xususiyatlarni o'zgartirsin", "hint": "Qattiq bog'lanish; ma'lumot umumiy view model yoki servis orqali oqishi kerak." }
+      ],
+      "explanation": "Mezonlar: minimal iOS versiyasi (SwiftUI API'lari versiyaga bog'liq), jamoa tajribasi, murakkab UIKit-only komponentlar (masalan, maxsus collection layout). Dizayn tokenlari va komponentlar ikkala tizimda bir xil ko'rinishi uchun umumiy design system modul. `UIHostingConfiguration` (iOS 16+) — SwiftUI'ni UIKit hujayrasi ichida.",
+      "reviewed": false
+    }
+  ]
+}
