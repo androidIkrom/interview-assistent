@@ -1,0 +1,188 @@
+{
+  "topic": "php.oop",
+  "questions": [
+    {
+      "id": "php.oop.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "PHP'da class, interface va trait qanday farqlanadi?",
+      "options": [
+        { "id": "a", "text": "Class — holat + xatti-harakat, bitta klassdan meros; interface — kontrakt (metod imzolari, konstantalar), ko'p implement; trait — kodni qayta ishlatish (metod va property'lar) ko'p meros o'rniga, `use` bilan klassga qo'shiladi, instansiya qilinmaydi", "correct": true },
+        { "id": "b", "text": "Trait — interface'ning eski nomi", "hint": "Trait implementatsiya saqlaydi, interface — faqat imzolar." },
+        { "id": "c", "text": "PHP'da ko'p meros bor", "hint": "Yo'q — trait va interface uning o'rnini bosadi." },
+        { "id": "d", "text": "Interface'da metod tanasi bo'lishi mumkin", "hint": "PHP interface'da tana yo'q (default metod yo'q); trait'da bor." }
+      ],
+      "explanation": "Trait konflikt: ikki trait bir xil metod — `use A, B { A::foo insteadof B; B::foo as barFoo; }`. Trait abstract metod talab qilishi mumkin. Laravel: `HasFactory`, `SoftDeletes`, `Notifiable` — trait'lar. Haddan ortiq trait — yashirin bog'liqlik, kompozitsiya afzal.",
+      "reviewed": false
+    },
+    {
+      "id": "php.oop.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Namespace va Composer autoload (PSR-4) qanday ishlaydi?",
+      "options": [
+        { "id": "a", "text": "Namespace — klass nomlari to'qnashuvini oldini oladi (`App\\Services\\UserService`); PSR-4 — namespace prefiksi → katalog mapping (`\"App\\\\\": \"app/\"`), klass fayl yo'li namespace'dan hisoblanadi; `vendor/autoload.php` klassni birinchi ishlatilganda yuklaydi (`spl_autoload_register`)", "correct": true },
+        { "id": "b", "text": "Hamma klass qo'lda `require` qilinadi", "hint": "Autoload buni yo'q qiladi." },
+        { "id": "c", "text": "Namespace — papka nomi, boshqa ma'nosi yo'q", "hint": "Mantiqiy nom; PSR-4 uni papkaga bog'laydi — konvensiya." },
+        { "id": "d", "text": "Composer faqat paket yuklash uchun", "hint": "Paket + autoload + skriptlar." }
+      ],
+      "explanation": "`composer dump-autoload -o` — classmap optimizatsiya (production). `composer.lock` — aniq versiyalar, git'ga kiradi; `composer install` lock'dan, `update` — yangilaydi. Semver cheklovlar `^8.0`. `composer require --dev` — faqat ishlab chiqish. `composer audit` — zaifliklar.",
+      "reviewed": false
+    },
+    {
+      "id": "php.oop.003",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Quyidagi kod nimani chop etadi?",
+      "code": "<?php\nabstract class Shape {\n    abstract public function area(): float;\n    public function describe(): string {\n        return static::class . ': ' . $this->area();\n    }\n}\nclass Square extends Shape {\n    public function __construct(private float $side) {}\n    public function area(): float { return $this->side ** 2; }\n}\n\necho (new Square(3))->describe();",
+      "options": [
+        { "id": "a", "text": "Square: 9", "correct": true },
+        { "id": "b", "text": "Shape: 9", "hint": "`static::class` — late static binding, chaqirilgan (haqiqiy) klass nomi; `self::class` bo'lsa `Shape` bo'lardi." },
+        { "id": "c", "text": "Fatal error — abstract class", "hint": "`Square` konkret — `area` implement qilingan; `new Shape` bo'lsa xato bo'lardi." },
+        { "id": "d", "text": "Square: 6", "hint": "`**` — daraja: 3² = 9." }
+      ],
+      "explanation": "`self` — e'lon qilingan klass (compile-time), `static` — runtime klass (late static binding), `parent` — ota. `static` — fluent/factory metodlarda (`return new static()`). Constructor promotion `private float $side` — property e'lon + tayinlash.",
+      "reviewed": false
+    },
+    {
+      "id": "php.oop.004",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "PHP'da magic metodlar (`__get`, `__set`, `__call`, `__toString`) nima va qanday ehtiyotkorlik kerak?",
+      "options": [
+        { "id": "a", "text": "Mavjud bo'lmagan property/metodga murojaatni ushlash (`__get`/`__set`/`__call`/`__callStatic`), satrga o'girish (`__toString`), `__invoke` — ob'ektni funksiya kabi; kuchli (Eloquent atributlari shunday), lekin IDE/statik tahlil ko'rmaydi, yashirin xatti-harakat — kam ishlatish, `@property` PHPDoc bilan hujjatlash", "correct": true },
+        { "id": "b", "text": "Faqat `__construct` va `__destruct`", "hint": "Ular ham magic, lekin ro'yxat uzun." },
+        { "id": "c", "text": "Eskirgan, PHP 8 da olib tashlangan", "hint": "Bor va keng ishlatiladi (Eloquent, Facade)." },
+        { "id": "d", "text": "Doim ishlatish tavsiya — kod qisqaradi", "hint": "Qisqa, lekin \"sehrli\" — debug va autocomplete qiyin." }
+      ],
+      "explanation": "Eloquent `$user->name` — `__get` orqali `attributes` massividan; Facade `Cache::get()` — `__callStatic` orqali container'dagi instansiya. `__toString` — `Stringable` interfeysi (8.0 avtomatik). `__serialize`/`__unserialize`, `__clone`. Laravel IDE Helper — magic uchun PHPDoc generatsiya.",
+      "reviewed": false
+    },
+    {
+      "id": "php.oop.005",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`composer.json` va `composer.lock` qanday farqlanadi, qaysi biri git'ga kiradi?",
+      "options": [
+        { "id": "a", "text": "`composer.json` — talablar (versiya diapazoni `^10.0`), skriptlar, autoload; `composer.lock` — `install`/`update` natijasida o'rnatilgan aniq versiyalar va hash'lar; ikkalasi git'da (ilova uchun) — jamoa va production bir xil versiya oladi; kutubxona uchun lock odatda ignore", "correct": true },
+        { "id": "b", "text": "`lock` — vaqtinchalik fayl, git'ga kirmaydi", "hint": "Ilovada lock git'da — aks holda har deploy boshqa versiya." },
+        { "id": "c", "text": "Bir xil mazmun, ikki format", "hint": "Biri diapazon, ikkinchisi aniq versiya." },
+        { "id": "d", "text": "`composer.json` qo'lda yozilmaydi", "hint": "Qo'lda ham, `composer require` ham o'zgartiradi." }
+      ],
+      "explanation": "CI/production: `composer install --no-dev --optimize-autoloader --no-interaction` — lock'dan, dev paketlarsiz. `composer update vendor/package` — bitta paketni yangilash. Dependabot/Renovate — lock'ni avtomatik yangilash PR'lari. `composer outdated` — eskirganlar.",
+      "reviewed": false
+    },
+    {
+      "id": "php.oop.006",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "PHP'da interface + abstract class + trait birgalikda qanday dizayn beradi va qachon qaysi biri?",
+      "options": [
+        { "id": "a", "text": "Interface — tashqi kontrakt (DI, test uchun almashtirish, type hint); abstract class — umumiy ildiz + Template Method (qisman implementatsiya, konstruktor); trait — gorizontal qayta ishlatish ierarxiyasiz (logging, timestamps). Default — interface + kompozitsiya; abstract — aniq \"is-a\" ierarxiya; trait — kichik, holatsiz yordamchilar", "correct": true },
+        { "id": "b", "text": "Hamma joyda abstract class", "hint": "Bitta meros — kengayish cheklanadi; interface moslashuvchan." },
+        { "id": "c", "text": "Trait hamma narsani almashtiradi", "hint": "Trait — yashirin bog'liqlik, test qiyin; haddan oshsa \"trait soup\"." },
+        { "id": "d", "text": "Interface kerak emas — duck typing bor", "hint": "PHP'da type hint interface orqali — kompilyator/PHPStan tekshiradi." }
+      ],
+      "explanation": "Laravel misoli: `Illuminate\\Contracts\\Cache\\Repository` (interface) → `CacheManager` → driver'lar; `Model` — abstract-ish ildiz; `SoftDeletes` — trait. Trait'da `abstract` metod — klassdan nimani kutishini aniq aytish. Trait'da konstruktor — qochish.",
+      "reviewed": false
+    },
+    {
+      "id": "php.oop.007",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Quyidagi klassdagi dizayn muammolari nimada?",
+      "code": "<?php\nclass OrderService {\n    public function process($order) {\n        $db = new PDO(getenv('DSN'));\n        $mailer = new Mailer(getenv('SMTP'));\n        $db->exec(\"UPDATE orders SET status='paid' WHERE id={$order->id}\");\n        $mailer->send($order->email, 'Paid');\n        Logger::log('processed ' . $order->id);\n    }\n}",
+      "options": [
+        { "id": "a", "text": "Bog'liqliklar ichida yaratiladi (`new PDO`, `new Mailer`) — test va almashtirish imkonsiz, konstruktor orqali inject qilish kerak; SQL injection (`{$order->id}` interpolatsiya) — prepared statement; tur e'lonlari yo'q; static `Logger::log` — yashirin bog'liqlik; `getenv` servis ichida — config qatlami", "correct": true },
+        { "id": "b", "text": "Faqat metod nomi noto'g'ri", "hint": "Nom qabul qilinadi; tuzilma muammosi." },
+        { "id": "c", "text": "`PDO` o'rniga `mysqli` kerak", "hint": "Drayver tanlovi muammo emas; yaratish joyi muammo." },
+        { "id": "d", "text": "Muammo yo'q", "hint": "Bu klassni DB'siz unit test qilib bo'ladimi?" }
+      ],
+      "explanation": "Yaxshi: `public function __construct(private OrderRepository $orders, private MailerInterface $mailer, private LoggerInterface $logger) {}` — Laravel container avtomatik yig'adi. PSR-3 `LoggerInterface`. Order'ni DTO/Model turi bilan. Bu SOLID'ning D (DIP) va S (SRP) — eng ko'p so'raladigan PHP suhbat savoli.",
+      "reviewed": false
+    },
+    {
+      "id": "php.oop.008",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "PSR standartlari nima va qaysilari muhim?",
+      "options": [
+        { "id": "a", "text": "PHP-FIG interop standartlari: PSR-4 (autoload), PSR-12 (kod uslubi), PSR-3 (Logger interface), PSR-7/15/17 (HTTP message, middleware, factory), PSR-11 (Container), PSR-6/16 (Cache), PSR-14 (Event dispatcher), PSR-18 (HTTP client) — kutubxonalar framework'dan mustaqil almashinadi", "correct": true },
+        { "id": "b", "text": "PHP rasmiy sintaksis qoidalari", "hint": "Til qoidasi emas — jamoatchilik interop standartlari." },
+        { "id": "c", "text": "Faqat Laravel uchun", "hint": "Framework'dan mustaqil — Symfony, Laravel, Slim hammasi qo'llaydi." },
+        { "id": "d", "text": "Eskirgan, endi ishlatilmaydi", "hint": "Har zamonaviy paket PSR-4, PSR-3, PSR-7/18 ga tayanadi." }
+      ],
+      "explanation": "Misol: Monolog PSR-3 implement qiladi — Laravel ham, Symfony ham ishlatadi. Guzzle PSR-7/18. Laravel o'z HTTP abstraksiyasini ishlatadi (Symfony HttpFoundation), lekin PSR-7 ga ko'prik bor. Suhbatda: \"PSR-4 va PSR-12 ni bilasizmi\" — minimal kutish.",
+      "reviewed": false
+    },
+    {
+      "id": "php.oop.009",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "PHP 8 attributes nima va qayerda ishlatiladi?",
+      "options": [
+        { "id": "a", "text": "Kodga strukturali metadata (`#[Route('/users')]`, `#[ORM\\Column]`) — PHPDoc annotatsiya o'rniga, tilning qismi, reflection orqali o'qiladi (`getAttributes()`); Symfony route/validation, Doctrine mapping, Laravel (8.x+ ba'zi joylar, 11 da ko'proq), PHPUnit `#[Test]`, `#[Override]` (8.3), `#[Deprecated]` (8.4)", "correct": true },
+        { "id": "b", "text": "Klass property'larining yangi nomi", "hint": "Property emas — metadata deklaratsiya." },
+        { "id": "c", "text": "Runtime'da kodni o'zgartiradi", "hint": "Passiv — faqat o'qiladi, framework unga qarab ish qiladi." },
+        { "id": "d", "text": "Faqat izoh — ta'siri yo'q", "hint": "PHPDoc'dan farqi — til tekshiradi, reflection beradi." }
+      ],
+      "explanation": "O'z attribute: `#[Attribute(Attribute::TARGET_METHOD)] class Cacheable { public function __construct(public int $ttl) {} }` → `$method->getAttributes(Cacheable::class)[0]->newInstance()`. Attribute vs interface: metadata — attribute, xatti-harakat — interface. Reflection narxi — cache qilish.",
+      "reviewed": false
+    },
+    {
+      "id": "php.oop.010",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "PHP'da immutable value object qanday to'g'ri yoziladi?",
+      "options": [
+        { "id": "a", "text": "`final readonly class` (8.2+), constructor promotion, konstruktorda validatsiya (invariant), `equals()` metodi, o'zgarish — `with*()` yangi instansiya qaytaradi, named constructor (`fromString`), `__toString`/`Stringable`; massiv property — ichi ham immutable (readonly massivga yozib bo'lmaydi); mutable ob'ekt property'dan qochish", "correct": true },
+        { "id": "b", "text": "Private property + faqat getter — yetarli", "hint": "Getter mutable ob'ekt qaytarsa — ichi o'zgaradi; `readonly` tilni jalb qiladi." },
+        { "id": "c", "text": "PHP'da immutable qilib bo'lmaydi", "hint": "`readonly` (8.1/8.2) aynan shuning uchun." },
+        { "id": "d", "text": "`const` property'lar", "hint": "`const` — klass darajasi, instansiya qiymati emas." }
+      ],
+      "explanation": "`final readonly class Email { public function __construct(public string $value) { if (!filter_var($value, FILTER_VALIDATE_EMAIL)) throw new InvalidArgumentException(); } }` — noto'g'ri Email mavjud bo'lolmaydi. Eloquent cast (`CastsAttributes`) bilan DB'dan to'g'ridan-to'g'ri VO. PHP 8.3 `clone` ichida readonly qayta init — `with` metodlar uchun.",
+      "reviewed": false
+    },
+    {
+      "id": "php.oop.011",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Quyidagi kod nimani chop etadi?",
+      "code": "<?php\ntrait Counter {\n    private static int $count = 0;\n    public static function inc(): int { return ++self::$count; }\n}\nclass A { use Counter; }\nclass B { use Counter; }\n\nA::inc(); A::inc();\nB::inc();\necho A::inc(), ' ', B::inc();",
+      "options": [
+        { "id": "a", "text": "3 2", "correct": true },
+        { "id": "b", "text": "5 5", "hint": "Trait kodi har ishlatuvchi klassga nusxalanadi — `A` va `B` alohida `$count`ga ega." },
+        { "id": "c", "text": "3 1", "hint": "`B::inc()` bir marta oldin chaqirilgan — ikkinchisi 2." },
+        { "id": "d", "text": "Fatal error — trait'da static property", "hint": "Trait'da static property ruxsat etilgan (8.1+ ham)." }
+      ],
+      "explanation": "Trait — \"compiler-assisted copy-paste\": har klassga alohida nusxa, static ham. Meros (`B extends A`) bo'lsa — ota klassning property'si baham ko'rilardi (`self::` vs `static::` farqi). Bu trait vs meros semantikasini tekshiradigan savol.",
+      "reviewed": false
+    },
+    {
+      "id": "php.oop.012",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Katta PHP loyihasida Composer bog'liqliklarini boshqarish strategiyasi qanday bo'lishi kerak?",
+      "options": [
+        { "id": "a", "text": "Lock git'da, `composer audit` CI'da, Dependabot/Renovate avtomatik PR, semver cheklovlar (`^`), katta major yangilashlar Rector bilan, `composer why`/`why-not` tahlil, private paketlar — Satis/Private Packagist, monorepo bo'lsa path repository, `platform` konfiguratsiya (PHP versiyasi qotiriladi), `--prefer-dist`, kam bog'liqlik (har paket — xavf va yuklash vaqti), abandoned paketlarni kuzatish", "correct": true },
+        { "id": "b", "text": "`composer update` har deploy'da", "hint": "Nazoratsiz yangilanish — production'da kutilmagan buzilish." },
+        { "id": "c", "text": "Bog'liqliklarni qo'lda `vendor/` ga commit qilish", "hint": "Repo shishadi, yangilash qiyin; lock + install yetarli (ba'zi deploy strategiyalarida vendor artefakt sifatida)." },
+        { "id": "d", "text": "Bog'liqliklar xavf emas", "hint": "Supply chain hujumlar (packagist typosquatting, hijack) — real." }
+      ],
+      "explanation": "Laravel major yangilash — Laravel Shift (avtomatik) yoki Rector set'lar. PHP versiya yangilash — `composer config platform.php 8.3` bilan lokal muhit farqidan qochish. `composer.json`da `\"config\": {\"sort-packages\": true}`. Abandoned paket — alternativa qidirish yoki fork.",
+      "reviewed": false
+    }
+  ]
+}

@@ -1,0 +1,220 @@
+{
+  "topic": "php.lang",
+  "questions": [
+    {
+      "id": "php.lang.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "PHP'da `==` va `===` qanday farqlanadi?",
+      "options": [
+        { "id": "a", "text": "`==` — qiymatlarni tur o'girish (type juggling) bilan solishtiradi (`\"1\" == 1` true); `===` — tur va qiymat ikkalasi teng bo'lishi kerak (`\"1\" === 1` false); default `===` ishlatish tavsiya etiladi", "correct": true },
+        { "id": "b", "text": "Bir xil narsa", "hint": "`0 == \"a\"` PHP 8 da false, lekin `0 == \"\"` — tur o'girish ishlaydi; `===` hech qachon o'girmaydi." },
+        { "id": "c", "text": "`===` faqat ob'ektlar uchun", "hint": "Har qanday tur uchun — qattiq tenglik." },
+        { "id": "d", "text": "`==` tezroq, shu sabab afzal", "hint": "Tezlik ahamiyatsiz; `==` kutilmagan natijalar beradi." }
+      ],
+      "explanation": "PHP 8 tur o'girishni qattiqlashtirdi (`0 == \"foo\"` endi false), lekin `null == false`, `\"\" == null`, `\"1e3\" == \"1000\"` hali true. `in_array`, `array_search`, `switch` — default `==` (strict parametr/`match` bilan qattiq). `declare(strict_types=1)` — funksiya argumentlari uchun.",
+      "reviewed": false
+    },
+    {
+      "id": "php.lang.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Quyidagi kod nimani chop etadi?",
+      "code": "<?php\n$a = [1, 2, 3];\n$b = $a;\n$b[] = 4;\n\n$o1 = new stdClass();\n$o1->x = 1;\n$o2 = $o1;\n$o2->x = 2;\n\necho count($a), ' ', $o1->x;",
+      "options": [
+        { "id": "a", "text": "3 2", "correct": true },
+        { "id": "b", "text": "4 2", "hint": "Massivlar PHP'da qiymat bo'yicha nusxalanadi (copy-on-write) — `$b` o'zgarishi `$a`ga ta'sir qilmaydi." },
+        { "id": "c", "text": "3 1", "hint": "Ob'ektlar handle (havola) bo'yicha — `$o2` va `$o1` bitta ob'ekt." },
+        { "id": "d", "text": "4 1", "hint": "Ikkalasi ham teskari: massiv — nusxa, ob'ekt — havola." }
+      ],
+      "explanation": "PHP'da massiv — qiymat turi (copy-on-write: o'zgartirilguncha xotira baham ko'riladi), ob'ekt — handle. Ob'ekt nusxasi uchun `clone` (shallow; `__clone` bilan deep). Funksiyaga massiv uzatish — nusxa (katta massivda ham arzon, yozmaguncha).",
+      "reviewed": false
+    },
+    {
+      "id": "php.lang.003",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "PHP massivlari qanday tuzilma va qanday imkoniyatlar beradi?",
+      "options": [
+        { "id": "a", "text": "Tartibli hash map — bir xil tuzilma indeksli ro'yxat (`[1,2,3]`) va assotsiativ (`['a'=>1]`) sifatida ishlaydi, kalit int yoki string, qo'shish tartibi saqlanadi; boy funksiyalar (`array_map`, `array_filter`, `array_column`, spread `...`)", "correct": true },
+        { "id": "b", "text": "Faqat raqamli indeksli massiv", "hint": "Assotsiativ massiv — PHP'ning asosiy tuzilmasi." },
+        { "id": "c", "text": "Java `ArrayList` kabi, kalit faqat int", "hint": "String kalit ham — bitta tur ichida." },
+        { "id": "d", "text": "Tartibsiz hash map", "hint": "Qo'shish tartibi saqlanadi (`foreach` tartibli)." }
+      ],
+      "explanation": "Tuzoqlar: `\"1\"` kaliti `1`ga o'giriladi, `true` → 1, `null` → `\"\"`; `array_filter` kalitlarni saqlaydi (JSON'da ob'ektga aylanadi — `array_values`). `list()`/`[$a, $b] = $arr` destructuring. PHP 8.1 `array_is_list`.",
+      "reviewed": false
+    },
+    {
+      "id": "php.lang.004",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`include`, `require`, `include_once`, `require_once` qanday farqlanadi?",
+      "options": [
+        { "id": "a", "text": "`include` — fayl topilmasa warning, davom etadi; `require` — fatal error; `_once` variantlar faylni bir marta yuklaydi (qayta e'lon xatosidan qochish); zamonaviy kodda Composer autoload — bular deyarli ishlatilmaydi", "correct": true },
+        { "id": "b", "text": "Hammasi bir xil", "hint": "Xato darajasi va takror yuklash farq qiladi." },
+        { "id": "c", "text": "`require` tezroq", "hint": "Tezlik emas, xato ishlovi farq." },
+        { "id": "d", "text": "`include` faqat HTML uchun", "hint": "Har qanday PHP fayl — lekin odatda shablon uchun ishlatilgan." }
+      ],
+      "explanation": "Zamonaviy PHP: bitta `require __DIR__.'/vendor/autoload.php'` — qolgan klasslar PSR-4 autoload bilan kerak bo'lganda yuklanadi. Shablonlar — Blade/Twig. `include` dinamik yo'l bilan — xavfsizlik (LFI) xavfi.",
+      "reviewed": false
+    },
+    {
+      "id": "php.lang.005",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Superglobal'lar (`$_GET`, `$_POST`, `$_SERVER`, `$_SESSION`) nima va nega ulardan to'g'ridan-to'g'ri foydalanish tavsiya etilmaydi?",
+      "options": [
+        { "id": "a", "text": "Har joydan kiradigan global massivlar — so'rov ma'lumotlari, server muhiti, sessiya; to'g'ridan-to'g'ri ishlatish — validatsiyasiz kirish (xavfsizlik), test qilish qiyin, framework Request ob'ekti (`$request->input()`) ularni o'rab, filtrlaydi", "correct": true },
+        { "id": "b", "text": "Ularni ishlatish taqiqlangan", "hint": "Taqiq yo'q — framework ichida ishlatiladi; ilova kodida — Request orqali." },
+        { "id": "c", "text": "Faqat CLI'da ishlaydi", "hint": "Aksincha — web so'rovda to'ldiriladi." },
+        { "id": "d", "text": "Doim xavfsiz — PHP filtrlaydi", "hint": "Xom ma'lumot — `$_GET['id']` SQL'ga qo'yilsa injection." }
+      ],
+      "explanation": "`$_REQUEST` — GET/POST/COOKIE aralash, ishlatmaslik. `filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT)` — xom PHP'da validatsiya. Laravel: `$request->validated()`. `$_SERVER['HTTP_X_FORWARDED_FOR']` — klient boshqaradi, ishonmaslik.",
+      "reviewed": false
+    },
+    {
+      "id": "php.lang.006",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Quyidagi kod nimani chop etadi?",
+      "code": "<?php\n$x = \"10\" + 5;\n$y = \"10\" . 5;\n$z = \"5 apples\" + 5;   // PHP 8\nvar_dump($x, $y);\necho $z;",
+      "options": [
+        { "id": "a", "text": "int(15) string(3) \"105\" va 10 (Warning: A non-numeric value... bilan)", "correct": true },
+        { "id": "b", "text": "string \"105\" ikkalasi uchun", "hint": "`+` — arifmetik, satrni raqamga o'giradi; `.` — konkatenatsiya." },
+        { "id": "c", "text": "`$z` uchun TypeError", "hint": "PHP 8: `\"5 apples\"` — leading-numeric, Warning + 5 sifatida ishlaydi; `\"apples\"` bo'lsa TypeError." },
+        { "id": "d", "text": "int(15) int(105)", "hint": "`.` har doim string beradi." }
+      ],
+      "explanation": "PHP 8 \"Saner numeric strings\": `\"5 apples\"` — leading-numeric (Warning, ishlaydi), `\"apples\"` — non-numeric (TypeError arifmetikada). `declare(strict_types=1)` funksiya argumentlariga ta'sir qiladi, operatorlarga emas. Satr va raqamni aralashtirmaslik — aniq `(int)` cast.",
+      "reviewed": false
+    },
+    {
+      "id": "php.lang.007",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "PHP 8 ning asosiy yangi imkoniyatlari qaysilar?",
+      "options": [
+        { "id": "a", "text": "Named arguments, union types, `match` ifodasi, nullsafe `?->`, constructor property promotion, attributes `#[...]`, enum (8.1), `readonly` property (8.1) va class (8.2), fibers (8.1), first-class callable `strlen(...)`, JIT, `never` tur, DNF types (8.2)", "correct": true },
+        { "id": "b", "text": "Faqat tezlik — sintaksis o'zgarmagan", "hint": "PHP 8 — eng katta til yangilanishi: enum, match, readonly..." },
+        { "id": "c", "text": "Generics qo'shildi", "hint": "Generics hali yo'q — faqat PHPDoc/PHPStan darajasida." },
+        { "id": "d", "text": "PHP 8 — PHP 7 bilan to'liq mos, yangilik yo'q", "hint": "Ko'p yangilik va ba'zi buzuvchi o'zgarishlar (string-number solishtirish)." }
+      ],
+      "explanation": "Constructor promotion: `public function __construct(private readonly UserRepo $repo) {}` — 5 qator → 1. `match` — qattiq (`===`), qiymat qaytaradi, mos kelmasa `UnhandledMatchError`. Enum — `enum Status: string { case Active = 'active'; }`, metodlar va interfeys bilan. Bu to'rttasi suhbatda eng ko'p so'raladi.",
+      "reviewed": false
+    },
+    {
+      "id": "php.lang.008",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Quyidagi kod nimani chop etadi?",
+      "code": "<?php\nenum Status: string {\n    case Active = 'active';\n    case Banned = 'banned';\n\n    public function label(): string {\n        return match($this) {\n            self::Active => 'Faol',\n            self::Banned => 'Bloklangan',\n        };\n    }\n}\n\n$s = Status::from('banned');\necho $s->label(), ' ', $s->value, ' ', Status::tryFrom('x') === null ? 'null' : 'ok';",
+      "options": [
+        { "id": "a", "text": "Bloklangan banned null", "correct": true },
+        { "id": "b", "text": "Banned banned null", "hint": "`label()` match orqali o'zbekcha matn qaytaradi; `->name` bo'lsa `Banned` bo'lardi." },
+        { "id": "c", "text": "ValueError", "hint": "`tryFrom` noto'g'ri qiymatda `null` qaytaradi; `from` ValueError tashlaydi." },
+        { "id": "d", "text": "Bloklangan Banned null", "hint": "`->value` — backing qiymat (`'banned'`), `->name` — case nomi." }
+      ],
+      "explanation": "Backed enum (`: string`/`: int`) — `from`/`tryFrom`/`->value`, `cases()`. Pure enum — qiymatsiz. Enum — singleton ob'ektlar (`===` ishlaydi), konstanta va interfeys qo'llaydi, `new` yo'q. Laravel: enum cast (`protected $casts = ['status' => Status::class]`), route binding, validation `Enum` rule.",
+      "reviewed": false
+    },
+    {
+      "id": "php.lang.009",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "PHP'da `readonly` property qanday ishlaydi va qanday cheklovlari bor?",
+      "options": [
+        { "id": "a", "text": "Faqat bir marta, e'lon qilingan klass doirasidan (odatda konstruktor) initsializatsiya qilinadi, keyin o'zgartirish — `Error`; typed bo'lishi shart, default qiymat bo'lmaydi, `unset` yo'q; `readonly class` (8.2) — barcha propertylar; `clone` bilan o'zgartirish 8.3 da `__clone` ichida ruxsat", "correct": true },
+        { "id": "b", "text": "Tashqaridan o'qish mumkin, ichkaridan istalgancha yozish", "hint": "Ichkaridan ham bir marta — immutable." },
+        { "id": "c", "text": "`const` bilan bir xil", "hint": "`const` — klass darajasi, compile-time; `readonly` — instansiya, runtime qiymat." },
+        { "id": "d", "text": "Faqat private property'lar uchun", "hint": "Istalgan visibility — `public readonly` eng ko'p (DTO)." }
+      ],
+      "explanation": "Value object/DTO: `final readonly class Money { public function __construct(public int $amount, public string $currency) {} }`. O'zgarish — `with` metodlari yangi instansiya qaytaradi. Readonly massiv property — massiv ichini ham o'zgartirib bo'lmaydi; ob'ekt property — ob'ekt ichi o'zgarishi mumkin (shallow).",
+      "reviewed": false
+    },
+    {
+      "id": "php.lang.010",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Quyidagi kodda qanday muammolar bor?",
+      "code": "<?php\nfunction findUser($users, $id) {\n    foreach ($users as $u) {\n        if ($u['id'] == $id) {\n            return $u;\n        }\n    }\n    return false;\n}\n\n$user = findUser($users, $_GET['id']);\necho $user['name'];",
+      "options": [
+        { "id": "a", "text": "Tur e'lonlari yo'q (`array`, `int`, `?array`); `==` tur o'girish (`\"1abc\"` 1 ga teng bo'lishi mumkin); `false` qaytarish — `$user['name']` false'da null + warning; `$_GET['id']` validatsiyasiz; `null` yoki exception qaytarib, chaqiruvchi tekshirishi kerak", "correct": true },
+        { "id": "b", "text": "`foreach` o'rniga `for` kerak", "hint": "`foreach` — to'g'ri; muammo turlar va qaytarishda." },
+        { "id": "c", "text": "Faqat `echo` xavfsiz emas (XSS)", "hint": "To'g'ri — `htmlspecialchars` kerak, lekin boshqa muammolar ham bor." },
+        { "id": "d", "text": "Muammo yo'q", "hint": "Foydalanuvchi topilmasa nima chop etiladi?" }
+      ],
+      "explanation": "Zamonaviy PHP: `function findUser(array $users, int $id): ?array`, `declare(strict_types=1)`, `===`, `$user?->['name'] ?? 'Noma'lum'`. `false` qaytarish — eski PHP odati (`strpos`); yangi kodda `null` yoki exception. PHPStan level 8+ bu xatolarni ushlaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "php.lang.011",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "PHP'da closure, arrow function va `use` qanday ishlaydi?",
+      "options": [
+        { "id": "a", "text": "`function() use ($x, &$y) {}` — tashqi o'zgaruvchilar aniq `use` bilan (qiymat bo'yicha, `&` — havola); arrow `fn($a) => $a + $x` — tashqi scope'ni avtomatik qiymat bo'yicha oladi, bitta ifoda; `$this` closure'da avtomatik (klass ichida), `static fn` — `$this`siz; `Closure::bind` — scope o'zgartirish", "correct": true },
+        { "id": "b", "text": "Closure tashqi o'zgaruvchilarni avtomatik ko'radi (JS kabi)", "hint": "PHP'da aniq `use` kerak (arrow function bundan mustasno)." },
+        { "id": "c", "text": "Arrow function ko'p qatorli bo'lishi mumkin", "hint": "Faqat bitta ifoda." },
+        { "id": "d", "text": "`use` — o'zgaruvchini global qiladi", "hint": "Scope'ga oladi, global qilmaydi." }
+      ],
+      "explanation": "`use ($x)` — closure yaratilgan paytdagi qiymat (keyin `$x` o'zgarsa ko'rinmaydi); `use (&$x)` — jonli. First-class callable `strlen(...)` (8.1) — `Closure::fromCallable` o'rniga. Laravel'da collection metodlari, middleware, route closure — hamma joyda.",
+      "reviewed": false
+    },
+    {
+      "id": "php.lang.012",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "PHP so'rov hayot sikli (shared-nothing) nima va bu arxitekturaga qanday ta'sir qiladi?",
+      "options": [
+        { "id": "a", "text": "Har HTTP so'rov — toza jarayon/holat: bootstrap, ishlov, javob, hamma narsa yo'q qilinadi; xotira sizishi yo'q, oddiy model, lekin har so'rovda framework yuklash (OPcache + preloading yumshatadi), holat tashqarida (sessiya, cache, DB); Octane/Swoole/FrankenPHP — ilovani xotirada ushlab turib bu modelni o'zgartiradi (holat sizishi xavfi)", "correct": true },
+        { "id": "b", "text": "PHP ilova doim xotirada turadi (Java kabi)", "hint": "Klassik PHP-FPM — har so'rov noldan; Octane — istisno." },
+        { "id": "c", "text": "Global o'zgaruvchilar so'rovlar orasida saqlanadi", "hint": "FPM'da yo'q; Octane'da — ha, va bu xato manbai." },
+        { "id": "d", "text": "Hayot sikli performansga ta'sir qilmaydi", "hint": "Bootstrap har so'rovda — Laravel ~20–50 ms; Octane bilan ~2 ms." }
+      ],
+      "explanation": "PHP-FPM: pool worker jarayonlar, har biri so'rovni ketma-ket. `pm.max_children` — konkurentlik limiti (xotira / worker hajmi). Static property'lar, singleton'lar — FPM'da xavfsiz, Octane'da so'rovlar orasida \"yopishib qoladi\" — so'rov-scoped bog'liqliklarni to'g'ri bog'lash kerak.",
+      "reviewed": false
+    },
+    {
+      "id": "php.lang.013",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Quyidagi kod nimani chop etadi?",
+      "code": "<?php\ndeclare(strict_types=1);\n\nfunction total(int ...$nums): int {\n    return array_sum($nums);\n}\n\ntry {\n    echo total(1, 2, 3), ' ';\n    echo total(...[4, 5]), ' ';\n    echo total(1, \"2\");\n} catch (TypeError $e) {\n    echo 'TypeError';\n}",
+      "options": [
+        { "id": "a", "text": "6 9 TypeError", "correct": true },
+        { "id": "b", "text": "6 9 3", "hint": "`strict_types=1` — `\"2\"` string `int` parametrga o'girilmaydi — TypeError." },
+        { "id": "c", "text": "6 TypeError", "hint": "`...[4, 5]` — spread, int'lar — to'g'ri; 9 chiqadi." },
+        { "id": "d", "text": "Parse error", "hint": "Variadic va spread — PHP 5.6+ sintaksis." }
+      ],
+      "explanation": "`strict_types` faqat shu fayldagi chaqiruvlarga ta'sir qiladi (chaqiruvchi fayl hal qiladi, e'lon qilingan emas). Istisno: `int` → `float` ruxsat. `strict_types`siz `\"2\"` → 2 jim o'giriladi, `\"abc\"` → TypeError. Har faylda `declare(strict_types=1)` — zamonaviy standart (PHP-CS-Fixer qo'shadi).",
+      "reviewed": false
+    },
+    {
+      "id": "php.lang.014",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Katta PHP kod bazasida tur xavfsizligi va sifat qanday ta'minlanadi (til generics'siz)?",
+      "options": [
+        { "id": "a", "text": "PHPStan/Psalm yuqori level (generics PHPDoc orqali `@template`, `array<int, User>`, `list<T>`), `declare(strict_types=1)` hamma joyda, `final`/`readonly` default, PHP-CS-Fixer/Pint uslub, Rector avtomatik refactoring va versiya migratsiya, CI'da hammasi, baseline bilan bosqichma-bosqich qattiqlashtirish", "correct": true },
+        { "id": "b", "text": "PHP dinamik — tur xavfsizligi mumkin emas", "hint": "PHPStan level 9 + generics PHPDoc — amalda juda qattiq tekshiruv." },
+        { "id": "c", "text": "Faqat unit testlar yetarli", "hint": "Testlar bajarilgan yo'lni tekshiradi; statik tahlil — hammasini." },
+        { "id": "d", "text": "TypeScript'ga o'tish", "hint": "Boshqa ekotizim; PHP ichida vositalar yetarli." }
+      ],
+      "explanation": "PHPStan: `/** @return list<User> */`, `@param array<string, mixed>`, `@template T`, Laravel uchun Larastan (Eloquent turlari). Rector — PHP 7 → 8 migratsiya, deprecation'lar. Baseline — mavjud xatolarni qotirib, yangisiga yo'l bermaslik. Bu vositalar PHP'ni \"yozish oson, qo'llab-quvvatlash qiyin\" obro'sidan chiqardi.",
+      "reviewed": false
+    }
+  ]
+}

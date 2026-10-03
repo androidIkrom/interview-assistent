@@ -1,0 +1,126 @@
+{
+  "topic": "php.arch",
+  "questions": [
+    {
+      "id": "php.arch.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Laravel loyihasining papka tuzilmasi va asosiy qatlamlari qanday?",
+      "options": [
+        { "id": "a", "text": "`app/` (Models, Http/Controllers, Http/Requests, Jobs, Events, Listeners, Providers, Services/Actions — o'zingiz), `routes/`, `database/` (migrations, seeders, factories), `resources/views`, `config/`, `tests/` (Feature, Unit), `storage/`, `public/`; MVC + service/action qatlami — konvensiya, Laravel majburlamaydi", "correct": true },
+        { "id": "b", "text": "Hamma kod `app/Http/Controllers`da", "hint": "Controller — HTTP kirish; mantiq boshqa joyda." },
+        { "id": "c", "text": "Laravel tuzilmani o'zgartirishga ruxsat bermaydi", "hint": "Moslashuvchan — modul tuzilma (`app/Modules`) ko'p loyihada." },
+        { "id": "d", "text": "`vendor/` ichida ilova kodi", "hint": "`vendor/` — Composer paketlar, tegilmaydi." }
+      ],
+      "explanation": "O'sish bilan: `app/Domain/Orders/{Models,Actions,Events,...}` yoki `app/Modules/` — feature bo'yicha. `Services` — stateless yordamchi, `Actions` — bitta use case (`CreateOrder::execute`). `routes/api.php` vs `web.php` — middleware guruhlari farq. `.env` git'da yo'q, `.env.example` — bor.",
+      "reviewed": false
+    },
+    {
+      "id": "php.arch.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "OPcache nima va nima uchun production'da shart?",
+      "options": [
+        { "id": "a", "text": "PHP skriptlarni kompilyatsiya qilingan opcode ko'rinishida xotirada saqlaydi — har so'rovda fayl o'qish va parse qilish yo'q (2–3x tezlashish); production'da `opcache.validate_timestamps=0` (fayl o'zgarishini tekshirmaslik, deploy'da reset), `opcache.preload` — framework klasslarini oldindan yuklash", "correct": true },
+        { "id": "b", "text": "Ma'lumot cache (Redis kabi)", "hint": "Kod cache — ma'lumot emas." },
+        { "id": "c", "text": "Ixtiyoriy, kam ta'sir", "hint": "PHP performansining eng muhim bitta sozlamasi." },
+        { "id": "d", "text": "Faqat Laravel uchun", "hint": "PHP darajasida — har qanday ilova." }
+      ],
+      "explanation": "`validate_timestamps=0` — deploy'da `opcache_reset()` yoki FPM reload shart (aks holda eski kod). `memory_consumption` yetarli (256 MB+), `max_accelerated_files` fayl sonidan katta. JIT (8.0+) — CPU-bound kod uchun, web ilovada kam ta'sir. Docker'da — image'ga sozlash.",
+      "reviewed": false
+    },
+    {
+      "id": "php.arch.003",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Laravel ilovasida performance muammosi — qanday tekshiriladi?",
+      "options": [
+        { "id": "a", "text": "Telescope/Debugbar (dev) — so'rovlar, N+1, vaqt; Laravel Pulse (prod) — slow query, slow request, exception; APM (Blackfire, Tideways, New Relic, Sentry Performance) — profil; `EXPLAIN` sekin SQL; OPcache holati; tipik sabablar: N+1, cache yo'q, sinxron og'ir ish (queue'ga), katta Collection PHP'da, config/route cache yo'q, Composer autoload optimizatsiyasiz", "correct": true },
+        { "id": "b", "text": "PHP sekin — til almashtirish", "hint": "To'g'ri sozlangan Laravel ming RPS beradi; muammo odatda DB/kod." },
+        { "id": "c", "text": "Faqat server kuchaytirish", "hint": "N+1 ni kuchli server hal qilmaydi." },
+        { "id": "d", "text": "`dd(microtime())` yetarli", "hint": "Qo'lda o'lchash — tarqoq; profiler to'liq rasm beradi." }
+      ],
+      "explanation": "Tartib: o'lchash (qaysi endpoint sekin, qayerda vaqt) → eng katta foyda → qayta o'lchash. Ko'pincha: eager loading + indeks + cache = 10x. Xotira: `memory_get_peak_usage()`, katta `get()` → `chunk`/`lazy`. Blackfire — chaqiruv grafigi, funksiya darajasida.",
+      "reviewed": false
+    },
+    {
+      "id": "php.arch.004",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Laravel'da autentifikatsiya va avtorizatsiya qanday tashkil qilinadi?",
+      "options": [
+        { "id": "a", "text": "AuthN — guard'lar (session, token/Sanctum), Breeze/Jetstream/Fortify starter'lar, `Auth::user()`, `auth` middleware; AuthZ — Gate (`Gate::define`) va Policy (`UserPolicy@update`), `$this->authorize('update', $post)`, `@can` Blade, Form Request `authorize()`; rollar — spatie/permission yoki o'z jadval; policy auto-discovery", "correct": true },
+        { "id": "b", "text": "Har controller'da `if ($user->role == 'admin')`", "hint": "Tarqoq, takror; Policy markazlashtiradi." },
+        { "id": "c", "text": "Laravel'da auth yo'q — o'zingiz yozasiz", "hint": "To'liq auth tizimi bor — eng kuchli tomonlaridan." },
+        { "id": "d", "text": "AuthN va AuthZ bir xil", "hint": "Kim (login) va nima qila oladi (ruxsat) — alohida." }
+      ],
+      "explanation": "Policy: `php artisan make:policy PostPolicy --model=Post` → `update(User $user, Post $post): bool`. Route: `->can('update', 'post')`. API uchun Sanctum abilities + Policy. Multi-guard (admin/user) — alohida model va guard. 2FA — Fortify. Rate limit login — `throttle` middleware.",
+      "reviewed": false
+    },
+    {
+      "id": "php.arch.005",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Katta Laravel loyihasida modul chegaralari qanday belgilanadi?",
+      "options": [
+        { "id": "a", "text": "Feature/domen bo'yicha papkalar (`app/Modules/Orders/{Models,Actions,Http,Events,Providers}`), har modul o'z ServiceProvider (route, binding, event), modullar orasida — public contract (interfeys) yoki event, boshqa modul modelini to'g'ridan-to'g'ri ishlatmaslik (yoki faqat o'qish), `nwidart/laravel-modules` yoki oddiy namespace; PHPStan/Deptrac — bog'liqlik qoidalarini tekshirish", "correct": true },
+        { "id": "b", "text": "Standart `app/Models`, `app/Http` — hajm muhim emas", "hint": "200 model bir papkada — navigatsiya va egalik yo'qoladi." },
+        { "id": "c", "text": "Har modul — alohida Laravel ilova", "hint": "Mikroservis — oxirgi qadam; modulli monolit — oldin." },
+        { "id": "d", "text": "Modul chegarasi — faqat papka nomi", "hint": "Papka yetmaydi — import qoidalari (Deptrac) va provider bilan mustahkamlanadi." }
+      ],
+      "explanation": "Deptrac: `Orders` moduli `Payments` ichki klasslarini import qila olmaydi — CI'da xato. Umumiy (`Shared`/`Support`) — kichik, barqaror. Modul DB jadvallari — prefiks yoki alohida sxema (keyin ajratish oson). Bu monolitni kelajakda bo'lishga tayyorlaydi — lekin bo'lmaslik ham mumkin.",
+      "reviewed": false
+    },
+    {
+      "id": "php.arch.006",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Quyidagi Laravel kodida arxitektura muammolari nimada?",
+      "code": "<?php\nclass OrderController extends Controller {\n    public function store(Request $r) {\n        $r->validate(['items' => 'required|array']);\n        DB::beginTransaction();\n        $order = Order::create(['user_id' => auth()->id(), 'total' => 0]);\n        foreach ($r->items as $i) {\n            $p = Product::find($i['id']);\n            $order->items()->create([...]);\n            $order->total += $p->price * $i['qty'];\n            Http::post('https://stock.svc/reserve', [...]);\n        }\n        $order->save();\n        Mail::to(auth()->user())->send(new OrderPlaced($order));\n        DB::commit();\n        return $order;\n    }\n}",
+      "options": [
+        { "id": "a", "text": "Controller'da butun biznes mantiq (action/service'ga); `Product::find` siklda (N+1 — `whereIn`); tashqi HTTP tranzaksiya ichida (uzoq qulf, rollback tashqi tizimni qaytarmaydi — tranzaksiyadan tashqarida/job); `Mail::send` sinxron (queue, `afterCommit`); exception'da rollback yo'q (`DB::transaction` closure); Eloquent model to'g'ridan-to'g'ri qaytariladi (Resource)", "correct": true },
+        { "id": "b", "text": "Faqat `validate` yetarli emas (Form Request)", "hint": "To'g'ri, lekin muammolar ancha chuqur." },
+        { "id": "c", "text": "`DB::beginTransaction` o'rniga Eloquent tranzaksiya", "hint": "Bir xil; muammo tranzaksiya ichidagi tashqi chaqiruvlarda." },
+        { "id": "d", "text": "Muammo yo'q — ishlaydi", "hint": "Stock servisi 20 soniya javob bermasa, DB qulf nima bo'ladi?" }
+      ],
+      "explanation": "Yaxshi: `StoreOrderRequest` → `PlaceOrderAction::execute(PlaceOrderData)` → `DB::transaction` ichida faqat DB → `OrderPlaced` event → queued listener'lar (stock reserve job retry bilan, email) → `OrderResource`. Tranzaksiya qisqa, tashqi tizim — kompensatsiya bilan (saga). Bu Laravel suhbatining klassik \"refactor\" savoli.",
+      "reviewed": false
+    },
+    {
+      "id": "php.arch.007",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Laravel monolitini bo'lish (mikroservis yoki alohida ilova) qachon va qanday qilinadi?",
+      "options": [
+        { "id": "a", "text": "Qachon: jamoalar bir-birini to'sadi, deploy xavfi yuqori, bir qism boshqacha masshtab/texnologiya talab qiladi — avval modulli monolit; qanday: strangler fig (yangi funksiya alohida, eski modullar birma-bir), API gateway/yo'naltirish, ma'lumot egaligi (jadvallarni ajratish, replikatsiya yoki event bilan sinxron), umumiy auth (Passport/JWT, Sanctum token tekshiruvi), kontrakt testlar, observability oldin", "correct": true },
+        { "id": "b", "text": "Darhol mikroservislar — Laravel har servis uchun", "hint": "Operatsion yuk (deploy, monitoring, taqsimlangan tranzaksiya) kichik jamoa uchun og'ir; monolit avval." },
+        { "id": "c", "text": "Hech qachon bo'lmaslik", "hint": "Ba'zan zarur — lekin asosli sabab bilan." },
+        { "id": "d", "text": "DB'ni baham ko'rib, faqat kodni bo'lish", "hint": "Distributed monolith — eng yomon variant: tarmoq murakkabligi + bog'lanish." }
+      ],
+      "explanation": "Laravel'da bo'lish: modul → Composer paket (private) → alohida ilova. Ma'lumot: avval sxema ajratish (prefiks), keyin DB. Sessiya/auth — Sanctum token ikkala ilovada tekshirilsin yoki markaziy auth. Ko'p kompaniya modulli monolitda qoladi — bu ham to'g'ri javob.",
+      "reviewed": false
+    },
+    {
+      "id": "php.arch.008",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Laravel ilovasini production'ga deploy qilish va ishlatish uchun senior qanday tizim quradi?",
+      "options": [
+        { "id": "a", "text": "Docker image (PHP-FPM + Nginx yoki FrankenPHP/Octane), CI: Pint + Larastan + testlar + `composer audit`; deploy: zero-downtime (symlink release yoki rolling pod), `migrate --force` (backward-compatible), cache buyruqlar, `queue:restart`, OPcache reset; muhit: `.env` → secret manager, `APP_DEBUG=false`, HTTPS, log stdout → agregator, Sentry/Bugsnag, Pulse/APM, health endpoint, backup va rollback rejasi; scheduler bitta joyda; Horizon worker'lar alohida", "correct": true },
+        { "id": "b", "text": "FTP bilan fayllarni ko'chirish", "hint": "Qisman yangilangan kod, vendor sinxron emas — klassik xato." },
+        { "id": "c", "text": "`git pull` serverda yetarli", "hint": "Composer, migratsiya, cache, worker restart — hech biri yo'q." },
+        { "id": "d", "text": "`APP_DEBUG=true` production'da — xatolarni ko'rish uchun", "hint": "Stack trace va `.env` qiymatlari foydalanuvchiga ko'rinadi — jiddiy xavfsizlik teshigi." }
+      ],
+      "explanation": "Forge/Envoyer/Vapor — Laravel ekotizimi vositalari (server, zero-downtime, serverless). Kubernetes: FPM pod + worker Deployment + scheduler CronJob (yoki `schedule:work` bitta pod). Migratsiya — Job/init container, parallel pod race'siz. Health: `/up` (Laravel 11) + DB/Redis tekshiruvi.",
+      "reviewed": false
+    }
+  ]
+}
