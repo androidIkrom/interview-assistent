@@ -1,0 +1,192 @@
+{
+  "topic": "net.types",
+  "questions": [
+    {
+      "id": "net.types.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Massiv (`int[]`) va `List<int>` qanday farqlanadi?",
+      "options": [
+        { "id": "a", "text": "Massiv uzunligi yaratilganda qotiriladi; `List<T>` ichida massiv saqlaydi va to'lganda kattaroq massivga ko'chirib avtomatik o'sadi (`Add`, `Remove`, `Insert`). Indeks bo'yicha kirish ikkalasida O(1); oxiriga qo'shish List'da amortizatsiyalangan O(1)", "correct": true },
+        { "id": "b", "text": "`List<T>` bog'langan ro'yxat (linked list)", "hint": "`List<T>` — dinamik massiv; linked list — `LinkedList<T>`." },
+        { "id": "c", "text": "Massivga element qo'shib, uzunligini oshirish mumkin", "hint": "`Array.Resize` ham aslida yangi massiv yaratib ko'chiradi — massiv o'lchami o'zgarmas." },
+        { "id": "d", "text": "`List<T>` faqat reference type'lar uchun", "hint": "Generic — `List<int>` boxing'siz value type saqlaydi." }
+      ],
+      "explanation": "Elementlar soni oldindan ma'lum bo'lsa `new List<T>(capacity)` qayta allokatsiyalarni kamaytiradi. `Count` — haqiqiy elementlar, `Capacity` — ichki massiv hajmi. O'rtadan o'chirish/qo'shish O(n) — elementlar suriladi. API'dan qaytarishda `IReadOnlyList<T>` — chaqiruvchi o'zgartira olmaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "net.types.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Quyidagi kod nima qiladi?",
+      "code": "var ages = new Dictionary<string, int>\n{\n    [\"Ali\"] = 25,\n    [\"Vali\"] = 30\n};\n\nif (ages.TryGetValue(\"Gani\", out var g))\n    Console.Write(g);\nelse\n    Console.Write(\"yo'q \");\n\nConsole.Write(ages[\"Gani\"]);",
+      "options": [
+        { "id": "a", "text": "\"yo'q \" chop etiladi, keyin `KeyNotFoundException` tashlanadi", "correct": true },
+        { "id": "b", "text": "\"yo'q 0\" chop etiladi", "hint": "Indexer (`ages[key]`) yo'q kalit uchun default qiymat qaytarmaydi." },
+        { "id": "c", "text": "Darhol `KeyNotFoundException` — hech narsa chop etilmaydi", "hint": "`TryGetValue` exception tashlamaydi — `false` qaytaradi va `else` ishlaydi." },
+        { "id": "d", "text": "\"0 0\" chop etiladi", "hint": "`TryGetValue` `false` qaytarganda `if` sharti bajarilmaydi." }
+      ],
+      "explanation": "Kalit bor-yo'qligi noma'lum bo'lsa — `TryGetValue` (bitta qidiruv). `ContainsKey` + indexer — ikki qidiruv. `GetValueOrDefault(key, fallback)` — qisqa variant. Indexer'ga yozish (`ages[\"Gani\"] = 20`) esa kalit bo'lmasa qo'shadi, bo'lsa almashtiradi; `Add` esa mavjud kalitda `ArgumentException` beradi.",
+      "reviewed": false
+    },
+    {
+      "id": "net.types.003",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Quyidagi kod nimani chop etadi?",
+      "code": "var nums = new[] { 5, 2, 8, 3, 6 };\n\nvar result = nums\n    .Where(n => n > 3)\n    .OrderBy(n => n)\n    .Select(n => n * 10);\n\nConsole.WriteLine(string.Join(\",\", result));",
+      "options": [
+        { "id": "a", "text": "50,60,80", "correct": true },
+        { "id": "b", "text": "50,80,60", "hint": "`OrderBy` filtrdan o'tgan elementlarni o'sish tartibida saralaydi." },
+        { "id": "c", "text": "30,50,60,80", "hint": "`n > 3` qat'iy katta — 3 o'tmaydi." },
+        { "id": "d", "text": "5,6,8", "hint": "`Select` har elementni 10 ga ko'paytirib yangi qiymatga aylantiradi." }
+      ],
+      "explanation": "LINQ zanjiri: `Where` — filtr, `OrderBy` — saralash (barqaror), `Select` — proyeksiya. Query sintaksisi ham shunga kompilyatsiya qilinadi: `from n in nums where n > 3 orderby n select n * 10`. Natija `string.Join` uni sanab chiqqanda hisoblanadi (deferred execution).",
+      "reviewed": false
+    },
+    {
+      "id": "net.types.004",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`First`, `FirstOrDefault` va `Single` qanday farqlanadi?",
+      "options": [
+        { "id": "a", "text": "`First` — birinchi mos elementni qaytaradi, mos element bo'lmasa `InvalidOperationException`; `FirstOrDefault` — topilmasa `default` (`null`, `0`); `Single` — aynan bitta mos element bo'lishini talab qiladi: nol yoki birdan ko'p bo'lsa exception", "correct": true },
+        { "id": "b", "text": "Uchalasi bir xil, faqat nomlari boshqa", "hint": "Element topilmaganda yoki bir nechta topilganda xulqlari farq qiladi." },
+        { "id": "c", "text": "`Single` birinchi topilgan elementda to'xtaydi — `First`dan tezroq", "hint": "`Single` ikkinchi mos element yo'qligini tekshirish uchun davom etadi (yoki ikkinchisini topguncha)." },
+        { "id": "d", "text": "`FirstOrDefault` bo'sh ketma-ketlikda exception tashlaydi", "hint": "`OrDefault` qo'shimchasi aynan exception o'rniga default qiymat demak." }
+      ],
+      "explanation": "Tanlov ma'noni bildiradi: ID bo'yicha qidiruv (`Single`/`SingleOrDefault`) — ikki natija ma'lumot xatosi ekanini ko'rsatadi. `FirstOrDefault`dan keyin null tekshiruvini unutmang. Value type'larda `default` — `0`, uni \"topilmadi\"dan farqlab bo'lmaydi: .NET 6+ da `FirstOrDefault(predicate, defaultValue)` overload'i bor.",
+      "reviewed": false
+    },
+    {
+      "id": "net.types.005",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`HashSet<T>` qachon `List<T>`dan yaxshiroq?",
+      "options": [
+        { "id": "a", "text": "Takrorlanmas elementlar to'plami va tez \"bormi?\" tekshiruvi kerak bo'lganda: `Contains` o'rtacha O(1) (hash bo'yicha), `List.Contains` esa O(n). `Add` takrorni qo'shmaydi va `false` qaytaradi; `UnionWith`, `IntersectWith` kabi to'plam amallari bor. Tartib va indeks yo'q", "correct": true },
+        { "id": "b", "text": "Har doim — `HashSet` `List`ning tezroq versiyasi", "hint": "`HashSet`da indeks bo'yicha kirish va tartib yo'q, takror saqlamaydi." },
+        { "id": "c", "text": "Elementlarni saralangan tartibda saqlash kerak bo'lganda", "hint": "Saralangan to'plam — `SortedSet<T>`; `HashSet` tartibni kafolatlamaydi." },
+        { "id": "d", "text": "Elementlar tez-tez indeks bo'yicha o'qilganda", "hint": "Indeks bo'yicha kirish — `List<T>` yoki massivning kuchli tomoni." }
+      ],
+      "explanation": "O'z tipingiz element bo'lsa — `Equals` va `GetHashCode` to'g'ri implementatsiya qilinishi kerak (yoki `record`). Siklda `list.Contains` ishlatilgan O(n²) kodni `HashSet`ga o'tkazish — klassik optimallashtirish. Katta solishtirish uchun `IEqualityComparer<T>` (masalan, `StringComparer.OrdinalIgnoreCase`).",
+      "reviewed": false
+    },
+    {
+      "id": "net.types.006",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Quyidagi kod nimani chop etadi?",
+      "code": "var list = new List<int> { 1, 2, 3 };\nvar query = list.Where(x => x > 1);\n\nlist.Add(4);\n\nConsole.WriteLine(query.Count());",
+      "options": [
+        { "id": "a", "text": "3", "correct": true },
+        { "id": "b", "text": "2", "hint": "`Where` so'rovni darhol bajarmaydi — `Count()` chaqirilganda ro'yxatning o'sha paytdagi holati sanaladi." },
+        { "id": "c", "text": "4", "hint": "Filtr `x > 1` — 1 o'tmaydi." },
+        { "id": "d", "text": "`InvalidOperationException` — kolleksiya o'zgartirildi", "hint": "Bu exception sanab chiqish davomida o'zgartirilganda bo'ladi; bu yerda `Add` sanashdan oldin." }
+      ],
+      "explanation": "Deferred execution: `Where`, `Select`, `OrderBy` — faqat \"retsept\" (iterator) qaytaradi; bajarilish — `foreach`, `ToList()`, `Count()`, `First()` paytida. Natijani qotirish uchun — `ToList()`/`ToArray()`. Har sanashda qayta hisoblanadi — qimmat so'rovni ikki marta sanash ikki marta ishlaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "net.types.007",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`IEnumerable<T>` va `IQueryable<T>` farqi nima (masalan, EF Core bilan)?",
+      "options": [
+        { "id": "a", "text": "`IEnumerable<T>` — xotiradagi ketma-ketlik: LINQ operatorlari delegate (`Func<T,bool>`) sifatida C# kodida ishlaydi. `IQueryable<T>` — expression tree (`Expression<Func<T,bool>>`) yig'adi, provider uni SQL kabi tilga tarjima qiladi va DB'da bajaradi. `IQueryable`ni erta `IEnumerable`ga aylantirsangiz, keyingi filtrlar butun jadval yuklangandan keyin xotirada ishlaydi", "correct": true },
+        { "id": "b", "text": "`IQueryable` — `IEnumerable`ning tezroq nomi, farq yo'q", "hint": "`IQueryable` filtrni provider'ga (DB'ga) uzatadi; `IEnumerable` uni xotirada bajaradi." },
+        { "id": "c", "text": "`IEnumerable` so'rovlari har doim darhol bajariladi", "hint": "Ikkalasi ham deferred — farq qayerda bajarilishida." },
+        { "id": "d", "text": "`IQueryable`da istalgan C# metodini `Where` ichida ishlatish mumkin", "hint": "Provider tarjima qila olmaydigan metod EF Core 3+ da exception beradi." }
+      ],
+      "explanation": "Repository'dan `IEnumerable<User>` qaytarib, chaqiruvchi `.Where(...)` qilsa — butun jadval yuklanadi. `AsEnumerable()` — ataylab xotiraga o'tish nuqtasi. Yaxshi amaliyot: so'rovni `IQueryable` darajasida to'liq qurib, oxirida bir marta `ToListAsync()`.",
+      "reviewed": false
+    },
+    {
+      "id": "net.types.008",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Code review: bu kodda qanday muammo bor?",
+      "code": "IEnumerable<Order> orders = LoadOrders(); // yield return bilan DB'dan o'qiydi\n\nif (orders.Any())\n{\n    var total = orders.Sum(o => o.Amount);\n    var count = orders.Count();\n    Console.WriteLine($\"{count} ta, jami {total}\");\n}",
+      "options": [
+        { "id": "a", "text": "Multiple enumeration: `orders` lazy ketma-ketlik — `Any`, `Sum`, `Count` har biri `LoadOrders`ni qaytadan boshlab DB'ga uch marta boradi (natijalar orada o'zgarishi ham mumkin). Bir marta `ToList()` qilib, ro'yxat ustida ishlash kerak", "correct": true },
+        { "id": "b", "text": "`Any()` bo'sh ketma-ketlikda exception tashlaydi", "hint": "`Any()` bo'sh ketma-ketlikda `false` qaytaradi." },
+        { "id": "c", "text": "`Sum` faqat `int` bilan ishlaydi", "hint": "`decimal`, `double`, `long` va boshqa overload'lar bor." },
+        { "id": "d", "text": "Muammo yo'q — LINQ natijani avtomatik keshlaydi", "hint": "LINQ keshlamaydi: har sanash iterator'ni boshidan ishga tushiradi." }
+      ],
+      "explanation": "Rider/ReSharper \"Possible multiple enumeration\" warning beradi. Metod parametrini `IEnumerable<T>` qilsangiz va ichida ko'p marta sanasangiz — `IReadOnlyCollection<T>` qabul qilish niyatni aniqroq bildiradi. `yield` iterator'larda yon ta'sirlar (log, DB) har sanashda takrorlanadi.",
+      "reviewed": false
+    },
+    {
+      "id": "net.types.009",
+      "level": "middle",
+      "type": "multi",
+      "kind": "concept",
+      "prompt": "Qaysi LINQ operatorlari deferred (kechiktirilgan) bajariladi? (bir nechta javob)",
+      "options": [
+        { "id": "a", "text": "`Where`", "correct": true },
+        { "id": "b", "text": "`Select`", "correct": true },
+        { "id": "c", "text": "`OrderBy`", "correct": true },
+        { "id": "d", "text": "`ToList`", "hint": "`To...` operatorlari darhol sanab, natijani yangi kolleksiyaga yig'adi." },
+        { "id": "e", "text": "`Count`", "hint": "Bitta qiymat qaytaruvchi (aggregate) operatorlar ketma-ketlikni darhol sanaydi." }
+      ],
+      "explanation": "Deferred: ketma-ketlik qaytaruvchilar (`Where`, `Select`, `SelectMany`, `OrderBy`, `GroupBy`, `Skip`, `Take`, `Distinct`). Darhol (immediate): skalyar qaytaruvchilar (`Count`, `Sum`, `First`, `Any`, `Max`) va `ToList`, `ToArray`, `ToDictionary`. `OrderBy` deferred bo'lsa-da, sanash boshlanganda butun manbani o'qib oladi (buferlaydi).",
+      "reviewed": false
+    },
+    {
+      "id": "net.types.010",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Code review: nega `Contains` keyinchalik `false` qaytaradi?",
+      "code": "class Point\n{\n    public int X { get; set; }\n    public int Y { get; set; }\n    public override bool Equals(object? o) => o is Point p && p.X == X && p.Y == Y;\n    public override int GetHashCode() => HashCode.Combine(X, Y);\n}\n\nvar set = new HashSet<Point>();\nvar p = new Point { X = 1, Y = 2 };\nset.Add(p);\np.X = 10;\nConsole.WriteLine(set.Contains(p)); // False",
+      "options": [
+        { "id": "a", "text": "Kalit ob'ekt hash'ni hisoblovchi maydon o'zgardi: element eski hash \"savati\"da yotibdi, `Contains` yangi hash bo'yicha boshqa savatdan qidiradi. Hash-kolleksiyadagi kalitlar immutable bo'lishi kerak — `init`/`readonly` xususiyatlar yoki `record`", "correct": true },
+        { "id": "b", "text": "`Equals` noto'g'ri yozilgan — havolalarni solishtiradi", "hint": "`Equals` X va Y qiymatlarini solishtiradi; ob'ekt o'zi bilan teng." },
+        { "id": "c", "text": "`HashSet` `Equals`ni chaqirmaydi — faqat `ReferenceEquals`", "hint": "`HashSet` default'da `EqualityComparer<T>.Default` — sizning `Equals`/`GetHashCode` override'laringizdan foydalanadi." },
+        { "id": "d", "text": "`HashCode.Combine` tasodifiy natija beradi", "hint": "Bir jarayon ichida bir xil kirishga bir xil natija; jarayonlar o'rtasida farq qilishi mumkin (saqlamang)." }
+      ],
+      "explanation": "Kontrakt: teng ob'ektlar teng hash beradi; hash ob'ekt kolleksiyada turgan paytda o'zgarmasligi kerak. Xuddi shu xato `Dictionary` kalitlarida: kalit \"yo'qoladi\", lekin xotirada qoladi. `Equals` override qilinsa `GetHashCode` ham albatta (va aksincha); `IEquatable<T>` value type'larda boxing'ni oldini oladi.",
+      "reviewed": false
+    },
+    {
+      "id": "net.types.011",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Quyidagi kod nimani chop etadi?",
+      "code": "static IEnumerable<int> Take3(int[]? source)\n{\n    if (source is null) throw new ArgumentNullException(nameof(source));\n    for (int i = 0; i < 3; i++) yield return source[i];\n}\n\nvar seq = Take3(null);\nConsole.Write(\"A\");\ntry\n{\n    foreach (var x in seq) Console.Write(x);\n}\ncatch (ArgumentNullException)\n{\n    Console.Write(\"E\");\n}",
+      "options": [
+        { "id": "a", "text": "AE", "correct": true },
+        { "id": "b", "text": "Hech narsa — `Take3(null)` qatorida darhol exception", "hint": "`yield` bor metodning tanasi chaqirilganda emas, birinchi `MoveNext()`da ishlay boshlaydi — tekshiruv ham kechikadi." },
+        { "id": "c", "text": "A", "hint": "`foreach` iterator'ni ishga tushiradi va `null` tekshiruvi aynan shunda bajariladi." },
+        { "id": "d", "text": "E", "hint": "\"A\" qatori iterator ishga tushishidan oldin bajariladi." }
+      ],
+      "explanation": "Iterator metod butunlay state machine'ga aylanadi — argument validatsiyasi ham deferred. Yechim: tekshiruvni oddiy (iterator bo'lmagan) metodga chiqarib, ichki local function'ni qaytarish: `if (source is null) throw ...; return Impl(); IEnumerable<int> Impl() { ... yield ... }`. `async` metodlarda ham o'xshash: exception qaytgan `Task` ichiga joylanadi.",
+      "reviewed": false
+    },
+    {
+      "id": "net.types.012",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Yuqori yuklamali servisda ko'p o'qiladigan, kam o'zgaradigan lookup jadvali (masalan, 50 000 ta tarif) uchun qaysi kolleksiya strategiyasi to'g'ri?",
+      "options": [
+        { "id": "a", "text": "Yuklashda `FrozenDictionary` (.NET 8+) yoki immutable lug'at yaratib, bitta havola orqali e'lon qilish; yangilanishda yangi nusxa qurib, havolani atomik almashtirish (`Volatile.Write`/`Interlocked.Exchange`). O'qish lock'siz va o'qish uchun optimallashtirilgan; `ConcurrentDictionary` faqat tez-tez parallel yoziladigan holat uchun", "correct": true },
+        { "id": "b", "text": "Oddiy `Dictionary` + har o'qishda `lock`", "hint": "Ko'p o'quvchi lock uchun navbatga turadi — o'qish ko'p bo'lganda contention bo'g'ozga aylanadi." },
+        { "id": "c", "text": "`ConcurrentDictionary` — har doim eng tez variant", "hint": "U parallel yozish uchun striping va qo'shimcha xarajatga ega; deyarli faqat o'qiladigan ma'lumotda frozen/immutable tezroq." },
+        { "id": "d", "text": "Oddiy `Dictionary`ni lock'siz o'qish va yangilash", "hint": "`Dictionary` parallel yozish + o'qishda xavfsiz emas — ichki holat buzilishi, hatto cheksiz sikl bo'lishi mumkin." }
+      ],
+      "explanation": "Copy-on-write + atomik havola almashinuvi — \"read-mostly\" ma'lumot uchun klassik pattern. `FrozenDictionary` yaratish qimmatroq, lekin qidiruv `Dictionary`dan tezroq. `ImmutableDictionary` tez-tez kichik o'zgarishlar uchun qulay (strukturaviy bo'lishish), lekin o'qish sekinroq. Qarorni BenchmarkDotNet bilan o'z ma'lumotingizda tasdiqlang.",
+      "reviewed": false
+    }
+  ]
+}

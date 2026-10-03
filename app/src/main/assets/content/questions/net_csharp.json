@@ -1,0 +1,220 @@
+{
+  "topic": "net.csharp",
+  "questions": [
+    {
+      "id": "net.csharp.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "C#'da value type va reference type qanday farqlanadi?",
+      "options": [
+        { "id": "a", "text": "Value type (`int`, `bool`, `struct`, `enum`) o'zgaruvchida qiymatning o'zini saqlaydi — o'zlashtirishda nusxa olinadi; reference type (`class`, `string`, massiv, `interface`, `delegate`) o'zgaruvchida heap'dagi ob'ektga havola saqlaydi — o'zlashtirishda havola nusxalanadi, ikki o'zgaruvchi bitta ob'ektni ko'radi", "correct": true },
+        { "id": "b", "text": "Value type har doim stack'da, reference type har doim heap'da — farq faqat shunda", "hint": "Joylashuv — implementatsiya tafsiloti: class maydoni bo'lgan `int` heap'da yashaydi. Asosiy farq — nusxa olish semantikasi." },
+        { "id": "c", "text": "Reference type'lar o'zgarmas, value type'lar o'zgaruvchan", "hint": "O'zgarmaslik tipga emas, dizaynga bog'liq: `string` — o'zgarmas reference type, `List<T>` — o'zgaruvchan." },
+        { "id": "d", "text": "Farq yo'q — CLR ikkalasini bir xil ishlaydi", "hint": "Metodga uzatishda farq aniq ko'rinadi: struct nusxasi o'zgaradi, class ob'ekti esa asl holida o'zgaradi." }
+      ],
+      "explanation": "Value type metodga qiymat bo'yicha uzatiladi (nusxa); `ref`/`out`/`in` bilan havola sifatida uzatish mumkin. Reference type ham aslida qiymat bo'yicha uzatiladi — lekin qiymat havola: metod ichida ob'ekt maydonini o'zgartirish tashqarida ko'rinadi, o'zgaruvchini yangi ob'ektga qayta bog'lash esa ko'rinmaydi. `null` — faqat reference type (yoki `Nullable<T>`, `int?`).",
+      "reviewed": false
+    },
+    {
+      "id": "net.csharp.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Quyidagi kod nimani chop etadi?",
+      "code": "struct PointS { public int X; }\nclass PointC { public int X; }\n\nvar s1 = new PointS { X = 1 };\nvar s2 = s1;\ns2.X = 5;\n\nvar c1 = new PointC { X = 1 };\nvar c2 = c1;\nc2.X = 5;\n\nConsole.WriteLine($\"{s1.X} {c1.X}\");",
+      "options": [
+        { "id": "a", "text": "1 5", "correct": true },
+        { "id": "b", "text": "5 5", "hint": "`struct` — value type: `s2 = s1` mustaqil nusxa yaratadi, `s2` o'zgarishi `s1`ga tegmaydi." },
+        { "id": "c", "text": "1 1", "hint": "`class` — reference type: `c2` va `c1` bitta ob'ektga qaraydi." },
+        { "id": "d", "text": "5 1", "hint": "Struct va class rollarini almashtirib qo'ydingiz — qaysi biri nusxalanishini qayta ko'ring." }
+      ],
+      "explanation": "Struct nusxasi alohida xotira — `s1.X` 1 bo'lib qoladi. Class o'zgaruvchilari bitta heap ob'ektiga havola — `c2.X = 5` `c1` orqali ham ko'rinadi. Shu sabab mutable struct xavfli: nusxa ustida o'zgartirib, asl o'zgardi deb o'ylash oson. Struct'larni odatda `readonly struct` qilish tavsiya etiladi.",
+      "reviewed": false
+    },
+    {
+      "id": "net.csharp.003",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Quyidagi kod nimani chop etadi?",
+      "code": "record UserR(string Name);\nclass UserC\n{\n    public string Name { get; }\n    public UserC(string name) => Name = name;\n}\n\nvar r1 = new UserR(\"Ali\");\nvar r2 = new UserR(\"Ali\");\nvar c1 = new UserC(\"Ali\");\nvar c2 = new UserC(\"Ali\");\n\nConsole.WriteLine($\"{r1 == r2} {c1 == c2}\");",
+      "options": [
+        { "id": "a", "text": "True False", "correct": true },
+        { "id": "b", "text": "True True", "hint": "Oddiy class `==` operatorini qayta yozmasa, havolalarni solishtiradi — ikkita `new` ikki xil ob'ekt." },
+        { "id": "c", "text": "False False", "hint": "`record` kompilyator tomonidan qiymat bo'yicha tenglik (`Equals`, `==`, `GetHashCode`) oladi." },
+        { "id": "d", "text": "Kompilyatsiya xatosi", "hint": "Record'ni positional sintaksis bilan e'lon qilish va `==` ishlatish to'g'ri kod." }
+      ],
+      "explanation": "`record` (C# 9+) — reference type, lekin tenglik barcha xususiyatlar qiymati bo'yicha. Yana: `ToString()` chiroyli chiqadi (`UserR { Name = Ali }`), `with` ifodasi nusxa yaratadi (`r1 with { Name = \"Vali\" }`), positional xususiyatlar `init`-only. `record struct` — value type varianti. DTO va immutable modellar uchun qulay.",
+      "reviewed": false
+    },
+    {
+      "id": "net.csharp.004",
+      "level": "junior",
+      "type": "single",
+      "kind": "true_false",
+      "prompt": "Quyidagi fikr to'g'rimi?\n\n`string s = \"salom\"; s.ToUpper();` qatoridan keyin `s` o'zgaruvchisi \"SALOM\" qiymatiga ega bo'ladi.",
+      "options": [
+        { "id": "a", "text": "Ha", "hint": "`string` o'zgarmas (immutable): `ToUpper()` yangi satr qaytaradi, eskisini o'zgartirmaydi. Natija hech qayerga yozilmadi." },
+        { "id": "b", "text": "Yo'q", "correct": true }
+      ],
+      "explanation": "To'g'risi: `s = s.ToUpper();`. Immutability foydasi: satrlarni threadlar o'rtasida xavfsiz bo'lishish, `Dictionary` kaliti sifatida ishonchli `GetHashCode`, interning. Kamchiligi: siklda `+=` har safar yangi satr yaratadi — ko'p birlashtirishda `StringBuilder` ishlatiladi.",
+      "reviewed": false
+    },
+    {
+      "id": "net.csharp.005",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`interface` va `abstract class` qachon ishlatiladi?",
+      "options": [
+        { "id": "a", "text": "`interface` — kontrakt (nima qila oladi); class bir nechta interfeysni implementatsiya qila oladi, holat (maydon) saqlamaydi. `abstract class` — umumiy ildiz: maydonlar, konstruktor, qisman implementatsiya beradi, lekin faqat bitta class'dan meros olish mumkin. DI va testda almashtirish uchun odatda interface", "correct": true },
+        { "id": "b", "text": "Ikkalasi bir xil — faqat sintaksis farqi", "hint": "Class faqat bitta class'dan meros oladi, interfeyslar esa ko'p bo'lishi mumkin; abstract class maydon va konstruktorga ega bo'la oladi." },
+        { "id": "c", "text": "Interface'da hech qachon metod tanasi bo'lmaydi", "hint": "C# 8'dan beri default interface methods bor — lekin holat (instance maydon) baribir yo'q." },
+        { "id": "d", "text": "Abstract class'dan `new` bilan ob'ekt yaratish mumkin", "hint": "Abstract class'dan to'g'ridan-to'g'ri instansiya yaratib bo'lmaydi — faqat meros olgan konkret class'dan." }
+      ],
+      "explanation": "Qoidaga yaqin: \"is-a\" ierarxiya va umumiy kod — abstract class (masalan, `Stream`); \"can-do\" qobiliyat — interface (`IDisposable`, `IComparable<T>`). Ko'p hollarda interface + kompozitsiya meros ierarxiyasidan moslashuvchanroq.",
+      "reviewed": false
+    },
+    {
+      "id": "net.csharp.006",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Quyidagi kod nimani chop etadi?",
+      "code": "static int Parse(string s)\n{\n    try\n    {\n        Console.Write(\"T\");\n        return int.Parse(s);\n    }\n    catch (FormatException)\n    {\n        Console.Write(\"C\");\n        return -1;\n    }\n    finally\n    {\n        Console.Write(\"F\");\n    }\n}\n\nConsole.Write(Parse(\"abc\"));",
+      "options": [
+        { "id": "a", "text": "TCF-1", "correct": true },
+        { "id": "b", "text": "TC-1", "hint": "`finally` bloki `return` bo'lsa ham, metod chiqishidan oldin albatta bajariladi." },
+        { "id": "c", "text": "TC-1F", "hint": "`finally` metod qiymat qaytarishidan oldin ishlaydi; `Console.Write(Parse(...))` esa qaytgan qiymatni keyin chop etadi." },
+        { "id": "d", "text": "Dastur FormatException bilan to'xtaydi", "hint": "`catch (FormatException)` aynan shu exception'ni ushlaydi." }
+      ],
+      "explanation": "Tartib: `try` → exception → mos `catch` → `return -1` qiymati eslab qolinadi → `finally` → metod qaytadi → tashqi `Console.Write`. `finally` — resurslarni bo'shatish joyi (`using` ham ichkarida `try/finally`ga aylanadi). Exception'ni boshqarish oqimi uchun ishlatmang: `int.TryParse` arzonroq va aniqroq.",
+      "reviewed": false
+    },
+    {
+      "id": "net.csharp.007",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Boxing va unboxing nima va nega u performance'ga ta'sir qiladi?",
+      "options": [
+        { "id": "a", "text": "Boxing — value type'ni `object` (yoki interfeys) sifatida ishlatganda heap'da yangi ob'ekt yaratib qiymatni unga ko'chirish; unboxing — aniq tipga cast qilib qiymatni qaytarib olish. Har boxing — heap allokatsiya va GC bosimi; issiq kodda (sikl, `ArrayList`, `object` parametr, `string.Format` eski overload'lari) sezilarli sekinlashtiradi", "correct": true },
+        { "id": "b", "text": "Boxing — reference type'ni value type'ga aylantirish", "hint": "Yo'nalish teskari: value type `object`ga o'raladi." },
+        { "id": "c", "text": "Boxing faqat aniq `(object)` cast yozilganda bo'ladi", "hint": "Ko'pincha yashirin: `object o = 5;`, `ArrayList.Add(5)`, struct'ni interfeys sifatida uzatish." },
+        { "id": "d", "text": "Unboxing'da tipni istalgan mos tipga cast qilsa bo'ladi", "hint": "Box ichidagi aniq tipga cast kerak: `int`ni box qilib `(long)o` qilsangiz `InvalidCastException`." }
+      ],
+      "explanation": "Oldini olish: generic kolleksiyalar (`List<int>` — boxing yo'q), generic metodlar (`T` constraint bilan), struct'da `IEquatable<T>` implementatsiyasi (`Dictionary` kaliti sifatida `Equals(object)` boxing'idan qochish), string interpolation .NET 6+ handler'lari. Profiler'da allokatsiyalarni ko'rish — `dotnet-counters`, BenchmarkDotNet `[MemoryDiagnoser]`.",
+      "reviewed": false
+    },
+    {
+      "id": "net.csharp.008",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Quyidagi kod nimani chop etadi?",
+      "code": "string a = \"hello\";\nstring b = new string(\"hello\".ToCharArray());\nobject oa = a;\nobject ob = b;\n\nConsole.WriteLine($\"{a == b} {oa == ob} {oa.Equals(ob)}\");",
+      "options": [
+        { "id": "a", "text": "True False True", "correct": true },
+        { "id": "b", "text": "True True True", "hint": "`object` tipidagi o'zgaruvchilarda `==` — havola tengligi; `string`ning `==` overload'i chaqirilmaydi." },
+        { "id": "c", "text": "False False True", "hint": "`string` tipidagi `a == b` — overload qilingan operator, matnni solishtiradi." },
+        { "id": "d", "text": "True False False", "hint": "`Equals` virtual — runtime'da `string.Equals` ishlaydi va matnni solishtiradi." }
+      ],
+      "explanation": "Operatorlar statik — kompilyatsiya vaqtidagi tip bo'yicha tanlanadi: `object == object` — `ReferenceEquals`. `Equals` esa virtual — ob'ektning haqiqiy tipi bo'yicha. `new string(...)` interning'dan chetlab yangi ob'ekt yaratadi. Generic kodda ham shu tuzoq: constraint'siz `T` uchun `==` ishlatib bo'lmaydi — `EqualityComparer<T>.Default.Equals` ishlatiladi.",
+      "reviewed": false
+    },
+    {
+      "id": "net.csharp.009",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Nullable reference types (`#nullable enable`) nima beradi?",
+      "options": [
+        { "id": "a", "text": "Kompilyatorga reference type null bo'lishi mumkinmi yoki yo'qligini aytadi: `string` — null emas, `string?` — null bo'lishi mumkin; null bo'lishi mumkin qiymatni tekshirmasdan dereference qilsangiz warning beradi. Runtime xulqi o'zgarmaydi — bu statik tahlil, `NullReferenceException`ni erta topish uchun", "correct": true },
+        { "id": "b", "text": "Runtime'da `string`ga null yozishni taqiqlaydi va exception tashlaydi", "hint": "Faqat kompilyatsiya vaqtidagi tahlil va warning'lar; IL va runtime xulqi bir xil." },
+        { "id": "c", "text": "`string?` — `Nullable<string>` struct'i", "hint": "`Nullable<T>` faqat value type uchun (`int?`); reference type'da `?` — faqat annotatsiya." },
+        { "id": "d", "text": "`!` operatori qiymatni null'dan tozalaydi", "hint": "Null-forgiving `!` faqat warning'ni o'chiradi — qiymat null bo'lsa baribir exception." }
+      ],
+      "explanation": "Yangi loyihalarda default yoqilgan. Foydali atributlar: `[NotNullWhen(true)]` (`TryGet` pattern), `[MemberNotNull]`. Warning'larni `TreatWarningsAsErrors` bilan xatoga aylantirish — qat'iyroq. Tashqi kirish (JSON, DB) baribir null olib kelishi mumkin — chegarada validatsiya kerak.",
+      "reviewed": false
+    },
+    {
+      "id": "net.csharp.010",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Extension method qanday ishlaydi?",
+      "options": [
+        { "id": "a", "text": "`static` class ichidagi `static` metod, birinchi parametri `this` bilan belgilanadi: `public static bool IsEmpty(this string s)`. Chaqiruv `s.IsEmpty()` ko'rinadi, lekin kompilyator uni `StringExt.IsEmpty(s)`ga aylantiradi — tipga yangi a'zo qo'shilmaydi, private a'zolarga kirish yo'q, namespace `using` qilinishi kerak. LINQ shu mexanizmda qurilgan", "correct": true },
+        { "id": "b", "text": "Mavjud class'ni runtime'da o'zgartirib, yangi metod qo'shadi", "hint": "Hech narsa o'zgarmaydi — bu kompilyatsiya vaqtidagi sintaktik qulaylik (statik chaqiruv)." },
+        { "id": "c", "text": "Extension method tipning o'z metodidan ustun turadi", "hint": "Teskari: nomi va signaturasi bir xil instance metod bo'lsa, u tanlanadi; extension e'tiborsiz qoladi." },
+        { "id": "d", "text": "Extension method ichida `private` maydonlarga kirish mumkin", "hint": "U oddiy statik metod — faqat public (yoki assembly ichida internal) a'zolarni ko'radi." }
+      ],
+      "explanation": "Null bilan qiziq xulq: `string s = null; s.IsEmpty()` — exception emas, metodga `null` uzatiladi (instance metodda NRE bo'lardi). Interfeysga extension — barcha implementatsiyalarga umumiy xulq (`IEnumerable<T>` + LINQ). Ortiqcha ishlatish IntelliSense'ni ifloslantiradi — aniq namespace'larda saqlang.",
+      "reviewed": false
+    },
+    {
+      "id": "net.csharp.011",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Code review: bu exception handling'dagi asosiy muammo nima?",
+      "code": "public Order Load(int id)\n{\n    try\n    {\n        return _repo.Get(id);\n    }\n    catch (Exception ex)\n    {\n        _logger.LogError(ex.Message);\n        throw ex;\n    }\n}",
+      "options": [
+        { "id": "a", "text": "`throw ex;` stack trace'ni shu qatordan qayta boshlaydi — xato aslida qayerda bo'lgani yo'qoladi; `throw;` yozish kerak. Qo'shimcha: `LogError(ex.Message)` exception ob'ektini (stack trace, inner) yozmaydi — `LogError(ex, \"...\")` to'g'ri", "correct": true },
+        { "id": "b", "text": "`catch (Exception)` umuman ishlatib bo'lmaydi — kompilyatsiya xatosi", "hint": "Ruxsat etilgan; muammo — qayta tashlash usulida." },
+        { "id": "c", "text": "Muammo yo'q — exception log qilinib qayta tashlandi", "hint": "Qayta tashlangan exception'ning stack trace'iga qarang: u `_repo.Get` ichidagi joyni ko'rsatadimi?" },
+        { "id": "d", "text": "`finally` yo'qligi sababli resurs oqadi", "hint": "Bu yerda bo'shatiladigan resurs yo'q; asosiy xato — stack trace yo'qolishi." }
+      ],
+      "explanation": "Variantlar: `throw;` — asl stack trace saqlanadi; `throw new OrderLoadException(\"...\", ex)` — kontekst qo'shib, asl xato `InnerException`da. Log + rethrow har qatlamda takrorlansa, bitta xato log'da 5 marta chiqadi — odatda chegarada (middleware) bir marta log qilinadi. `catch` blokidan tashqarida qayta tashlash kerak bo'lsa — `ExceptionDispatchInfo.Capture(ex).Throw()`.",
+      "reviewed": false
+    },
+    {
+      "id": "net.csharp.012",
+      "level": "strong_middle",
+      "type": "multi",
+      "kind": "concept",
+      "prompt": "`IDisposable` va `using` haqida qaysi fikrlar to'g'ri? (bir nechta javob)",
+      "options": [
+        { "id": "a", "text": "`using var x = ...;` deklaratsiyasi `Dispose()`ni o'zgaruvchi ko'rinish doirasi (scope) tugaganda, exception bo'lsa ham chaqiradi", "correct": true },
+        { "id": "b", "text": "`IDisposable` boshqarilmaydigan yoki qimmat resurslarni (fayl, socket, DB ulanish) deterministik bo'shatish uchun — GC buni qachon qilishini kafolatlamaydi", "correct": true },
+        { "id": "c", "text": "Asinxron bo'shatish kerak bo'lganda `IAsyncDisposable` va `await using` ishlatiladi", "correct": true },
+        { "id": "d", "text": "`Dispose()` ob'ekt xotirasini darhol bo'shatadi", "hint": "Xotirani baribir GC yig'adi; `Dispose` faqat tashqi resursni yopadi." },
+        { "id": "e", "text": "Har bir class finalizer (`~MyClass()`) yozishi kerak", "hint": "Finalizer faqat to'g'ridan-to'g'ri unmanaged handle egasi uchun; u GC'ni sekinlashtiradi. Odatda `SafeHandle` yetarli." }
+      ],
+      "explanation": "Dispose pattern: `Dispose()` → resursni yopish + `GC.SuppressFinalize(this)`. Faqat managed `IDisposable` maydonlarga ega class'ga finalizer kerak emas. DI container o'zi yaratgan `IDisposable` servislarni scope oxirida dispose qiladi — ularni qo'lda dispose qilmang. `HttpClient`ni har so'rovda `using` qilish — socket tugashi; `IHttpClientFactory` ishlating.",
+      "reviewed": false
+    },
+    {
+      "id": "net.csharp.013",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Quyidagi kod nimani chop etadi?",
+      "code": "var actions = new List<Action>();\nfor (int i = 0; i < 3; i++)\n{\n    actions.Add(() => Console.Write(i));\n}\nforeach (var item in new[] { 7, 8, 9 })\n{\n    actions.Add(() => Console.Write(item));\n}\nforeach (var a in actions) a();",
+      "options": [
+        { "id": "a", "text": "333789", "correct": true },
+        { "id": "b", "text": "012789", "hint": "`for` sikli o'zgaruvchisi bitta — barcha lambda'lar bir xil `i`ni capture qiladi va uning yakuniy qiymatini ko'radi." },
+        { "id": "c", "text": "333999", "hint": "C# 5'dan beri `foreach` o'zgaruvchisi har iteratsiyada yangi — har lambda o'z `item`ini oladi." },
+        { "id": "d", "text": "222789", "hint": "Sikl `i < 3` shart bajarilmay qolganda tugaydi — `i` oxirida qaysi qiymatda bo'ladi?" }
+      ],
+      "explanation": "Closure qiymatni emas, o'zgaruvchini capture qiladi. `for` uchun tuzatish: sikl ichida nusxa — `int copy = i; actions.Add(() => Console.Write(copy));`. Closure capture qilgan o'zgaruvchi kompilyator yaratgan class'ga ko'chadi (heap allokatsiya) — issiq kodda `static` lambda (`static () => ...`) bilan tasodifiy capture'ning oldini olish mumkin.",
+      "reviewed": false
+    },
+    {
+      "id": "net.csharp.014",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Katta struct'ni `in` parametr sifatida uzatish yoki `readonly` maydonda saqlashda \"defensive copy\" nima va qanday oldini olinadi?",
+      "options": [
+        { "id": "a", "text": "Kompilyator `readonly` kontekstdagi (`in` parametr, `readonly` maydon) oddiy struct'ning metodini chaqirganda, metod holatni o'zgartirmasligiga ishonch yo'qligi uchun yashirin nusxa oladi — `in`ning foydasi yo'qoladi va mutatsiya jim yo'qoladi. Yechim: `readonly struct` yoki metodlarni `readonly` a'zo deb belgilash — kompilyator nusxasiz chaqiradi", "correct": true },
+        { "id": "b", "text": "`in` parametr har doim nusxasiz ishlaydi — defensive copy faqat class'larda bo'ladi", "hint": "Class — reference type, nusxa muammosi yo'q; defensive copy aynan mutable struct'larda paydo bo'ladi." },
+        { "id": "c", "text": "Defensive copy — GC ob'ektni Gen 2'ga ko'chirishi", "hint": "GC bilan aloqasi yo'q; bu kompilyator yaratadigan struct nusxasi." },
+        { "id": "d", "text": "Oldini olish uchun barcha struct'larni class'ga aylantirish kerak", "hint": "Bu heap allokatsiya qo'shadi; to'g'ri vosita — struct'ni `readonly` qilish." }
+      ],
+      "explanation": "Qoidalar: kichik (≈16 baytgacha), immutable qiymatlar uchun struct; har doim `readonly struct` boshlang. Katta struct'ni qiymat bo'yicha uzatish — har chaqiruvda nusxa; `in`/`ref readonly` faqat `readonly struct` bilan foydali. Tekshirish — BenchmarkDotNet va IL/JIT disassembly (sharplab.io). `record struct` ham `readonly record struct` sifatida e'lon qilinishi mumkin.",
+      "reviewed": false
+    }
+  ]
+}

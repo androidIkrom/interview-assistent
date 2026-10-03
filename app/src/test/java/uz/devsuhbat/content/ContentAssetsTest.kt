@@ -134,6 +134,12 @@ class ContentAssetsTest {
         "php.eloquent" to listOf(4, 4, 3, 2),
         "php.async" to listOf(3, 3, 2, 2),
         "php.arch" to listOf(2, 2, 2, 2),
+        "net.csharp" to listOf(6, 5, 2, 1),
+        "net.types" to listOf(5, 4, 2, 1),
+        "net.aspnet" to listOf(4, 4, 3, 2),
+        "net.async" to listOf(4, 4, 3, 2),
+        "net.data" to listOf(3, 3, 2, 2),
+        "net.arch" to listOf(2, 2, 2, 2),
     )
 
     @Test

@@ -1,0 +1,203 @@
+{
+  "topic": "net.async",
+  "questions": [
+    {
+      "id": "net.async.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`async`/`await` nima uchun kerak?",
+      "options": [
+        { "id": "a", "text": "I/O kutish (HTTP, DB, fayl) paytida thread'ni bloklamaslik uchun: `await` tugallanmagan `Task`ga yetganda metod shu joyda \"to'xtaydi\", thread bo'shab boshqa ishga qaytadi, natija tayyor bo'lgach metod davom etadi. Serverda bir xil thread'lar bilan ko'proq so'rovga xizmat qilinadi, UI'da interfeys qotmaydi", "correct": true },
+        { "id": "b", "text": "Kodni parallel ravishda ko'p yadroda bajarish uchun", "hint": "CPU parallelizmi — `Parallel.For`, `Task.Run`; `async/await` asosan kutishni bloklamasdan o'tkazish haqida." },
+        { "id": "c", "text": "`async` qo'shilgan metod avtomatik tezroq ishlaydi", "hint": "State machine qo'shimcha xarajat beradi; yutuq — tezlik emas, kutish paytida thread'ni bo'shatish." },
+        { "id": "d", "text": "`await` thread'ni natija kelguncha bloklaydi", "hint": "Bloklash — `.Result`/`.Wait()`; `await` esa thread'ni qo'yib yuboradi." }
+      ],
+      "explanation": "Kompilyator `async` metodni state machine'ga aylantiradi. I/O davomida hech qanday thread \"kutib o'tirmaydi\" — OS tugaganini xabar qiladi. Asinxron API'lar zanjiri tepadan pastgacha (\"async all the way\") bo'lishi kerak; o'rtada `.Result` bloklash muammolarga olib keladi.",
+      "reviewed": false
+    },
+    {
+      "id": "net.async.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Nega `async void` metodlardan qochish kerak?",
+      "options": [
+        { "id": "a", "text": "`async void`ni chaqiruvchi `await` qila olmaydi — qachon tugashini bilmaydi; ichidagi exception `Task`ga yozilmaydi va to'g'ridan-to'g'ri jarayonga tashlanadi (ko'pincha ilovani yiqitadi), `try/catch` bilan tashqaridan ushlab bo'lmaydi. Faqat event handler'lar uchun ruxsat etiladi; boshqa joyda `async Task`", "correct": true },
+        { "id": "b", "text": "`async void` kompilyatsiya qilinmaydi", "hint": "Kompilyatsiya qilinadi — aynan shu sabab xavfli." },
+        { "id": "c", "text": "`async void` `async Task`dan sekinroq, boshqa farq yo'q", "hint": "Asosiy farq — kutish va exception'larni boshqarishda." },
+        { "id": "d", "text": "`async void` metod sinxron bajariladi", "hint": "U ham birinchi tugallanmagan `await`gacha sinxron, keyin asinxron davom etadi — `async Task` kabi." }
+      ],
+      "explanation": "Tipik xato: `List.ForEach(async x => await SaveAsync(x))` — lambda `async void` bo'ladi, hech narsa kutilmaydi. Unit test'da `async void` test metod natijasi aniqlanmaydi. Analyzer'lar (VSTHRD100) buni ushlaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "net.async.003",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Quyidagi kod nimani chop etadi?",
+      "code": "static async Task WorkAsync()\n{\n    Console.Write(\"2\");\n    await Task.Delay(100);\n    Console.Write(\"4\");\n}\n\nConsole.Write(\"1\");\nvar t = WorkAsync();\nConsole.Write(\"3\");\nawait t;\nConsole.Write(\"5\");",
+      "options": [
+        { "id": "a", "text": "12345", "correct": true },
+        { "id": "b", "text": "13245", "hint": "`async` metod chaqirilganda birinchi tugallanmagan `await`gacha darhol (sinxron) ishlaydi." },
+        { "id": "c", "text": "12435", "hint": "`Task.Delay(100)` tugallanmagan — metod chaqiruvchiga qaytadi va \"3\" undan oldin chiqadi." },
+        { "id": "d", "text": "13254", "hint": "`await t` vazifa tugashini kutadi — \"5\" undan keyin." }
+      ],
+      "explanation": "`WorkAsync()` chaqirilganda \"2\" sinxron chiqadi, `await Task.Delay` tugallanmagan `Task` qaytaradi. Asosiy kod \"3\"ni yozadi, `await t` da kutadi; 100 ms dan keyin \"4\", so'ng \"5\". `Task` chaqirilganda ishlay boshlaydi (\"hot\") — `await` uni ishga tushirmaydi, faqat natijasini kutadi.",
+      "reviewed": false
+    },
+    {
+      "id": "net.async.004",
+      "level": "junior",
+      "type": "single",
+      "kind": "true_false",
+      "prompt": "Quyidagi fikr to'g'rimi?\n\nHar bir `async` metod chaqirilganda yangi thread yaratiladi.",
+      "options": [
+        { "id": "a", "text": "Ha", "hint": "`async` thread yaratmaydi: metod chaqiruvchi thread'da boshlanadi, davomi esa thread pool'dan (yoki sinxronizatsiya kontekstidan) mavjud thread'da ishlaydi." },
+        { "id": "b", "text": "Yo'q", "correct": true }
+      ],
+      "explanation": "Thread'ni ataylab pool'dan olish — `Task.Run` (CPU ishini UI thread'dan olib ketish uchun). ASP.NET Core'da `Task.Run` bilan I/O ni o'rash foydasiz — thread almashtirish xarajati qo'shiladi xolos. Haqiqiy asinxron I/O davomida hech qanday thread band emas.",
+      "reviewed": false
+    },
+    {
+      "id": "net.async.005",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`Task` va `ValueTask` qanday farqlanadi va qachon `ValueTask` ishlatiladi?",
+      "options": [
+        { "id": "a", "text": "`Task` — reference type, har asinxron natija uchun heap allokatsiya (keshlangan holatlardan tashqari). `ValueTask` — struct: natija ko'pincha sinxron tayyor bo'ladigan issiq yo'llarda (kesh, bufer) allokatsiyani tejaydi. Cheklov: `ValueTask`ni faqat bir marta `await` qilish mumkin, parallel kutib yoki ikki marta o'qib bo'lmaydi; kerak bo'lsa `.AsTask()`", "correct": true },
+        { "id": "b", "text": "`ValueTask` har doim tezroq — barcha metodlarda `Task` o'rniga ishlatish kerak", "hint": "Ko'p hollarda natija asinxron — foyda yo'q, lekin cheklovlar va murakkablik qo'shiladi. Default — `Task`." },
+        { "id": "c", "text": "`ValueTask` natijani bir nechta joyda `await` qilish uchun mo'ljallangan", "hint": "Aksincha — bir martalik iste'mol; ko'p marta kutish kerak bo'lsa `Task` yoki `.AsTask()`." },
+        { "id": "d", "text": "`ValueTask` sinxron ishlaydi, `Task` asinxron", "hint": "Ikkalasi ham asinxron natijani ifodalaydi; farq — allokatsiya va ishlatish qoidalarida." }
+      ],
+      "explanation": "Misol: `Stream.ReadAsync(Memory<byte>)` va `IAsyncEnumerator.MoveNextAsync()` `ValueTask` qaytaradi — buferda ma'lumot bor bo'lsa, allokatsiyasiz. Public API'da qarorni BenchmarkDotNet bilan asoslang. `Task.FromResult` va `Task.CompletedTask` ham tez yo'lda allokatsiyani kamaytiradi.",
+      "reviewed": false
+    },
+    {
+      "id": "net.async.006",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Code review: bu endpoint ~900 ms javob beradi. Har bir chaqiruv ~300 ms va ular bir-biriga bog'liq emas. Nima yaxshilanadi?",
+      "code": "public async Task<Dashboard> GetAsync(int userId)\n{\n    var profile = await _users.GetProfileAsync(userId);\n    var orders  = await _orders.GetRecentAsync(userId);\n    var stats   = await _stats.GetAsync(userId);\n    return new Dashboard(profile, orders, stats);\n}",
+      "options": [
+        { "id": "a", "text": "Uchala mustaqil chaqiruv ketma-ket kutilmoqda. Vazifalarni avval ishga tushirib, keyin birga kutish: `var p = _users.GetProfileAsync(userId); var o = ...; var s = ...; await Task.WhenAll(p, o, s);` — umumiy vaqt ≈ eng sekin chaqiruv (~300 ms). Shart: ular bitta `DbContext`ni bo'lishmasligi kerak", "correct": true },
+        { "id": "b", "text": "Har chaqiruvni `Task.Run` ichiga o'rash", "hint": "I/O allaqachon asinxron; `Task.Run` faqat qo'shimcha thread almashinuvi qo'shadi. Muammo — ketma-ket kutishda." },
+        { "id": "c", "text": "`await` o'rniga `.Result` ishlatish tezroq", "hint": "`.Result` thread'ni bloklaydi va baribir ketma-ket bo'ladi." },
+        { "id": "d", "text": "Kodni o'zgartirib bo'lmaydi — `async` metodlar har doim ketma-ket", "hint": "`Task`lar chaqirilganda boshlanadi; ularni avval ishga tushirib, keyin kutish mumkin." }
+      ],
+      "explanation": "`DbContext` thread-safe emas — bitta context'da parallel so'rovlar `InvalidOperationException` beradi; har vazifaga alohida context (`IDbContextFactory`) kerak. `Task.WhenAll` birinchi exception'ni `await` orqali tashlaydi, qolganlari `task.Exception`da. Juda ko'p parallel chaqiruvni cheklash — `SemaphoreSlim` yoki `Parallel.ForEachAsync`.",
+      "reviewed": false
+    },
+    {
+      "id": "net.async.007",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`CancellationToken` qanday ishlaydi?",
+      "options": [
+        { "id": "a", "text": "Kooperativ bekor qilish: chaqiruvchi `CancellationTokenSource.Cancel()` (yoki `CancelAfter`) qiladi, token metodlar zanjiri bo'ylab uzatiladi; metodlar uni asinxron API'larga beradi yoki `ThrowIfCancellationRequested()` bilan tekshiradi va `OperationCanceledException` tashlaydi. ASP.NET Core'da `HttpContext.RequestAborted` klient uzilganda bekor bo'ladi", "correct": true },
+        { "id": "b", "text": "`Cancel()` ishlayotgan thread'ni majburan to'xtatadi", "hint": "Majburiy to'xtatish yo'q — kod tokenni o'zi tekshirishi yoki uni qo'llovchi API'ga uzatishi kerak." },
+        { "id": "c", "text": "Token faqat `Task.Delay` bilan ishlaydi", "hint": "HttpClient, EF Core, stream'lar va ko'p kutubxonalar token qabul qiladi." },
+        { "id": "d", "text": "Bekor qilingan operatsiya `null` qaytaradi", "hint": "Odatiy konvensiya — `OperationCanceledException` (yoki `TaskCanceledException`)." }
+      ],
+      "explanation": "Controller action parametri `CancellationToken ct` — avtomatik `RequestAborted`ga bog'lanadi. Timeout: `using var cts = CancellationTokenSource.CreateLinkedTokenSource(ct); cts.CancelAfter(TimeSpan.FromSeconds(5));`. Bekor qilishni xato sifatida log qilmang — middleware'da alohida ushlang. `CancellationTokenSource` `IDisposable` — dispose qiling.",
+      "reviewed": false
+    },
+    {
+      "id": "net.async.008",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Ikkala vazifa ham exception tashlaydi. Quyidagi kod nimani chop etadi?",
+      "code": "static async Task FailAsync(Exception e)\n{\n    await Task.Delay(10);\n    throw e;\n}\n\nvar t1 = FailAsync(new InvalidOperationException(\"A\"));\nvar t2 = FailAsync(new ArgumentException(\"B\"));\nvar all = Task.WhenAll(t1, t2);\n\ntry\n{\n    await all;\n}\ncatch (Exception ex)\n{\n    Console.Write($\"{ex.GetType().Name} {all.Exception!.InnerExceptions.Count}\");\n}",
+      "options": [
+        { "id": "a", "text": "InvalidOperationException 2", "correct": true },
+        { "id": "b", "text": "AggregateException 2", "hint": "`await` `AggregateException`ni ochib, ichidagi birinchi exception'ni tashlaydi; `AggregateException` `.Wait()`/`.Result`da ko'rinadi." },
+        { "id": "c", "text": "InvalidOperationException 1", "hint": "`Task.WhenAll` barcha vazifalarning xatolarini yig'adi — `all.Exception` ichida ikkalasi bor." },
+        { "id": "d", "text": "ArgumentException 2", "hint": "Birinchi exception `WhenAll`ga uzatilgan vazifalar tartibi bo'yicha olinadi." }
+      ],
+      "explanation": "Barcha xatolarni ko'rish kerak bo'lsa — `catch`da `all.Exception.InnerExceptions` (WhenAll vazifasini o'zgaruvchida saqlang). `.Wait()` va `.Result` `AggregateException` tashlaydi, `GetAwaiter().GetResult()` esa birinchi asl exception'ni. Fire-and-forget vazifadagi kuzatilmagan exception `TaskScheduler.UnobservedTaskException`ga tushadi.",
+      "reviewed": false
+    },
+    {
+      "id": "net.async.009",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Code review: WPF ilovasida tugma bosilganda interfeys butunlay qotib qoladi. Sababi nima?",
+      "code": "private void LoadButton_Click(object sender, RoutedEventArgs e)\n{\n    var data = LoadAsync().Result;\n    Grid.ItemsSource = data;\n}\n\nprivate async Task<List<Item>> LoadAsync()\n{\n    var json = await _http.GetStringAsync(\"/items\");\n    return Parse(json);\n}",
+      "options": [
+        { "id": "a", "text": "Deadlock: `.Result` UI thread'ni bloklaydi; `await` esa davomni UI `SynchronizationContext`ga — aynan shu band thread'ga — qaytarmoqchi. Ikkalasi bir-birini kutadi. Yechim: \"async all the way\" — handler'ni `async void` (event handler uchun ruxsat) qilib `await LoadAsync()`; kutubxona kodida qo'shimcha `ConfigureAwait(false)`", "correct": true },
+        { "id": "b", "text": "`GetStringAsync` server javob bermaguncha har doim cheksiz kutadi", "hint": "HTTP so'rov tugaydi; muammo — davom ettirish uchun UI thread bo'shamasligi." },
+        { "id": "c", "text": "`Parse` CPU'ni band qiladi", "hint": "Parse'dan oldin ham ilova qotadi — `.Result` va sinxronizatsiya konteksti o'rtasidagi o'zaro kutish." },
+        { "id": "d", "text": "Muammo yo'q — `.Result` `await`ning sinxron varianti", "hint": "`.Result` thread'ni to'liq bloklaydi va UI/klassik ASP.NET kontekstida deadlock beradi." }
+      ],
+      "explanation": "Klassik sync-over-async deadlock — WinForms/WPF/MAUI va eski ASP.NET (System.Web)da. ASP.NET Core'da `SynchronizationContext` yo'q, shuning uchun deadlock bo'lmaydi, lekin `.Result` baribir thread pool thread'ini bloklab starvation'ga olib keladi. `ConfigureAwait(false)` — \"davomni istalgan thread'da bajar\" degani, deadlock'ning faqat bir sababini yopadi.",
+      "reviewed": false
+    },
+    {
+      "id": "net.async.010",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`ConfigureAwait(false)` qachon kerak va ASP.NET Core ilova kodida u nimani o'zgartiradi?",
+      "options": [
+        { "id": "a", "text": "U `await`dan keyingi davomni joriy `SynchronizationContext`ga qaytarmaslikni bildiradi. UI va umumiy kutubxonalar (NuGet paketlar) uchun foydali: kutubxona qaysi muhitda ishlashini bilmaydi, deadlock va UI thread'ga keraksiz qaytishning oldini oladi. ASP.NET Core ilova kodida `SynchronizationContext` yo'q — amalda deyarli farq qilmaydi", "correct": true },
+        { "id": "b", "text": "U operatsiyani boshqa thread'da boshlaydi", "hint": "Operatsiya qanday boshlanishiga ta'sir qilmaydi — faqat davom qayerda ishlashiga." },
+        { "id": "c", "text": "ASP.NET Core'da har `await`ga yozilmasa deadlock bo'ladi", "hint": "ASP.NET Core'da `SynchronizationContext` yo'q — bu deadlock turi bu yerda bo'lmaydi." },
+        { "id": "d", "text": "`ConfigureAwait(false)`dan keyin `HttpContext`ga kirish taqiqlanadi", "hint": "ASP.NET Core'da `HttpContext` thread'ga bog'lanmagan; muammo UI'da: davomda UI elementlariga tegish mumkin emas." }
+      ],
+      "explanation": "UI ilovada `ConfigureAwait(false)`dan keyin UI kontrollarini o'zgartirish — cross-thread exception. Kutubxona muallifi uchun qoida: har `await`da `ConfigureAwait(false)`. .NET 8+ da `ConfigureAwaitOptions` (masalan, `SuppressThrowing`) qo'shilgan.",
+      "reviewed": false
+    },
+    {
+      "id": "net.async.011",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Code review: bu kod kompilyatsiya qilinmaydi. Qanday tuzatiladi?",
+      "code": "private readonly object _gate = new();\n\npublic async Task<string> GetTokenAsync()\n{\n    lock (_gate)\n    {\n        if (_token is null || _token.IsExpired)\n            _token = await _auth.RefreshAsync();\n        return _token.Value;\n    }\n}",
+      "options": [
+        { "id": "a", "text": "`lock` ichida `await` taqiqlangan: `Monitor` thread'ga bog'langan, `await`dan keyin davom boshqa thread'da bo'lishi mumkin va lock'ni bo'shatib bo'lmaydi. Asinxron o'zaro istisno uchun `SemaphoreSlim(1, 1)`: `await _sem.WaitAsync(); try { ... } finally { _sem.Release(); }`", "correct": true },
+        { "id": "b", "text": "`lock(this)` yozish kerak", "hint": "Lock ob'ekti muammo emas (`lock(this)` hatto yomonroq); asosiy cheklov — lock ichida `await`." },
+        { "id": "c", "text": "`RefreshAsync().Result` qilib lock ichida sinxron chaqirish", "hint": "Kompilyatsiya qilinadi, lekin lock ushlab turilgan holda thread bloklanadi — starvation va deadlock xavfi." },
+        { "id": "d", "text": "`Interlocked.Exchange` bilan almashtirish", "hint": "Interlocked bitta qiymatni atomik almashtiradi, lekin \"tekshir va asinxron yangila\" ketma-ketligini himoyalamaydi." }
+      ],
+      "explanation": "`SemaphoreSlim` `WaitAsync` thread'ga bog'lanmagan. Double-check: lock'dan oldin tez tekshiruv (token yaroqli bo'lsa semaforsiz qaytish) — kutishni kamaytiradi. Bir nechta parallel so'rov refresh qilmasligi uchun yana bir yondashuv — umumiy `Task`ni keshlash (`Lazy<Task<T>>`). .NET 9+ da yangi `System.Threading.Lock` tipi ham `await` bilan ishlamaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "net.async.012",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Servisda CPU past (~20%), lekin yuklama oshganda javob vaqtlari keskin o'sadi va `dotnet-counters`da thread pool queue length va thread count doimiy o'smoqda. Eng ehtimolli sabab va yechim?",
+      "options": [
+        { "id": "a", "text": "Thread pool starvation: kodda sync-over-async (`.Result`, `.Wait()`, `Thread.Sleep`, sinxron I/O) thread'larni bloklaydi; pool yangi thread'larni sekin qo'shadi va navbat o'sadi. Yechim: bloklovchi chaqiruvlarni topish (`dotnet-trace`, dump'da stack'lar) va to'liq asinxronga o'tkazish; `SetMinThreads` — faqat vaqtinchalik yamoq", "correct": true },
+        { "id": "b", "text": "CPU yetishmayapti — serverga yadro qo'shish kerak", "hint": "CPU 20% — hisoblash emas, kutish muammosi: thread'lar ishlamayapti, bloklangan." },
+        { "id": "c", "text": "GC juda tez-tez ishlayapti", "hint": "GC muammosi odatda CPU va pauza vaqtlarida ko'rinadi; o'sib borayotgan pool navbati — bloklangan thread'lar belgisi." },
+        { "id": "d", "text": "`MaxThreads`ni kamaytirish kerak", "hint": "Thread'lar allaqachon yetishmayapti — cheklash vaziyatni yomonlashtiradi." }
+      ],
+      "explanation": "Starvation belgilari: past CPU, yuqori latency, `ThreadPool.QueueLength` > 0 doimiy, `ThreadPool.ThreadCount` sekin o'sishi. Tez-tez uchraydigan sabablar: konstruktor yoki DI factory'da `.Result`, sinxron logging/HTTP, `lock` ostida uzoq ish. Tekshirish: `dotnet-counters monitor System.Runtime`, `dotnet-dump analyze` → `clrstack -all`.",
+      "reviewed": false
+    },
+    {
+      "id": "net.async.013",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Navbatdan ko'p xabar keladi, har birini qayta ishlash ~200 ms I/O; tashqi API 10 tadan ortiq parallel so'rovga bardosh bermaydi. Qaysi dizayn to'g'ri?",
+      "options": [
+        { "id": "a", "text": "Bounded `Channel<T>` (`Channel.CreateBounded` + `FullMode.Wait`) — ishlab chiqaruvchi navbat to'lganda kutadi (backpressure); iste'molchilar soni yoki `Parallel.ForEachAsync(..., new ParallelOptions { MaxDegreeOfParallelism = 10 })` bilan parallellik cheklanadi; `CancellationToken` va graceful shutdown'da qolgan elementlarni tugatish", "correct": true },
+        { "id": "b", "text": "Har xabar uchun `Task.Run` va `await`siz qoldirish (fire-and-forget)", "hint": "Parallellik cheklanmaydi (tashqi API yiqiladi), xatolar yo'qoladi, xotira o'sadi." },
+        { "id": "c", "text": "Barcha xabarlarni `Task.WhenAll` bilan bir vaqtda ishlash", "hint": "Minglab parallel so'rov — tashqi API limiti va xotira uchun xavfli." },
+        { "id": "d", "text": "Xabarlarni bittadan ketma-ket ishlash — boshqa yo'l yo'q", "hint": "Throughput 5 xabar/s bilan cheklanadi; nazoratli parallellik (10 tagacha) 10 barobar tezroq." }
+      ],
+      "explanation": "Backpressure — tizimning eng sekin qismi butun oqim tezligini belgilashi va xotira cheksiz o'smasligi. Qo'shimcha: retry + circuit breaker (Polly / `Microsoft.Extensions.Resilience`), idempotent qayta ishlash, `SemaphoreSlim` — oddiyroq cheklov. TPL Dataflow ham shu masalalar uchun (`BoundedCapacity`, `MaxDegreeOfParallelism`).",
+      "reviewed": false
+    }
+  ]
+}
