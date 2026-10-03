@@ -1,0 +1,482 @@
+{
+  "topic": "core.testing",
+  "questions": [
+    {
+      "id": "core.testing.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Unit test nima?",
+      "options": [
+        { "id": "a", "text": "Kodning eng kichik mustaqil birligini (funksiya, klass) tashqi bog'liqliklardan ajratib, izolyatsiyada tekshiradigan test", "correct": true },
+        { "id": "b", "text": "Butun ilovani foydalanuvchi ko'zi bilan tekshiradigan test", "hint": "Butun ilova — bu end-to-end daraja." },
+        { "id": "c", "text": "Bir nechta modul birga ishlashini tekshiradigan test", "hint": "Modullar birgaligi — integration test." },
+        { "id": "d", "text": "Qo'lda bajariladigan tekshiruv", "hint": "Unit testlar avtomatlashtirilgan va tez bo'ladi." }
+      ],
+      "explanation": "Unit test tez (millisekundlar), deterministik, DB/tarmoqsiz. Masalan, `calculateDiscount(price, percent)` ni turli qiymatlar bilan chaqirib natijani tekshirish. Ko'p sonli unit test — piramidaning asosi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.testing.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Integration test unit testdan nimasi bilan farq qiladi?",
+      "options": [
+        { "id": "a", "text": "Integration test bir nechta komponent (yoki komponent + real DB/API) birgalikda to'g'ri ishlashini tekshiradi; unit test bitta birlikni izolyatsiyada", "correct": true },
+        { "id": "b", "text": "Integration test tezroq ishlaydi", "hint": "Real bog'liqliklar (DB, tarmoq) tufayli odatda sekinroq." },
+        { "id": "c", "text": "Integration test faqat UI'ni tekshiradi", "hint": "UI tekshiruvi alohida tur; integration — komponentlar chegarasi haqida." },
+        { "id": "d", "text": "Farqi yo'q", "hint": "Qamrov va tezlik jiddiy farq qiladi." }
+      ],
+      "explanation": "Misol: `UserRepository` haqiqiy (test) PostgreSQL bilan — SQL to'g'rimi, migratsiya mosmi? Unit testlar har birlik to'g'riligini, integration testlar \"ular birga gaplasha oladimi\"ni isbotlaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.testing.003",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "End-to-end (E2E) test nima?",
+      "options": [
+        { "id": "a", "text": "Butun tizimni real foydalanuvchi stsenariysi bo'yicha (UI'dan DB'gacha) tekshiradigan test", "correct": true },
+        { "id": "b", "text": "Bitta funksiyani tekshiradigan test", "hint": "Bitta funksiya — unit daraja." },
+        { "id": "c", "text": "Kod stilini tekshiradigan vosita", "hint": "Stil tekshiruvi — linter, test emas." },
+        { "id": "d", "text": "Faqat backend API'ni tekshiradigan test", "hint": "E2E to'liq zanjirni, UI bilan birga qamraydi." }
+      ],
+      "explanation": "Misol: \"Foydalanuvchi login qiladi, mahsulot qo'shadi, to'lov qiladi — buyurtma DB'da paydo bo'ladi\". Eng ishonchli, lekin sekin, mo'rt va qimmat — shu sabab oz sonli, faqat asosiy oqimlar uchun.",
+      "reviewed": false
+    },
+    {
+      "id": "core.testing.004",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Test piramidasi nimani tavsiya qiladi?",
+      "options": [
+        { "id": "a", "text": "Ko'p unit test (asos), kamroq integration test (o'rta), eng kam E2E test (uchi)", "correct": true },
+        { "id": "b", "text": "Ko'p E2E test, kam unit test", "hint": "Bu \"ice cream cone\" antipattern — sekin va mo'rt." },
+        { "id": "c", "text": "Har turdan teng miqdorda", "hint": "Tezlik va narx farqi tufayli teng taqsimot samarasiz." },
+        { "id": "d", "text": "Faqat qo'lda test", "hint": "Piramida avtomatlashtirilgan testlar haqida." }
+      ],
+      "explanation": "Pastki qavat tez va arzon — tez fikr-mulohaza beradi, ko'p bo'lsin. Yuqori qavat sekin va qimmat — faqat muhim oqimlar. Nisbat taxminan 70/20/10, lekin loyihaga qarab o'zgaradi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.testing.005",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Testdagi `assert` nima qiladi?",
+      "options": [
+        { "id": "a", "text": "Kutilgan va haqiqiy qiymatni solishtiradi; mos kelmasa test muvaffaqiyatsiz deb belgilanadi", "correct": true },
+        { "id": "b", "text": "Testni ishga tushiradi", "hint": "Ishga tushirish — test runner vazifasi." },
+        { "id": "c", "text": "Xatoni ushlab, testni davom ettiradi", "hint": "Aksincha — mos kelmaslikda testni to'xtatadi." },
+        { "id": "d", "text": "Konsolga log yozadi", "hint": "Log yozish emas, tekshirish." }
+      ],
+      "explanation": "`assertEquals(5, add(2, 3))`. Yaxshi assertion aniq xabar beradi: \"expected 5 but was 6\". Testda assertion bo'lmasa, u hech narsani isbotlamaydi — faqat \"exception tashlanmadi\" degani.",
+      "reviewed": false
+    },
+    {
+      "id": "core.testing.006",
+      "level": "junior",
+      "type": "multi",
+      "kind": "concept",
+      "prompt": "Avtomatlashtirilgan testlar nima uchun yoziladi? (bir nechta javob)",
+      "options": [
+        { "id": "a", "text": "Regressiyani (eski funksiya buzilishini) tez aniqlash", "correct": true },
+        { "id": "b", "text": "Refactoring'ni xavfsiz qilish", "correct": true },
+        { "id": "c", "text": "Kod qanday ishlashi kerakligini hujjatlashtirish", "correct": true },
+        { "id": "d", "text": "Dastur tezligini oshirish", "hint": "Testlar runtime tezlikka ta'sir qilmaydi." }
+      ],
+      "explanation": "Testlar — xavfsizlik to'ri: o'zgartirdingiz, yashil — davom etasiz. Ular ijro etiladigan hujjat: `test \"empty cart total is zero\"` kodni o'qimay niyatni aytadi. Birinchi yozilsa (TDD), dizaynni ham yaxshilaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.testing.007",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Quyidagi testdagi muammo nimada?",
+      "code": "@Test\nfun testDiscount() {\n    val result = calculateDiscount(100.0, 10)\n    println(result)\n}",
+      "options": [
+        { "id": "a", "text": "Hech qanday assertion yo'q — test har doim o'tadi, hatto funksiya noto'g'ri ishlasa ham", "correct": true },
+        { "id": "b", "text": "Test nomi juda uzun", "hint": "Nom qisqa; muammo test tanasida." },
+        { "id": "c", "text": "`@Test` annotatsiyasi noto'g'ri", "hint": "Annotatsiya to'g'ri — test topiladi va ishga tushadi." },
+        { "id": "d", "text": "Muammo yo'q", "hint": "Funksiya 999 qaytarsa, bu test nima deydi?" }
+      ],
+      "explanation": "Test faqat exception tashlanmasligini tekshiradi. To'g'ri: `assertEquals(90.0, result, 0.001)`. Yana bir yaxshilash — nom: `discount_10percent_of_100_is_90`.",
+      "reviewed": false
+    },
+    {
+      "id": "core.testing.008",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Arrange-Act-Assert (AAA) tuzilmasi nimani anglatadi?",
+      "options": [
+        { "id": "a", "text": "Test uch qismdan iborat: tayyorlash (ma'lumot, ob'ektlar), harakat (tekshirilayotgan metodni chaqirish), tekshirish (natijani assert qilish)", "correct": true },
+        { "id": "b", "text": "Uchta assert yozish shart", "hint": "Assert soni haqida emas, tartib haqida." },
+        { "id": "c", "text": "Testlarni alifbo tartibida joylash", "hint": "Tartib fayl ichidagi emas, test ichidagi." },
+        { "id": "d", "text": "Uch marta qayta ishga tushirish", "hint": "Qayta ishga tushirish bilan aloqasi yo'q." }
+      ],
+      "explanation": "Given-When-Then — BDD'dagi sinonimi. Tuzilma testni o'qishni osonlashtiradi va bitta test bitta xatti-harakatni tekshirishga undaydi. Arrange katta bo'lsa — kod dizayni murakkab degan signal.",
+      "reviewed": false
+    },
+    {
+      "id": "core.testing.009",
+      "level": "junior",
+      "type": "single",
+      "kind": "true_false",
+      "prompt": "Quyidagi fikr to'g'rimi?\n\nUnit testlar real DB va tarmoqqa ulanishi kerak, aks holda ular haqiqiy holatni tekshirmaydi.",
+      "options": [
+        { "id": "a", "text": "Ha", "hint": "Real DB sekin va beqaror; unit darajada izolyatsiya maqsad. Real ulanish boshqa daraja testlari uchun." },
+        { "id": "b", "text": "Yo'q", "correct": true }
+      ],
+      "explanation": "Unit test izolyatsiyada: tashqi bog'liqliklar fake/mock bilan almashtiriladi. Real DB bilan ishlash — integration test vazifasi. Ikkalasi kerak, lekin turli maqsadda.",
+      "reviewed": false
+    },
+    {
+      "id": "core.testing.010",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Yaxshi test nomi qanday bo'lishi kerak?",
+      "options": [
+        { "id": "a", "text": "Tekshirilayotgan xatti-harakat va kutilgan natijani tasvirlashi: `withdraw_moreThanBalance_throwsInsufficientFunds`", "correct": true },
+        { "id": "b", "text": "Qisqa va raqamli: `test1`, `test2`", "hint": "Yiqilganda `test7 failed` hech narsa aytmaydi." },
+        { "id": "c", "text": "Metod nomi bilan bir xil: `testWithdraw`", "hint": "Qaysi holat tekshirilgani noma'lum — bitta metodga o'nlab test bo'lishi mumkin." },
+        { "id": "d", "text": "Nom ahamiyatsiz", "hint": "Test nomi — yiqilganda ko'radigan birinchi narsa." }
+      ],
+      "explanation": "Test nomi — spetsifikatsiya. Yiqilgan testning nomi muammoni o'qishning o'zidan tushuntirishi kerak. Kotlin'da backtick nomlar: `` fun `withdraw more than balance throws`() ``.",
+      "reviewed": false
+    },
+    {
+      "id": "core.testing.011",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Mock, stub va fake orasidagi farq nimada?",
+      "options": [
+        { "id": "a", "text": "Stub — oldindan belgilangan javob qaytaradi; mock — chaqiruvlarni yozib, kutilgan o'zaro ta'sirni tekshiradi; fake — soddalashtirilgan ishlaydigan implementatsiya (masalan, in-memory DB)", "correct": true },
+        { "id": "b", "text": "Uchalasi bir xil, kutubxonaga qarab nomlanadi", "hint": "Maqsadlar farq qiladi: javob berish, o'zaro ta'sirni tekshirish, haqiqiy mantiq." },
+        { "id": "c", "text": "Mock — real ob'ekt, stub — soxta ob'ekt", "hint": "Ikkalasi ham test o'rnini bosuvchi (test double)." },
+        { "id": "d", "text": "Fake faqat UI testlarida ishlatiladi", "hint": "Fake har qanday qatlamda — ko'pincha repository uchun." }
+      ],
+      "explanation": "Stub: `when(repo.find(1)).thenReturn(user)`. Mock: `verify(mailer).send(any())`. Fake: `InMemoryUserRepository` — haqiqiy mantiq, lekin DB'siz. Fake'lar testni implementatsiyaga kamroq bog'laydi, shu sabab ko'pincha afzal.",
+      "reviewed": false
+    },
+    {
+      "id": "core.testing.012",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Testda mock'lardan haddan tashqari foydalanishning xavfi nimada?",
+      "options": [
+        { "id": "a", "text": "Test implementatsiya tafsilotlariga bog'lanib qoladi — refactoring'da xatti-harakat o'zgarmasa ham testlar yiqiladi, va real integratsiya xatolari o'tib ketadi", "correct": true },
+        { "id": "b", "text": "Testlar juda sekin ishlaydi", "hint": "Mock'lar aksincha tezlashtiradi; muammo mo'rtlikda." },
+        { "id": "c", "text": "Xavfi yo'q — qancha ko'p mock, shuncha yaxshi izolyatsiya", "hint": "Hamma narsa mock bo'lsa, test faqat mock'larni tekshiradi, kodni emas." },
+        { "id": "d", "text": "Mock'lar production kodga tushib qoladi", "hint": "Bu test tuzilmasi muammosi, mock'ning tabiati emas." }
+      ],
+      "explanation": "\"Mock hell\": `verify(a).callB(); verify(b).callC()` — bu kod tuzilishini qayta yozish, xatti-harakatni tekshirish emas. Qoida: o'zingiz boshqarmaydigan va sekin/nodeterministik chegaralarni (tarmoq, vaqt, DB) almashtiring; qolganini real yoki fake bilan tekshiring.",
+      "reviewed": false
+    },
+    {
+      "id": "core.testing.013",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Test izolyatsiyasi nimani anglatadi va nega muhim?",
+      "options": [
+        { "id": "a", "text": "Har test mustaqil: boshqa test natijasi yoki tartibiga bog'liq emas, umumiy holatni o'zgartirmaydi — shunda yiqilish sababi aniq va testlar parallel/tasodifiy tartibda ishlaydi", "correct": true },
+        { "id": "b", "text": "Testlar alohida serverda ishlashi", "hint": "Infratuzilma haqida emas, testlar orasidagi bog'liqlik haqida." },
+        { "id": "c", "text": "Har test alohida faylda bo'lishi", "hint": "Fayl joylashuvi izolyatsiyani ta'minlamaydi." },
+        { "id": "d", "text": "Testlar faqat ketma-ket ishlashi", "hint": "Aksincha — izolyatsiya parallel ishlashga yo'l ochadi." }
+      ],
+      "explanation": "Buzilish belgisi: alohida o'tadi, suite'da yiqiladi (yoki aksincha). Sabablar: static/singleton holat, umumiy DB qatorlari, tozalanmagan fayllar. Yechim: har testda yangi ob'ektlar, `@Before` da holatni tiklash, tranzaksiyani rollback qilish.",
+      "reviewed": false
+    },
+    {
+      "id": "core.testing.014",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "100% code coverage nimani anglatadi va nimani anglatmaydi?",
+      "options": [
+        { "id": "a", "text": "Har qator test paytida bajarilgan — lekin to'g'ri assert qilingani, barcha kirish kombinatsiyalari va chegaraviy holatlar tekshirilgani kafolatlanmaydi", "correct": true },
+        { "id": "b", "text": "Kodda xato yo'q", "hint": "Qator bajarilishi uning to'g'riligini isbotlamaydi — assertionsiz test ham coverage beradi." },
+        { "id": "c", "text": "Barcha mumkin bo'lgan kirishlar tekshirilgan", "hint": "Coverage qatorlarni sanaydi, kirish fazosini emas." },
+        { "id": "d", "text": "Loyiha production'ga tayyor", "hint": "Tayyorlik ko'p omilga bog'liq; coverage ulardan bittasi ham emas." }
+      ],
+      "explanation": "Coverage — qamralmagan joylarni topish uchun foydali (past coverage = aniq muammo), lekin yuqori coverage = sifat emas. Mutation testing (kodga xato kiritib, testlar sezadimi) sifatni yaxshiroq o'lchaydi. Coverage'ni KPI qilish — assertionsiz testlarga olib keladi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.testing.015",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "TDD sikli qanday qadamlardan iborat?",
+      "options": [
+        { "id": "a", "text": "Red — yiqiladigan test yozish; Green — testni o'tkazadigan minimal kod; Refactor — testlar yashil holda kodni tozalash; takrorlash", "correct": true },
+        { "id": "b", "text": "Kod yozish, keyin test yozish, keyin deploy", "hint": "TDD'da test birinchi — kod undan keyin." },
+        { "id": "c", "text": "Barcha testlarni oldindan yozib, keyin butun kodni yozish", "hint": "TDD kichik qadamlar bilan — bitta test, bitta o'zgarish." },
+        { "id": "d", "text": "Test yozish, deploy, keyin tuzatish", "hint": "Deploy siklning qismi emas." }
+      ],
+      "explanation": "Red bosqichi muhim: test yiqilganini ko'rmasangiz, u haqiqatan nimani tekshirayotganini bilmaysiz. Minimal kod — ortiqcha dizayn qilmaslikka (YAGNI) majbur qiladi. Refactor — yashil to'r ostida xavfsiz.",
+      "reviewed": false
+    },
+    {
+      "id": "core.testing.016",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Quyidagi test nega mo'rt (brittle) hisoblanadi?",
+      "code": "@Test\nfun `register user`() {\n    service.register(\"ali@mail.uz\", \"pass123\")\n\n    verify(validator).validateEmail(\"ali@mail.uz\")\n    verify(hasher).hash(\"pass123\")\n    verify(repo).save(any())\n    verify(mailer).sendWelcome(\"ali@mail.uz\")\n    verifyNoMoreInteractions(validator, hasher, repo, mailer)\n}",
+      "options": [
+        { "id": "a", "text": "U natijani emas, ichki chaqiruvlar ketma-ketligini tekshiradi — xatti-harakat o'zgarmasdan refactoring qilinsa (masalan, hash'ni boshqa joyda chaqirish) test yiqiladi", "correct": true },
+        { "id": "b", "text": "Test nomi backtick'da", "hint": "Backtick nomlar Kotlin'da odatiy va o'qilishi oson." },
+        { "id": "c", "text": "Email formati noto'g'ri", "hint": "Email to'g'ri; muammo nimani tekshirishda." },
+        { "id": "d", "text": "Test juda qisqa", "hint": "Uzunlik muammo emas, mohiyat." }
+      ],
+      "explanation": "Yaxshiroq: fake repository ishlatib, `register`dan keyin `repo.findByEmail(\"ali@mail.uz\")` mavjud va parol hash'langanini tekshirish; mailer uchun bitta `verify` — bu tashqi yon ta'sir. Test \"nima bo'ldi\"ni tekshirsin, \"qanday qilindi\"ni emas.",
+      "reviewed": false
+    },
+    {
+      "id": "core.testing.017",
+      "level": "middle",
+      "type": "multi",
+      "kind": "concept",
+      "prompt": "Qaysi bog'liqliklarni unit testda almashtirish (test double) o'rinli? (bir nechta javob)",
+      "options": [
+        { "id": "a", "text": "Tarmoq so'rovlari (HTTP klient)", "correct": true },
+        { "id": "b", "text": "Joriy vaqt (`Clock`, `System.currentTimeMillis`)", "correct": true },
+        { "id": "c", "text": "Tasodifiy sonlar generatori", "correct": true },
+        { "id": "d", "text": "Tekshirilayotgan klassning o'z private metodlari", "hint": "O'z metodlarini almashtirish — klassni o'zi bilan sinash; bu ichki tuzilmaga bog'lanish." }
+      ],
+      "explanation": "Almashtirish mezoni: sekin, nodeterministik yoki tashqi (tarmoq, vaqt, random, fayl tizimi, DB). Vaqt va random'ni interfeys orqali uzatish (`Clock`, `Random`) kodni testlanadigan qiladi. Private metodlar — implementatsiya tafsiloti, ularni public xatti-harakat orqali tekshiring.",
+      "reviewed": false
+    },
+    {
+      "id": "core.testing.018",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Parametrlashtirilgan (parameterized) testlar qachon foydali?",
+      "options": [
+        { "id": "a", "text": "Bir xil mantiq ko'p kirish/kutilgan natija juftliklari bilan tekshirilganda — test kodi takrorlanmaydi, har holat alohida natija beradi", "correct": true },
+        { "id": "b", "text": "Faqat UI testlarida", "hint": "Har darajada ishlatiladi; eng ko'p sof funksiyalar uchun." },
+        { "id": "c", "text": "Testlarni tezlashtirish uchun", "hint": "Tezlik emas, takrorlanishni kamaytirish maqsad." },
+        { "id": "d", "text": "Hech qachon — har holat alohida metod bo'lishi shart", "hint": "10 ta bir xil metod nusxasi — texnik qarz." }
+      ],
+      "explanation": "Misol: email validatori — 15 ta to'g'ri/noto'g'ri satr bitta jadvalda. JUnit5 `@ParameterizedTest`, Kotest data-driven. Har qator alohida test sifatida hisobot beradi — qaysi kirish yiqilganini darhol ko'rasiz.",
+      "reviewed": false
+    },
+    {
+      "id": "core.testing.019",
+      "level": "middle",
+      "type": "single",
+      "kind": "true_false",
+      "prompt": "Quyidagi fikr to'g'rimi?\n\nTDD'da \"Green\" bosqichida testni o'tkazish uchun eng sodda (hatto \"ahmoqona\") yechim yozish qabul qilinadi.",
+      "options": [
+        { "id": "a", "text": "Ha", "correct": true },
+        { "id": "b", "text": "Yo'q", "hint": "Keyingi test soddalashtirishni \"umumiylashtirishga\" majbur qiladi — bu siklning qismi." }
+      ],
+      "explanation": "\"Fake it till you make it\": birinchi test uchun `return 4` ham to'g'ri. Keyingi test umumiy yechimni talab qiladi. Bu ortiqcha dizaynni oldini oladi va har qadamni kichik saqlaydi. Refactor bosqichi — tozalash joyi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.testing.020",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Test fixture nima?",
+      "options": [
+        { "id": "a", "text": "Testlar uchun oldindan tayyorlangan muhit va ma'lumotlar (ob'ektlar, DB holati) — har test bir xil boshlang'ich nuqtadan boshlashi uchun", "correct": true },
+        { "id": "b", "text": "Testni tuzatish (fix) jarayoni", "hint": "So'z o'xshash, ma'no boshqa — bu \"o'rnatilgan holat\"." },
+        { "id": "c", "text": "Test hisoboti formati", "hint": "Hisobot bilan aloqasi yo'q." },
+        { "id": "d", "text": "CI serveri", "hint": "Infratuzilma emas, test ichidagi tayyorgarlik." }
+      ],
+      "explanation": "`@Before`/`setUp` da yaratiladigan ob'ektlar, test DB'dagi seed qatorlar, builder/factory funksiyalar (`aUser(name = \"Ali\")`) — fixture. Yaxshi fixture: minimal, aniq, har testdan keyin tozalanadi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.testing.021",
+      "level": "strong_middle",
+      "type": "multi",
+      "kind": "concept",
+      "prompt": "Flaky (beqaror) testlarning tipik sabablari qaysilar? (bir nechta javob)",
+      "options": [
+        { "id": "a", "text": "Vaqtga bog'liqlik — `sleep`, timeout, real soat", "correct": true },
+        { "id": "b", "text": "Testlar orasidagi umumiy holat va tartibga bog'liqlik", "correct": true },
+        { "id": "c", "text": "Tartibsiz kolleksiya (`Set`, `HashMap`) ustida tartibni kutish", "correct": true },
+        { "id": "d", "text": "Test nomining uzunligi", "hint": "Nom ijroga ta'sir qilmaydi." }
+      ],
+      "explanation": "Boshqa sabablar: real tarmoq, parallel ishlashda race condition, tasodifiy ma'lumot (seedsiz), resurslar tozalanmasligi. Flaky test ishonchni yo'qotadi — \"qayta ishga tushir\" madaniyati haqiqiy xatolarni yashiradi. Yechim: sababini topib tuzatish, quarantine — vaqtincha, o'chirish — oxirgi chora.",
+      "reviewed": false
+    },
+    {
+      "id": "core.testing.022",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Quyidagi test nega vaqti-vaqti bilan yiqiladi?",
+      "code": "@Test\nfun `cache expires after one second`() {\n    val cache = TtlCache<String>(ttlMillis = 1000)\n    cache.put(\"k\", \"v\")\n    Thread.sleep(1000)\n    assertNull(cache.get(\"k\"))\n}",
+      "options": [
+        { "id": "a", "text": "Real vaqtga tayanadi — `sleep` aniq 1000 ms bo'lishi kafolatlanmaydi va CI yuklangan bo'lsa chegara holatda turlicha natija beradi; yechim — `Clock` inject qilib vaqtni qo'lda surish", "correct": true },
+        { "id": "b", "text": "`assertNull` noto'g'ri — `assertEquals(null, ...)` kerak", "hint": "Ikkalasi bir xil ishlaydi." },
+        { "id": "c", "text": "`put` chaqiruvi `get`dan keyin bo'lishi kerak", "hint": "Tartib to'g'ri." },
+        { "id": "d", "text": "Test hech qachon yiqilmaydi", "hint": "`sleep(1000)` dan keyin aynan 1000 ms o'tganmi? Chegara shartiga (`<` yoki `<=`) qarang." }
+      ],
+      "explanation": "Vaqtga bog'liq kod uchun `Clock` abstraksiyasi: testda `FakeClock.advance(1001)`. Test millisekundlarda tugaydi va deterministik bo'ladi. Kotlin coroutines'da `runTest` + virtual time shu printsip.",
+      "reviewed": false
+    },
+    {
+      "id": "core.testing.023",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Test ma'lumotlarini (test data) boshqarishda qaysi yondashuv testlarni mustahkam qiladi?",
+      "options": [
+        { "id": "a", "text": "Har test o'ziga kerakli ma'lumotni builder/factory orqali yaratadi (faqat muhim maydonlarni ko'rsatib), umumiy katta fixture'ga tayanmaydi va o'zidan keyin tozalaydi", "correct": true },
+        { "id": "b", "text": "Barcha testlar uchun bitta katta `seed.sql` — hamma undan foydalanadi", "hint": "Bitta testning o'zgartirishi o'nlab boshqasini buzadi; nima muhimligi ko'rinmaydi." },
+        { "id": "c", "text": "Production DB nusxasini ishlatish", "hint": "PII xavfi, hajm, va ma'lumot o'zgarganda testlar sababsiz yiqiladi." },
+        { "id": "d", "text": "Ma'lumotni testga qattiq kodlab, hamma maydonni to'liq yozish", "hint": "20 maydonli ob'ektda qaysi maydon testga muhim — ko'rinmaydi." }
+      ],
+      "explanation": "Object Mother / Test Data Builder: `aUser(role = ADMIN)` — qolgan maydonlar oqilona default. Test nimani tekshirayotganini aniq ko'rsatadi. Integration testda tranzaksiya rollback yoki har testga alohida sxema/konteyner (Testcontainers).",
+      "reviewed": false
+    },
+    {
+      "id": "core.testing.024",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Contract testing (masalan, Pact) qanday muammoni hal qiladi?",
+      "options": [
+        { "id": "a", "text": "Mikroservislarda consumer va provider API shartnomasiga mosligini to'liq E2E muhitsiz, mustaqil tekshiradi — consumer kutgan so'rov/javob shakli provider tomonida tasdiqlanadi", "correct": true },
+        { "id": "b", "text": "Yuridik shartnomalarni avtomatik tekshiradi", "hint": "\"Contract\" — API shartnomasi, huquqiy hujjat emas." },
+        { "id": "c", "text": "UI dizayn mosligini tekshiradi", "hint": "Vizual moslik — screenshot/snapshot test." },
+        { "id": "d", "text": "DB sxemasini validatsiya qiladi", "hint": "Sxema — migratsiya testi; contract servislar orasidagi interfeys haqida." }
+      ],
+      "explanation": "Muammo: consumer provider'ni mock qiladi — mock eskirsa, test o'tadi, production yiqiladi. Contract test: consumer kutishlarini fayl (pact) sifatida yozadi, provider CI'da shu faylga qarshi o'zini tekshiradi. Ikkala jamoa mustaqil deploy qila oladi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.testing.025",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Qaysi kodni unit test bilan qoplash odatda foyda keltirmaydi?",
+      "options": [
+        { "id": "a", "text": "Mantiqsiz oddiy getter/setter, framework tomonidan generatsiya qilingan kod, uchinchi tomon kutubxonasining o'zi, va tashqi tizimga faqat uzatuvchi yupqa adapter (u integration testda tekshiriladi)", "correct": true },
+        { "id": "b", "text": "Biznes-mantiq va hisob-kitoblar", "hint": "Bu aynan eng ko'p test kerak bo'lgan joy." },
+        { "id": "c", "text": "Chegaraviy holatlar va xato yo'llari", "hint": "Xato yo'llari ko'pincha eng kam tekshirilgan va eng xavfli." },
+        { "id": "d", "text": "Hamma kod teng darajada testlanishi shart", "hint": "Test ham kod — uning ham narxi bor; foyda/narx baholanadi." }
+      ],
+      "explanation": "Test — investitsiya: qaytim xatoni topish ehtimoli × xato narxi. Trivial kod uchun qaytim nol. Yupqa adapterlar (HTTP klient o'rami) uchun mock bilan unit test — mock'ni tekshirish; real integratsiya testi foydali. Kuchni murakkab mantiq va chegaralarga qarating.",
+      "reviewed": false
+    },
+    {
+      "id": "core.testing.026",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Snapshot (golden) testlarning kuchli va zaif tomonlari nimada?",
+      "options": [
+        { "id": "a", "text": "Kuchli — katta chiqish (UI, JSON, render) regressiyasini oson ushlaydi; zaif — har o'zgarishda snapshot ko'r-ko'rona yangilanadi, niyat ifodalanmaydi, kichik o'zgarish shovqin beradi", "correct": true },
+        { "id": "b", "text": "Zaif tomoni yo'q — doim ishlatish kerak", "hint": "\"Update snapshots\" tugmasini o'ylamay bosish odatiy — test ma'nosini yo'qotadi." },
+        { "id": "c", "text": "Faqat backend uchun yaroqli", "hint": "Eng ko'p UI/Compose/React komponentlarida ishlatiladi." },
+        { "id": "d", "text": "Ular unit testlarni to'liq almashtiradi", "hint": "Snapshot \"o'zgardi\" deydi, \"to'g'ri\" demaydi." }
+      ],
+      "explanation": "Snapshot test — \"ilgari qanday bo'lsa, shunday qolsin\" degan tekshiruv. Dizayn muntazam o'zgaradigan joyda shovqin; barqaror chiqish (serializer, API javobi, legacy kod) uchun kuchli. Snapshot'ni review'da diff sifatida ko'rib tasdiqlash — intizom talab qiladi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.testing.027",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "true_false",
+      "prompt": "Quyidagi fikr to'g'rimi?\n\nFlaky testni qayta ishga tushirish (retry) bilan \"o'tkazib yuborish\" — muammoni hal qilishning qoniqarli usuli.",
+      "options": [
+        { "id": "a", "text": "Ha", "hint": "Retry simptomni yashiradi; flaky test ko'pincha production'dagi haqiqiy race condition'ni ko'rsatadi." },
+        { "id": "b", "text": "Yo'q", "correct": true }
+      ],
+      "explanation": "Avtomatik retry — vaqtinchalik choralar: CI'ni to'xtatmaydi, lekin sababni yashiradi. To'g'ri yo'l: flaky testlarni kuzatish (dashboard), har birining sababini topish (vaqt, holat, tartib, race), tuzatish yoki o'chirish. Jamoa \"qizil = qayta bos\" ga o'rgansa, haqiqiy xatolar ham o'tib ketadi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.testing.028",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Testlanadigan kod (testable code) dizayni qanday xususiyatlarga ega?",
+      "options": [
+        { "id": "a", "text": "Bog'liqliklar tashqaridan uzatiladi (DI), yon ta'sirlar sof mantiqdan ajratilgan, global holat yo'q, vaqt/random abstraksiya orqali, kichik va bitta mas'uliyatli birliklar", "correct": true },
+        { "id": "b", "text": "Barcha metodlar `public` va `static`", "hint": "Static metodlar bog'liqlikni almashtirishni qiyinlashtiradi." },
+        { "id": "c", "text": "Bir klass hamma ishni qiladi — test ham bitta bo'ladi", "hint": "God object'ni test qilish — eng qiyin va mo'rt." },
+        { "id": "d", "text": "Testlanish dizaynga bog'liq emas", "hint": "\"Test yozish qiyin\" — dizayn haqida signal." }
+      ],
+      "explanation": "Test yozish qiyinligi — dizayn muammosining simptomi: yashirin bog'liqlik, chuqur meros, static chaqiruvlar, `new` ichkarida. TDD shu sabab dizaynni yaxshilaydi — test birinchi yozilsa, bog'liqliklar tabiiy tarzda tashqariga chiqadi. Functional core, imperative shell — sof mantiq markazda, yon ta'sir chetda.",
+      "reviewed": false
+    },
+    {
+      "id": "core.testing.029",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Jamoa uchun test strategiyasini belgilashda senior nimalarni hal qiladi?",
+      "options": [
+        { "id": "a", "text": "Har daraja (unit/integration/E2E/contract) qamrovi va nisbati, nima mock qilinadi, test muhitlari, CI'da qaysi testlar qaysi bosqichda ishlaydi, flaky siyosati, sifat darvozalari (gate) va bularning xavf/narx asosi", "correct": true },
+        { "id": "b", "text": "Faqat coverage foizini belgilash", "hint": "Foiz — bitta ko'rsatkich; strategiya qaysi xavflarni qanday yopishni hal qiladi." },
+        { "id": "c", "text": "Har dasturchi o'zi xohlagancha test yozadi", "hint": "Izchillik bo'lmasa, suite tez orada sekin, mo'rt va ishonchsiz bo'ladi." },
+        { "id": "d", "text": "QA bo'limi barcha testlarni qo'lda bajaradi", "hint": "Qo'lda test strategiyaning kichik qismi; avtomatlashtirish asosiy." }
+      ],
+      "explanation": "Strategiya xavfdan boshlanadi: to'lov mantiqi — chuqur unit + integration; marketing sahifasi — smoke yetarli. Hujjatlashtirilgan qoidalar (\"repository'lar Testcontainers bilan\", \"E2E faqat 5 asosiy oqim\") jamoani bir xil yo'nalishga qo'yadi va review'ni osonlashtiradi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.testing.030",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "CI'da test vaqti 40 daqiqaga chiqdi. Qanday yondashuvlar uni qisqartiradi?",
+      "options": [
+        { "id": "a", "text": "Testlarni parallel/shard qilib ishlatish, tez unit testlarni PR'da, sekin E2E'ni merge'dan keyin yoki nightly, faqat o'zgargan modullarni test qilish (affected), sekin testlarni unit darajaga tushirish, flaky va eskirganlarni olib tashlash", "correct": true },
+        { "id": "b", "text": "Testlarning yarmini o'chirish", "hint": "Ko'r-ko'rona o'chirish qamrovni yo'qotadi; qaysi test qiymat bermasligini tahlil qilish kerak." },
+        { "id": "c", "text": "Testlarni faqat release oldidan ishga tushirish", "hint": "Xato haftalar davomida to'planadi — topish va tuzatish narxi ko'p marta oshadi." },
+        { "id": "d", "text": "Kuchli server olish kifoya", "hint": "Vertikal o'sish chegarali; parallelizm va test piramidasini to'g'rilash barqaror yechim." }
+      ],
+      "explanation": "Maqsad: PR'da 10 daqiqadan kam fikr-mulohaza. Bosqichli pipeline: lint + unit (daqiqalar) → integration → E2E (merge'dan keyin). Build cache, test sharding (4 worker = ~4x), Testcontainers'ni qayta ishlatish. Sekin suite — piramida teskari (ko'p E2E) degan signal.",
+      "reviewed": false
+    },
+    {
+      "id": "core.testing.031",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "\"Testing in production\" nimani anglatadi va u qanday vositalar bilan xavfsiz qilinadi?",
+      "options": [
+        { "id": "a", "text": "Yangi kodni real trafik va ma'lumotda nazorat ostida tekshirish — canary release (kichik foiz foydalanuvchi), feature flag (tez o'chirish), shadow traffic, kuchli monitoring va avtomatik rollback bilan", "correct": true },
+        { "id": "b", "text": "Testlarni yozmay, to'g'ridan-to'g'ri production'ga chiqarish", "hint": "Bu test emas, qimor; yondashuv aksincha qo'shimcha himoya qatlamlari talab qiladi." },
+        { "id": "c", "text": "Production DB'da unit testlarni ishga tushirish", "hint": "Unit testlar production ma'lumotiga tegmasligi kerak." },
+        { "id": "d", "text": "QA'ni production'da qo'lda tekshirishga qo'yish", "hint": "Qo'lda tekshirish — kichik qism; mohiyat trafik va kuzatuvda." }
+      ],
+      "explanation": "Staging hech qachon production'ga to'liq teng emas (ma'lumot hajmi, trafik shakli, integratsiyalar). Canary: 1% → 10% → 100%, har bosqichda xato/latency metrikalari solishtiriladi. Feature flag — deploy'ni release'dan ajratadi: kod bor, lekin o'chirilgan. Bu pre-production testlarni almashtirmaydi, to'ldiradi.",
+      "reviewed": false
+    },
+    {
+      "id": "core.testing.032",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Legacy kodda (testsiz, katta, chalkash) testlashni qayerdan boshlash kerak?",
+      "options": [
+        { "id": "a", "text": "Characterization test — mavjud xatti-harakatni (to'g'ri yoki noto'g'ri) qayd qilish, so'ng seam'lar topib bog'liqliklarni ajratish, o'zgartirmoqchi bo'lgan joyni avval test bilan o'rab olish; hamma narsani birdan qoplashga urinmaslik", "correct": true },
+        { "id": "b", "text": "Avval hamma kodni qayta yozish, keyin test qo'shish", "hint": "Testsiz qayta yozish — xatti-harakatni yo'qotish xavfi; \"big rewrite\" ko'pincha muvaffaqiyatsiz." },
+        { "id": "c", "text": "Faqat yangi kodga test yozish, eskisiga tegmaslik", "hint": "Eski kod o'zgartirilayotganda testsiz qolsa, regressiya shu yerda bo'ladi." },
+        { "id": "d", "text": "100% unit coverage'ga yetmaguncha boshqa ish qilmaslik", "hint": "Real emas va biznes qiymat bermaydi; xavfli joylarni ustuvorlashtirish kerak." }
+      ],
+      "explanation": "Michael Feathers (\"Working Effectively with Legacy Code\"): o'zgartirish nuqtasini aniqlash, test nuqtalarini topish, bog'liqliklarni uzish (extract interface, parameterize constructor), test yozish, o'zgartirish. Yuqori darajali (integration/E2E) testlar — birinchi to'r; unit testlar refactoring davomida paydo bo'ladi.",
+      "reviewed": false
+    }
+  ]
+}

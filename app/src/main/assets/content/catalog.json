@@ -160,12 +160,12 @@
     { "id": "ml.ops", "title": "MLOps va tizim dizayni" },
 
     { "id": "core.dsa", "title": "Algoritmlar va ma'lumot tuzilmalari", "file": "core_dsa.json" },
-    { "id": "core.oop", "title": "OOP, SOLID, dizayn patternlari" },
+    { "id": "core.oop", "title": "OOP, SOLID, dizayn patternlari", "file": "core_oop.json" },
     { "id": "core.sql", "title": "SQL va ma'lumotlar bazasi", "file": "core_sql.json" },
     { "id": "core.git", "title": "Git va jamoaviy ish", "file": "core_git.json" },
     { "id": "core.http", "title": "HTTP, REST, tarmoq", "file": "core_http.json" },
-    { "id": "core.security", "title": "Xavfsizlik asoslari" },
-    { "id": "core.testing", "title": "Testlash asoslari" },
+    { "id": "core.security", "title": "Xavfsizlik asoslari", "file": "core_security.json" },
+    { "id": "core.testing", "title": "Testlash asoslari", "file": "core_testing.json" },
     { "id": "core.sysdesign", "title": "System design" },
     { "id": "core.aicode", "title": "AI yordamida kod va code review" },
     { "id": "core.mobile", "title": "Mobile umumiy", "file": "core_mobile.json" }

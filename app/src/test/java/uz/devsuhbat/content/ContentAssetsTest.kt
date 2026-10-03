@@ -105,6 +105,9 @@ class ContentAssetsTest {
         "node.async" to listOf(4, 4, 3, 2),
         "node.db" to listOf(3, 3, 2, 2),
         "node.arch" to listOf(2, 2, 2, 2),
+        "core.oop" to listOf(16, 14, 10, 6),
+        "core.security" to listOf(8, 10, 8, 6),
+        "core.testing" to listOf(10, 10, 8, 4),
     )
 
     @Test
