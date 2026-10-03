@@ -8,12 +8,12 @@
       "kind": "concept",
       "prompt": "React'da props va state farqi nima?",
       "options": [
-        { "id": "a", "text": "Props ota komponentdan keladi va o'qish uchun; state komponentning o'z ichki ma'lumoti va u o'zgarganda komponent qayta chiziladi", "correct": true },
-        { "id": "b", "text": "Props o'zgaruvchan, state o'zgarmas", "hint": "Aksincha: props komponent ichida o'zgartirilmaydi." },
+        { "id": "a", "text": "Props ota komponentdan keladi va faqat o'qiladi; state — komponentning o'z ma'lumoti", "correct": true },
+        { "id": "b", "text": "Props o'zgaruvchan va bola komponent ularni bemalol o'zgartira oladi, state esa o'zgarmas", "hint": "Aksincha: props komponent ichida o'zgartirilmaydi." },
         { "id": "c", "text": "State faqat klass komponentlarda bor", "hint": "`useState` funksional komponentlarga state beradi." },
         { "id": "d", "text": "Farqi yo'q", "hint": "Biri tashqaridan kiradi, ikkinchisi ichkarida boshqariladi." }
       ],
-      "explanation": "Ma'lumot yuqoridan pastga props orqali oqadi. Komponent o'zi o'zgartiradigan narsa (forma qiymati, ochiq/yopiq) state. Bir nechta komponentga kerak bo'lgan state eng yaqin umumiy ota'ga ko'tariladi (lifting state up).",
+      "explanation": "State o'zgarganda komponent qayta chiziladi. Ma'lumot yuqoridan pastga props orqali oqadi. Komponent o'zi o'zgartiradigan narsa (forma qiymati, ochiq/yopiq) state. Bir nechta komponentga kerak bo'lgan state eng yaqin umumiy ota'ga ko'tariladi (lifting state up).",
       "reviewed": false
     },
     {
@@ -23,9 +23,9 @@
       "kind": "concept",
       "prompt": "Ro'yxat render qilganda `key` nima uchun kerak va nega indeksni kalit qilish yomon?",
       "options": [
-        { "id": "a", "text": "React elementlarni kalit bo'yicha taniydi; indeks kalit bo'lsa, element o'chirilganda yoki tartib o'zgarganda holat va DOM noto'g'ri elementga yopishib qoladi", "correct": true },
+        { "id": "a", "text": "React elementlarni kalit bo'yicha taniydi; indeks kalit bo'lsa, tartib o'zgarganda holat boshqa elementga o'tadi", "correct": true },
         { "id": "b", "text": "`key` faqat ogohlantirishni o'chirish uchun", "hint": "Ogohlantirish bejiz emas: kalit reconciliation to'g'riligi uchun." },
-        { "id": "c", "text": "Indeks eng yaxshi kalit, chunki u yagona", "hint": "Yagona, lekin barqaror emas: element ko'chganda indeksi o'zgaradi." },
+        { "id": "c", "text": "Indeks eng yaxshi kalit, chunki u har doim yagona, raqamli va element o'chirilganda yoki qo'shilganda ham barqaror qoladi", "hint": "Yagona, lekin barqaror emas: element ko'chganda indeksi o'zgaradi." },
         { "id": "d", "text": "`key` CSS uchun ishlatiladi", "hint": "U DOM'ga tushmaydi, faqat React ichida." }
       ],
       "explanation": "Barqaror kalit (id) React'ga \"bu o'sha element, faqat joyi o'zgardi\" deyish imkonini beradi. Indeks faqat ro'yxat statik va qayta tartiblanmaganda qabul qilinadi.",
@@ -54,8 +54,8 @@
       "kind": "concept",
       "prompt": "Controlled va uncontrolled input farqi nima?",
       "options": [
-        { "id": "a", "text": "Controlled'da qiymat React state'da va `onChange` orqali yangilanadi; uncontrolled'da qiymat DOM'da turadi va `ref` bilan o'qiladi", "correct": true },
-        { "id": "b", "text": "Controlled input'ni foydalanuvchi o'zgartira olmaydi", "hint": "O'zgartira oladi, faqat har o'zgarish state orqali o'tadi." },
+        { "id": "a", "text": "Controlled — qiymat state'da, `onChange` bilan yangilanadi; uncontrolled — qiymat DOM'da, `ref` bilan o'qiladi", "correct": true },
+        { "id": "b", "text": "Controlled input'ni foydalanuvchi klaviaturadan umuman o'zgartira olmaydi, uni faqat dasturiy ravishda o'zgartirish mumkin", "hint": "O'zgartira oladi, faqat har o'zgarish state orqali o'tadi." },
         { "id": "c", "text": "Uncontrolled input React'da ishlamaydi", "hint": "Ishlaydi va oddiy formalar uchun yetarli." },
         { "id": "d", "text": "Farqi faqat nomda", "hint": "Haqiqat manbai (state yoki DOM) farq qiladi." }
       ],
@@ -69,9 +69,9 @@
       "kind": "concept",
       "prompt": "`useEffect` dan funksiya qaytarish (cleanup) qachon chaqiriladi va nima uchun kerak?",
       "options": [
-        { "id": "a", "text": "Komponent o'chirilganda va effekt qayta ishlashidan oldin; obunalar, taymerlar va listener'larni tozalash uchun", "correct": true },
+        { "id": "a", "text": "O'chirilganda va effekt qayta ishlashidan oldin; obuna va taymerlarni tozalash uchun", "correct": true },
         { "id": "b", "text": "Faqat komponent o'chirilganda", "hint": "Dependency o'zgarib effekt qayta ishlaganda ham avval cleanup chaqiriladi." },
-        { "id": "c", "text": "Har render'da, effektdan oldin", "hint": "Faqat effekt qayta ishlashi kerak bo'lganda." },
+        { "id": "c", "text": "Har render'da, effektdan oldin, hatto dependency'lar o'zgarmagan bo'lsa ham chaqiriladi", "hint": "Faqat effekt qayta ishlashi kerak bo'lganda." },
         { "id": "d", "text": "Hech qachon, bu faqat uslub", "hint": "Cleanup'siz obuna va taymerlar to'planib, leak va ikki marta ishlashga olib keladi." }
       ],
       "explanation": "`useEffect(() => { const id = setInterval(...); return () => clearInterval(id); }, [])`. Strict Mode development'da effektni ikki marta ishlatib, cleanup to'g'riligini tekshiradi: cleanup'siz effekt ikki taymer qoldiradi.",
@@ -84,8 +84,8 @@
       "kind": "concept",
       "prompt": "React komponenti qachon qayta render bo'ladi?",
       "options": [
-        { "id": "a", "text": "O'z state'i o'zgarganda, ota komponent qayta render bo'lganda (memo bo'lmasa) yoki ishlatayotgan context qiymati o'zgarganda", "correct": true },
-        { "id": "b", "text": "Faqat props o'zgarganda", "hint": "Standart holatda ota render bo'lsa, bola props o'zgarmasa ham render bo'ladi." },
+        { "id": "a", "text": "O'z state'i, ota komponentning render'i (memo bo'lmasa) yoki ishlatilgan context o'zgarganda", "correct": true },
+        { "id": "b", "text": "Faqat unga uzatilgan props o'zgarganda; ota komponentning qayta render bo'lishi unga ta'sir qilmaydi", "hint": "Standart holatda ota render bo'lsa, bola props o'zgarmasa ham render bo'ladi." },
         { "id": "c", "text": "Faqat DOM o'zgarganda", "hint": "Render DOM o'zgarishi emas; render natijasi solishtirilib, keyin DOM yangilanadi." },
         { "id": "d", "text": "Har soniyada avtomatik", "hint": "React faqat o'zgarishga javoban render qiladi." }
       ],
@@ -99,12 +99,12 @@
       "kind": "concept",
       "prompt": "`useMemo` va `useCallback` qachon haqiqatan foydali?",
       "options": [
-        { "id": "a", "text": "Qimmat hisobni takrorlamaslik yoki `memo` qilingan bolaga barqaror havola uzatish uchun; har joyda ishlatish o'zi xarajat", "correct": true },
-        { "id": "b", "text": "Har bir funksiya va qiymatni o'rash kerak", "hint": "Har `useMemo` taqqoslash va xotira narxi; foydasi bo'lmasa, kod sekinroq va murakkabroq." },
+        { "id": "a", "text": "Qimmat hisobni takrorlamaslik yoki `memo` bolaga barqaror havola berish uchun", "correct": true },
+        { "id": "b", "text": "Har bir funksiya va qiymatni o'rash kerak, aks holda har render'da xotira oqib ketadi", "hint": "Har `useMemo` taqqoslash va xotira narxi; foydasi bo'lmasa, kod sekinroq va murakkabroq." },
         { "id": "c", "text": "Ular render'ni butunlay to'xtatadi", "hint": "Ular faqat qiymat yoki funksiya havolasini saqlaydi." },
         { "id": "d", "text": "Faqat klass komponentlarda", "hint": "Bular hook'lar; funksional komponentlar uchun." }
       ],
-      "explanation": "Inline funksiya har render'da yangi havola; `memo` qilingan bola uni \"yangi prop\" deb qayta render bo'ladi — `useCallback` shuni to'xtatadi. Boshqa hollarda avval React Profiler bilan o'lchash kerak. React Compiler bilan qo'lda memoization ehtiyoji kamayadi.",
+      "explanation": "Ularni har joyda ishlatishning o'zi xarajat. Inline funksiya har render'da yangi havola; `memo` qilingan bola uni \"yangi prop\" deb qayta render bo'ladi — `useCallback` shuni to'xtatadi. Boshqa hollarda avval React Profiler bilan o'lchash kerak. React Compiler bilan qo'lda memoization ehtiyoji kamayadi.",
       "reviewed": false
     },
     {
@@ -114,8 +114,8 @@
       "kind": "concept",
       "prompt": "Prop drilling nima va Context uni qanday hal qiladi, qanday narxi bor?",
       "options": [
-        { "id": "a", "text": "Prop'ni ko'p qatlam orqali faqat pastga uzatish uchun o'tkazish; Context daraxtning istalgan joyida qiymatni o'qish imkonini beradi, lekin qiymat o'zgarganda barcha iste'molchilar qayta render bo'ladi", "correct": true },
-        { "id": "b", "text": "Context global o'zgaruvchi va render'ga ta'sir qilmaydi", "hint": "Context o'zgarsa, uni o'qigan har komponent render bo'ladi." },
+        { "id": "a", "text": "Prop'ni ko'p qatlam orqali uzatish; Context uni istalgan joyda o'qitadi, lekin o'zgarganda iste'molchilar qayta render bo'ladi", "correct": true },
+        { "id": "b", "text": "Context — oddiy global o'zgaruvchi: uning qiymati o'zgarganda hech qaysi komponent qayta render bo'lmaydi, shuning uchun narxi yo'q", "hint": "Context o'zgarsa, uni o'qigan har komponent render bo'ladi." },
         { "id": "c", "text": "Prop drilling har doim xato", "hint": "2–3 qatlam uchun props aniqroq va soddaroq." },
         { "id": "d", "text": "Context faqat mavzu (theme) uchun", "hint": "Theme, til, auth, DI — kam o'zgaradigan har qanday ma'lumot uchun." }
       ],
@@ -145,9 +145,9 @@
       "kind": "concept",
       "prompt": "Server ma'lumotini (API javoblari) Redux kabi global store'da emas, TanStack Query kabi kutubxonada saqlash nega tavsiya etiladi?",
       "options": [
-        { "id": "a", "text": "Server holati keshlash, eskirish, qayta yuklash, dedup va xato/loading holatlarini talab qiladi; bu kutubxonalar shuni beradi, store esa faqat saqlaydi", "correct": true },
+        { "id": "a", "text": "Server holati keshlash, eskirish, qayta yuklash va dedup talab qiladi — bu kutubxonalar aynan shuni beradi", "correct": true },
         { "id": "b", "text": "Redux eskirgan va ishlatilmaydi", "hint": "Redux Toolkit hali ham klient holati uchun ishlatiladi; gap vazifalarni ajratishda." },
-        { "id": "c", "text": "Global store'da API ma'lumotini saqlab bo'lmaydi", "hint": "Mumkin, lekin kesh mantig'ini o'zingiz yozasiz." },
+        { "id": "c", "text": "Global store'da API ma'lumotini saqlab bo'lmaydi, chunki store faqat sinxron va primitiv qiymatlarni qabul qiladi", "hint": "Mumkin, lekin kesh mantig'ini o'zingiz yozasiz." },
         { "id": "d", "text": "TanStack Query ma'lumotni serverda saqlaydi", "hint": "U klientda keshlaydi; nomidagi \"server\" ma'lumot manbasini bildiradi." }
       ],
       "explanation": "Klient holati (modal ochiq, tanlangan tab) va server holati (foydalanuvchilar ro'yxati) tabiatan har xil. Server holati \"eskiradi\" va qayta sinxronlanishi kerak; `staleTime`, `refetchOnWindowFocus`, optimistic update kabi tushunchalar shu uchun.",
@@ -190,12 +190,12 @@
       "kind": "concept",
       "prompt": "Katta React ilovasida holat (state) arxitekturasini qanday qurish to'g'ri?",
       "options": [
-        { "id": "a", "text": "Holatni turi bo'yicha ajratish: server holati — so'rov keshi (TanStack Query), URL holati — router, lokal UI holati — komponentda, haqiqiy global klient holati — kichik store; hammasini bitta global store'ga yig'maslik", "correct": true },
-        { "id": "b", "text": "Hamma holatni bitta Redux store'da saqlash", "hint": "Server keshi, forma kiritishi va URL bitta joyda chalkashadi va har o'zgarish keng render beradi." },
+        { "id": "a", "text": "Turi bo'yicha ajratish: server holati — so'rov keshi, URL — router, lokal UI — komponentda, global — kichik store", "correct": true },
+        { "id": "b", "text": "Hamma holatni (server javoblari, formalar, URL parametrlari) bitta katta Redux store'da saqlash — yagona manba uchun", "hint": "Server keshi, forma kiritishi va URL bitta joyda chalkashadi va har o'zgarish keng render beradi." },
         { "id": "c", "text": "Hamma holatni Context'da saqlash", "hint": "Tez o'zgaradigan holat Context'da butun daraxtni render qiladi." },
         { "id": "d", "text": "Holatni faqat `localStorage` da saqlash", "hint": "Bu saqlash joyi, arxitektura emas; sinxron va reaktiv emas." }
       ],
-      "explanation": "Ko'p \"global state\" muammolari aslida server keshi yoki URL'da bo'lishi kerak bo'lgan holat. Filtr va sahifa URL'da bo'lsa, ulashish va orqaga qaytish bepul ishlaydi. Qolgan haqiqiy global holat odatda kichik: auth, theme, bir nechta bayroq.",
+      "explanation": "Hammasini bitta global store'ga yig'ish keraksiz murakkablik va ortiqcha render'lar keltiradi. Ko'p \"global state\" muammolari aslida server keshi yoki URL'da bo'lishi kerak bo'lgan holat. Filtr va sahifa URL'da bo'lsa, ulashish va orqaga qaytish bepul ishlaydi. Qolgan haqiqiy global holat odatda kichik: auth, theme, bir nechta bayroq.",
       "reviewed": false
     }
   ]

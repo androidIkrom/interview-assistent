@@ -11,7 +11,7 @@
         { "id": "a", "text": "Har bo'lak bitta vazifaga ega bo'ladi: o'qish, test qilish va boshqa joyda ishlatish osonlashadi", "correct": true },
         { "id": "b", "text": "Sahifa tezroq yuklanadi", "hint": "Komponentlar soni yuklanishga deyarli ta'sir qilmaydi." },
         { "id": "c", "text": "Kod qisqaradi", "hint": "Ba'zan aksincha uzayadi; maqsad hajm emas, tushunarlilik." },
-        { "id": "d", "text": "Foydasi yo'q, bitta katta komponent yaxshiroq", "hint": "500 qatorli komponentni o'zgartirish va test qilish qiyin." }
+        { "id": "d", "text": "Foydasi yo'q: bitta katta komponentni o'qish, o'zgartirish va qo'llab-quvvatlash har doim osonroq", "hint": "500 qatorli komponentni o'zgartirish va test qilish qiyin." }
       ],
       "explanation": "Qoida: komponent bitta narsani qilsin va props orqali sozlansin. Lekin haddan tashqari bo'lish ham zarar: har tugma uchun 5 ta qatlam. Takrorlanish uch marta ko'ringanda ajratish — amaliy mezon.",
       "reviewed": false
@@ -23,12 +23,12 @@
       "kind": "concept",
       "prompt": "Rasm uchun `alt` atributi va input uchun `<label>` nima uchun kerak?",
       "options": [
-        { "id": "a", "text": "Screen reader foydalanuvchilari rasm mazmunini va maydon nimaligini bilishi uchun; `alt` rasm yuklanmaganda ham ko'rinadi", "correct": true },
+        { "id": "a", "text": "Screen reader foydalanuvchilari rasm mazmunini va maydon nimaligini bilishi uchun", "correct": true },
         { "id": "b", "text": "Faqat SEO uchun", "hint": "SEO ham foyda ko'radi, lekin asosiy maqsad odamlar." },
-        { "id": "c", "text": "Rasm tezroq yuklanishi uchun", "hint": "Yuklanishga aloqasi yo'q." },
+        { "id": "c", "text": "Rasm sekin internetda tezroq yuklanishi va brauzer uni oldindan keshlab qo'yishi uchun", "hint": "Yuklanishga aloqasi yo'q." },
         { "id": "d", "text": "Shart emas, dizayn uchun", "hint": "Usiz ko'zi ojiz foydalanuvchi formani to'ldira olmaydi." }
       ],
-      "explanation": "Dekorativ rasm uchun `alt=\"\"` (bo'sh) — screen reader uni o'tkazib yuboradi. `<label for=\"email\">` yoki input'ni label ichiga olish: bosganda fokus ham o'tadi. Accessibility qonuniy talab bo'lgan mamlakatlar ko'paymoqda.",
+      "explanation": "`alt` rasm yuklanmaganda ham ko'rinadi. Dekorativ rasm uchun `alt=\"\"` (bo'sh) — screen reader uni o'tkazib yuboradi. `<label for=\"email\">` yoki input'ni label ichiga olish: bosganda fokus ham o'tadi. Accessibility qonuniy talab bo'lgan mamlakatlar ko'paymoqda.",
       "reviewed": false
     },
     {
@@ -38,8 +38,8 @@
       "kind": "concept",
       "prompt": "Ilova bundle'i 3 MB. Birinchi navbatda qaysi yondashuv to'g'ri?",
       "options": [
-        { "id": "a", "text": "Bundle analyzer bilan nimadan iboratligini ko'rish, marshrutlar bo'yicha code splitting, og'ir kutubxonalarni yengilroqqa almashtirish yoki lazy yuklash", "correct": true },
-        { "id": "b", "text": "Barcha kodni minify qilish kifoya", "hint": "Production build allaqachon minify qiladi; 3 MB shundan keyin." },
+        { "id": "a", "text": "Bundle analyzer bilan tarkibini ko'rish, marshrut bo'yicha code splitting, og'ir kutubxonani almashtirish", "correct": true },
+        { "id": "b", "text": "Barcha kodni minify va gzip qilish kifoya — bu har qanday bundle'ni bir necha barobar kichraytirib, muammoni hal qiladi", "hint": "Production build allaqachon minify qiladi; 3 MB shundan keyin." },
         { "id": "c", "text": "Serverni kuchliroq qilish", "hint": "Hajm foydalanuvchi tarmog'i va qurilmasida yuk; server emas." },
         { "id": "d", "text": "Hamma narsani bitta faylga yig'ish", "hint": "Bu aksincha: foydalanuvchi kerak bo'lmagan kodni ham yuklaydi." }
       ],
@@ -53,8 +53,8 @@
       "kind": "concept",
       "prompt": "Frontend'da test strategiyasi qanday bo'lishi kerak?",
       "options": [
-        { "id": "a", "text": "Ko'p tez komponent/integratsiya testlari (Testing Library, foydalanuvchi nuqtai nazaridan), oz E2E (Playwright) muhim oqimlar uchun, sof mantiq uchun unit testlar", "correct": true },
-        { "id": "b", "text": "Faqat E2E, chunki u haqiqiy brauzerda", "hint": "E2E sekin, mo'rt va sababni topish qiyin; hamma narsani u bilan qoplab bo'lmaydi." },
+        { "id": "a", "text": "Ko'p komponent/integratsiya testlari (Testing Library), oz E2E muhim oqimlar uchun, mantiq uchun unit", "correct": true },
+        { "id": "b", "text": "Faqat E2E testlar, chunki ular haqiqiy brauzerda ishlaydi va qolgan barcha test turlarini almashtiradi", "hint": "E2E sekin, mo'rt va sababni topish qiyin; hamma narsani u bilan qoplab bo'lmaydi." },
         { "id": "c", "text": "Faqat snapshot testlar", "hint": "Snapshot har o'zgarishda yangilanadi va xatoni emas, farqni ko'rsatadi." },
         { "id": "d", "text": "Frontend'ni test qilish shart emas", "hint": "Regressiyalar foydalanuvchiga tushadi." }
       ],
@@ -83,12 +83,12 @@
       "kind": "concept",
       "prompt": "Klient holati uchun Context, Zustand va Redux Toolkit orasida qanday tanlanadi?",
       "options": [
-        { "id": "a", "text": "Kam o'zgaradigan, keng kerak bo'lgan qiymat — Context; o'rtacha global holat, selektorlar bilan aniq render — Zustand kabi yengil store; murakkab, qoidali, kuzatuv va middleware kerak bo'lgan holat — Redux Toolkit", "correct": true },
-        { "id": "b", "text": "Har doim Redux, chunki u standart", "hint": "Kichik ilovada Redux ortiqcha; tanlov murakkablikka qarab." },
+        { "id": "a", "text": "Kam o'zgaradigan qiymat — Context; o'rtacha global holat — Zustand; murakkab, qoidali holat — Redux Toolkit", "correct": true },
+        { "id": "b", "text": "Har doim Redux Toolkit, chunki u sanoat standarti va boshqa yechimlar katta ilovalarda ishlamaydi va qo'llab-quvvatlanmaydi", "hint": "Kichik ilovada Redux ortiqcha; tanlov murakkablikka qarab." },
         { "id": "c", "text": "Context hamma narsaga yetadi", "hint": "Tez o'zgaradigan holat Context'da keng render beradi." },
         { "id": "d", "text": "Farqi yo'q, hammasi bir xil", "hint": "Render nazorati, DevTools, middleware jiddiy farq qiladi." }
       ],
-      "explanation": "Avval server holatini (TanStack Query) va URL holatini chiqarib tashlang; qolgan global holat ko'pincha kichik bo'ladi. Kutubxona tanlovi jamoa tajribasi va kuzatuv ehtiyojiga ham bog'liq; o'zgartirish keyin qimmat emas, agar store komponentlardan ajratilgan bo'lsa.",
+      "explanation": "Zustand selektorlar bilan aniq render beradi; Redux Toolkit kuzatuv va middleware kerak bo'lganda. Avval server holatini (TanStack Query) va URL holatini chiqarib tashlang; qolgan global holat ko'pincha kichik bo'ladi. Kutubxona tanlovi jamoa tajribasi va kuzatuv ehtiyojiga ham bog'liq; o'zgartirish keyin qimmat emas, agar store komponentlardan ajratilgan bo'lsa.",
       "reviewed": false
     },
     {
@@ -113,8 +113,8 @@
       "kind": "concept",
       "prompt": "Bir nechta mahsulot ishlatadigan design system'ni qanday boshqarish kerak?",
       "options": [
-        { "id": "a", "text": "Alohida versiyalangan paket, token'lar, hujjat (Storybook), accessibility talablari, o'zgarish jarayoni (RFC, deprecation) va iste'molchilarni avtomatik yangilash vositalari (codemod)", "correct": true },
-        { "id": "b", "text": "Har mahsulot komponentlarni nusxalab olib, o'zi o'zgartiradi", "hint": "Nusxalar tez ajralib, izchillik yo'qoladi." },
+        { "id": "a", "text": "Alohida versiyalangan paket: token'lar, Storybook hujjati, a11y talablari, RFC va codemod bilan yangilash", "correct": true },
+        { "id": "b", "text": "Har mahsulot komponentlarni nusxalab olib, o'z ehtiyojiga qarab erkin o'zgartiradi — shunda hech kim kutmaydi", "hint": "Nusxalar tez ajralib, izchillik yo'qoladi." },
         { "id": "c", "text": "Bitta katta CSS fayl hammaga", "hint": "Komponent mantig'i, accessibility va versiyalash yo'q." },
         { "id": "d", "text": "Dizaynerlar Figma'da saqlasa yetarli", "hint": "Kod bilan sinxron bo'lmagan dizayn tez eskiradi; token'lar ikkalasini bog'laydi." }
       ],
