@@ -2,6 +2,7 @@ package uz.devsuhbat.engine
 
 import kotlin.random.Random
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import uz.devsuhbat.content.Level
@@ -128,6 +129,22 @@ class QuestionPickerTest {
         assertEquals(20, QuestionPicker.mistakes(many, Level.JUNIOR, states, today, Random(3)).size)
     }
 
+    // --- next review ---
+
+    @Test
+    fun nextReviewIsTheEarliestFutureDay() {
+        val states = mapOf(state("j.001", 1, 102), state("j.002", 2, 102), state("j.003", 3, 105))
+
+        assertEquals(NextReview(inDays = 2, count = 2), QuestionPicker.nextReview(pool, Level.JUNIOR, states, today))
+    }
+
+    @Test
+    fun nextReviewIgnoresDueAndOutOfLevelQuestions() {
+        val states = mapOf(state("j.001", 1, 99), state("x.001", 1, 101))
+
+        assertNull(QuestionPicker.nextReview(pool, Level.JUNIOR, states, today))
+    }
+
     // --- mock pick ---
 
     private fun many(prefix: String, level: Level, count: Int) =
@@ -175,6 +192,43 @@ class QuestionPickerTest {
 
         assertEquals(small.map { it.id }.toSet(), picked.map { it.id }.toSet())
         assertEquals(7, picked.size)
+    }
+
+    private fun List<uz.devsuhbat.content.Question>.fieldCount() = count { !it.id.startsWith("core.") }
+
+    @Test
+    fun mockTakesSixtyPercentFromFieldTopics() {
+        val picked = QuestionPicker.mock(many("f", Level.MIDDLE, 40) + many("core.x", Level.MIDDLE, 40), Level.MIDDLE, Random(3))
+
+        assertEquals(25, picked.size)
+        assertEquals(15, picked.fieldCount())
+    }
+
+    @Test
+    fun mockFillsFromCommonWhenFieldIsShort() {
+        val picked = QuestionPicker.mock(many("f", Level.MIDDLE, 6) + many("core.x", Level.MIDDLE, 40), Level.MIDDLE, Random(3))
+
+        assertEquals(25, picked.size)
+        assertEquals(6, picked.fieldCount())
+    }
+
+    @Test
+    fun mockFillsFromFieldWhenCommonIsShort() {
+        val picked = QuestionPicker.mock(many("f", Level.MIDDLE, 40) + many("core.x", Level.MIDDLE, 4), Level.MIDDLE, Random(3))
+
+        assertEquals(25, picked.size)
+        assertEquals(21, picked.fieldCount())
+    }
+
+    @Test
+    fun mockKeepsLevelMixInsideEachPart() {
+        val pool = many("f.m", Level.MIDDLE, 30) + many("f.j", Level.JUNIOR, 30) +
+            many("core.m", Level.MIDDLE, 30) + many("core.j", Level.JUNIOR, 30)
+
+        val picked = QuestionPicker.mock(pool, Level.MIDDLE, Random(3))
+
+        assertEquals(15, picked.countOf(Level.MIDDLE))
+        assertEquals(15, picked.fieldCount())
     }
 
     @Test

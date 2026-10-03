@@ -39,6 +39,8 @@
     <string name="home_mistakes">Xatolar</string>
     <string name="home_mistakes_due">%1$d ta savol takrorlashni kutmoqda</string>
     <string name="home_mistakes_none">Bugun takrorlanadigan savol yo\'q</string>
+    <string name="home_mistakes_tomorrow">%1$d ta savol ertaga qaytadi</string>
+    <string name="home_mistakes_later">%1$d ta savol %2$d kundan keyin qaytadi</string>
     <string name="home_mistakes_action">Takrorlash</string>
     <string name="home_mock">Mock interview</string>
     <string name="home_mock_desc">%1$d ta savol, 30 daqiqa. Javoblar faqat oxirida tekshiriladi.</string>

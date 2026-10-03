@@ -18,6 +18,7 @@ import uz.devsuhbat.content.Level
 import uz.devsuhbat.data.MockSummary
 import uz.devsuhbat.data.ThemeMode
 import uz.devsuhbat.data.UserSettings
+import uz.devsuhbat.engine.NextReview
 import uz.devsuhbat.engine.Progress
 import uz.devsuhbat.engine.QuestionState
 
@@ -73,6 +74,16 @@ class HomeViewModelTest {
         assertEquals(Level.JUNIOR, state.level)
         assertEquals(Progress(mastered = 1, total = 4), state.readiness)
         assertEquals(1, state.dueCount)
+    }
+
+    @Test
+    fun showsWhenTheNextMistakesComeBack() = runTest(dispatcher) {
+        states.value = mapOf("a.t.003" to QuestionState("a.t.003", box = 1, dueDay = 101))
+
+        val state = viewModel().state.first { !it.loading }
+
+        assertEquals(0, state.dueCount)
+        assertEquals(NextReview(inDays = 1, count = 1), state.nextReview)
     }
 
     @Test

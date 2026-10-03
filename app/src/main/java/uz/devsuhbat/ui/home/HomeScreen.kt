@@ -33,6 +33,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import uz.devsuhbat.AppContainer
 import uz.devsuhbat.R
 import uz.devsuhbat.data.MockSummary
+import uz.devsuhbat.engine.NextReview
 import uz.devsuhbat.engine.QuestionPicker
 import uz.devsuhbat.ui.common.titleRes
 
@@ -78,7 +79,7 @@ fun HomeScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             ReadinessCard(state)
-            MistakesCard(state.dueCount, onMistakes)
+            MistakesCard(state.dueCount, state.nextReview, onMistakes)
             PracticeCard(onPractice)
             MockCard(state.mockQuestionCount, state.lastMock, onMock)
         }
@@ -141,6 +142,7 @@ private fun ReadinessCard(state: HomeUiState) {
                 LinearProgressIndicator(
                     progress = { state.readiness.mastered.toFloat() / state.readiness.total },
                     modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                    drawStopIndicator = {},
                 )
                 Text(
                     text = stringResource(R.string.home_mastered, state.readiness.mastered, state.readiness.total),
@@ -153,15 +155,16 @@ private fun ReadinessCard(state: HomeUiState) {
 }
 
 @Composable
-private fun MistakesCard(dueCount: Int, onMistakes: () -> Unit) {
+private fun MistakesCard(dueCount: Int, nextReview: NextReview?, onMistakes: () -> Unit) {
     Card(modifier = Modifier.fillMaxWidth()) {
         Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             Text(stringResource(R.string.home_mistakes), style = MaterialTheme.typography.titleLarge)
             Text(
-                text = if (dueCount > 0) {
-                    stringResource(R.string.home_mistakes_due, dueCount)
-                } else {
-                    stringResource(R.string.home_mistakes_none)
+                text = when {
+                    dueCount > 0 -> stringResource(R.string.home_mistakes_due, dueCount)
+                    nextReview == null -> stringResource(R.string.home_mistakes_none)
+                    nextReview.inDays == 1 -> stringResource(R.string.home_mistakes_tomorrow, nextReview.count)
+                    else -> stringResource(R.string.home_mistakes_later, nextReview.count, nextReview.inDays)
                 },
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,

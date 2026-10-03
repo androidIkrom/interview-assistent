@@ -161,6 +161,7 @@ fun SessionScreen(
                     LinearProgressIndicator(
                         progress = { state.position.toFloat() / state.queueSize },
                         modifier = Modifier.fillMaxWidth(),
+                        drawStopIndicator = {},
                     )
                 }
             }
