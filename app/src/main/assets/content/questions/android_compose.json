@@ -24,9 +24,9 @@
       "prompt": "Tugma bosilganda matn o'zgarmayapti. Sabab nima?",
       "code": "@Composable\nfun Counter() {\n    var count = 0\n    Button(onClick = { count++ }) {\n        Text(\"Bosildi: $count\")\n    }\n}",
       "options": [
-        { "id": "a", "text": "`count` oddiy o'zgaruvchi: Compose uning o'zgarishini kuzatmaydi va u har recomposition'da qayta 0 bo'ladi", "correct": true },
+        { "id": "a", "text": "`count` oddiy o'zgaruvchi: Compose uni kuzatmaydi, har recomposition'da 0 bo'ladi", "correct": true },
         { "id": "b", "text": "`Button` ichida `Text` ishlatib bo'lmaydi", "hint": "`Button` ning content lambda'si aynan `Text` kabi composable'lar uchun mo'ljallangan." },
-        { "id": "c", "text": "`onClick` lambda'si main thread'da ishlamaydi", "hint": "Compose'da click callback'lari main thread'da chaqiriladi." },
+        { "id": "c", "text": "`onClick` lambda'si main thread'da emas, fon oqimida ishlaydi, shuning uchun UI yangilanmaydi", "hint": "Compose'da click callback'lari main thread'da chaqiriladi." },
         { "id": "d", "text": "`count++` o'rniga `count += 1` yozish kerak", "hint": "Bu ikki yozuv bir xil ishni bajaradi. Muammo amalda emas, o'zgaruvchining qanday e'lon qilinganida." }
       ],
       "explanation": "Compose faqat `State` obyektlarining o'qilishi va yozilishini kuzatadi. To'g'ri variant: `var count by remember { mutableStateOf(0) }`. `mutableStateOf` o'zgarishni Compose'ga bildiradi, `remember` esa qiymatni recomposition'lar orasida saqlaydi.",
@@ -41,7 +41,7 @@
       "options": [
         { "id": "a", "text": "`userId` qiymati o'zgarganda: eski coroutine bekor qilinadi va yangisi boshlanadi", "correct": true },
         { "id": "b", "text": "Har bir recomposition'da", "hint": "Unda har chizishda so'rov ketgan bo'lardi. Kalit (key) parametri aynan shuning oldini olish uchun berilgan." },
-        { "id": "c", "text": "Faqat bir marta, composable birinchi marta ekranga chiqqanda", "hint": "Bu `LaunchedEffect(Unit)` uchun to'g'ri bo'lardi. Bu yerda kalit sifatida o'zgaruvchan qiymat berilgan." },
+        { "id": "c", "text": "Faqat bir marta, composable birinchi marta ekranga chiqqanda; keyingi o'zgarishlar e'tiborsiz qoladi", "hint": "Bu `LaunchedEffect(Unit)` uchun to'g'ri bo'lardi. Bu yerda kalit sifatida o'zgaruvchan qiymat berilgan." },
         { "id": "d", "text": "`load` funksiyasi tugagach, avtomatik takrorlanadi", "hint": "Effekt bloki tugagach o'z-o'zidan qayta boshlanmaydi; takrorlash uchun sikl yozish kerak." }
       ],
       "explanation": "`LaunchedEffect` composition'ga kirganda coroutine boshlaydi. Kalitlardan biri o'zgarsa, joriy coroutine bekor qilinadi va blok yangi qiymat bilan qayta boshlanadi. Composable composition'dan chiqsa, coroutine bekor qilinadi.",
@@ -69,8 +69,8 @@
       "kind": "concept",
       "prompt": "`LazyColumn` da \"yuqoriga\" tugmasini `listState.firstVisibleItemIndex > 0` bo'lganda ko'rsatmoqchisiz. Scroll paytida ortiqcha recomposition bo'lmasligi uchun nima qilasiz?",
       "options": [
-        { "id": "a", "text": "Shartni `remember { derivedStateOf { ... } }` ichiga olaman: recomposition faqat shart natijasi o'zgarganda bo'ladi", "correct": true },
-        { "id": "b", "text": "Shartni `LaunchedEffect` ichida hisoblab, natijani `mutableStateOf` ga yozaman", "hint": "Ishlaydi, lekin ortiqcha: bir holatdan boshqasini hisoblash uchun maxsus, soddaroq API bor va u qo'shimcha coroutine talab qilmaydi." },
+        { "id": "a", "text": "Shartni `remember { derivedStateOf { ... } }` ga olaman: recomposition faqat natija o'zgarganda", "correct": true },
+        { "id": "b", "text": "Shartni `LaunchedEffect(listState)` ichida hisoblab, natijani alohida `mutableStateOf` ga yozib boraman", "hint": "Ishlaydi, lekin ortiqcha: bir holatdan boshqasini hisoblash uchun maxsus, soddaroq API bor va u qo'shimcha coroutine talab qilmaydi." },
         { "id": "c", "text": "`firstVisibleItemIndex` ni `rememberSaveable` ga saqlayman", "hint": "Bu qiymatni saqlab qolish masalasi. Recomposition soniga ta'sir qilmaydi: indeks har o'zgarganda baribir qayta chiziladi." },
         { "id": "d", "text": "Composable'ga `@Stable` annotatsiyasini qo'yaman", "hint": "`@Stable` parametr tiplarining barqarorligi haqida. Bu yerda muammo tez-tez o'zgaradigan holatni to'g'ridan-to'g'ri o'qishda." }
       ],
@@ -84,9 +84,9 @@
       "kind": "concept",
       "prompt": "Compose'da holatni qayerda saqlash (state hoisting) bo'yicha qaysi qoida to'g'ri?",
       "options": [
-        { "id": "a", "text": "Holat uni o'qiydigan va o'zgartiradigan composable'larning eng yaqin umumiy ajdodiga ko'tariladi; biznes mantiqqa tegishli holat ViewModel'da turadi", "correct": true },
+        { "id": "a", "text": "Holat uni ishlatadigan composable'larning eng yaqin umumiy ajdodiga ko'tariladi; biznes holati — ViewModel'da", "correct": true },
         { "id": "b", "text": "Barcha holat doim eng yuqori (root) composable'da saqlanadi", "hint": "Unda har kichik o'zgarish butun daraxt bo'ylab parametr uzatishni talab qiladi va recomposition doirasi keraksiz kengayadi." },
-        { "id": "c", "text": "Har bir composable o'z holatini o'zi `remember` qiladi va tashqariga chiqarmaydi", "hint": "Bunday composable'ni qayta ishlatish va test qilish qiyin: tashqaridan uning holatini boshqarib bo'lmaydi." },
+        { "id": "c", "text": "Har bir composable o'z holatini o'zi `remember` qiladi va uni hech qachon parametr orqali tashqariga chiqarmaydi", "hint": "Bunday composable'ni qayta ishlatish va test qilish qiyin: tashqaridan uning holatini boshqarib bo'lmaydi." },
         { "id": "d", "text": "Holat faqat ViewModel'da saqlanadi, composable ichida `remember` ishlatilmaydi", "hint": "Sof UI holati (masalan, menyu ochiq yoki yopiqligi) uchun ViewModel ortiqcha: u ekran mantiqiga tegishli emas." }
       ],
       "explanation": "State hoisting'da holat kerak bo'lgan eng past umumiy darajaga ko'tariladi: undan pastda bo'lsa, composable'lar uni ulasha olmaydi, undan yuqorida bo'lsa, keraksiz bog'liqlik va recomposition paydo bo'ladi. UI elementining o'ziga xos holati composable'da (`remember`), ekran va biznes holati esa ViewModel'da saqlanadi.",
@@ -99,12 +99,12 @@
       "kind": "concept",
       "prompt": "`Modifier.padding(16.dp).background(Color.Red)` va `Modifier.background(Color.Red).padding(16.dp)` bir xil natija beradimi?",
       "options": [
-        { "id": "a", "text": "Yo'q: modifikatorlar tartib bilan qo'llanadi; birinchisida padding qismi bo'yalmaydi, ikkinchisida bo'yaladi", "correct": true },
+        { "id": "a", "text": "Yo'q: modifikatorlar tartib bilan qo'llanadi, shuning uchun bo'yaladigan maydon farq qiladi", "correct": true },
         { "id": "b", "text": "Ha, modifikatorlar tartibi ahamiyatsiz", "hint": "Har bir modifikator o'zidan keyingisini o'rab oladi; zanjirdagi o'rin natijani o'zgartiradi." },
-        { "id": "c", "text": "Yo'q: ikkinchi variant kompilyatsiya bo'lmaydi", "hint": "Ikkala zanjir ham to'g'ri Kotlin kodi." },
+        { "id": "c", "text": "Yo'q: ikkinchi variant kompilyatsiya bo'lmaydi, chunki `background` dan keyin `padding` chaqirilmaydi", "hint": "Ikkala zanjir ham to'g'ri Kotlin kodi." },
         { "id": "d", "text": "Ha, lekin faqat `Box` ichida", "hint": "Tartib qoidasi barcha composable'lar uchun bir xil." }
       ],
-      "explanation": "Modifikatorlar chapdan o'ngga qo'llanadi. `padding().background()` da avval bo'sh joy ajratiladi, keyin qolgan ichki qism bo'yaladi. `background().padding()` da avval butun maydon bo'yaladi, keyin kontent ichkariga suriladi.",
+      "explanation": "Birinchi variantda padding qismi bo'yalmaydi, ikkinchisida bo'yaladi. Modifikatorlar chapdan o'ngga qo'llanadi. `padding().background()` da avval bo'sh joy ajratiladi, keyin qolgan ichki qism bo'yaladi. `background().padding()` da avval butun maydon bo'yaladi, keyin kontent ichkariga suriladi.",
       "reviewed": false
     },
     {
@@ -129,9 +129,9 @@
       "kind": "concept",
       "prompt": "`remember` va `rememberSaveable` farqi nima?",
       "options": [
-        { "id": "a", "text": "`rememberSaveable` qiymatni `Bundle` ga saqlaydi, shuning uchun u ekran aylantirilganda va jarayon o'ldirilganda ham tiklanadi", "correct": true },
+        { "id": "a", "text": "`rememberSaveable` qiymatni `Bundle` ga saqlaydi — aylantirish va jarayon o'limidan keyin ham tiklanadi", "correct": true },
         { "id": "b", "text": "`rememberSaveable` qiymatni diskdagi bazaga yozadi", "hint": "Disk ishlatilmaydi; saqlash mexanizmi Activity'ning saqlangan holati bilan bir xil." },
-        { "id": "c", "text": "`rememberSaveable` har qanday obyektni hech qanday shartsiz saqlaydi", "hint": "Faqat `Bundle` ga sig'adigan tiplar; boshqalari uchun `Saver` yoki `@Parcelize` kerak." },
+        { "id": "c", "text": "`rememberSaveable` har qanday obyektni (Parcelable bo'lmasa ham) hech qanday shartsiz va cheklovsiz saqlaydi", "hint": "Faqat `Bundle` ga sig'adigan tiplar; boshqalari uchun `Saver` yoki `@Parcelize` kerak." },
         { "id": "d", "text": "Farqi yo'q, `rememberSaveable` eskirgan nom", "hint": "Ikkalasi ham amalda va vazifalari boshqa-boshqa." }
       ],
       "explanation": "`remember` qiymatni faqat composition yashab turgan paytda saqlaydi. `rememberSaveable` uni saqlangan holat (`Bundle`) orqali ham saqlaydi: aylantirish va jarayon o'limidan keyin tiklanadi. `Bundle` hajmi cheklangan, shuning uchun unga faqat kichik UI holati yoziladi.",
@@ -175,7 +175,7 @@
       "kind": "concept",
       "prompt": "Nega `collectAsState()` o'rniga `collectAsStateWithLifecycle()` tavsiya etiladi?",
       "options": [
-        { "id": "a", "text": "Ilova fonga o'tganda (lifecycle `STARTED` dan pastga tushganda) oqimni kuzatish to'xtaydi va resurslar tejaladi", "correct": true },
+        { "id": "a", "text": "Fonda (lifecycle `STARTED` dan pastda) kuzatish to'xtaydi va resurs tejaladi", "correct": true },
         { "id": "b", "text": "U oqimni fon oqimida (background thread) yig'adi", "hint": "Yig'ish baribir main thread'da; farq qachon yig'ilishida." },
         { "id": "c", "text": "U `StateFlow` dan boshqa oqimlar bilan ham ishlaydi, `collectAsState` esa yo'q", "hint": "Ikkalasi ham istalgan `Flow` bilan ishlaydi (boshlang'ich qiymat berilsa)." },
         { "id": "d", "text": "U qiymatni jarayon o'limidan keyin ham tiklaydi", "hint": "Holatni tiklash bunga aloqador emas; buning uchun saqlangan holat API'lari bor." }
@@ -190,12 +190,12 @@
       "kind": "concept",
       "prompt": "Compose ekrani sekin ishlayapti. Sababni topishda qaysi yondashuv to'g'ri?",
       "options": [
-        { "id": "a", "text": "Release build'da o'lchash, Layout Inspector'da recomposition sonlarini ko'rish, tez-tez o'qiladigan holatni kechiktirish va baseline profile qo'shish", "correct": true },
+        { "id": "a", "text": "Release build'da o'lchash, recomposition sonini Layout Inspector'da ko'rish, baseline profile qo'shish", "correct": true },
         { "id": "b", "text": "Debug build'da o'lchab, barcha klasslarga `@Stable` qo'yish", "hint": "Debug build'da Compose sezilarli sekin ishlaydi va o'lchov noto'g'ri bo'ladi; annotatsiyani ko'r-ko'rona qo'yish esa xatoga olib keladi." },
-        { "id": "c", "text": "Barcha holatni bitta katta `data class` ga yig'ib, root composable'da o'qish", "hint": "Bu aksincha: har kichik o'zgarish butun ekranni qayta compose qiladi." },
+        { "id": "c", "text": "Barcha holatni bitta katta `data class` ga yig'ib, root composable'da o'qish va pastga parametr qilib uzatish", "hint": "Bu aksincha: har kichik o'zgarish butun ekranni qayta compose qiladi." },
         { "id": "d", "text": "`LazyColumn` larni `Column` ga almashtirish", "hint": "Bu ko'rinmaydigan elementlarni ham compose qilishga majbur qiladi." }
       ],
-      "explanation": "Avval o'lchash kerak, va faqat release (R8 yoqilgan) build'da: debug'da Compose interpretatsiya rejimida ishlaydi. Layout Inspector qaysi composable keraksiz qayta bajarilayotganini ko'rsatadi. Keyin holat o'qishni pastga tushirish (lambda modifikatorlar, `derivedStateOf`), barqaror kalitlar va baseline profile bilan tuzatiladi.",
+      "explanation": "Tez-tez o'zgaradigan holatni o'qishni kechiktirish ham yordam beradi. Avval o'lchash kerak, va faqat release (R8 yoqilgan) build'da: debug'da Compose interpretatsiya rejimida ishlaydi. Layout Inspector qaysi composable keraksiz qayta bajarilayotganini ko'rsatadi. Keyin holat o'qishni pastga tushirish (lambda modifikatorlar, `derivedStateOf`), barqaror kalitlar va baseline profile bilan tuzatiladi.",
       "reviewed": false
     }
   ]

@@ -131,12 +131,12 @@
       "kind": "concept",
       "prompt": "`StateFlow` va `SharedFlow` nimasi bilan farq qiladi?",
       "options": [
-        { "id": "a", "text": "`StateFlow` har doim joriy qiymatga ega va yangi kuzatuvchiga darhol uni beradi; `SharedFlow` standart holatda qiymat saqlamaydi va bir martalik hodisalar uchun mos", "correct": true },
+        { "id": "a", "text": "`StateFlow` doim joriy qiymatni saqlaydi va yangi kuzatuvchiga beradi; `SharedFlow` — hodisalar uchun", "correct": true },
         { "id": "b", "text": "`StateFlow` sovuq (cold), `SharedFlow` issiq (hot) oqim", "hint": "Ikkalasi ham issiq oqim: kuzatuvchi bo'lmasa ham mavjud." },
         { "id": "c", "text": "`SharedFlow` faqat bitta kuzatuvchiga ega bo'la oladi", "hint": "Nomi shundan: uni ko'p kuzatuvchi baham ko'radi." },
-        { "id": "d", "text": "`StateFlow` bir xil qiymatni ketma-ket ikki marta ham yuboradi", "hint": "U teng qiymatlarni o'tkazib yuboradi (`distinctUntilChanged` kabi)." }
+        { "id": "d", "text": "`StateFlow` bir xil qiymatni ketma-ket ikki marta ham yuboradi, shuning uchun UI ikki marta yangilanadi", "hint": "U teng qiymatlarni o'tkazib yuboradi (`distinctUntilChanged` kabi)." }
       ],
-      "explanation": "`StateFlow` — holat uchun: boshlang'ich qiymat shart, `value` orqali o'qiladi, teng qiymatlar takrorlanmaydi. `SharedFlow` — hodisalar uchun: `replay` va bufer sozlanadi, standart holatda yangi kuzatuvchi oldingi qiymatlarni olmaydi.",
+      "explanation": "`SharedFlow` standart holatda qiymat saqlamaydi va bir martalik hodisalar uchun mos. `StateFlow` — holat uchun: boshlang'ich qiymat shart, `value` orqali o'qiladi, teng qiymatlar takrorlanmaydi. `SharedFlow` — hodisalar uchun: `replay` va bufer sozlanadi, standart holatda yangi kuzatuvchi oldingi qiymatlarni olmaydi.",
       "reviewed": false
     },
     {
@@ -163,12 +163,12 @@
       "prompt": "100 ta id uchun bu funksiya juda sekin ishlayapti. Sabab va yechim qaysi?",
       "code": "suspend fun loadAll(ids: List<String>): List<User> {\n    val result = mutableListOf<User>()\n    for (id in ids) {\n        result += api.user(id)\n    }\n    return result\n}",
       "options": [
-        { "id": "a", "text": "So'rovlar ketma-ket bajarilmoqda; ularni `coroutineScope` ichida `async` bilan parallel ishga tushirib, `awaitAll()` bilan yig'ish kerak", "correct": true },
+        { "id": "a", "text": "So'rovlar ketma-ket ketmoqda: `async` bilan parallel boshlab, `awaitAll()` bilan yig'ish kerak", "correct": true },
         { "id": "b", "text": "`mutableListOf` sekin; `ArrayList` ishlatish kerak", "hint": "`mutableListOf` aynan `ArrayList` yaratadi; vaqt tarmoqqa ketyapti." },
-        { "id": "c", "text": "Funksiya `Dispatchers.IO` da ishlamayapti", "hint": "Retrofit `suspend` funksiyalari oqimni o'zi almashtiradi; dispatcher'ni o'zgartirish so'rovlarni parallel qilmaydi." },
+        { "id": "c", "text": "Funksiya `Dispatchers.IO` da ishlamayapti, shuning uchun har bir so'rov main thread'ni band qiladi", "hint": "Retrofit `suspend` funksiyalari oqimni o'zi almashtiradi; dispatcher'ni o'zgartirish so'rovlarni parallel qilmaydi." },
         { "id": "d", "text": "`for` o'rniga `forEach` ishlatish kerak", "hint": "Ikkalasi ham elementlarni birma-bir, oldingisi tugashini kutib bajaradi." }
       ],
-      "explanation": "Har bir `api.user(id)` oldingisi tugashini kutadi, shuning uchun umumiy vaqt barcha so'rovlar yig'indisiga teng. `coroutineScope { ids.map { async { api.user(it) } }.awaitAll() }` ularni bir vaqtda yuboradi. Serverni ortiqcha yuklamaslik uchun parallellikni cheklash (masalan, `Semaphore`) ham kerak bo'lishi mumkin.",
+      "explanation": "Parallel so'rovlar `coroutineScope` ichida ishga tushiriladi. Har bir `api.user(id)` oldingisi tugashini kutadi, shuning uchun umumiy vaqt barcha so'rovlar yig'indisiga teng. `coroutineScope { ids.map { async { api.user(it) } }.awaitAll() }` ularni bir vaqtda yuboradi. Serverni ortiqcha yuklamaslik uchun parallellikni cheklash (masalan, `Semaphore`) ham kerak bo'lishi mumkin.",
       "reviewed": false
     },
     {
@@ -178,10 +178,10 @@
       "kind": "concept",
       "prompt": "`stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), initial)` dagi 5 soniya nima uchun kerak?",
       "options": [
-        { "id": "a", "text": "Ekran aylantirilganda kuzatuvchi qisqa vaqtga yo'qoladi; kechikish yuqori oqimni bekor qilib, qayta boshlashning oldini oladi", "correct": true },
+        { "id": "a", "text": "Aylantirishda kuzatuvchi qisqa yo'qoladi; kechikish oqimni qayta boshlashning oldini oladi", "correct": true },
         { "id": "b", "text": "Har 5 soniyada oqim qayta ishga tushadi", "hint": "Bu davriy taymer emas; vaqt faqat oxirgi kuzatuvchi ketgandan keyin sanaladi." },
         { "id": "c", "text": "Birinchi qiymat 5 soniyadan keyin beriladi", "hint": "Boshlang'ich qiymat darhol mavjud; kechikish boshlanishga emas, to'xtashga tegishli." },
-        { "id": "d", "text": "5 soniyadan keyin `StateFlow` qiymati tozalanadi", "hint": "Qiymat saqlanib qoladi; to'xtaydigan narsa — yuqori oqimni kuzatish." }
+        { "id": "d", "text": "5 soniya kuzatuvchi bo'lmasa, `StateFlow` qiymati tozalanib, yana `initial` qiymatga qaytariladi", "hint": "Qiymat saqlanib qoladi; to'xtaydigan narsa — yuqori oqimni kuzatish." }
       ],
       "explanation": "`WhileSubscribed` oxirgi kuzatuvchi ketganda yuqori oqimni to'xtatadi. Aylantirishda UI bir lahzaga obunani uzadi va qayta ulanadi; 5 soniyalik muhlat shu oraliqda oqimni tirik saqlaydi. Foydalanuvchi ilovadan haqiqatan chiqib ketsa, muhlatdan keyin oqim to'xtaydi va resurs tejaladi.",
       "reviewed": false
@@ -193,10 +193,10 @@
       "kind": "concept",
       "prompt": "Katta loyihada dispatcher'larni (`Dispatchers.IO` va boshqalarni) klass ichiga to'g'ridan-to'g'ri yozish o'rniga konstruktor orqali inject qilish nima beradi?",
       "options": [
-        { "id": "a", "text": "Testda ularni `TestDispatcher` bilan almashtirib, vaqtni boshqarish va testlarni deterministik qilish mumkin bo'ladi", "correct": true },
+        { "id": "a", "text": "Testda ularni `TestDispatcher` bilan almashtirib, testlarni deterministik qilish mumkin", "correct": true },
         { "id": "b", "text": "Production'da kod tezroq ishlaydi", "hint": "Tezlikka ta'siri yo'q; production'da o'sha dispatcher'lar ishlatiladi." },
         { "id": "c", "text": "Coroutine'lar avtomatik bekor qilinadigan bo'ladi", "hint": "Bekor qilishni scope boshqaradi, dispatcher emas." },
-        { "id": "d", "text": "`suspend` funksiyalarni main thread'dan chaqirish mumkin bo'ladi", "hint": "Buni inject qilmasdan ham qilish mumkin: main-safe funksiya o'zi `withContext` ishlatadi." }
+        { "id": "d", "text": "`suspend` funksiyalarni main thread'dan bloklanmasdan chaqirish mumkin bo'ladi, boshqa foyda yo'q", "hint": "Buni inject qilmasdan ham qilish mumkin: main-safe funksiya o'zi `withContext` ishlatadi." }
       ],
       "explanation": "Klass ichida `Dispatchers.IO` qattiq yozilgan bo'lsa, test haqiqiy oqimlar va haqiqiy vaqt bilan ishlaydi: sekin va beqaror. Inject qilingan dispatcher o'rniga testda `StandardTestDispatcher` beriladi; `delay` lar virtual vaqtda darhol o'tadi va bajarilish tartibi boshqariladi.",
       "reviewed": false

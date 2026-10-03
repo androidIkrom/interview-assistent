@@ -58,7 +58,7 @@
         { "id": "a", "text": "Uning barcha to'g'ridan-to'g'ri vorislari compile vaqtida ma'lum", "correct": true },
         { "id": "b", "text": "`when` ifodasida barcha vorislar ko'rib chiqilsa, `else` tarmog'i shart emas", "correct": true },
         { "id": "c", "text": "Undan to'g'ridan-to'g'ri obyekt yaratish mumkin", "hint": "Sealed class o'z-o'zidan abstract; uning konstruktorini tashqaridan chaqirib bo'lmaydi." },
-        { "id": "d", "text": "Vorislari istalgan modul va paketda e'lon qilinishi mumkin", "hint": "Vorislar o'sha paket va o'sha modul ichida bo'lishi shart. Aks holda kompilyator ularning to'liq ro'yxatini bila olmaydi." }
+        { "id": "d", "text": "Vorislari loyihaning istalgan modul va paketida, hatto boshqa kutubxonalarda ham e'lon qilinishi mumkin", "hint": "Vorislar o'sha paket va o'sha modul ichida bo'lishi shart. Aks holda kompilyator ularning to'liq ro'yxatini bila olmaydi." }
       ],
       "explanation": "Sealed class cheklangan ierarxiya yaratadi: vorislar faqat o'sha paket va modulda e'lon qilinadi, shuning uchun kompilyator ularning hammasini biladi. Shu sabab `when` to'liq (exhaustive) bo'lishi mumkin va yangi voris qo'shilganda kompilyator barcha `when` larni ko'rsatib beradi.",
       "reviewed": false
@@ -101,12 +101,12 @@
       "kind": "concept",
       "prompt": "Kotlin'da `==` va `===` operatorlari nimasi bilan farq qiladi?",
       "options": [
-        { "id": "a", "text": "`==` qiymatlarni (`equals` orqali) solishtiradi, `===` esa ikki havola bitta obyektga ishora qilishini tekshiradi", "correct": true },
+        { "id": "a", "text": "`==` — `equals` orqali qiymat, `===` — bitta obyektga havolami", "correct": true },
         { "id": "b", "text": "`==` havolalarni, `===` esa qiymatlarni solishtiradi", "hint": "Bu Java'dagi `==` bilan adashtirish. Kotlin'da ikki belgili operator `equals` ni chaqiradi." },
         { "id": "c", "text": "Ikkalasi bir xil ishlaydi, `===` shunchaki tipni qat'iyroq tekshiradi", "hint": "Bu JavaScript'dagi ma'no. Kotlin'da tiplar baribir compile vaqtida tekshiriladi." },
         { "id": "d", "text": "`===` faqat sonlar uchun ishlatiladi", "hint": "Bu operator har qanday havola tipi bilan ishlaydi." }
       ],
-      "explanation": "`a == b` aslida `a?.equals(b) ?: (b === null)` ga aylanadi, ya'ni mazmunni solishtiradi. `a === b` esa ikkala o'zgaruvchi xotiradagi aynan bitta obyektga ishora qilgandagina `true` bo'ladi.",
+      "explanation": "`==` qiymatlarni `equals` orqali solishtiradi, `===` esa ikki havola bitta obyektga ishora qilishini tekshiradi. `a == b` aslida `a?.equals(b) ?: (b === null)` ga aylanadi, ya'ni mazmunni solishtiradi. `a === b` esa ikkala o'zgaruvchi xotiradagi aynan bitta obyektga ishora qilgandagina `true` bo'ladi.",
       "reviewed": false
     },
     {
@@ -132,10 +132,10 @@
       "kind": "concept",
       "prompt": "`data class` oddiy klassga nisbatan nimani qo'shimcha beradi?",
       "options": [
-        { "id": "a", "text": "`equals`, `hashCode`, `toString`, `copy` va `componentN` funksiyalarini avtomatik generatsiya qiladi", "correct": true },
+        { "id": "a", "text": "`equals`, `hashCode`, `toString`, `copy` va `componentN` ni generatsiya qiladi", "correct": true },
         { "id": "b", "text": "Obyektni avtomatik ravishda o'zgarmas (immutable) qiladi", "hint": "Data class'da `var` xususiyatlar ham bo'lishi mumkin; o'zgarmaslik kafolatlanmaydi." },
         { "id": "c", "text": "Klassni avtomatik `Serializable` qiladi", "hint": "Serializatsiya uchun alohida interfeys yoki annotatsiya kerak." },
-        { "id": "d", "text": "Klassdan faqat bitta nusxa (singleton) yaratilishini ta'minlaydi", "hint": "Singleton uchun `object` kalit so'zi ishlatiladi." }
+        { "id": "d", "text": "Klassdan faqat bitta nusxa (singleton) yaratilishini kompilyator darajasida ta'minlaydi", "hint": "Singleton uchun `object` kalit so'zi ishlatiladi." }
       ],
       "explanation": "Data class ma'lumot saqlash uchun mo'ljallangan: kompilyator asosiy konstruktordagi xususiyatlar asosida taqqoslash, xesh, matn ko'rinishi, nusxalash (`copy`) va destrukturizatsiya (`componentN`) funksiyalarini yozib beradi.",
       "reviewed": false
@@ -160,9 +160,9 @@
       "kind": "concept",
       "prompt": "`lateinit` va `by lazy` qachon ishlatiladi?",
       "options": [
-        { "id": "a", "text": "`lateinit` — keyinroq qo'lda tayinlanadigan `var` uchun; `by lazy` — birinchi murojaatda bir marta hisoblanadigan `val` uchun", "correct": true },
+        { "id": "a", "text": "`lateinit` — keyin tayinlanadigan `var`; `by lazy` — birinchi murojaatda hisoblanadigan `val`", "correct": true },
         { "id": "b", "text": "`lateinit` faqat `val` bilan, `by lazy` faqat `var` bilan ishlaydi", "hint": "Aksincha: qayta tayinlanishi kerak bo'lgani `var`, bir marta hisoblanadigani `val`." },
-        { "id": "c", "text": "Ikkalasi ham primitiv tiplar (`Int`, `Boolean`) uchun mo'ljallangan", "hint": "`lateinit` primitiv tiplar bilan umuman ishlamaydi." },
+        { "id": "c", "text": "Ikkalasi ham faqat primitiv tiplar (`Int`, `Boolean`) uchun mo'ljallangan, obyektlar uchun emas", "hint": "`lateinit` primitiv tiplar bilan umuman ishlamaydi." },
         { "id": "d", "text": "`by lazy` qiymatni har murojaatda qaytadan hisoblaydi", "hint": "Unda `lazy` ning ma'nosi qolmas edi: natija keshlanadi." }
       ],
       "explanation": "`lateinit var` qiymat keyinroq (masalan, `onCreate` da yoki DI orqali) berilishini bildiradi; tayinlanmasdan o'qilsa, `UninitializedPropertyAccessException` chiqadi. `by lazy` lambda'ni birinchi murojaatda bir marta bajaradi va natijani saqlaydi; standart holatda u thread-safe.",
