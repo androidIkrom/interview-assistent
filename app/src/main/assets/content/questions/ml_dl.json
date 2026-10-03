@@ -1,0 +1,156 @@
+{
+  "topic": "ml.dl",
+  "questions": [
+    {
+      "id": "ml.dl.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Neyron tarmoqda aktivatsiya funksiyasi (ReLU, sigmoid) nima uchun kerak?",
+      "options": [
+        { "id": "a", "text": "Chiziqsizlik qo'shish uchun: aktivatsiyasiz bir nechta chiziqli qatlam ketma-ketligi baribir bitta chiziqli funksiyaga teng — tarmoq murakkab bog'liqliklarni (tasvir, matn) o'rgana olmaydi. Yashirin qatlamlarda odatda ReLU/GELU, chiqishda vazifaga mos funksiya (sinf ehtimollari uchun softmax)", "correct": true },
+        { "id": "b", "text": "O'qitishni tezlashtirish uchun — boshqa vazifasi yo'q", "hint": "Asosiy vazifa — tarmoqning ifoda qobiliyati (chiziqsizlik)." },
+        { "id": "c", "text": "Qatlamlar sonini kamaytirish uchun", "hint": "Qatlamlar soni arxitektura tanlovi; aktivatsiya har neyron chiqishini o'zgartiradi." },
+        { "id": "d", "text": "Aktivatsiya faqat chiqish qatlamida ishlatiladi", "hint": "Yashirin qatlamlarda ham albatta — aks holda tarmoq chiziqli model bo'lib qoladi." }
+      ],
+      "explanation": "Neyron — kirishlarning og'irlikli yig'indisi + bias, so'ng aktivatsiya. Sigmoid/tanh chuqur tarmoqlarda gradientlarning so'nishiga olib keladi — shu sabab yashirin qatlamlarda ReLU oilasi keng tarqalgan.",
+      "reviewed": false
+    },
+    {
+      "id": "ml.dl.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Epoch, batch size va learning rate nimani anglatadi?",
+      "options": [
+        { "id": "a", "text": "Epoch — butun train ma'lumotidan bir marta to'liq o'tish; batch size — bitta og'irlik yangilanishi uchun ishlatiladigan misollar soni; learning rate — har yangilanishda og'irliklar gradient yo'nalishida qanchalik siljishi. Juda katta learning rate — o'qitish beqaror yoki yoyiladi, juda kichik — juda sekin", "correct": true },
+        { "id": "b", "text": "Epoch — bitta misol bo'yicha bitta yangilanish", "hint": "Bu bitta qadam (iteration); epoch — butun to'plam bo'yicha." },
+        { "id": "c", "text": "Learning rate qanchalik katta bo'lsa, model shunchalik aniq", "hint": "Katta qadamlar minimumdan sakrab o'tib ketadi va loss portlashi mumkin." },
+        { "id": "d", "text": "Batch size natijaga ta'sir qilmaydi — faqat xotiraga", "hint": "U gradient shovqini, umumlashtirish va mos learning rate'ga ham ta'sir qiladi." }
+      ],
+      "explanation": "Odatiy amaliyot: learning rate scheduler (warmup + cosine decay), validation loss'ni kuzatish, GPU xotirasi imkon bergan batch size. Bitta epoch'dagi qadamlar soni = ma'lumot hajmi / batch size.",
+      "reviewed": false
+    },
+    {
+      "id": "ml.dl.003",
+      "level": "junior",
+      "type": "multi",
+      "kind": "concept",
+      "prompt": "Neyron tarmoqda overfitting'ni kamaytirishning qaysi usullari to'g'ri? (bir nechta javob)",
+      "options": [
+        { "id": "a", "text": "Dropout — o'qitishda neyronlarning bir qismini tasodifan o'chirish", "correct": true },
+        { "id": "b", "text": "Early stopping — validation loss yaxshilanmay qolganda o'qitishni to'xtatish", "correct": true },
+        { "id": "c", "text": "Data augmentation — tasvirlarni aylantirish, kesish, rangini o'zgartirish kabi usullar bilan ma'lumotni ko'paytirish", "correct": true },
+        { "id": "d", "text": "Epoch'lar sonini cheksiz oshirish", "hint": "Uzoq o'qitish modelni train ma'lumotini yodlashga undaydi — overfitting kuchayadi." },
+        { "id": "e", "text": "Validation to'plamini train'ga qo'shib, faqat train loss'ga qarash", "hint": "Overfitting'ni aniqlash imkoni yo'qoladi — umumlashtirishni o'lchaydigan ma'lumot kerak." }
+      ],
+      "explanation": "Yana: weight decay (L2), kichikroq model, ko'proq real ma'lumot, oldindan o'qitilgan modeldan transfer learning (kam ma'lumotda ayniqsa samarali). Dropout faqat o'qitishda ishlaydi — inference'da `model.eval()` unutilmasin.",
+      "reviewed": false
+    },
+    {
+      "id": "ml.dl.004",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Backpropagation va gradient descent qanday birga ishlaydi? Adam optimizatori SGD'dan nimasi bilan farq qiladi?",
+      "options": [
+        { "id": "a", "text": "Backpropagation zanjir qoidasi bilan loss'ning har og'irlikka nisbatan gradientini chiqishdan kirishga qarab hisoblaydi; gradient descent og'irliklarni gradientga teskari yo'nalishda siljitadi. SGD (momentum bilan) — barcha parametrlar uchun bitta learning rate; Adam — har parametr uchun gradientlarning o'rtachasi va dispersiyasi asosida moslashuvchan qadam: tez yaqinlashadi va sozlash oson, lekin ba'zi vazifalarda SGD yaxshiroq umumlashtiradi", "correct": true },
+        { "id": "b", "text": "Backpropagation — ma'lumotni tarmoq orqali oldinga o'tkazish", "hint": "Oldinga o'tish — forward pass; backprop gradientlarni orqaga hisoblaydi." },
+        { "id": "c", "text": "Adam learning rate tanlashni butunlay keraksiz qiladi", "hint": "Adam ham learning rate'ga sezgir; faqat parametrlar bo'yicha moslashadi." },
+        { "id": "d", "text": "Gradient descent har doim global minimumni topadi", "hint": "Chuqur tarmoqlarning loss yuzasi qavariq emas — lokal minimum va egar nuqtalar bor (amalda ko'pincha yetarli yaxshi yechim topiladi)." }
+      ],
+      "explanation": "Zamonaviy framework'lar (PyTorch, JAX) gradientlarni avtomatik hisoblaydi (autograd). AdamW — weight decay to'g'ri ajratilgan variant, transformer'larda standart. Gradient clipping — gradient portlashining oldini oladi.",
+      "reviewed": false
+    },
+    {
+      "id": "ml.dl.005",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Embedding nima va u qanday ishlatiladi?",
+      "options": [
+        { "id": "a", "text": "Ob'ektni (so'z, matn, mahsulot, foydalanuvchi, rasm) zich sonli vektorga aylantirish: ma'nosi yaqin ob'ektlar vektorlar fazosida yaqin joylashadi. Ishlatilishi: semantik qidiruv va RAG (kosinus o'xshashlik), tavsiya tizimlari, klasterlash, kategorik xususiyatlarni modelga berish", "correct": true },
+        { "id": "b", "text": "Embedding — one-hot kodlashning boshqa nomi", "hint": "One-hot — siyrak, o'lchami katta va ma'no yaqinligini bildirmaydi; embedding — zich va o'rganilgan." },
+        { "id": "c", "text": "Turli modellardan olingan embedding'larni bir-biri bilan bemalol solishtirish mumkin", "hint": "Har model o'z vektor fazosini yaratadi — bitta indeksda bitta model embedding'lari bo'lishi kerak." },
+        { "id": "d", "text": "Embedding faqat matn uchun", "hint": "Rasm, audio, grafik, foydalanuvchi va mahsulotlar uchun ham keng ishlatiladi." }
+      ],
+      "explanation": "Embedding modeli o'zgartirilsa, butun indeksni qayta hisoblash kerak — versiyalashni rejalashtiring. Vektor qidiruv uchun ANN indekslar (HNSW) va vektor bazalar (pgvector, Qdrant, Milvus).",
+      "reviewed": false
+    },
+    {
+      "id": "ml.dl.006",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Transformer'dagi attention mexanizmining asosiy g'oyasi nima?",
+      "options": [
+        { "id": "a", "text": "Har token boshqa barcha tokenlarga qarab, qaysilari unga muhimroq ekanini o'rganadi: query, key va value vektorlari orqali o'xshashlik og'irliklari hisoblanib, value'larning og'irlikli yig'indisi olinadi. Ketma-ketlik parallel ishlanadi (RNN'dan farqli) va uzoq bog'liqliklar to'g'ridan-to'g'ri ushlanadi; xarajat esa kontekst uzunligi kvadratiga proporsional o'sadi", "correct": true },
+        { "id": "b", "text": "Attention — modelning e'tiborini faqat birinchi so'zga qaratish", "hint": "Har token barcha (yoki ruxsat etilgan) tokenlarga turli og'irlik bilan qaraydi." },
+        { "id": "c", "text": "Transformer matnni so'zma-so'z ketma-ket, RNN kabi ishlaydi", "hint": "O'qitishda butun ketma-ketlik parallel ishlanadi — GPU'dan samarali foydalanish shundan." },
+        { "id": "d", "text": "Attention xarajati kontekst uzunligiga bog'liq emas", "hint": "Standart self-attention n×n matritsa hisoblaydi — uzun kontekst qimmat." }
+      ],
+      "explanation": "Multi-head attention — bir nechta turdagi munosabatlarni parallel o'rganadi. Pozitsiya ma'lumoti alohida beriladi (positional encoding, RoPE). Decoder modellar (GPT turidagi) causal mask bilan faqat oldingi tokenlarga qaraydi.",
+      "reviewed": false
+    },
+    {
+      "id": "ml.dl.007",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "RAG (Retrieval-Augmented Generation) nima va qachon ishlatiladi?",
+      "options": [
+        { "id": "a", "text": "Savolga javob berishdan oldin tashqi bilim bazasidan (hujjatlar, wiki, mahsulot katalogi) tegishli parchalar qidirib topiladi va LLM'ga kontekst sifatida beriladi; model javobni shu manbalarga asoslaydi. Qachon: ma'lumot tez-tez yangilanadi, maxsus/ichki bilim kerak, manbaga havola va kirish huquqlari muhim — modelni qayta o'qitmasdan", "correct": true },
+        { "id": "b", "text": "RAG — LLM'ni yangi ma'lumotlarda qayta o'qitish (fine-tuning)", "hint": "RAG model og'irliklarini o'zgartirmaydi; bilim so'rov paytida kontekstga qo'shiladi." },
+        { "id": "c", "text": "RAG gallyutsinatsiyani butunlay yo'q qiladi", "hint": "Kamaytiradi, lekin noto'g'ri parcha topilsa yoki model kontekstga amal qilmasa, xato javob bo'lishi mumkin." },
+        { "id": "d", "text": "RAG'da qidiruv sifati javob sifatiga ta'sir qilmaydi", "hint": "Kerakli parcha topilmasa, eng yaxshi model ham to'g'ri javob bera olmaydi — retrieval ko'pincha asosiy bo'g'oz." }
+      ],
+      "explanation": "Asosiy qismlar: hujjatlarni bo'laklash (chunking), embedding va indeks, qidiruv (vektor + kalit so'z, ya'ni hybrid), reranking, prompt'da manbalar bilan generatsiya. Sifat ko'pincha bo'laklash va qidiruvni yaxshilash bilan oshadi, kattaroq model bilan emas.",
+      "reviewed": false
+    },
+    {
+      "id": "ml.dl.008",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "LLM asosidagi yordamchi ba'zan ishonch bilan noto'g'ri faktlarni (gallyutsinatsiya) aytmoqda. Qanday kamaytiriladi?",
+      "options": [
+        { "id": "a", "text": "Javobni ishonchli manbalarga asoslash (RAG, tool/API chaqiruvlari aniq ma'lumot uchun), prompt'da manba yo'q bo'lsa \"bilmayman\" deyishga ruxsat va iqtiboslarni talab qilish, tuzilgan chiqish (JSON sxema) va avtomatik tekshiruvlar, muhim amallar uchun inson tasdig'i, baholash to'plami bilan muntazam o'lchash", "correct": true },
+        { "id": "b", "text": "Temperature'ni maksimal qilish — model ijodkorroq va aniqroq bo'ladi", "hint": "Yuqori temperature tasodifiylikni oshiradi — faktik vazifalarda xatolar ko'payadi." },
+        { "id": "c", "text": "Prompt'ga \"hech qachon xato qilma\" deb yozish yetarli", "hint": "Ko'rsatma yordam berishi mumkin, lekin model bilmagan faktni bu bilan bilib qolmaydi." },
+        { "id": "d", "text": "Kattaroq model gallyutsinatsiyani butunlay yo'q qiladi", "hint": "Kamaytirishi mumkin, lekin yo'q qilmaydi; asoslash va tekshiruv kerak." }
+      ],
+      "explanation": "Gallyutsinatsiya — model ehtimolli matn generatori ekanining tabiiy natijasi. Kontekst oynasi cheklangan: juda ko'p parcha berish ham sifatni tushirishi mumkin. Hisob-kitob va sanalar uchun model o'zi emas, kod yoki API (tool use) ishonchliroq.",
+      "reviewed": false
+    },
+    {
+      "id": "ml.dl.009",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Bank qo'llab-quvvatlash xizmati uchun LLM'ni moslashtirish kerak. Fine-tuning va RAG o'rtasida qanday tanlaysiz?",
+      "options": [
+        { "id": "a", "text": "Bilim (tariflar, qoidalar — tez o'zgaradi, manba ko'rsatish kerak) — RAG: yangilash oson, kirish huquqlari va iqtiboslar boshqariladi. Xulq, uslub, format yoki maxsus vazifa (tasniflash, ma'lum tonda javob, tool chaqirish) — fine-tuning yoki avval yaxshi prompt va few-shot misollar. Ko'pincha kombinatsiya; qaror baholash to'plamida o'lchab, xarajat va qo'llab-quvvatlash narxini hisobga olib qabul qilinadi", "correct": true },
+        { "id": "b", "text": "Har doim fine-tuning — model bilimni o'zida saqlaydi", "hint": "Har tarif o'zgarishida qayta o'qitish qimmat; model eskirgan ma'lumotni ishonch bilan aytishi va manba ko'rsata olmasligi mumkin." },
+        { "id": "c", "text": "Har doim RAG — fine-tuning hech qachon kerak emas", "hint": "Uslub, format va maxsus vazifalarda fine-tuning sifat va xarajat bo'yicha ustun bo'lishi mumkin." },
+        { "id": "d", "text": "Tanlov faqat model hajmiga bog'liq", "hint": "Asosiy omillar: bilim yangilanish chastotasi, manba talablari, xulq maqsadi va baholash natijalari." }
+      ],
+      "explanation": "Odatiy ketma-ketlik: prompt engineering → RAG → (kerak bo'lsa) fine-tuning. Fine-tuning uchun sifatli, xilma-xil misollar va alohida baholash to'plami kerak; mijoz ma'lumotlari bilan o'qitishda maxfiylik va qonun talablari.",
+      "reviewed": false
+    },
+    {
+      "id": "ml.dl.010",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "LLM xizmatining xarajati va kechikishi juda yuqori. Qaysi optimallashtirishlar to'g'ri?",
+      "options": [
+        { "id": "a", "text": "Vazifaga qarab model tanlash va routing (oddiy so'rovlar — kichik/arzon model, murakkablari — katta); prompt'ni qisqartirish va takrorlanuvchi qismlar uchun prompt caching; javoblar keshlash (bir xil/semantik o'xshash so'rovlar); streaming (birinchi token tezroq ko'rinadi); o'z modelingizda — kvantizatsiya, batching va samarali serving (vLLM kabi); har o'zgarishni sifat baholash to'plami bilan tekshirish", "correct": true },
+        { "id": "b", "text": "Barcha so'rovlarni eng katta modelga yuborish — sifat har doim muhimroq", "hint": "Ko'p so'rovlar uchun kichik model yetarli; xarajat va latency keskin oshadi." },
+        { "id": "c", "text": "Kontekstga barcha hujjatlarni to'liq qo'shish — model o'zi kerakligini topadi", "hint": "Token xarajati va latency oshadi, sifat esa ko'pincha pasayadi." },
+        { "id": "d", "text": "Sifatni tekshirmasdan arzonroq modelga o'tish", "hint": "Jim sifat pasayishi foydalanuvchilarni yo'qotishi mumkin; har o'zgarish baholanadi." }
+      ],
+      "explanation": "Metrikalar: so'rov boshiga xarajat, time-to-first-token, umumiy latency (p95), sifat ko'rsatkichlari — birga kuzatiladi. Batch API'lar (real vaqt shart bo'lmagan vazifalar uchun) narxni sezilarli kamaytiradi.",
+      "reviewed": false
+    }
+  ]
+}

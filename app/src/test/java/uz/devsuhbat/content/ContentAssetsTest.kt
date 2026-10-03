@@ -158,6 +158,12 @@ class ContentAssetsTest {
         "ops.k8s" to listOf(4, 4, 3, 2),
         "ops.iac" to listOf(3, 3, 2, 2),
         "ops.observability" to listOf(2, 2, 2, 2),
+        "ml.python" to listOf(6, 5, 2, 1),
+        "ml.stats" to listOf(5, 4, 2, 1),
+        "ml.classic" to listOf(4, 4, 3, 2),
+        "ml.eval" to listOf(4, 4, 3, 2),
+        "ml.dl" to listOf(3, 3, 2, 2),
+        "ml.ops" to listOf(2, 2, 2, 2),
     )
 
     @Test

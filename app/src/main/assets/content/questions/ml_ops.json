@@ -1,0 +1,125 @@
+{
+  "topic": "ml.ops",
+  "questions": [
+    {
+      "id": "ml.ops.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "ML modelini production'ga chiqarishda oddiy dasturiy ta'minotdan farqli ravishda nimalarni versiyalash kerak?",
+      "options": [
+        { "id": "a", "text": "Faqat kod emas: o'qitish ma'lumotlari (yoki uning snapshot'i), xususiyatlarni tayyorlash kodi, giperparametrlar, model artefakti (og'irliklar) va muhit (kutubxona versiyalari). Shunda modelni qayta yaratish, solishtirish va oldingisiga qaytish mumkin; model registry'da versiya, metrikalar va bosqich (staging/production) saqlanadi", "correct": true },
+        { "id": "b", "text": "Faqat model fayli (`model.pkl`) yetarli", "hint": "Qaysi ma'lumot va kod bilan olinganini bilmasangiz, modelni qayta yaratib yoki muammoni tushuntirib bo'lmaydi." },
+        { "id": "c", "text": "ML'da versiyalash kerak emas — har safar yangi model o'qitiladi", "hint": "Production'dagi model nega shunday ishlayotganini va qanday qaytarishni bilish uchun versiyalar shart." },
+        { "id": "d", "text": "Katta ma'lumot fayllarini to'g'ridan-to'g'ri Git'ga commit qilish", "hint": "Git katta binar fayllar uchun mos emas; DVC, lakeFS yoki obyekt saqlash + versiya havolasi ishlatiladi." }
+      ],
+      "explanation": "ML tizimida xulq kod + ma'lumot + model kombinatsiyasidan kelib chiqadi. Vositalar: MLflow Model Registry, DVC, W&B Artifacts. Har production bashorati qaysi model versiyasidan kelganini log qilish — debug uchun zarur.",
+      "reviewed": false
+    },
+    {
+      "id": "ml.ops.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Batch inference va online (real-time) inference qanday farqlanadi?",
+      "options": [
+        { "id": "a", "text": "Batch — bashoratlar rejalashtirilgan vaqtda ko'p ob'ekt uchun birdan hisoblanib saqlanadi (masalan, har kecha barcha mijozlar uchun churn bali): oddiy, arzon, lekin natija eskirishi mumkin. Online — har so'rov kelganda darhol (millisekundlarda) API orqali bashorat: yangi ma'lumot bilan ishlaydi (firibgarlik tekshiruvi), lekin latency, mavjudlik va masshtab talablari qattiqroq", "correct": true },
+        { "id": "b", "text": "Batch inference har doim aniqroq", "hint": "Model bir xil; farq — qachon va qaysi ma'lumot bilan hisoblanishida." },
+        { "id": "c", "text": "Firibgarlikni aniqlash uchun kechki batch yetarli", "hint": "To'lov paytida qaror kerak — tranzaksiya amalga oshgandan keyin kech bo'ladi." },
+        { "id": "d", "text": "Online inference uchun model yaxshi bo'lsa, latency ahamiyatsiz", "hint": "Foydalanuvchi oqimida har millisekund muhim; sekin model butun mahsulotni sekinlashtiradi." }
+      ],
+      "explanation": "Oraliq variant — streaming (hodisalar oqimida, masalan Kafka). Ko'p tizimlar gibrid: og'ir xususiyatlar batch'da oldindan hisoblanadi, yakuniy bashorat online.",
+      "reviewed": false
+    },
+    {
+      "id": "ml.ops.003",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Training-serving skew nima va uning oldini qanday olish mumkin?",
+      "options": [
+        { "id": "a", "text": "Model o'qitishda ko'rgan xususiyatlar bilan production'da oladigan xususiyatlar farqi: o'qitishda Python/SQL'da bir tarzda, servisda boshqa tilda qayta yozilgan mantiq, boshqa ma'lumot manbai, vaqt farqi yoki kelajak ma'lumotidan foydalanish. Oldini olish: xususiyatlarni bitta kod/pipeline bilan hisoblash (feature store yoki umumiy kutubxona), servisdagi xususiyatlarni log qilib train taqsimoti bilan solishtirish", "correct": true },
+        { "id": "b", "text": "Bu — modelning train ma'lumotiga overfitting'i", "hint": "Overfitting model xususiyati; skew esa kirish ma'lumotlari o'qitish va servis o'rtasida farq qilishi." },
+        { "id": "c", "text": "Skew faqat GPU va CPU farqi tufayli bo'ladi", "hint": "Ko'p hollarda sabab — xususiyatlarni tayyorlash mantiqi va ma'lumot manbalari farqi." },
+        { "id": "d", "text": "Validatsiya natijasi yaxshi bo'lsa, skew bo'lishi mumkin emas", "hint": "Validatsiya o'qitish pipeline'i ma'lumotida — servisdagi farqni ko'rmaydi." }
+      ],
+      "explanation": "Klassik misol: o'qitishda \"oxirgi 30 kun xaridlari\" kun oxiridagi to'liq ma'lumotdan, servisda esa kechikkan qisman ma'lumotdan hisoblanadi. Point-in-time correct join'lar — o'qitish ma'lumotida har misol uchun faqat o'sha paytda ma'lum bo'lgan qiymatlar.",
+      "reviewed": false
+    },
+    {
+      "id": "ml.ops.004",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Jamoa o'nlab tajribalarni noutbuklarda o'tkazmoqda va qaysi model qaysi parametrlar bilan eng yaxshi bo'lganini eslay olmayapti. Nima kerak?",
+      "options": [
+        { "id": "a", "text": "Experiment tracking (MLflow, Weights & Biases va h.k.): har ishga tushirishda parametrlar, kod versiyasi (commit), ma'lumot versiyasi, metrikalar, grafiklar va model artefakti avtomatik yoziladi; natijalarni solishtirish va eng yaxshisini registry'ga ko'chirish mumkin. Qayta yaratiladiganlik uchun tasodifiy seed va muhit ham saqlanadi", "correct": true },
+        { "id": "b", "text": "Natijalarni Excel jadvaliga qo'lda yozib borish", "hint": "Unutiladi, xatolarga moyil va kod/ma'lumot versiyasi bilan bog'lanmaydi." },
+        { "id": "c", "text": "Faqat eng yaxshi modelni saqlab, qolganlarini o'chirish", "hint": "Nega aynan u yaxshi ekanini va oldingi urinishlarni solishtirish imkoni yo'qoladi." },
+        { "id": "d", "text": "Noutbuk fayl nomlariga versiya qo'shish (`model_final_v3_real.ipynb`)", "hint": "Tartibsiz va qaysi natija qaysi kod holatidan kelganini kafolatlamaydi." }
+      ],
+      "explanation": "Noutbuklar tadqiqot uchun qulay, lekin production o'qitish — takrorlanadigan skript/pipeline'da (Airflow, Kubeflow, Prefect). Tracking server jamoa uchun umumiy bo'lsin — bilim bir odamning kompyuterida qolmasin.",
+      "reviewed": false
+    },
+    {
+      "id": "ml.ops.005",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Production'dagi model sifati vaqt o'tib pasaymoqda. Data drift va concept drift qanday farqlanadi va qanday kuzatiladi?",
+      "options": [
+        { "id": "a", "text": "Data drift — kirish xususiyatlari taqsimoti o'zgaradi (yangi foydalanuvchi segmenti, yangi qurilmalar): PSI, KS-test kabi statistikalar bilan train taqsimotiga solishtiriladi. Concept drift — kirish va natija o'rtasidagi bog'liqlik o'zgaradi (firibgarlar yangi usul topdi): bashorat va haqiqiy natijalar (label kechikib keladi) bo'yicha sifat metrikalari bilan aniqlanadi. Ikkalasi uchun ham alertlar, segment tahlili va qayta o'qitish siyosati", "correct": true },
+        { "id": "b", "text": "Ikkalasi bir xil — faqat nomlanishi boshqa", "hint": "Biri kirish taqsimoti, ikkinchisi kirish→natija bog'liqligi o'zgarishi; aniqlash usullari ham farq qiladi." },
+        { "id": "c", "text": "Model bir marta o'qitilgandan keyin abadiy ishlaydi — monitoring kerak emas", "hint": "Dunyo o'zgaradi; monitoringsiz model jim yomonlashadi." },
+        { "id": "d", "text": "Data drift aniqlansa, model albatta yomonlashgan", "hint": "Ba'zi taqsimot o'zgarishlari model uchun ahamiyatsiz; haqiqiy ta'sirni sifat metrikalari bilan tekshirish kerak." }
+      ],
+      "explanation": "Label'lar kechikib kelsa (kredit default — oylar o'tib), proksi metrikalar kuzatiladi: bashorat taqsimoti, ishonch darajasi, biznes ko'rsatkichlari. Qayta o'qitish — jadval bo'yicha yoki drift trigger'i bilan, har doim yangi modelni eskisi bilan solishtirib (champion/challenger).",
+      "reviewed": false
+    },
+    {
+      "id": "ml.ops.006",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Feature store nima va qachon foydali?",
+      "options": [
+        { "id": "a", "text": "Xususiyatlarni markazlashgan holda aniqlash, hisoblash va saqlash tizimi: offline qism — o'qitish uchun tarixiy qiymatlar (point-in-time to'g'ri join'lar bilan), online qism — servis uchun past latency'li so'nggi qiymatlar; bir xil ta'rif ikkalasini ham to'ldiradi. Bir nechta model va jamoa bir xil xususiyatlardan foydalanganda, training-serving skew muammo bo'lganda foydali (Feast, Tecton, cloud yechimlar)", "correct": true },
+        { "id": "b", "text": "Feature store — modelning og'irliklarini saqlash joyi", "hint": "Og'irliklar model registry'da; feature store kirish xususiyatlari uchun." },
+        { "id": "c", "text": "Har qanday kichik loyihada birinchi kundan feature store shart", "hint": "Bitta model va oddiy xususiyatlar uchun ortiqcha infratuzilma; ehtiyoj paydo bo'lganda kiritiladi." },
+        { "id": "d", "text": "Feature store'da faqat xom ma'lumotlar saqlanadi", "hint": "U aynan hisoblangan, qayta ishlatiladigan xususiyatlarni saqlaydi." }
+      ],
+      "explanation": "Point-in-time correctness — o'qitish misoli uchun xususiyat qiymati aynan o'sha vaqtda mavjud bo'lgan holatda olinadi, aks holda kelajakdan leakage. Xususiyatlar katalogi jamoalar o'rtasida takroriy ishni kamaytiradi.",
+      "reviewed": false
+    },
+    {
+      "id": "ml.ops.007",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Tavsiya modeli API'si 2 000 RPS va p99 < 100 ms talab qiladi, hozir esa p99 — 400 ms. Model serving'ni qanday optimallashtirasiz?",
+      "options": [
+        { "id": "a", "text": "Avval vaqt qayerga ketishini o'lchash (xususiyatlarni olish, model, post-processing). Keyin: xususiyatlarni oldindan hisoblab online store'da saqlash, keshlash (mashhur so'rovlar/foydalanuvchilar), dynamic batching GPU/CPU'da, model optimallashtirish (kvantizatsiya, distillyatsiya, ONNX/TensorRT), ikki bosqichli arxitektura (tez nomzod tanlash + kichik to'plamni og'ir model bilan reranking), gorizontal autoscaling va yuklama testi bilan tasdiqlash", "correct": true },
+        { "id": "b", "text": "Faqat serverlar sonini oshirish", "hint": "Throughput oshadi, lekin har bitta so'rovning latency'si (ayniqsa model va xususiyat olish vaqti) kamaymaydi." },
+        { "id": "c", "text": "Modelni har so'rovda diskdan qayta yuklash", "hint": "Model servis ishga tushganda bir marta xotiraga yuklanadi; har so'rovda yuklash latency'ni keskin oshiradi." },
+        { "id": "d", "text": "Sifatni tekshirmasdan modelni eng kichik versiyaga almashtirish", "hint": "Latency tushadi, lekin tavsiya sifati va biznes metrikasi yomonlashishi mumkin — trade-off o'lchanadi." }
+      ],
+      "explanation": "Latency budjetini qismlarga bo'lish (xususiyatlar 20 ms, model 40 ms, tarmoq 20 ms) muhandislik qarorlarini aniq qiladi. Timeout va fallback (masalan, mashhur mahsulotlar ro'yxati) — model ishlamasa ham foydalanuvchi bo'sh sahifa ko'rmasin.",
+      "reviewed": false
+    },
+    {
+      "id": "ml.ops.008",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Kompaniyaning 500 000 ta ichki hujjati bo'yicha xodimlar uchun LLM yordamchi (RAG) tizimini loyihalash kerak. Asosiy dizayn qarorlari qaysilar?",
+      "options": [
+        { "id": "a", "text": "Ingestion: hujjatlarni tozalash, tuzilmaga mos bo'laklash (sarlavhalar, jadvallar), metadata (manba, sana, bo'lim, kirish huquqi), o'zgarishlarni inkremental yangilash. Qidiruv: hybrid (vektor + BM25) va reranker, so'rovni qayta yozish. Xavfsizlik: foydalanuvchi faqat o'zi ko'rishi mumkin bo'lgan hujjatlar bo'yicha qidirish (qidiruv bosqichida filtr). Generatsiya: manbaga havolalar, \"bilmayman\" holati. Baholash to'plami, monitoring, xarajat va latency nazorati", "correct": true },
+        { "id": "b", "text": "Barcha hujjatlarni bitta katta prompt'ga joylash", "hint": "Kontekst oynasiga sig'maydi, juda qimmat va sekin; kirish huquqlari ham buziladi." },
+        { "id": "c", "text": "Kirish huquqlarini LLM javobidan keyin tekshirish yetarli", "hint": "Maxfiy matn allaqachon kontekstga tushgan va javobga oqishi mumkin — filtr qidiruv bosqichida bo'lishi kerak." },
+        { "id": "d", "text": "Faqat vektor qidiruv — kalit so'z qidiruvi eskirgan", "hint": "Aniq atamalar, kodlar va nomlar (masalan, buyruq raqami) bo'yicha kalit so'z qidiruvi ko'pincha aniqroq; hybrid yondashuv kuchliroq." }
+      ],
+      "explanation": "Ko'p RAG loyihalari muvaffaqiyatsizligi model emas, ma'lumot sifati va qidiruvdan: eskirgan hujjatlar, yomon bo'laklash, metadata yo'qligi. Bosqichma-bosqich: bitta bo'lim bilan boshlash, baholash to'plamini yig'ish, keyin kengaytirish.",
+      "reviewed": false
+    }
+  ]
+}

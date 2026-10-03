@@ -1,0 +1,203 @@
+{
+  "topic": "ml.eval",
+  "questions": [
+    {
+      "id": "ml.eval.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Test to'plamida 990 ta oddiy va 10 ta firibgar tranzaksiya bor. Model hammasini \"oddiy\" (0) deb bashorat qiladi. Kod nimani chop etadi?",
+      "code": "from sklearn.metrics import accuracy_score, recall_score\n\ny_true = [0] * 990 + [1] * 10\ny_pred = [0] * 1000\n\nprint(accuracy_score(y_true, y_pred), recall_score(y_true, y_pred))",
+      "options": [
+        { "id": "a", "text": "0.99 0.0", "correct": true },
+        { "id": "b", "text": "0.99 0.99", "hint": "Recall — haqiqiy firibgarlarning qancha qismi topilgani; model bittasini ham topmadi." },
+        { "id": "c", "text": "0.01 0.0", "hint": "1000 ta bashoratdan 990 tasi to'g'ri — accuracy yuqori." },
+        { "id": "d", "text": "0.5 0.5", "hint": "Accuracy to'g'ri bashoratlar ulushini hisoblaydi, sinflar bo'yicha o'rtachani emas." }
+      ],
+      "explanation": "Nomutanosib sinflarda accuracy aldaydi: foydasiz model 99% oladi. Kerakli metrikalar — recall, precision, F1, PR-AUC. Baseline sifatida doim \"eng ko'p sinf\" modelining natijasini ko'rsating.",
+      "reviewed": false
+    },
+    {
+      "id": "ml.eval.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Precision va recall qanday farqlanadi?",
+      "options": [
+        { "id": "a", "text": "Precision — model \"musbat\" degan holatlarning qanchasi haqiqatan musbat: TP / (TP + FP) (signallar qanchalik ishonchli). Recall — haqiqiy musbatlarning qanchasini model topdi: TP / (TP + FN) (qanchasini o'tkazib yubormadik). Odatda biri oshsa, ikkinchisi kamayadi — chegara orqali muvozanatlanadi", "correct": true },
+        { "id": "b", "text": "Ikkalasi ham to'g'ri bashoratlar ulushi — faqat nomlari boshqa", "hint": "Maxrajlari farq qiladi: precision — model bashoratlari bo'yicha, recall — haqiqiy musbatlar bo'yicha." },
+        { "id": "c", "text": "Recall — model \"musbat\" degan holatlarning to'g'ri qismi", "hint": "Bu precision ta'rifi; recall haqiqiy musbatlar ichidan topilganlar ulushi." },
+        { "id": "d", "text": "Precision va recall faqat regressiya uchun ishlatiladi", "hint": "Ular klassifikatsiya metrikalari." }
+      ],
+      "explanation": "Xotiraga: precision — \"aytganlarimiz to'g'rimi?\", recall — \"hammasini topdikmi?\". Ko'p sinfli vazifada har sinf uchun alohida hisoblanib, macro yoki weighted o'rtacha olinadi.",
+      "reviewed": false
+    },
+    {
+      "id": "ml.eval.003",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Confusion matrix qiymatlari asosida kod nimani chop etadi?",
+      "code": "TP, FP, FN, TN = 40, 10, 20, 930\n\nprecision = TP / (TP + FP)\nrecall = TP / (TP + FN)\n\nprint(round(precision, 2), round(recall, 2))",
+      "options": [
+        { "id": "a", "text": "0.8 0.67", "correct": true },
+        { "id": "b", "text": "0.67 0.8", "hint": "Precision maxrajida FP (10), recall maxrajida FN (20) — o'rinlari almashgan." },
+        { "id": "c", "text": "0.97 0.8", "hint": "0,97 — accuracy: (TP + TN) / jami." },
+        { "id": "d", "text": "0.8 0.8", "hint": "Recall uchun: 40 / (40 + 20)." }
+      ],
+      "explanation": "F1 = 2·P·R / (P + R) = 2·0,8·0,667 / 1,467 ≈ 0,73. Confusion matrix'ni har doim ko'rsating — bitta metrika qaysi turdagi xato ko'pligini yashiradi.",
+      "reviewed": false
+    },
+    {
+      "id": "ml.eval.004",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Regressiyada MAE va RMSE qanday farqlanadi?",
+      "options": [
+        { "id": "a", "text": "MAE — xatolar modullarining o'rtachasi: talqini oson (\"o'rtacha 120 000 so'mga adashadi\"), katta xatolarga chidamli. RMSE — xatolar kvadratlari o'rtachasining ildizi: katta xatolarni kuchliroq jazolaydi. Katta adashish ayniqsa qimmat bo'lsa — RMSE, chetdagi qiymatlar ko'p bo'lsa — MAE", "correct": true },
+        { "id": "b", "text": "Ikkalasi har doim bir xil qiymat beradi", "hint": "RMSE ≥ MAE; farq katta xatolar qanchalik ko'pligini ko'rsatadi." },
+        { "id": "c", "text": "RMSE chetdagi qiymatlarga MAE'dan kam sezgir", "hint": "Kvadratga oshirish katta xatolarni kuchaytiradi — RMSE sezgirroq." },
+        { "id": "d", "text": "R² har doim 0 dan 1 gacha", "hint": "Yomon model uchun R² manfiy bo'lishi mumkin (o'rtachani bashorat qilishdan ham yomon)." }
+      ],
+      "explanation": "Nisbiy xato kerak bo'lsa — MAPE (lekin nolga yaqin haqiqiy qiymatlarda portlaydi). Metrika biznes yo'qotishiga mos tanlanadi: zaxirani kam bashorat qilish ortiqchasidan qimmat bo'lsa — asimmetrik (quantile) loss.",
+      "reviewed": false
+    },
+    {
+      "id": "ml.eval.005",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Saraton skriningi va spam filtri uchun qaysi metrikaga ko'proq urg'u beriladi?",
+      "options": [
+        { "id": "a", "text": "Saraton skriningi — recall: kasalni o'tkazib yuborish (FN) juda qimmat, qo'shimcha tekshiruv (FP) esa qabul qilinadi. Spam filtri — precision: muhim xatni spamga tashlab yuborish (FP) qimmat, ba'zi spam inbox'ga tushishi (FN) kechiriladi. Qaror xato turlarining narxiga bog'liq", "correct": true },
+        { "id": "b", "text": "Ikkalasida ham accuracy yetarli", "hint": "Accuracy xato turlarini farqlamaydi, ularning narxi esa juda turlicha." },
+        { "id": "c", "text": "Saraton skriningi — precision, spam — recall", "hint": "Qaysi xato qimmatroq ekanini o'ylang: kasalni o'tkazib yuborishmi yoki ortiqcha tekshiruvmi?" },
+        { "id": "d", "text": "Har doim F1 — boshqa metrika kerak emas", "hint": "F1 precision va recall'ga teng og'irlik beradi; xatolar narxi teng bo'lmasa, F-beta yoki to'g'ridan-to'g'ri xarajat funksiyasi yaxshiroq." }
+      ],
+      "explanation": "F-beta: beta > 1 recall'ga, beta < 1 precision'ga ko'proq og'irlik beradi. Eng yaxshi yondashuv — biznes bilan har xato turining narxini kelishib, kutilgan xarajatni minimallashtiradigan chegarani tanlash.",
+      "reviewed": false
+    },
+    {
+      "id": "ml.eval.006",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "ROC-AUC va PR-AUC qachon qaysi biri ko'proq ma'lumot beradi?",
+      "options": [
+        { "id": "a", "text": "ROC-AUC — TPR va FPR bo'yicha, tasodifiy musbat misol tasodifiy manfiydan yuqori baholanish ehtimoli; sinflar nisbatiga deyarli sezgir emas. Kuchli nomutanosiblikda (musbatlar 0,1%) ko'p manfiylar tufayli FPR kichik ko'rinadi va ROC-AUC optimistik — PR-AUC (precision–recall) nodir sinfdagi haqiqiy sifatni yaxshiroq ko'rsatadi", "correct": true },
+        { "id": "b", "text": "ROC-AUC = 0,5 — mukammal model", "hint": "0,5 — tasodifiy taxmin darajasi; 1,0 — mukammal ajratish." },
+        { "id": "c", "text": "PR-AUC'ning tasodifiy baseline'i har doim 0,5", "hint": "PR-AUC baseline'i musbatlar ulushiga teng (masalan, 0,001)." },
+        { "id": "d", "text": "AUC metrikalari aniq chegara tanlashni talab qiladi", "hint": "AUC barcha chegaralar bo'yicha umumiy baho; amaliy qaror uchun chegara alohida tanlanadi." }
+      ],
+      "explanation": "AUC — modellarni reyting qobiliyati bo'yicha solishtirish uchun, lekin production'da muhimi — tanlangan chegaradagi precision/recall va biznes ta'siri. Ehtimollar kalibrlanmagan bo'lsa ham AUC yuqori bo'lishi mumkin.",
+      "reviewed": false
+    },
+    {
+      "id": "ml.eval.007",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "k-fold cross-validation qanday ishlaydi va qachon kerak?",
+      "options": [
+        { "id": "a", "text": "Ma'lumot k qismga bo'linadi; har safar bitta qism validation, qolganlari train — k marta o'qitib, natijalar o'rtachasi va tarqoqligi olinadi. Kichik ma'lumotda bitta tasodifiy bo'lishga qaraganda ishonchliroq baho beradi va modellarni solishtirishda barqarorlikni ko'rsatadi. Klassifikatsiyada stratified, guruhli ma'lumotda GroupKFold", "correct": true },
+        { "id": "b", "text": "Bitta modelni k ta turli test to'plamida bir marta o'qitib baholash", "hint": "Har fold'da model qayta o'qitiladi — har safar boshqa train qismida." },
+        { "id": "c", "text": "Cross-validation test to'plamini butunlay almashtiradi — alohida test kerak emas", "hint": "CV model tanlash uchun; yakuniy halol baho uchun alohida test (yoki nested CV) kerak." },
+        { "id": "d", "text": "Vaqt qatorlari uchun oddiy tasodifiy k-fold to'g'ri", "hint": "Kelajak ma'lumotida o'qitib o'tmishni bashorat qilish — leakage; vaqt bo'yicha bo'lish kerak." }
+      ],
+      "explanation": "Preprocessing'ni (scaler, imputer, encoder) har fold ichida qilish uchun sklearn `Pipeline` + `cross_val_score`. Fold'lar orasidagi katta tarqoqlik — model yoki ma'lumot beqarorligi belgisi.",
+      "reviewed": false
+    },
+    {
+      "id": "ml.eval.008",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Code review: model validatsiyada juda yaxshi, production'da sezilarli yomon. Kodda qanday xato bor?",
+      "code": "from sklearn.preprocessing import StandardScaler\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LogisticRegression\n\nX_scaled = StandardScaler().fit_transform(X)\nX_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2)\n\nmodel = LogisticRegression().fit(X_train, y_train)\nprint(model.score(X_test, y_test))",
+      "options": [
+        { "id": "a", "text": "Data leakage: scaler butun ma'lumotda (test'ni ham) `fit` qilingan — test statistikasi o'qitishga oqib o'tgan. Avval bo'lish, keyin scaler'ni faqat train'da `fit` qilish; eng yaxshisi `Pipeline([(\"scaler\", StandardScaler()), (\"clf\", LogisticRegression())])`. Bundan tashqari, xususiyatlarda kelajak ma'lumoti yoki target'dan olingan ustunlar yo'qligini tekshirish", "correct": true },
+        { "id": "b", "text": "`LogisticRegression` o'rniga random forest kerak", "hint": "Model tanlovi baholashdagi xatoni tuzatmaydi." },
+        { "id": "c", "text": "`test_size=0.2` juda katta", "hint": "Test hajmi muammo emas; muammo — bo'lishdan oldingi `fit`." },
+        { "id": "d", "text": "Muammo yo'q — scaler faqat masshtablaydi, hech narsa o'rganmaydi", "hint": "Scaler o'rtacha va standart og'ishni o'rganadi — bu ma'lumotdan olingan statistika." }
+      ],
+      "explanation": "Leakage turlari: preprocessing leakage (bu holat), target leakage (bashorat paytida mavjud bo'lmaydigan xususiyat — masalan, \"to'lov kechikdi\" ustuni default bashoratida), vaqt leakage, dublikatlar train va test'da. Shubhali yuqori natija — avval leakage'ni qidiring.",
+      "reviewed": false
+    },
+    {
+      "id": "ml.eval.009",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Kunlik sotuvni bashorat qiluvchi model qanday validatsiya qilinishi kerak?",
+      "options": [
+        { "id": "a", "text": "Vaqt bo'yicha: model faqat o'tmishda o'qitilib, keyingi davrda baholanadi — walk-forward (rolling/expanding window, `TimeSeriesSplit`), bashorat gorizontiga mos bo'shliq (gap) bilan; xususiyatlar (lag, rolling) faqat bashorat paytida ma'lum bo'lgan ma'lumotdan; natija oddiy baseline'lar (o'tgan hafta shu kun, mavsumiy naive) bilan solishtiriladi", "correct": true },
+        { "id": "b", "text": "Kunlarni tasodifiy aralashtirib 5-fold CV", "hint": "Model kelajak kunlaridan o'rganib o'tmishni \"bashorat qiladi\" — real ishlashdan ancha yaxshi natija." },
+        { "id": "c", "text": "Faqat oxirgi bitta kunda baholash", "hint": "Bitta nuqta juda shovqinli; bir nechta davr bo'yicha baholash kerak." },
+        { "id": "d", "text": "Baseline bilan solishtirish shart emas", "hint": "Murakkab model \"o'tgan haftadagi qiymat\"dan yaxshi bo'lmasligi mumkin — buni bilish kerak." }
+      ],
+      "explanation": "Bayramlar, aksiyalar va tashqi omillar (ob-havo) xususiyat sifatida va validatsiya davrlarini tanlashda hisobga olinadi. Bashorat oralig'i (prediction interval) ham baholanadi — biznes uchun noaniqlik muhim.",
+      "reviewed": false
+    },
+    {
+      "id": "ml.eval.010",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Model ehtimol qaytaradi va biznes uni \"bu mijoz 30% ehtimol bilan ketadi\" deb talqin qilmoqchi. Nimani tekshirish kerak?",
+      "options": [
+        { "id": "a", "text": "Kalibrovka: 0,3 ehtimol berilgan mijozlarning haqiqatan ~30% i ketadimi — reliability diagram va Brier score bilan tekshiriladi. Ko'p modellar (boosting, SVM, resampling bilan o'qitilganlar) kalibrlanmagan ehtimol beradi — Platt scaling yoki isotonic regression bilan alohida validation to'plamida kalibrlanadi. Qaror chegarasi esa xato narxlariga qarab tanlanadi", "correct": true },
+        { "id": "b", "text": "Har qanday model chiqishi to'g'ridan-to'g'ri ehtimol sifatida talqin qilinadi", "hint": "Yuqori AUC'li model ham ehtimollarni muntazam oshirib yoki kamaytirib berishi mumkin." },
+        { "id": "c", "text": "Kalibrovkani test to'plamida qilib, o'sha to'plamda baholash", "hint": "Baho optimistik bo'ladi; kalibrovka uchun alohida qism kerak." },
+        { "id": "d", "text": "Kalibrovka AUC'ni sezilarli oshiradi", "hint": "Monoton kalibrovka reytingni o'zgartirmaydi — AUC deyarli o'zgarmaydi; ehtimollar aniqligi yaxshilanadi." }
+      ],
+      "explanation": "Kalibrlangan ehtimollar kutilgan qiymat hisoblari uchun zarur (kutilgan yo'qotish = ehtimol × summa). sklearn: `CalibratedClassifierCV`. Ma'lumot taqsimoti o'zgarsa (drift), kalibrovka ham buziladi — monitoring kerak.",
+      "reviewed": false
+    },
+    {
+      "id": "ml.eval.011",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Yangi tavsiya modeli offline'da NDCG bo'yicha 8% yaxshiroq, lekin A/B testda konversiya o'zgarmadi. Mumkin bo'lgan sabablar?",
+      "options": [
+        { "id": "a", "text": "Offline metrika biznes natijasiga to'liq mos emas (masalan, kliklar emas, xaridlar muhim); offline ma'lumot eski model ko'rsatgan narsalar bilan qiyshaygan (feedback loop, selection bias); train-serve farqi (production'da xususiyatlar boshqacha yoki kechikib keladi); latency oshib foydalanuvchi tajribasini yomonlashtirgan; test quvvati yetarli emas yoki davom muddati qisqa. Har bir farazni ma'lumot bilan tekshirish", "correct": true },
+        { "id": "b", "text": "A/B test noto'g'ri — offline natijaga ishonib modelni chiqarish kerak", "hint": "Haqiqiy foydalanuvchi xulqi — yakuniy hakam; offline yutuq faqat gipoteza." },
+        { "id": "c", "text": "NDCG noto'g'ri hisoblangan — boshqa sabab bo'lishi mumkin emas", "hint": "Offline va online natija farqi juda keng tarqalgan hodisa, ko'p sabablari bor." },
+        { "id": "d", "text": "Foydalanuvchilar yangi modelni yoqtirmaydi — tahlil qilish shart emas", "hint": "Sababini topmasangiz, keyingi model ham xuddi shu muammoga uchraydi." }
+      ],
+      "explanation": "Offline metrikani online natija bilan bog'lash uchun tarixiy A/B testlar bo'yicha korrelyatsiyani tekshiring. Off-policy baholash (inverse propensity) va shadow deployment (bashoratlarni log qilib, foydalanuvchiga ko'rsatmaslik) farqni kamaytiradi.",
+      "reviewed": false
+    },
+    {
+      "id": "ml.eval.012",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Kompaniya ichki hujjatlar bo'yicha savol-javob beruvchi RAG chatbot qurdi. Uning sifatini qanday baholaysiz?",
+      "options": [
+        { "id": "a", "text": "Komponentlar bo'yicha: retrieval — kerakli hujjat parchalari topildimi (recall@k, MRR) belgilangan savol-javob to'plamida; generatsiya — javob topilgan kontekstga asoslanganmi (faithfulness), savolga to'g'ri va to'liq javobmi; \"bilmayman\" kerak bo'lgan holatlar. Usullar: domen mutaxassislari bilan yig'ilgan golden set, inson baholashi bilan kalibrlangan LLM-as-judge, regressiya to'plami har o'zgarishda; production'da foydalanuvchi fikri, eskalatsiya va xarajat/latency", "correct": true },
+        { "id": "b", "text": "Bir nechta savol berib, javoblar yaxshi ko'rinsa — tayyor", "hint": "Anekdotik tekshiruv regressiyalarni va chetki holatlarni ushlamaydi; takrorlanadigan baholash to'plami kerak." },
+        { "id": "c", "text": "Faqat BLEU/ROUGE kabi matn o'xshashligi metrikalari yetarli", "hint": "To'g'ri javob turlicha so'zlar bilan ifodalanishi mumkin; faktik to'g'rilik va kontekstga asoslanganlik o'lchanmaydi." },
+        { "id": "d", "text": "LLM-as-judge baholashi har doim ishonchli va tekshirishni talab qilmaydi", "hint": "Hakam model ham xato va moyillikka ega (uzun javoblarni yoqtirish) — inson baholari bilan solishtirib kalibrlash kerak." }
+      ],
+      "explanation": "Muhim chetki holatlar: hujjatlarda javob yo'q savollar, ziddiyatli hujjatlar, eskirgan versiyalar, kirish huquqi cheklangan ma'lumotlar (foydalanuvchi ko'rmasligi kerak bo'lgan hujjatdan javob — xavfsizlik xatosi). Baholash to'plami production'dagi haqiqiy savollar bilan muntazam yangilanadi.",
+      "reviewed": false
+    },
+    {
+      "id": "ml.eval.013",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Kredit modelining umumiy AUC'si 0,82. Uni ishga tushirishdan oldin yana nimani baholash kerak?",
+      "options": [
+        { "id": "a", "text": "Segmentlar (slice) bo'yicha sifat: hududlar, yosh guruhlari, jins, yangi va eski mijozlar, kanallar — umumiy yaxshi metrika ba'zi guruhlarda yomon ishlashni yashiradi; fairness metrikalari (guruhlar bo'yicha tasdiqlash ulushi, xato ulushlari) va ularning qonuniy talablarga mosligi; vaqt bo'yicha barqarorlik (turli oylarda); stress-stsenariylar va kam ma'lumotli segmentlar uchun noaniqlik", "correct": true },
+        { "id": "b", "text": "Umumiy AUC yuqori bo'lsa, barcha guruhlarda ham yaxshi ishlaydi", "hint": "Kichik guruhlar umumiy metrikaga kam ta'sir qiladi — ular uchun model juda yomon bo'lishi mumkin." },
+        { "id": "c", "text": "Jins kabi sezgir xususiyatlarni olib tashlash adolatni kafolatlaydi", "hint": "Boshqa xususiyatlar (manzil, ism, xarid odatlari) proksi bo'lib xizmat qilishi mumkin; natijalarni guruhlar bo'yicha tekshirish kerak." },
+        { "id": "d", "text": "Segment tahlili faqat ilmiy tadqiqot uchun kerak", "hint": "Tartibga solingan sohalarda bu huquqiy talab va obro' xavfi masalasi." }
+      ],
+      "explanation": "Fairness metrikalari bir-biriga zid bo'lishi mumkin (demographic parity va equalized odds bir vaqtda bajarilmaydi) — qaysi biri muhimligini biznes, yuristlar va etika bilan kelishish kerak. Natijalar model card'da hujjatlashtiriladi.",
+      "reviewed": false
+    }
+  ]
+}

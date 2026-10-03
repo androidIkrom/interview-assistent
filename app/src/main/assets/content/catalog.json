@@ -152,12 +152,12 @@
     { "id": "ops.iac", "title": "Terraform, IaC, cloud", "file": "ops_iac.json" },
     { "id": "ops.observability", "title": "Monitoring, SRE, xavfsizlik", "file": "ops_observability.json" },
 
-    { "id": "ml.python", "title": "Python, pandas, numpy" },
-    { "id": "ml.stats", "title": "Statistika va ehtimollik" },
-    { "id": "ml.classic", "title": "Klassik ML" },
-    { "id": "ml.eval", "title": "Metrikalar va validatsiya" },
-    { "id": "ml.dl", "title": "Deep learning va LLM" },
-    { "id": "ml.ops", "title": "MLOps va tizim dizayni" },
+    { "id": "ml.python", "title": "Python, pandas, numpy", "file": "ml_python.json" },
+    { "id": "ml.stats", "title": "Statistika va ehtimollik", "file": "ml_stats.json" },
+    { "id": "ml.classic", "title": "Klassik ML", "file": "ml_classic.json" },
+    { "id": "ml.eval", "title": "Metrikalar va validatsiya", "file": "ml_eval.json" },
+    { "id": "ml.dl", "title": "Deep learning va LLM", "file": "ml_dl.json" },
+    { "id": "ml.ops", "title": "MLOps va tizim dizayni", "file": "ml_ops.json" },
 
     { "id": "core.dsa", "title": "Algoritmlar va ma'lumot tuzilmalari", "file": "core_dsa.json" },
     { "id": "core.oop", "title": "OOP, SOLID, dizayn patternlari", "file": "core_oop.json" },

@@ -1,0 +1,221 @@
+{
+  "topic": "ml.python",
+  "questions": [
+    {
+      "id": "ml.python.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Quyidagi kod nimani chop etadi?",
+      "code": "import pandas as pd\n\ndf = pd.DataFrame({\"x\": [10, 20, 30, 40]}, index=[3, 2, 1, 0])\n\nprint(df.loc[1, \"x\"], df.iloc[1][\"x\"])",
+      "options": [
+        { "id": "a", "text": "30 20", "correct": true },
+        { "id": "b", "text": "20 20", "hint": "`loc` pozitsiya emas, index yorlig'i bo'yicha tanlaydi: yorlig'i 1 bo'lgan qator — uchinchi qator." },
+        { "id": "c", "text": "20 30", "hint": "`iloc` — pozitsiya (0 dan): 1-pozitsiya ikkinchi qator." },
+        { "id": "d", "text": "KeyError", "hint": "Index'da 1 yorlig'i bor — xato bo'lmaydi." }
+      ],
+      "explanation": "`loc` — yorliq bo'yicha (qator va ustun nomlari, kesishda oxiri kiradi: `df.loc[1:0]`), `iloc` — butun son pozitsiyasi bo'yicha (Python kabi, oxiri kirmaydi). Filtrlash va `sort_values`dan keyin index aralashadi — shu sabab tuzoq tez-tez uchraydi; kerak bo'lsa `reset_index(drop=True)`.",
+      "reviewed": false
+    },
+    {
+      "id": "ml.python.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Quyidagi kod nimani chop etadi?",
+      "code": "import pandas as pd\n\ndf = pd.DataFrame({\n    \"city\": [\"Toshkent\", \"Samarqand\", \"Toshkent\", \"Buxoro\", \"Samarqand\"],\n    \"sales\": [100, 50, 70, 30, 20],\n})\n\nres = df.groupby(\"city\")[\"sales\"].sum().sort_values(ascending=False)\nprint(res.index[0], res.iloc[0])",
+      "options": [
+        { "id": "a", "text": "Toshkent 170", "correct": true },
+        { "id": "b", "text": "Toshkent 100", "hint": "`sum()` shahar bo'yicha barcha qatorlarni qo'shadi: 100 + 70." },
+        { "id": "c", "text": "Samarqand 70", "hint": "Samarqand jami 50 + 20 = 70, lekin Toshkent'niki kattaroq." },
+        { "id": "d", "text": "Buxoro 30", "hint": "`ascending=False` — kamayish tartibi: eng kattasi birinchi." }
+      ],
+      "explanation": "`groupby` — split-apply-combine: guruhlash, har guruhga agregatsiya, natijani birlashtirish. Bir nechta agregatsiya: `df.groupby(\"city\").agg(total=(\"sales\", \"sum\"), n=(\"sales\", \"size\"))`. SQL'dagi `GROUP BY ... ORDER BY SUM(...) DESC`ga teng.",
+      "reviewed": false
+    },
+    {
+      "id": "ml.python.003",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Natijaviy DataFrame'da nechta qator bo'ladi?",
+      "code": "import pandas as pd\n\nusers = pd.DataFrame({\"user_id\": [1, 2, 3], \"name\": [\"Ali\", \"Vali\", \"Gani\"]})\norders = pd.DataFrame({\"user_id\": [1, 1, 4], \"amount\": [50, 30, 90]})\n\nres = users.merge(orders, on=\"user_id\", how=\"left\")\nprint(len(res))",
+      "options": [
+        { "id": "a", "text": "4", "correct": true },
+        { "id": "b", "text": "3", "hint": "1-foydalanuvchining ikkita buyurtmasi bor — `merge` uning qatorini ikkiga ko'paytiradi." },
+        { "id": "c", "text": "2", "hint": "`how=\"left\"` chap jadvaldagi barcha foydalanuvchilarni saqlaydi, buyurtmasi yo'qlarini ham (NaN bilan)." },
+        { "id": "d", "text": "5", "hint": "`user_id = 4` chap jadvalda yo'q — left join'da u qo'shilmaydi." }
+      ],
+      "explanation": "Natija: Ali×2 (50, 30), Vali (NaN), Gani (NaN). `how`: `inner` — faqat moslar, `left`/`right` — bir tomon to'liq, `outer` — hammasi. Tekshiruv uchun `validate=\"one_to_many\"` va `indicator=True` (qaysi tomondan kelganini ko'rsatadi) foydali.",
+      "reviewed": false
+    },
+    {
+      "id": "ml.python.004",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Quyidagi kod nimani chop etadi?",
+      "code": "import numpy as np\n\na = np.array([[1, 2, 3],\n              [4, 5, 6]])   # shape (2, 3)\nb = np.array([10, 20, 30])  # shape (3,)\n\nc = a + b\nprint(c.shape, c[1, 2])",
+      "options": [
+        { "id": "a", "text": "(2, 3) 36", "correct": true },
+        { "id": "b", "text": "(2, 3) 16", "hint": "Broadcasting: `b` har qatorga qo'shiladi; `c[1, 2]` = 6 + 30." },
+        { "id": "c", "text": "ValueError: shapes do not match", "hint": "Oxirgi o'lchamlar mos (3 va 3) — broadcasting ishlaydi." },
+        { "id": "d", "text": "(3, 2) 36", "hint": "Natija shakli kattaroq massiv shakli bilan bir xil — (2, 3)." }
+      ],
+      "explanation": "Broadcasting qoidasi: o'lchamlar o'ngdan solishtiriladi, har juft teng yoki biri 1 bo'lishi kerak. Ustun bo'yicha qo'shish uchun `b` shakli (2, 1) bo'lishi kerak: `a + np.array([[100], [200]])`. Broadcasting nusxa yaratmasdan ishlaydi — sikldan ancha tez.",
+      "reviewed": false
+    },
+    {
+      "id": "ml.python.005",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "pandas'da yetishmayotgan qiymatlar (NaN) bilan qanday ishlanadi?",
+      "options": [
+        { "id": "a", "text": "Aniqlash: `df.isna().sum()` (ustun bo'yicha soni); keyin vaziyatga qarab: `dropna()` — qatorlarni tashlash (kam bo'lsa), `fillna()` — to'ldirish (mediana, moda, oldingi qiymat, maxsus belgi), yoki modelga \"yetishmaydi\" belgisini alohida xususiyat sifatida berish. Sababini tushunish muhim — ma'lumot tasodifan yoki tizimli ravishda yo'qmi", "correct": true },
+        { "id": "b", "text": "NaN'larni har doim 0 bilan to'ldirish to'g'ri", "hint": "0 ko'pincha ma'noli qiymat (masalan, daromad 0) — taqsimotni buzadi va noto'g'ri signal beradi." },
+        { "id": "c", "text": "`df == None` bilan NaN'larni topish mumkin", "hint": "NaN o'zi bilan ham teng emas; `isna()`/`notna()` ishlatiladi." },
+        { "id": "d", "text": "NaN'li qatorlarni doim o'chirib tashlash — eng xavfsiz", "hint": "Ma'lumotning katta qismi yo'qolishi va tanlanma siljishi (bias) mumkin." }
+      ],
+      "explanation": "To'ldirish statistikasini (masalan, mediana) faqat train qismidan hisoblang — aks holda data leakage. sklearn'da `SimpleImputer(strategy=\"median\", add_indicator=True)` Pipeline ichida buni to'g'ri qiladi.",
+      "reviewed": false
+    },
+    {
+      "id": "ml.python.006",
+      "level": "junior",
+      "type": "single",
+      "kind": "true_false",
+      "prompt": "Quyidagi fikr to'g'rimi?\n\n1 million elementli sonlar ustida oddiy Python `for` sikli numpy'ning vektorlashgan amalidan (masalan, `arr * 2`) tezroq ishlaydi.",
+      "options": [
+        { "id": "a", "text": "Ha", "hint": "numpy amallari C'da, uzluksiz xotira ustida, interpreter xarajatisiz bajariladi — odatda o'nlab-yuzlab marta tezroq." },
+        { "id": "b", "text": "Yo'q", "correct": true }
+      ],
+      "explanation": "Python siklida har element — ob'ekt, tip tekshiruvi va interpreter qadami. Vektorlashtirish: arifmetik amallar, `np.where`, mantiqiy niqoblar, `np.cumsum`. pandas'da ham `df[\"a\"] * 2` — tez, `df.apply(..., axis=1)` — sekin.",
+      "reviewed": false
+    },
+    {
+      "id": "ml.python.007",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Code review: kod `SettingWithCopyWarning` beradi va ba'zan `df` o'zgarmay qoladi. Nima tuzatiladi?",
+      "code": "active = df[df[\"status\"] == \"active\"]\nactive[\"score\"] = active[\"score\"] * 1.1\n\ndf[df[\"age\"] > 60][\"segment\"] = \"senior\"",
+      "options": [
+        { "id": "a", "text": "Filtrlangan natija nusxa yoki ko'rinish (view) bo'lishi noaniq; zanjirli indekslash (`df[mask][\"col\"] = ...`) vaqtinchalik ob'ektga yozadi va asl `df` o'zgarmaydi. Bitta `loc` bilan yozish kerak: `df.loc[df[\"age\"] > 60, \"segment\"] = \"senior\"`; alohida DataFrame kerak bo'lsa aniq `.copy()`. pandas 3 da Copy-on-Write bu xulqni aniq qiladi", "correct": true },
+        { "id": "b", "text": "Warning'ni `pd.options.mode.chained_assignment = None` bilan o'chirish yetarli", "hint": "Ogohlantirish o'chadi, lekin asl `df` baribir yangilanmaydi — xato yashiriladi." },
+        { "id": "c", "text": "`*` o'rniga `np.multiply` ishlatish kerak", "hint": "Amal turi muammo emas; muammo — qaysi ob'ektga yozilayotganida." },
+        { "id": "d", "text": "Muammo faqat ustun nomlarida", "hint": "Nomlar to'g'ri; muammo — zanjirli indekslash." }
+      ],
+      "explanation": "Qoida: o'qish uchun istalgan usul, yozish uchun — bitta `df.loc[qator_sharti, ustun]`. pandas 2.x da `pd.options.mode.copy_on_write = True` bilan kelajakdagi xulqni hozirdan yoqish mumkin.",
+      "reviewed": false
+    },
+    {
+      "id": "ml.python.008",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Code review: 5 million qatorda bu kod 3 daqiqa ishlaydi. Qanday tezlashtiriladi?",
+      "code": "def label(row):\n    if row[\"amount\"] > 1_000_000:\n        return \"big\"\n    elif row[\"amount\"] > 100_000:\n        return \"medium\"\n    return \"small\"\n\ndf[\"size\"] = df.apply(label, axis=1)",
+      "options": [
+        { "id": "a", "text": "`apply(axis=1)` har qator uchun Python funksiyasini chaqiradi — sikl kabi sekin. Vektorlashgan variant: `np.select([df.amount > 1_000_000, df.amount > 100_000], [\"big\", \"medium\"], default=\"small\")` yoki `pd.cut(df.amount, bins=[-np.inf, 100_000, 1_000_000, np.inf], labels=[\"small\", \"medium\", \"big\"])` — o'nlab marta tezroq", "correct": true },
+        { "id": "b", "text": "`apply` o'rniga `iterrows()` bilan sikl yozish", "hint": "`iterrows` yanada sekin — har qator uchun Series ob'ekti yaratadi." },
+        { "id": "c", "text": "Ko'proq RAM qo'shish", "hint": "Muammo xotirada emas, har qatordagi Python chaqiruvlarida." },
+        { "id": "d", "text": "Funksiyaga `@staticmethod` qo'shish", "hint": "Chaqiruv turi ta'sir qilmaydi; qatorma-qator ishlash usuli sekin." }
+      ],
+      "explanation": "Chegaralarga e'tibor: `pd.cut` default'da o'ng chegarani kiritadi (`right=True`), `np.select` esa shartlarni tartib bilan tekshiradi — ikkalasi bir xil natija berishini tekshiring. Natijani `category` tipida saqlash xotirani tejaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "ml.python.009",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Natijaviy DataFrame'da nechta qator bo'ladi?",
+      "code": "import pandas as pd\n\na = pd.DataFrame({\"k\": [1, 1, 2], \"x\": [\"a1\", \"a2\", \"a3\"]})\nb = pd.DataFrame({\"k\": [1, 1, 1, 2], \"y\": [\"b1\", \"b2\", \"b3\", \"b4\"]})\n\nprint(len(a.merge(b, on=\"k\")))",
+      "options": [
+        { "id": "a", "text": "7", "correct": true },
+        { "id": "b", "text": "4", "hint": "Kalit ikkala tomonda takrorlansa, har juftlik qator beradi (many-to-many)." },
+        { "id": "c", "text": "3", "hint": "Inner join chap jadval qatorlari sonini saqlashni kafolatlamaydi." },
+        { "id": "d", "text": "5", "hint": "k=1: 2 × 3 = 6 qator, k=2: 1 × 1 = 1 qator." }
+      ],
+      "explanation": "Kutilmagan qator \"portlashi\" — ma'lumotlar bilan ishlashdagi eng keng tarqalgan jim xatolardan: yig'indilar ikki-uch baravar oshib ketadi. Himoya: merge'dan oldin kalit noyobligini tekshirish (`b.k.is_unique`), `validate=\"many_to_one\"` va natija qatorlar sonini solishtirish.",
+      "reviewed": false
+    },
+    {
+      "id": "ml.python.010",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "8 GB'lik CSV pandas'ga yuklanganda 30 GB xotira egallamoqda. Xotirani qanday kamaytirish mumkin?",
+      "options": [
+        { "id": "a", "text": "Tiplarni optimallashtirish: takrorlanuvchi satrlar uchun `category`, sonlarni kichikroq tipga (`int32`, `float32`) tushirish, `usecols` bilan faqat kerakli ustunlarni o'qish, `dtype`ni o'qishda berish; Arrow asosidagi tiplar (`dtype_backend=\"pyarrow\"`); kerak bo'lsa `chunksize` bilan qismlab ishlash va natijani Parquet'da saqlash", "correct": true },
+        { "id": "b", "text": "Barcha ustunlarni `object` tipiga o'tkazish", "hint": "`object` — har qiymat alohida Python ob'ekti, eng ko'p xotira egallaydigan tip." },
+        { "id": "c", "text": "CSV'ni Excel formatida saqlab o'qish", "hint": "Excel sekinroq va qator chegarasiga ega; ustunli format (Parquet) samaraliroq." },
+        { "id": "d", "text": "Hech narsa qilib bo'lmaydi — pandas doim shuncha xotira oladi", "hint": "Tiplar va o'qish sozlamalari xotirani bir necha baravar kamaytiradi." }
+      ],
+      "explanation": "Tekshirish: `df.memory_usage(deep=True)`. `category` faqat noyob qiymatlar soni kam bo'lsa foydali. Parquet ustunli va siqilgan — keyingi o'qishlar tezroq va faqat kerakli ustunlar yuklanadi.",
+      "reviewed": false
+    },
+    {
+      "id": "ml.python.011",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Sekundlik sensor ma'lumotlaridan har soat uchun o'rtacha qiymat va 24 soatlik sirpanuvchi o'rtacha olish kerak. Qaysi yondashuv to'g'ri?",
+      "options": [
+        { "id": "a", "text": "Vaqt ustunini `pd.to_datetime` bilan datetime'ga o'girib (vaqt zonasini aniqlab) index qilish; `df.resample(\"1h\").mean()` — soatlik agregatsiya; keyin `.rolling(24).mean()` (yoki vaqt oynasi `rolling(\"24h\")`) — sirpanuvchi o'rtacha. Bo'sh soatlar NaN bo'lishi va qanday to'ldirilishini hisobga olish", "correct": true },
+        { "id": "b", "text": "Vaqtni satr sifatida qoldirib, `groupby(df.time.str[:13])` qilish", "hint": "Mo'rt va sekin; vaqt zonasi, format va bo'sh soatlarni to'g'ri ishlamaydi." },
+        { "id": "c", "text": "`rolling(24)` sekundlik ma'lumotda ham 24 soatni beradi", "hint": "Butun son oyna — qatorlar soni: sekundlik ma'lumotda 24 sekund." },
+        { "id": "d", "text": "Python siklida har soatni qo'lda hisoblash", "hint": "pandas vaqt qatorlari vositalari buni vektorlashgan holda qiladi." }
+      ],
+      "explanation": "Xususiyat (feature) yaratishda `rolling` faqat o'tmish qiymatlaridan foydalanishi kerak — `center=True` yoki kelajak qiymatlari data leakage beradi. `shift(1)` bilan \"oldingi soat\" xususiyatlari.",
+      "reviewed": false
+    },
+    {
+      "id": "ml.python.012",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Quyidagi kod nimani chop etadi?",
+      "code": "import numpy as np\n\na = np.array([1, 2, 3, 4, 5])\nb = a[1:3]\nb[0] = 99\nc = a[[0, 1]]\nc[0] = -1\n\nprint(a)",
+      "options": [
+        { "id": "a", "text": "[ 1 99  3  4  5]", "correct": true },
+        { "id": "b", "text": "[1 2 3 4 5]", "hint": "Oddiy kesish (slice) nusxa emas, ko'rinish (view) qaytaradi — `b` orqali yozish `a`ni o'zgartiradi." },
+        { "id": "c", "text": "[-1 99  3  4  5]", "hint": "Indekslar ro'yxati bilan tanlash (fancy indexing) har doim nusxa qaytaradi — `c` o'zgarishi `a`ga ta'sir qilmaydi." },
+        { "id": "d", "text": "[-1  2  3  4  5]", "hint": "Qaysi amal view, qaysi biri nusxa qaytarishini solishtiring." }
+      ],
+      "explanation": "Slice — view (xotira bo'lishiladi, tez), fancy/boolean indexing — nusxa. Tekshirish: `np.shares_memory(a, b)`. Funksiyaga massiv berib, ichida slice'ni o'zgartirish — kutilmagan yon ta'sir manbai; kerak bo'lsa `.copy()`.",
+      "reviewed": false
+    },
+    {
+      "id": "ml.python.013",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "200 GB'lik log ma'lumotlarini bitta mashinada (32 GB RAM) tahlil qilish kerak. Qaysi yondashuv to'g'ri?",
+      "options": [
+        { "id": "a", "text": "Xotiradan kattaroq ma'lumot uchun mo'ljallangan vositalar: Parquet'ga o'tkazish (ustunli, siqilgan, bo'limlangan), DuckDB yoki Polars lazy/streaming rejimida so'rov — faqat kerakli ustun va qatorlar o'qiladi, filtrlar manbaga \"pushdown\" qilinadi; juda katta bo'lsa — Spark/Dask kabi taqsimlangan hisoblash", "correct": true },
+        { "id": "b", "text": "`pd.read_csv` bilan hammasini birdan yuklash", "hint": "Xotiraga sig'maydi — jarayon yiqiladi yoki swap'da qotadi." },
+        { "id": "c", "text": "Ma'lumotni Excel'ga bo'lib-bo'lib ochish", "hint": "Excel qator chegarasi (~1 mln) va qo'lda ish — imkonsiz va xatoga moyil." },
+        { "id": "d", "text": "Tasodifiy 1% tanlanma bilan har doim cheklanish", "hint": "Tanlanma qidiruv tahlili uchun foydali, lekin aniq hisobotlar (summa, noyob foydalanuvchilar) uchun to'liq ma'lumot kerak." }
+      ],
+      "explanation": "DuckDB to'g'ridan-to'g'ri Parquet/CSV ustida SQL ishlatadi: `SELECT city, sum(amount) FROM 'logs/*.parquet' GROUP BY city`. Ma'lumotni sana bo'yicha bo'limlash (partitioning) so'rovlarni keskin tezlashtiradi.",
+      "reviewed": false
+    },
+    {
+      "id": "ml.python.014",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Har kecha ishlaydigan ma'lumot pipeline'ida manba tizim jim o'zgarib qolishi (ustun nomi, tip, birlik o'zgarishi) model sifatini buzmoqda. Qanday himoya qurasiz?",
+      "options": [
+        { "id": "a", "text": "Ma'lumot kontrakti va avtomatik validatsiya: sxema (ustunlar, tiplar, nullable), qiymat diapazonlari va kategoriyalar, qatorlar soni va noyoblik, taqsimot statistikalari (oldingi kunlarga nisbatan keskin siljish) — Pandera, Great Expectations yoki dbt testlari bilan pipeline bosqichlarida; buzilsa pipeline to'xtaydi va egasiga alert; manba jamoasi bilan sxema o'zgarishlari jarayoni kelishiladi", "correct": true },
+        { "id": "b", "text": "Xatolarni `try/except: pass` bilan yutib yuborish — pipeline to'xtamasin", "hint": "Buzuq ma'lumot jim o'tib, modelga va hisobotlarga tushadi — eng qimmat xato turi." },
+        { "id": "c", "text": "Faqat model metrikalari tushganda tekshirish", "hint": "Kechikish katta: zarar allaqachon production'da; ma'lumot muammosini manba bosqichida ushlash arzonroq." },
+        { "id": "d", "text": "Har kuni natijalarni qo'lda ko'zdan kechirish", "hint": "Masshtablanmaydi va inson e'tibori ishonchsiz; avtomatik tekshiruvlar kerak." }
+      ],
+      "explanation": "\"Garbage in, garbage out\": ML tizimlaridagi ko'p incident'lar model emas, ma'lumot muammosi. Ma'lumot liniyasi (lineage) va versiyalash qaysi manba qaysi natijaga ta'sir qilganini topishga yordam beradi.",
+      "reviewed": false
+    }
+  ]
+}
