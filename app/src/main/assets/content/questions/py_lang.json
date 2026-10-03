@@ -1,0 +1,217 @@
+{
+  "topic": "py.lang",
+  "questions": [
+    {
+      "id": "py.lang.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Python'da `list` va `tuple` farqi nima?",
+      "options": [
+        { "id": "a", "text": "`list` o'zgaruvchan (mutable), `tuple` o'zgarmas (immutable); shuning uchun tuple dict kaliti bo'la oladi va biroz tezroq", "correct": true },
+        { "id": "b", "text": "`tuple` faqat sonlarni saqlaydi", "hint": "Ikkalasi ham istalgan tipni saqlaydi." },
+        { "id": "c", "text": "`list` tartibni saqlamaydi", "hint": "Ikkalasi ham tartibli." },
+        { "id": "d", "text": "Farqi faqat qavslarda", "hint": "Qavslar sintaksis; asosiy farq o'zgaruvchanlikda." }
+      ],
+      "explanation": "Tuple \"yozuv\" (koordinata, qaytariladigan juftlik) uchun, list esa o'zgaradigan to'plam uchun. O'zgarmaslik xatolardan himoya qiladi va `hash` imkonini beradi: `{(1, 2): 'a'}` ishlaydi, `{[1, 2]: 'a'}` xato.",
+      "reviewed": false
+    },
+    {
+      "id": "py.lang.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Bu kod nima chiqaradi?",
+      "code": "a = [1, 2, 3]\nb = a\nb.append(4)\nprint(a)",
+      "options": [
+        { "id": "a", "text": "[1, 2, 3, 4]", "correct": true },
+        { "id": "b", "text": "[1, 2, 3]", "hint": "`b = a` nusxa yaratmaydi; ikkala nom bitta ro'yxatga ishora qiladi." },
+        { "id": "c", "text": "Xato", "hint": "Kod to'g'ri; `append` ro'yxatni joyida o'zgartiradi." },
+        { "id": "d", "text": "[4]", "hint": "`append` oxiriga qo'shadi, almashtirmaydi." }
+      ],
+      "explanation": "Python'da o'zgaruvchi obyektga yorliq. Mustaqil nusxa uchun `b = a.copy()` yoki `list(a)`; ichma-ich tuzilmalar uchun `copy.deepcopy`. Bu \"mutable default argument\" xatosining ham ildizi.",
+      "reviewed": false
+    },
+    {
+      "id": "py.lang.003",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Bu funksiya ikki marta chaqirilganda nima chiqaradi?",
+      "code": "def add(item, items=[]):\n    items.append(item)\n    return items\n\nprint(add(1))\nprint(add(2))",
+      "options": [
+        { "id": "a", "text": "[1] keyin [1, 2]", "correct": true },
+        { "id": "b", "text": "[1] keyin [2]", "hint": "Standart qiymat har chaqiruvda yangidan yaratilmaydi." },
+        { "id": "c", "text": "Xato", "hint": "Kod ishlaydi, faqat kutilmagan natija beradi." },
+        { "id": "d", "text": "[1, 2] keyin [1, 2]", "hint": "Birinchi chaqiruvda ro'yxatda hali bitta element." }
+      ],
+      "explanation": "Standart qiymatlar funksiya e'lon qilinganda bir marta hisoblanadi; `[]` chaqiruvlar orasida ulashiladi. To'g'ri yozuv: `items=None` va ichida `if items is None: items = []`.",
+      "reviewed": false
+    },
+    {
+      "id": "py.lang.004",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`is` va `==` farqi nima?",
+      "options": [
+        { "id": "a", "text": "`==` qiymatlarni (`__eq__`) solishtiradi, `is` ikki nom aynan bitta obyektga ishora qilishini tekshiradi", "correct": true },
+        { "id": "b", "text": "Farqi yo'q", "hint": "`[1] == [1]` True, `[1] is [1]` False." },
+        { "id": "c", "text": "`is` tezroq, shuning uchun hamma joyda ishlatish kerak", "hint": "Qiymat solishtirish uchun `is` noto'g'ri natija beradi." },
+        { "id": "d", "text": "`is` faqat sonlar uchun", "hint": "`is` har qanday obyekt uchun identiklikni tekshiradi; sonlar uchun esa uni ishlatmaslik kerak." }
+      ],
+      "explanation": "`is` faqat singleton'lar bilan: `x is None`, `x is True`. Kichik butun sonlar keshlangani uchun `a is b` ba'zan True chiqadi va bu yolg'on ishonch beradi; qiymat uchun doim `==`.",
+      "reviewed": false
+    },
+    {
+      "id": "py.lang.005",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`*args` va `**kwargs` nima?",
+      "options": [
+        { "id": "a", "text": "`*args` ixtiyoriy sondagi pozitsion argumentlarni tuple sifatida, `**kwargs` nomli argumentlarni dict sifatida qabul qiladi", "correct": true },
+        { "id": "b", "text": "Ko'rsatkichlar (pointer) sintaksisi", "hint": "Python'da ko'rsatkich yo'q; `*` bu yerda \"yoyish\" belgisi." },
+        { "id": "c", "text": "Majburiy argumentlar", "hint": "Aksincha, ular ixtiyoriy va soni noma'lum." },
+        { "id": "d", "text": "Nomlari aynan `args` va `kwargs` bo'lishi shart", "hint": "Nom kelishuv; muhimi `*` va `**`." }
+      ],
+      "explanation": "`def log(*args, **kwargs)` istalgan chaqiruvni qabul qiladi; dekoratorlar shu usulda asl funksiyaga argumentlarni uzatadi (`f(*args, **kwargs)`). `*` chaqiruvda ham ishlaydi: `print(*[1, 2, 3])`.",
+      "reviewed": false
+    },
+    {
+      "id": "py.lang.006",
+      "level": "junior",
+      "type": "single",
+      "kind": "true_false",
+      "prompt": "Quyidagi fikr to'g'rimi?\n\nPython'da bloklar (if, for, def) qavs bilan emas, bo'sh joy (indentatsiya) bilan belgilanadi va noto'g'ri indentatsiya xato hisoblanadi.",
+      "options": [
+        { "id": "a", "text": "Ha", "correct": true },
+        { "id": "b", "text": "Yo'q", "hint": "Python'da indentatsiya sintaksisning bir qismi: `IndentationError` haqiqiy xato. PEP 8 bo'yicha 4 ta bo'sh joy ishlatiladi; tab va bo'sh joyni aralashtirish xato beradi." }
+      ],
+      "explanation": "Bu kodni o'qilishini majburlaydi. Formatterlar (black, ruff format) uslubni avtomatik tekislaydi, shuning uchun jamoada indentatsiya bahsi bo'lmaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "py.lang.007",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Dekorator nima va qanday ishlaydi?",
+      "options": [
+        { "id": "a", "text": "Funksiyani qabul qilib, uni o'rab olgan yangi funksiya qaytaradigan funksiya; `@dec` yozuvi `f = dec(f)` bilan teng", "correct": true },
+        { "id": "b", "text": "Klassga xususiyat qo'shadigan annotatsiya", "hint": "Bu Java'dagi annotatsiya haqida tasavvur; Python dekoratori oddiy funksiya chaqiruvi." },
+        { "id": "c", "text": "Faqat `@property` va `@staticmethod` degan ichki sintaksis", "hint": "Bular tayyor dekoratorlar; o'zingiznikini yozish mumkin." },
+        { "id": "d", "text": "Funksiyani tezlashtiruvchi kompilyator ko'rsatmasi", "hint": "Tezlikka aloqasi yo'q (faqat `lru_cache` kabi dekorator kesh orqali tezlashtiradi)." }
+      ],
+      "explanation": "Log, kesh, retry, autentifikatsiya tekshiruvi — dekoratorlar bilan kesishuvchi mantiq bir joyda yoziladi. `functools.wraps` asl funksiyaning nomi va hujjatini saqlaydi; usiz debugging qiyinlashadi.",
+      "reviewed": false
+    },
+    {
+      "id": "py.lang.008",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Bu kod nima chiqaradi?",
+      "code": "def gen():\n    print(\"start\")\n    yield 1\n    yield 2\n\ng = gen()\nprint(\"created\")\nprint(next(g))\nprint(next(g))",
+      "options": [
+        { "id": "a", "text": "created, start, 1, 2", "correct": true },
+        { "id": "b", "text": "start, created, 1, 2", "hint": "Generator funksiyasi chaqirilganda tanasi bajarilmaydi; birinchi `next` gacha kutadi." },
+        { "id": "c", "text": "created, 1, 2", "hint": "`print(\"start\")` birinchi `yield` dan oldin turibdi va birinchi `next` da bajariladi." },
+        { "id": "d", "text": "created, start, 1, start, 2", "hint": "Generator holatini saqlaydi; `start` ikkinchi marta bajarilmaydi." }
+      ],
+      "explanation": "Generator dangasa (lazy): har `next` keyingi `yield` gacha ishlaydi va to'xtaydi. Shuning uchun u cheksiz ketma-ketlik va katta fayllarni xotiraga yuklamasdan qayta ishlash imkonini beradi.",
+      "reviewed": false
+    },
+    {
+      "id": "py.lang.009",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Context manager (`with`) nima uchun kerak va qanday yoziladi?",
+      "options": [
+        { "id": "a", "text": "Resursni olish va xato bo'lsa ham albatta qaytarish uchun; `__enter__`/`__exit__` metodlari yoki `@contextmanager` dekoratorli generator bilan yoziladi", "correct": true },
+        { "id": "b", "text": "Faqat fayllar uchun maxsus sintaksis", "hint": "Fayl eng mashhur misol, lekin qulflar, tranzaksiyalar, ulanishlar ham." },
+        { "id": "c", "text": "`try/except` ning qisqa yozuvi", "hint": "U `try/finally` ga yaqinroq; xatoni ushlash majburiy emas." },
+        { "id": "d", "text": "Kodni tezlashtirish vositasi", "hint": "Tezlikka aloqasi yo'q; to'g'rilik uchun." }
+      ],
+      "explanation": "`with open(p) as f:` blokdan chiqishda (exception bo'lsa ham) faylni yopadi. `__exit__` xatoni qabul qiladi va `True` qaytarsa uni yutadi. Baza tranzaksiyasi: `__exit__` da xato bo'lsa rollback, bo'lmasa commit.",
+      "reviewed": false
+    },
+    {
+      "id": "py.lang.010",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`@staticmethod`, `@classmethod` va oddiy metod farqi nima?",
+      "options": [
+        { "id": "a", "text": "Oddiy metod `self` (nusxa) oladi; `classmethod` `cls` (klass) oladi va muqobil konstruktorlar uchun qulay; `staticmethod` hech narsa olmaydi, shunchaki klass ichidagi funksiya", "correct": true },
+        { "id": "b", "text": "`staticmethod` klass holatini o'zgartira oladi", "hint": "U klassga ham, nusxaga ham murojaat qilmaydi." },
+        { "id": "c", "text": "`classmethod` faqat meros olingan klasslarda ishlaydi", "hint": "Har qanday klassda ishlaydi; `cls` meros olinganda bola klass bo'ladi — bu uning afzalligi." },
+        { "id": "d", "text": "Farqi yo'q, hammasi bir xil chaqiriladi", "hint": "Chaqirish sintaksisi o'xshash, lekin birinchi argument har xil." }
+      ],
+      "explanation": "`@classmethod def from_json(cls, s)` meros olingan klassda ham to'g'ri tipni qaytaradi. `staticmethod` klass bilan mantiqan bog'liq yordamchi funksiya uchun; ko'pincha oddiy modul funksiyasi ham yetadi.",
+      "reviewed": false
+    },
+    {
+      "id": "py.lang.011",
+      "level": "middle",
+      "type": "multi",
+      "kind": "concept",
+      "prompt": "Quyidagilardan qaysilari Python'da o'zgarmas (immutable) tiplar?",
+      "options": [
+        { "id": "a", "text": "`str`", "correct": true },
+        { "id": "b", "text": "`tuple`", "correct": true },
+        { "id": "c", "text": "`list`", "hint": "`append`, `pop` uni joyida o'zgartiradi." },
+        { "id": "d", "text": "`dict`", "hint": "Kalit qo'shish va o'chirish mumkin." }
+      ],
+      "explanation": "O'zgarmas tiplar: `int`, `float`, `str`, `bytes`, `tuple`, `frozenset`. `s += 'x'` yangi satr yaratadi, eskisini o'zgartirmaydi. O'zgarmaslik hash imkonini beradi va funksiyaga uzatilganda kutilmagan o'zgarishdan himoya qiladi.",
+      "reviewed": false
+    },
+    {
+      "id": "py.lang.012",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "MRO (method resolution order) nima va ko'p meroslilikda nega muhim?",
+      "options": [
+        { "id": "a", "text": "Python metodni qaysi tartibda qidirishini belgilaydi (C3 linearization); `super()` zanjiri shu tartib bo'yicha yuradi, shuning uchun mixin'lar bashorat qilinadigan ishlaydi", "correct": true },
+        { "id": "b", "text": "Metodlarni alifbo bo'yicha tartiblash", "hint": "Tartib klass ierarxiyasidan chiqadi, nomdan emas." },
+        { "id": "c", "text": "Python ko'p meroslilikni qo'llamaydi", "hint": "Qo'llaydi; MRO aynan shuning uchun kerak." },
+        { "id": "d", "text": "Faqat `object` dan meros olganda ishlaydi", "hint": "Har klass oxir-oqibat `object` dan meros oladi; MRO hammasiga tegishli." }
+      ],
+      "explanation": "`class C(A, B)` da `C.__mro__` → C, A, B, object. `super().__init__()` \"ota klass\" emas, MRO'dagi keyingi klassni chaqiradi; shuning uchun har klass `super()` ni chaqirsa, zanjir to'liq o'tadi. Django'ning class-based view'lari shu printsipda.",
+      "reviewed": false
+    },
+    {
+      "id": "py.lang.013",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Bu klass millionlab nusxada yaratiladi va xotira ko'p ketyapti. Nima yordam beradi?",
+      "code": "class Point:\n    def __init__(self, x, y):\n        self.x = x\n        self.y = y",
+      "options": [
+        { "id": "a", "text": "`__slots__ = ('x', 'y')`: har nusxada `__dict__` yaratilmaydi, xotira sezilarli kamayadi va atribut murojaati tezlashadi", "correct": true },
+        { "id": "b", "text": "`x` va `y` ni `float` ga aylantirish", "hint": "Tip xotira muammosini hal qilmaydi; muammo har nusxadagi lug'atda." },
+        { "id": "c", "text": "Klassni funksiyaga almashtirish", "hint": "Nusxalar baribir kerak." },
+        { "id": "d", "text": "`gc.collect()` ni tez-tez chaqirish", "hint": "Tirik obyektlarni GC o'chirmaydi." }
+      ],
+      "explanation": "Oddiy nusxa atributlarni `__dict__` da saqlaydi (yuzlab bayt). `__slots__` atributlarni qat'iy joylarda saqlaydi, lekin yangi atribut qo'shishga yo'l qo'ymaydi. `@dataclass(slots=True)` ikkalasini birga beradi. Alternativ: `numpy` massivlari.",
+      "reviewed": false
+    },
+    {
+      "id": "py.lang.014",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Katta Python loyihasida type hint'lar va `mypy`/`pyright` qanday foyda beradi va qanday yondashuv to'g'ri?",
+      "options": [
+        { "id": "a", "text": "Xatolarni ishga tushirmasdan topish, IDE yordami va hujjat; bosqichma-bosqich kiritish, chegaralarda (API, baza) qat'iy, CI'da tekshiruv, `Any` ni kuzatish", "correct": true },
+        { "id": "b", "text": "Type hint'lar runtime'da tiplarni tekshiradi", "hint": "Python ularni e'tiborsiz qoldiradi; tekshiruv faqat statik vositalarda (yoki pydantic kabi kutubxonalarda)." },
+        { "id": "c", "text": "Ular kodni sekinlashtiradi, shuning uchun ishlatmaslik kerak", "hint": "Runtime ta'siri deyarli yo'q." },
+        { "id": "d", "text": "Faqat kutubxona mualliflari uchun", "hint": "Katta ilova kodida eng ko'p foyda beradi: refaktoring xavfsizlashadi." }
+      ],
+      "explanation": "Dinamik tilda refaktoring xavfli: `rename` xatolari faqat runtime'da chiqadi. Tiplar + statik tekshiruv bu xavfni kamaytiradi. Amaliy qoida: yangi kod to'liq tiplangan, eski kod modullar bo'yicha o'tkaziladi, `strict` rejim bosqichma-bosqich yoqiladi.",
+      "reviewed": false
+    }
+  ]
+}

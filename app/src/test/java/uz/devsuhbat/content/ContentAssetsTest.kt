@@ -93,6 +93,12 @@ class ContentAssetsTest {
         "fe.ts" to listOf(4, 4, 3, 2),
         "fe.browser" to listOf(3, 3, 2, 2),
         "fe.arch" to listOf(2, 2, 2, 2),
+        "py.lang" to listOf(6, 5, 2, 1),
+        "py.idioms" to listOf(5, 4, 2, 1),
+        "py.web" to listOf(4, 4, 3, 2),
+        "py.async" to listOf(4, 4, 3, 2),
+        "py.db" to listOf(3, 3, 2, 2),
+        "py.arch" to listOf(2, 2, 2, 2),
     )
 
     @Test

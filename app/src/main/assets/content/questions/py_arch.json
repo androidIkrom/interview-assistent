@@ -1,0 +1,125 @@
+{
+  "topic": "py.arch",
+  "questions": [
+    {
+      "id": "py.arch.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Virtual muhit (`venv`) nima uchun kerak?",
+      "options": [
+        { "id": "a", "text": "Har loyihaning paketlarini alohida saqlash uchun: versiyalar to'qnashmaydi va tizim Python'i ifloslanmaydi", "correct": true },
+        { "id": "b", "text": "Python'ni tezlashtirish uchun", "hint": "Tezlikka aloqasi yo'q." },
+        { "id": "c", "text": "Kodni shifrlash uchun", "hint": "Xavfsizlik vositasi emas." },
+        { "id": "d", "text": "Faqat Windows'da kerak", "hint": "Har platformada." }
+      ],
+      "explanation": "Bitta loyiha Django 4, boshqasi Django 5 talab qilsa, global o'rnatish bilan ikkalasi birga ishlamaydi. `requirements.txt` yoki `pyproject.toml` + lock fayl (uv, poetry) bog'liqliklarni aniq versiyalar bilan takrorlanuvchan qiladi.",
+      "reviewed": false
+    },
+    {
+      "id": "py.arch.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Sozlamalar (baza paroli, API kalitlari) qayerda saqlanishi kerak?",
+      "options": [
+        { "id": "a", "text": "Environment o'zgaruvchilarida yoki secret manager'da; kodda va git'da emas; `.env` fayl faqat lokal va `.gitignore` da", "correct": true },
+        { "id": "b", "text": "`settings.py` ichida to'g'ridan-to'g'ri", "hint": "Git tarixiga tushadi va har muhit uchun kodni o'zgartirish kerak bo'ladi." },
+        { "id": "c", "text": "Ma'lumotlar bazasida", "hint": "Bazaga ulanish uchun parol kerak — aylanma bog'liqlik." },
+        { "id": "d", "text": "Izohda (comment) yozib qo'yish", "hint": "Izoh ham kodning bir qismi." }
+      ],
+      "explanation": "12-factor prinsipi: konfiguratsiya muhitda. `pydantic-settings` yoki `django-environ` muhitdan tiplangan sozlamalar o'qiydi. Secret tasodifan commit bo'lsa, uni almashtirish (rotate) shart.",
+      "reviewed": false
+    },
+    {
+      "id": "py.arch.003",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Veb-ilovada keshlash (Redis) qanday strategiya bilan qilinadi va asosiy muammo nima?",
+      "options": [
+        { "id": "a", "text": "Cache-aside: avval keshdan, bo'lmasa bazadan o'qib keshga yozish, TTL bilan; asosiy muammo — invalidatsiya: ma'lumot o'zgarganda keshni yangilash yoki o'chirish", "correct": true },
+        { "id": "b", "text": "Hamma narsani cheksiz keshlash", "hint": "Eskirgan ma'lumot va xotira tugashi." },
+        { "id": "c", "text": "Keshni bazaning o'rniga ishlatish", "hint": "Redis yo'qolsa, ma'lumot ham yo'qoladi; u manba emas, tezlashtiruvchi." },
+        { "id": "d", "text": "Faqat statik fayllarni keshlash", "hint": "Statik fayllar CDN ishi; Redis so'rov natijalari va hisoblar uchun." }
+      ],
+      "explanation": "Kalit nomlash (`user:42:profile`), TTL, \"thundering herd\" (ko'p so'rov bir vaqtda bo'sh keshga tushadi — qulf yoki erta yangilash) va serializatsiya formati — amaliy masalalar. Django'da `cache.get_or_set`, FastAPI'da dekorator yoki qo'lda.",
+      "reviewed": false
+    },
+    {
+      "id": "py.arch.004",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Loyihada kod qatlamlari (router/view → service → repository) nima uchun ajratiladi?",
+      "options": [
+        { "id": "a", "text": "HTTP tafsilotlari, biznes mantiq va baza kirishini ajratish: har qatlam alohida test qilinadi va almashtiriladi; view yupqa qoladi", "correct": true },
+        { "id": "b", "text": "Fayllar soni ko'p bo'lsin uchun", "hint": "Maqsad soni emas, mas'uliyat ajratish." },
+        { "id": "c", "text": "Freymvork shuni majburlaydi", "hint": "Django ham, FastAPI ham majburlamaydi; bu jamoa intizomi." },
+        { "id": "d", "text": "Tezlik uchun", "hint": "Qatlamlar tezlashtirmaydi; tushunarlilik va testlanuvchanlik uchun." }
+      ],
+      "explanation": "View'da biznes mantiq bo'lsa, uni HTTP'siz test qilib bo'lmaydi va CLI/worker'dan qayta ishlatib bo'lmaydi. Kichik loyihada ortiqcha qatlamlar ham zarar; o'sgan sari ajratish tabiiy keladi. Django'da \"fat models, thin views\" yoki alohida `services.py`.",
+      "reviewed": false
+    },
+    {
+      "id": "py.arch.005",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Celery vazifasi qayta urinishda (retry) ikki marta email yubormasligi uchun nima qilish kerak?",
+      "options": [
+        { "id": "a", "text": "Vazifani idempotent qilish: yagona kalit (masalan, `email:order:42`) bo'yicha bajarilganlikni bazada yoki Redis'da belgilash va tekshirish; `acks_late` bilan birga", "correct": true },
+        { "id": "b", "text": "Retry'ni o'chirish", "hint": "Unda vaqtinchalik xatoda vazifa butunlay yo'qoladi." },
+        { "id": "c", "text": "Vazifani ikki marta chaqirmaslikka harakat qilish", "hint": "Tarmoq va worker o'limi sabab \"kamida bir marta\" yetkazish muqarrar; kod bunga tayyor bo'lishi kerak." },
+        { "id": "d", "text": "`time.sleep` qo'shish", "hint": "Kechikish takrorni oldini olmaydi." }
+      ],
+      "explanation": "Navbatlar \"at-least-once\" kafolat beradi: worker natijani tasdiqlashdan oldin o'lsa, vazifa qayta keladi. Shuning uchun har vazifa takroriy bajarilishga chidamli bo'lishi kerak. Yon ta'sir (email, to'lov) oldidan \"bajarildimi\" tekshiruvi — standart naqsh.",
+      "reviewed": false
+    },
+    {
+      "id": "py.arch.006",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Python servisining kuzatuvchanligi (observability) uchun minimal to'plam nima?",
+      "options": [
+        { "id": "a", "text": "Strukturali loglar (JSON, so'rov identifikatori bilan), metrikalar (so'rovlar soni, kechikish p95, xatolar — Prometheus), tarqatilgan tracing (OpenTelemetry), xato kuzatuvi (Sentry)", "correct": true },
+        { "id": "b", "text": "`print` bilan loglash yetarli", "hint": "`print` darajasiz, formatsiz va qidirib bo'lmaydi." },
+        { "id": "c", "text": "Faqat server CPU grafigi", "hint": "CPU ilova nima qilayotganini aytmaydi." },
+        { "id": "d", "text": "Foydalanuvchi shikoyatlari", "hint": "Muammoni ular aytguncha emas, oldin ko'rish kerak." }
+      ],
+      "explanation": "Request ID so'rov bilan birga barcha loglar va servislar orqali o'tadi; shunda bitta so'rovning izini topish mumkin. Metrikalar alert uchun, loglar sabab uchun, trace sekin qism qayerdaligi uchun. `logging` modulini `structlog` bilan JSON'ga sozlash odat.",
+      "reviewed": false
+    },
+    {
+      "id": "py.arch.007",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Katta Django monolitini bo'lish kerakmi va qanday?",
+      "options": [
+        { "id": "a", "text": "Avval ichkarida chegaralar (modulli monolit: alohida app'lar, aniq interfeyslar, bir-birining modeliga to'g'ridan-to'g'ri murojaat yo'q); faqat alohida masshtab, jamoa yoki texnologiya ehtiyoji bo'lgan qismni ajratish; ma'lumot egaligini aniqlash", "correct": true },
+        { "id": "b", "text": "Darhol mikroservislarga bo'lish", "hint": "Chegaralar aniq bo'lmagan monolitni bo'lish taqsimlangan monolit beradi: hamma muammo + tarmoq." },
+        { "id": "c", "text": "Hech qachon bo'lmaslik", "hint": "Ba'zi qismlar (hisobot, ML) haqiqatan alohida bo'lishi kerak bo'ladi." },
+        { "id": "d", "text": "Har Django app'ni alohida servis qilish", "hint": "App chegarasi har doim servis chegarasi emas; umumiy baza muammosi qoladi." }
+      ],
+      "explanation": "Mikroservis narxi: tarmoq, taqsimlangan tranzaksiya, deploy va kuzatuv murakkabligi. Ko'p jamoalar uchun yaxshi tuzilgan monolit yetarli. Ajratishda birinchi qadam — umumiy bazadan voz kechish; bu ko'pincha eng qiyin qism.",
+      "reviewed": false
+    },
+    {
+      "id": "py.arch.008",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Python servisining performance'ini yaxshilashda qaysi tartib to'g'ri?",
+      "options": [
+        { "id": "a", "text": "Avval o'lchash (profiler, APM, p95), odatda baza so'rovlari va tashqi I/O eng katta sabab; keyin kesh, N+1, indeks; faqat shundan keyin kod optimizatsiyasi va kerak bo'lsa og'ir qismni C/Rust kengaytmasi yoki boshqa tilga chiqarish", "correct": true },
+        { "id": "b", "text": "Darhol Go yoki Rust'ga qayta yozish", "hint": "Ko'p hollarda sekinlik tilda emas, bazada va arxitekturada; qayta yozish qimmat." },
+        { "id": "c", "text": "Barcha sikllarni list comprehension qilish", "hint": "Mikro-optimizatsiya; umumiy vaqtga ta'siri odatda foizning ulushi." },
+        { "id": "d", "text": "PyPy'ga o'tish", "hint": "Ba'zan yordam beradi, lekin C-kengaytmalar bilan moslik muammosi; avval sabab topilishi kerak." }
+      ],
+      "explanation": "Amdahl qonuni: so'rov vaqtining 90% baza bo'lsa, Python kodini 2 barobar tezlashtirish jami 5% beradi. `py-spy`, `cProfile`, APM (Datadog, Sentry Performance) qayerda vaqt ketayotganini ko'rsatadi. Python'ning o'zi kamdan-kam tor joy bo'ladi; bo'lsa, `numpy`, Cython, Rust (PyO3) nuqtaviy yechim.",
+      "reviewed": false
+    }
+  ]
+}

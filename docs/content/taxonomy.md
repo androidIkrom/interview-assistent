@@ -279,6 +279,7 @@ Tugallangan mavzular `ContentAssetsTest.completedTopics` ro'yxatida turadi: test
 | 2. `core.git` + `core.http` | yozildi (2026-10-03), inson tekshiruvi kutilmoqda | 172 / 1312 |
 | 3. `core.sql` + `core.dsa` | yozildi (2026-10-03), inson tekshiruvi kutilmoqda | 286 / 1312 |
 | 4. Frontend (6 mavzu) | yozildi (2026-10-03), inson tekshiruvi kutilmoqda | 356 / 1312 |
+| 5. Python (6 mavzu) | yozildi (2026-10-03), inson tekshiruvi kutilmoqda | 426 / 1312 |
 
 ## 6. Manbalar
 
