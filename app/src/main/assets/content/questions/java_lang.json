@@ -1,0 +1,219 @@
+{
+  "topic": "java.lang",
+  "questions": [
+    {
+      "id": "java.lang.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Java'da primitiv va reference tiplar qanday farqlanadi?",
+      "options": [
+        { "id": "a", "text": "Primitiv (`int`, `boolean`, `double`...) qiymatni o'zida saqlaydi va null bo'lolmaydi; reference tiplar ob'ektga havola saqlaydi, null bo'lishi mumkin va heap'da yashaydi", "correct": true },
+        { "id": "b", "text": "Primitivlar heap'da, ob'ektlar stack'da saqlanadi", "hint": "Teskari: lokal primitivlar stack'da, ob'ektlar heap'da." },
+        { "id": "c", "text": "Farqi yo'q, `int` ham ob'ekt", "hint": "`int.toString()` yozib ko'ring — kompilyatsiya bo'lmaydi; ob'ekt — `Integer`." },
+        { "id": "d", "text": "Reference tiplar null bo'lolmaydi", "hint": "`String s = null;` — mumkin, va NPE manbai." }
+      ],
+      "explanation": "8 primitiv: `byte short int long float double char boolean`. Har biriga wrapper (`Integer`, `Double`...) — kolleksiyalarda kerak (`List<Integer>`). Autoboxing avtomatik o'giradi, lekin `Integer == Integer` havolani solishtiradi — 127 dan katta qiymatlarda tuzoq.",
+      "reviewed": false
+    },
+    {
+      "id": "java.lang.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`equals()` va `==` orasidagi farq nimada?",
+      "options": [
+        { "id": "a", "text": "`==` reference tiplar uchun havolalarni (bir xil ob'ektmi) solishtiradi; `equals()` mantiqiy tenglikni tekshiradi (klass qanday aniqlagan bo'lsa)", "correct": true },
+        { "id": "b", "text": "Ikkalasi bir xil", "hint": "`new String(\"a\") == new String(\"a\")` nima beradi?" },
+        { "id": "c", "text": "`==` faqat primitivlar uchun ishlaydi", "hint": "Ob'ektlar uchun ham ishlaydi, lekin havolani solishtiradi." },
+        { "id": "d", "text": "`equals()` tezroq", "hint": "Tezlik emas, semantika farq qiladi." }
+      ],
+      "explanation": "`Object.equals()` default `==` bilan bir xil; `String`, `Integer`, record'lar uni override qiladi. Qoida: ob'ektlarni `equals()` bilan solishtiring (yoki `Objects.equals(a, b)` — null-safe). String literal'lar pool'da bo'lgani uchun `\"a\" == \"a\"` tasodifan true — bunga tayanmang.",
+      "reviewed": false
+    },
+    {
+      "id": "java.lang.003",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`equals()` override qilinsa, nima uchun `hashCode()` ham override qilinishi kerak?",
+      "options": [
+        { "id": "a", "text": "Kontrakt: teng ob'ektlar bir xil hashCode'ga ega bo'lishi shart; aks holda `HashMap`/`HashSet` teng ob'ektlarni turli bucket'ga qo'yib, topolmaydi", "correct": true },
+        { "id": "b", "text": "Kompilyator talab qiladi", "hint": "Kompilyator ogohlantirmaydi — IDE/linter ogohlantiradi." },
+        { "id": "c", "text": "`toString()` ishlashi uchun", "hint": "`toString` mustaqil." },
+        { "id": "d", "text": "Shart emas", "hint": "`HashSet`ga ikkita \"teng\" ob'ekt qo'yib `size()` tekshiring." }
+      ],
+      "explanation": "`HashMap` avval `hashCode()` bo'yicha bucket topadi, keyin `equals()` bilan tekshiradi. hashCode farq qilsa, `equals()` hech chaqirilmaydi. Teskarisi shart emas: turli ob'ektlar bir xil hash bo'lishi mumkin (kolliziya). `Objects.hash(...)` yoki record ishlatish — xavfsiz yo'l.",
+      "reviewed": false
+    },
+    {
+      "id": "java.lang.004",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Quyidagi kod nimani chop etadi?",
+      "code": "String s = \"hello\";\ns.toUpperCase();\ns.concat(\" world\");\nSystem.out.println(s);",
+      "options": [
+        { "id": "a", "text": "hello", "correct": true },
+        { "id": "b", "text": "HELLO", "hint": "`toUpperCase()` yangi String qaytaradi — natija hech qayerga saqlanmadi." },
+        { "id": "c", "text": "HELLO world", "hint": "Ikkala metod ham asl ob'ektni o'zgartirmaydi." },
+        { "id": "d", "text": "hello world", "hint": "`concat` natijasi tashlab yuborildi." }
+      ],
+      "explanation": "`String` immutable: har o'zgartiruvchi metod yangi ob'ekt qaytaradi, asl o'zgarmaydi. To'g'ri: `s = s.toUpperCase();`. Immutability — thread-safety, string pool, `HashMap` kaliti sifatida xavfsizlik. Ko'p o'zgartirish uchun `StringBuilder`.",
+      "reviewed": false
+    },
+    {
+      "id": "java.lang.005",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`final` kalit so'zi o'zgaruvchi, metod va klassga qo'llanganda nimani anglatadi?",
+      "options": [
+        { "id": "a", "text": "O'zgaruvchi — bir marta qiymat beriladi (havola o'zgarmaydi, ob'ekt ichi o'zgarishi mumkin); metod — override qilib bo'lmaydi; klass — meros olib bo'lmaydi", "correct": true },
+        { "id": "b", "text": "Ob'ektni to'liq immutable qiladi", "hint": "`final List<String> l` — `l.add()` ishlaydi; faqat `l = ...` taqiqlanadi." },
+        { "id": "c", "text": "Faqat konstantalar uchun", "hint": "`static final` konstanta; `final` o'zi kengroq." },
+        { "id": "d", "text": "Garbage collector'dan himoya qiladi", "hint": "GC bilan aloqasi yo'q." }
+      ],
+      "explanation": "`final` parametr va lokal o'zgaruvchilar lambda'da ishlatish uchun kerak (effectively final). `final` klass — `String`, `Integer`. Dizayn maslahati: kengaytirish uchun mo'ljallanmagan klassni `final` qiling, maydonlarni default `final`.",
+      "reviewed": false
+    },
+    {
+      "id": "java.lang.006",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Checked va unchecked exception qanday farqlanadi?",
+      "options": [
+        { "id": "a", "text": "Checked (`Exception` avlodi, `RuntimeException`dan tashqari) — kompilyator ushlash yoki `throws` e'lon qilishni talab qiladi; unchecked (`RuntimeException`, `Error`) — talab qilmaydi", "correct": true },
+        { "id": "b", "text": "Checked runtime'da, unchecked kompilyatsiyada paydo bo'ladi", "hint": "Ikkalasi ham runtime'da tashlanadi; farq kompilyator tekshiruvida." },
+        { "id": "c", "text": "Unchecked exception'ni ushlab bo'lmaydi", "hint": "`catch (NullPointerException e)` — mumkin." },
+        { "id": "d", "text": "Farqi yo'q", "hint": "`IOException`ni `throws`siz tashlab ko'ring — kompilyatsiya xatosi." }
+      ],
+      "explanation": "Checked: `IOException`, `SQLException` — tiklanishi mumkin bo'lgan tashqi holatlar. Unchecked: `NullPointerException`, `IllegalArgumentException` — dasturchi xatosi. `Error` (`OutOfMemoryError`) — ushlamaslik kerak. Zamonaviy amaliyot checked'dan qochadi (Kotlin'da umuman yo'q).",
+      "reviewed": false
+    },
+    {
+      "id": "java.lang.007",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Quyidagi kod nimani chop etadi?",
+      "code": "Integer a = 127, b = 127;\nInteger c = 128, d = 128;\nSystem.out.println((a == b) + \" \" + (c == d));",
+      "options": [
+        { "id": "a", "text": "true false", "correct": true },
+        { "id": "b", "text": "true true", "hint": "`Integer` — ob'ekt, `==` havolani solishtiradi. Cache diapazoni -128..127." },
+        { "id": "c", "text": "false false", "hint": "Kichik qiymatlar `Integer.valueOf` cache'idan bir xil ob'ekt sifatida keladi." },
+        { "id": "d", "text": "Kompilyatsiya xatosi", "hint": "Kod to'g'ri kompilyatsiya qilinadi." }
+      ],
+      "explanation": "Autoboxing `Integer.valueOf()` chaqiradi, u -128..127 ni cache'laydi — bir xil ob'ekt. 128 uchun yangi ob'ektlar — `==` false. Klassik tuzoq; `equals()` yoki `intValue()` bilan solishtiring.",
+      "reviewed": false
+    },
+    {
+      "id": "java.lang.008",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Generics'da `List<? extends Number>` va `List<? super Integer>` qanday farqlanadi?",
+      "options": [
+        { "id": "a", "text": "`? extends Number` — Number yoki avlodlari ro'yxati; o'qish mumkin (Number sifatida), qo'shish mumkin emas. `? super Integer` — Integer yoki ajdodlari; Integer qo'shish mumkin, o'qishda faqat Object. PECS: Producer Extends, Consumer Super", "correct": true },
+        { "id": "b", "text": "Ikkalasi bir xil", "hint": "`list.add(1)` birida kompilyatsiya bo'ladi, ikkinchisida yo'q." },
+        { "id": "c", "text": "`extends` qo'shishga, `super` o'qishga ruxsat beradi", "hint": "Teskari." },
+        { "id": "d", "text": "Wildcard faqat metod qaytarish turida ishlatiladi", "hint": "Asosan parametrlarda ishlatiladi." }
+      ],
+      "explanation": "`List<Integer>` `List<Number>`ning avlodi emas (invariance) — shu sabab wildcard kerak. `Collections.copy(List<? super T> dest, List<? extends T> src)` — PECS namunasi. Type erasure: runtime'da `List<String>` va `List<Integer>` bir xil klass.",
+      "reviewed": false
+    },
+    {
+      "id": "java.lang.009",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Java record nima va u nimani avtomatik beradi?",
+      "options": [
+        { "id": "a", "text": "Immutable ma'lumot tashuvchi klass: `record Point(int x, int y)` — private final maydonlar, konstruktor, accessor'lar (`x()`), `equals`/`hashCode`/`toString` avtomatik; meros ololmaydi, lekin interfeys implement qiladi", "correct": true },
+        { "id": "b", "text": "DB jadval qatori uchun maxsus tur", "hint": "DB bilan aloqasi yo'q — til xususiyati." },
+        { "id": "c", "text": "Mutable klass, setter'lar bilan", "hint": "Record maydonlari final — setter yo'q." },
+        { "id": "d", "text": "Interface'ning yangi nomi", "hint": "Record — konkret klass." }
+      ],
+      "explanation": "Java 16+. Compact konstruktor validatsiya uchun: `record Range(int lo, int hi) { Range { if (lo > hi) throw ...; } }`. Lombok `@Value`ning til darajasidagi o'rnini bosadi. Pattern matching bilan (`if (o instanceof Point(int x, int y))`) deconstruction.",
+      "reviewed": false
+    },
+    {
+      "id": "java.lang.010",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Sealed class/interface nima uchun kerak?",
+      "options": [
+        { "id": "a", "text": "Qaysi klasslar meros olishi mumkinligini cheklaydi (`permits`); `switch` pattern matching bilan kompilyator barcha variantlar qamralganini tekshiradi (exhaustiveness) — algebraik ma'lumot turlari", "correct": true },
+        { "id": "b", "text": "Klassni serializatsiyadan himoya qiladi", "hint": "Serializatsiya bilan aloqasi yo'q." },
+        { "id": "c", "text": "`final` bilan bir xil", "hint": "`final` — hech kim meros olmaydi; sealed — faqat ro'yxatdagilar." },
+        { "id": "d", "text": "Faqat enum uchun ishlaydi", "hint": "Klass va interfeyslar uchun; enum allaqachon \"yopiq\"." }
+      ],
+      "explanation": "`sealed interface Shape permits Circle, Square {}` + `switch (shape) { case Circle c -> ...; case Square s -> ...; }` — `default` kerak emas, yangi variant qo'shilsa kompilyator barcha switch'larni ko'rsatadi. Java 17+. Kotlin `sealed class` bilan bir xil g'oya.",
+      "reviewed": false
+    },
+    {
+      "id": "java.lang.011",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Quyidagi koddagi muammo nimada?",
+      "code": "public class Money {\n    private final long cents;\n    public Money(long cents) { this.cents = cents; }\n\n    @Override\n    public boolean equals(Object o) {\n        Money m = (Money) o;\n        return cents == m.cents;\n    }\n}",
+      "options": [
+        { "id": "a", "text": "`null` va boshqa turdagi ob'ekt uchun exception (`ClassCastException`/NPE) — `instanceof` tekshiruvi kerak; `hashCode` override qilinmagan — `HashMap`da buziladi", "correct": true },
+        { "id": "b", "text": "`long` o'rniga `double` kerak", "hint": "Pul uchun `long` tiyinlarda — to'g'ri." },
+        { "id": "c", "text": "`final` olib tashlanishi kerak", "hint": "Immutable qiymat ob'ekti uchun `final` to'g'ri." },
+        { "id": "d", "text": "Muammo yo'q", "hint": "`money.equals(\"abc\")` nima qiladi?" }
+      ],
+      "explanation": "To'g'ri: `if (this == o) return true; if (!(o instanceof Money m)) return false; return cents == m.cents;` + `hashCode() { return Long.hashCode(cents); }`. Yoki `record Money(long cents)` — hammasi avtomatik va to'g'ri.",
+      "reviewed": false
+    },
+    {
+      "id": "java.lang.012",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Quyidagi kod nimani chop etadi?",
+      "code": "class Parent {\n    static String name() { return \"Parent\"; }\n    String greet() { return \"Hi from \" + name(); }\n}\nclass Child extends Parent {\n    static String name() { return \"Child\"; }\n}\n\nParent p = new Child();\nSystem.out.println(p.greet());",
+      "options": [
+        { "id": "a", "text": "Hi from Parent", "correct": true },
+        { "id": "b", "text": "Hi from Child", "hint": "Static metodlar override qilinmaydi — polimorfizm ularga ishlamaydi. `greet()` ichidagi `name()` qaysi klassga bog'langan?" },
+        { "id": "c", "text": "Kompilyatsiya xatosi", "hint": "Static metodni bola klassda qayta e'lon qilish (hiding) ruxsat etilgan." },
+        { "id": "d", "text": "Hi from null", "hint": "null hech qayerda yo'q." }
+      ],
+      "explanation": "Static metodlar klassga bog'langan, ob'ektga emas — dynamic dispatch yo'q. `Child.name()` — method hiding, override emas. `Parent.greet()` ichidagi `name()` kompilyatsiya vaqtida `Parent.name()`ga bog'lanadi. Shu sabab `@Override` static metodga qo'yilmaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "java.lang.013",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Java'da immutable klass yaratishning to'liq shartlari qaysilar?",
+      "options": [
+        { "id": "a", "text": "Klass `final` (yoki konstruktorlar private), maydonlar `private final`, setter yo'q, mutable maydonlar (kolleksiya, massiv, `Date`) konstruktorda defensive copy bilan olinadi va getter'da nusxa/unmodifiable ko'rinish qaytariladi", "correct": true },
+        { "id": "b", "text": "Barcha maydonlarni `final` qilish yetarli", "hint": "`final List<String> items` — `getItems().add(...)` ichini o'zgartiradi." },
+        { "id": "c", "text": "Setter'larni olib tashlash yetarli", "hint": "Konstruktorga berilgan ro'yxatni tashqarida o'zgartirish mumkin." },
+        { "id": "d", "text": "Klassni `abstract` qilish", "hint": "Abstract immutability bermaydi." }
+      ],
+      "explanation": "Shallow immutability tuzog'i — eng ko'p uchraydigan xato. `List.copyOf(items)` (Java 10+) — immutable nusxa bir qatorda. Record ham maydon havolalarini final qiladi, lekin ichki mutable ob'ektni himoya qilmaydi — compact konstruktorda `List.copyOf` qiling.",
+      "reviewed": false
+    },
+    {
+      "id": "java.lang.014",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Java 17/21 ga migratsiya qilishda til darajasida qaysi imkoniyatlar kodni sezilarli soddalashtiradi va qaysi tuzoqlarga e'tibor berish kerak?",
+      "options": [
+        { "id": "a", "text": "Record'lar DTO/value ob'ektlar uchun, sealed + switch pattern matching `if-else instanceof` zanjirlari o'rniga, text block'lar, `var`; tuzoqlar — Lombok/Jackson/Hibernate versiyalari record bilan mosligi, `--illegal-access` yopilishi (reflection ichki API'ga), eskirgan kutubxonalar (javax → jakarta)", "correct": true },
+        { "id": "b", "text": "Hech narsa o'zgarmaydi, faqat JVM tezroq", "hint": "Til jiddiy o'sdi; migratsiya tuzoqlari ham bor (module system, removed API)." },
+        { "id": "c", "text": "Barcha klasslarni record'ga o'tkazish kerak", "hint": "Record — immutable ma'lumot uchun; JPA entity, xizmat klasslari uchun mos emas." },
+        { "id": "d", "text": "Migratsiya xavfsiz emas, Java 8'da qolish kerak", "hint": "Java 8 LTS tugashga yaqin; xavfsizlik va performance yangilanishlari 17/21 da." }
+      ],
+      "explanation": "Strategiya: avval kompilyatsiya (bog'liqliklarni yangilash, `jdeps` bilan ichki API tekshiruvi), keyin til xususiyatlarini bosqichma-bosqich (IDE inspection \"convert to record\"). Spring Boot 3 Java 17 talab qiladi va jakarta namespace'ga o'tdi — ikkalasini birga rejalashtirish.",
+      "reviewed": false
+    }
+  ]
+}

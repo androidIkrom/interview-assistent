@@ -1,0 +1,125 @@
+{
+  "topic": "java.arch",
+  "questions": [
+    {
+      "id": "java.arch.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "JVM, JRE va JDK qanday farqlanadi?",
+      "options": [
+        { "id": "a", "text": "JVM — bytecode'ni bajaradigan virtual mashina; JRE — JVM + standart kutubxonalar (ishga tushirish uchun); JDK — JRE + kompilyator (`javac`) va vositalar (ishlab chiqish uchun)", "correct": true },
+        { "id": "b", "text": "Uchalasi bir xil", "hint": "Biri bajaradi, biri yugurtiradi, biri yozishga yordam beradi." },
+        { "id": "c", "text": "JDK faqat Windows uchun", "hint": "Hamma platformada bor." },
+        { "id": "d", "text": "JVM Java kodini to'g'ridan-to'g'ri o'qiydi", "hint": "JVM `.class` bytecode o'qiydi; `javac` manbani bytecode'ga aylantiradi." }
+      ],
+      "explanation": "\"Write once, run anywhere\": bytecode platformadan mustaqil, JVM har platforma uchun alohida. Kotlin, Scala, Groovy ham JVM bytecode'ga kompilyatsiya bo'ladi. Java 11+ da alohida JRE tarqatilmaydi — `jlink` bilan minimal runtime yig'iladi.",
+      "reviewed": false
+    },
+    {
+      "id": "java.arch.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Garbage collector (GC) nima qiladi?",
+      "options": [
+        { "id": "a", "text": "Hech qanday havola qolmagan (erishib bo'lmaydigan) ob'ektlarni avtomatik aniqlab, heap xotirasini bo'shatadi — dasturchi `free` chaqirmaydi", "correct": true },
+        { "id": "b", "text": "Ishlatilmayotgan o'zgaruvchilarni koddan o'chiradi", "hint": "Kodga tegmaydi — runtime xotira." },
+        { "id": "c", "text": "Diskdagi vaqtinchalik fayllarni tozalaydi", "hint": "Faqat heap." },
+        { "id": "d", "text": "Ob'ekt scope'dan chiqishi bilan darhol o'chiradi", "hint": "Darhol emas — GC o'z vaqtida, davrlarda ishlaydi." }
+      ],
+      "explanation": "Erishuvchanlik GC root'lardan (stack, static maydonlar) boshlab tekshiriladi. GC bo'lsa ham memory leak mumkin: static `Map`ga qo'shib unutish, listener'ni olib tashlamaslik, `ThreadLocal`. `System.gc()` — tavsiya, kafolat emas; chaqirmaslik kerak.",
+      "reviewed": false
+    },
+    {
+      "id": "java.arch.003",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "JVM heap'i generatsiyalarga qanday bo'linadi va nima uchun?",
+      "options": [
+        { "id": "a", "text": "Young (Eden + Survivor) va Old (Tenured): ko'p ob'ekt qisqa umr ko'radi (\"weak generational hypothesis\") — Young tez va tez-tez tozalanadi (minor GC), uzoq yashaganlar Old'ga ko'chadi, u kamroq tozalanadi (major/full GC)", "correct": true },
+        { "id": "b", "text": "Stack va heap", "hint": "Bu umumiy bo'linish; savol heap ichidagi tuzilma haqida." },
+        { "id": "c", "text": "Har thread uchun alohida heap", "hint": "Heap umumiy; TLAB — faqat allokatsiya buferi." },
+        { "id": "d", "text": "Bo'linmaydi, bitta blok", "hint": "Zamonaviy GC'lar (G1, ZGC) ham generatsion g'oyani ishlatadi (ZGC 21+ da generational)." }
+      ],
+      "explanation": "Minor GC — millisekundlar, Full GC — \"stop the world\" sekundlargacha (katta heap'da). Metaspace — klass metadata (Java 8+, PermGen o'rniga). `-Xmx` — max heap; konteynerda JVM konteyner limitini ko'radi (`MaxRAMPercentage`).",
+      "reviewed": false
+    },
+    {
+      "id": "java.arch.004",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "JIT kompilyator nima va u ilova performansiga qanday ta'sir qiladi?",
+      "options": [
+        { "id": "a", "text": "JVM bytecode'ni avval interpretatsiya qiladi, \"issiq\" (ko'p chaqirilgan) kodni runtime'da mashina kodiga kompilyatsiya qiladi va real profil asosida optimallaydi (inlining, escape analysis) — shu sabab warm-up'dan keyin tezlashadi", "correct": true },
+        { "id": "b", "text": "Manba kodni bytecode'ga aylantiradi", "hint": "Bu `javac` (AOT) — JIT runtime'da ishlaydi." },
+        { "id": "c", "text": "Ilovani sekinlashtiradi", "hint": "Dastlab biroz yuk, keyin sezilarli tezlashish." },
+        { "id": "d", "text": "Faqat GUI ilovalarda ishlaydi", "hint": "Har qanday JVM ilovasida." }
+      ],
+      "explanation": "C1 (tez, yengil) va C2 (sekin, agressiv) tiered compilation. Oqibat: benchmark'da warm-up kerak (JMH), serverless'da cold start muammosi (CDS, CRaC, native image yechimlari). Native image JIT'dan voz kechadi — tez start, lekin peak performance pastroq.",
+      "reviewed": false
+    },
+    {
+      "id": "java.arch.005",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Production'da `OutOfMemoryError: Java heap space` — qanday tekshiriladi?",
+      "options": [
+        { "id": "a", "text": "`-XX:+HeapDumpOnOutOfMemoryError` bilan heap dump olish, Eclipse MAT/VisualVM'da dominator tree — qaysi ob'ektlar ko'p joy oladi va kim ularni ushlab turibdi (GC root yo'li); ko'pincha sizish: static kolleksiya, cache'siz TTL, yopilmagan resurslar, `ThreadLocal`", "correct": true },
+        { "id": "b", "text": "`-Xmx`ni oshirish — yetarli", "hint": "Sizish bo'lsa, faqat kechiktiradi; sabab topilmagan." },
+        { "id": "c", "text": "Qayta ishga tushirish va kuzatish", "hint": "Qaytadi; dump — yagona dalil." },
+        { "id": "d", "text": "GC'ni o'zgartirish", "hint": "GC turi sizishni to'xtatmaydi — erishiladigan ob'ektni GC o'chirolmaydi." }
+      ],
+      "explanation": "Sizishdan farqli: haqiqiy ehtiyoj katta (katta so'rov natijasi xotiraga to'liq yuklandi — paging/streaming kerak). Doimiy kuzatuv: heap after GC grafigi o'sib boraversa — sizish. JFR allokatsiya profili — qayerda ko'p ob'ekt yaratiladi. Konteynerda OOMKilled — JVM'dan tashqari xotira (native, thread stack) ham hisobga olinadi.",
+      "reviewed": false
+    },
+    {
+      "id": "java.arch.006",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Spring Boot mikroservisida circuit breaker (Resilience4j) qanday sozlanadi va nimaga e'tibor berish kerak?",
+      "options": [
+        { "id": "a", "text": "`@CircuitBreaker(name, fallbackMethod)` yoki dekorator; sliding window (so'rov soni/vaqt), failure rate chegarasi (masalan 50%), open holat davomiyligi, half-open'da sinov so'rovlari; qaysi exception'lar \"xato\" (4xx ko'pincha emas), timeout bilan birga (`TimeLimiter`), fallback — degrade qilingan javob, metrikalar actuator'da", "correct": true },
+        { "id": "b", "text": "Faqat `try/catch` yetarli", "hint": "`try/catch` yiqilgan servisga so'rov yuborishni to'xtatmaydi — kaskad davom etadi." },
+        { "id": "c", "text": "Circuit breaker retry'ni almashtiradi", "hint": "Ular birga: retry — vaqtinchalik xato, breaker — doimiy yiqilish. Tartib: Retry(CircuitBreaker(call))." },
+        { "id": "d", "text": "Netflix Hystrix — joriy standart", "hint": "Hystrix maintenance rejimida (2018); Resilience4j — Spring tavsiyasi." }
+      ],
+      "explanation": "Tuzoq: breaker har endpoint uchun alohida bo'lishi kerak (bitta sekin endpoint hammasini ochmasin). Fallback cache'dan eski ma'lumot yoki \"xizmat vaqtincha mavjud emas\" — biznes bilan kelishiladi. Bulkhead — bog'liqlik uchun alohida thread/semaphore limiti.",
+      "reviewed": false
+    },
+    {
+      "id": "java.arch.007",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Java 21 ilovasi uchun GC tanlovi (G1, ZGC, Parallel) qanday qilinadi?",
+      "options": [
+        { "id": "a", "text": "G1 (default) — muvozanat, ko'p servis uchun yetarli; ZGC (generational, 21+) — katta heap va past pauza (< 1 ms) talab qilinganda, biroz ko'proq CPU/xotira; Parallel — throughput muhim, pauza muhim emas (batch). Tanlov SLO (p99 latency) va o'lchov asosida, taxmin emas", "correct": true },
+        { "id": "b", "text": "Doim ZGC — eng yangi", "hint": "Kichik heap va CPU cheklangan konteynerda G1 samaraliroq bo'lishi mumkin." },
+        { "id": "c", "text": "GC tanlovi ahamiyatsiz", "hint": "p99 latency 10x farq qilishi mumkin." },
+        { "id": "d", "text": "Serial GC — production default", "hint": "Serial — kichik heap/bir yadro uchun; serverda default G1." }
+      ],
+      "explanation": "Sozlash tartibi: avval o'lchov (GC loglari `-Xlog:gc*`, JFR), keyin heap hajmi (`-Xmx`, konteynerda `MaxRAMPercentage=75`), keyin GC tanlovi, eng oxirida nozik flag'lar (ko'pincha kerak emas). Allokatsiya tezligini kamaytirish (kod darajasi) — har GC'ga yordam beradi.",
+      "reviewed": false
+    },
+    {
+      "id": "java.arch.008",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Spring Boot + Kafka'da xabarni ishonchli ishlov berish (yo'qotmaslik, takrorga bardosh) qanday ta'minlanadi?",
+      "options": [
+        { "id": "a", "text": "Producer: `acks=all`, idempotent producer, outbox pattern (DB + Kafka atomikligi); consumer: manual ack ishlov tugagach, idempotent handler (xabar kaliti bo'yicha dedup), retry topic + dead letter topic, partition kaliti bilan tartib; monitoring — consumer lag", "correct": true },
+        { "id": "b", "text": "Kafka o'zi exactly-once kafolatlaydi, qo'shimcha ish yo'q", "hint": "Kafka tranzaksiyalari Kafka ichida; DB'ga yozish idempotentlik talab qiladi." },
+        { "id": "c", "text": "Auto-commit yoqilgan, xato bo'lsa log yozish yetarli", "hint": "Auto-commit ishlov tugamasidan ofsetni commit qilishi mumkin — xabar yo'qoladi." },
+        { "id": "d", "text": "Har xabar uchun sinxron HTTP chaqiruv bilan tasdiqlash", "hint": "Kafka'ning asinxron afzalligi yo'qoladi." }
+      ],
+      "explanation": "Spring Kafka: `DefaultErrorHandler` + `DeadLetterPublishingRecoverer`, `@RetryableTopic` (non-blocking retry). Poison message — DLT'ga, alert. Consumer group rebalance — ishlov o'rtasida bo'lsa takror keladi: idempotentlik shart. Schema registry (Avro) — moslik evolyutsiyasi.",
+      "reviewed": false
+    }
+  ]
+}

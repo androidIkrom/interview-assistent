@@ -1,0 +1,156 @@
+{
+  "topic": "java.data",
+  "questions": [
+    {
+      "id": "java.data.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "JPA va Hibernate qanday bog'liq?",
+      "options": [
+        { "id": "a", "text": "JPA — Java ORM spetsifikatsiyasi (interfeyslar va annotatsiyalar: `@Entity`, `EntityManager`); Hibernate — uning eng keng tarqalgan implementatsiyasi (o'z qo'shimchalari bilan)", "correct": true },
+        { "id": "b", "text": "Bir xil narsa", "hint": "Biri standart, ikkinchisi implementatsiya; EclipseLink ham JPA implementatsiyasi." },
+        { "id": "c", "text": "JPA — Hibernate'ning yangi versiyasi", "hint": "JPA — spetsifikatsiya, versiyalari Hibernate'dan mustaqil." },
+        { "id": "d", "text": "Hibernate — JDBC drayveri", "hint": "Hibernate JDBC ustida ishlaydi, drayver emas." }
+      ],
+      "explanation": "Spring Data JPA — yana bir qatlam: `JpaRepository` interfeysi, metod nomidan so'rov (`findByEmail`). Qatlamlar: Spring Data JPA → JPA (Jakarta Persistence) → Hibernate → JDBC → drayver → DB. Muammo bo'lsa, qaysi qatlamda ekanini bilish debug'ni tezlashtiradi.",
+      "reviewed": false
+    },
+    {
+      "id": "java.data.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "JPA entity qanday talablarga javob berishi kerak?",
+      "options": [
+        { "id": "a", "text": "`@Entity` annotatsiyasi, `@Id` bilan primary key, argumentsiz konstruktor (public yoki protected), `final` bo'lmasligi (proxy uchun), maydonlar yoki getter'lar bilan mapping", "correct": true },
+        { "id": "b", "text": "`record` bo'lishi kerak", "hint": "Record `final` va argumentsiz konstruktorsiz — entity bo'lolmaydi (DTO/proyeksiya uchun mos)." },
+        { "id": "c", "text": "Faqat `Serializable` implement qilishi", "hint": "Tavsiya, lekin talab emas; `@Id` esa majburiy." },
+        { "id": "d", "text": "Barcha maydonlar `public` bo'lishi", "hint": "Odatda private + getter/setter." }
+      ],
+      "explanation": "Hibernate entity'ni reflection bilan yaratadi va lazy loading uchun subclass proxy qiladi — shu sabab argumentsiz konstruktor va non-final. `equals`/`hashCode` entity'da ehtiyotkorlik talab qiladi: ID generatsiyadan oldin null; biznes kalit yoki `instanceof` + ID bilan.",
+      "reviewed": false
+    },
+    {
+      "id": "java.data.003",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Spring Data JPA'da `JpaRepository<User, Long>` interfeysi nima beradi?",
+      "options": [
+        { "id": "a", "text": "Tayyor CRUD metodlari (`save`, `findById`, `findAll`, `delete`), paging/sorting, va metod nomidan avtomatik so'rov (`findByEmailAndActiveTrue`) — implementatsiya runtime'da generatsiya qilinadi", "correct": true },
+        { "id": "b", "text": "Faqat interfeys — implementatsiyani o'zingiz yozasiz", "hint": "Implementatsiya Spring tomonidan proxy sifatida yaratiladi." },
+        { "id": "c", "text": "DB jadvalini yaratadi", "hint": "Jadval yaratish — `ddl-auto` yoki migratsiya (Flyway/Liquibase)." },
+        { "id": "d", "text": "SQL yozishga ruxsat bermaydi", "hint": "`@Query` bilan JPQL yoki native SQL yozish mumkin." }
+      ],
+      "explanation": "Murakkab so'rovlar uchun `@Query(\"select u from User u where ...\")`, dinamik uchun Specification/Criteria/QueryDSL. Metod nomi uzun bo'lib ketsa (`findByAAndBOrCOrderByD`) — `@Query` o'qilishi osonroq. Proyeksiya (interfeys yoki record) — faqat kerakli ustunlar.",
+      "reviewed": false
+    },
+    {
+      "id": "java.data.004",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Quyidagi kod nima uchun sekin ishlaydi?",
+      "code": "@Entity\nclass Order {\n    @Id Long id;\n    @ManyToOne(fetch = FetchType.LAZY) Customer customer;\n}\n\nList<Order> orders = orderRepo.findAll();   // 1000 ta\nfor (Order o : orders) {\n    System.out.println(o.getCustomer().getName());\n}",
+      "options": [
+        { "id": "a", "text": "N+1 muammosi: `findAll` 1 so'rov, keyin har `getCustomer()` alohida SELECT — 1001 so'rov. Yechim: `JOIN FETCH` (`@Query(\"select o from Order o join fetch o.customer\")`), `@EntityGraph`, yoki batch fetching", "correct": true },
+        { "id": "b", "text": "`LAZY` o'rniga `EAGER` qo'yish — yagona yechim", "hint": "EAGER hamma joyda yuklaydi (kerak bo'lmasa ham) va kolleksiyalarda kartezian portlash; bu yerda `JOIN FETCH` nozikroq." },
+        { "id": "c", "text": "`println` sekin", "hint": "1000 println — millisekundlar; 1000 SQL — soniyalar." },
+        { "id": "d", "text": "Kod tez — Hibernate cache qiladi", "hint": "Birinchi darajali cache bir xil customer'ni takror yuklamaydi, lekin har xil customer — har biri alohida so'rov." }
+      ],
+      "explanation": "N+1 — JPA'ning eng ko'p uchraydigan performance muammosi. Aniqlash: `spring.jpa.show-sql=true` yoki `hibernate.generate_statistics`, test muhitida so'rov sanash (datasource-proxy). `@BatchSize(size=50)` — N+1 ni N/50+1 ga tushiradi, kod o'zgarmaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "java.data.005",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`LazyInitializationException` qachon va nima uchun yuz beradi?",
+      "options": [
+        { "id": "a", "text": "Lazy bog'lanish (`@OneToMany` kolleksiya, LAZY `@ManyToOne`) persistence context (sessiya) yopilgandan keyin birinchi marta o'qilganda — masalan, controller'da yoki JSON serializatsiyada", "correct": true },
+        { "id": "b", "text": "Entity'da `@Id` yo'q bo'lganda", "hint": "Bu boshqa xato (`AnnotationException`)." },
+        { "id": "c", "text": "DB ulanmaganda", "hint": "Ulanish xatosi boshqacha ko'rinadi." },
+        { "id": "d", "text": "`findAll` juda ko'p qator qaytarganda", "hint": "Hajm emas, sessiya yopilgani sabab." }
+      ],
+      "explanation": "Yechimlar: kerakli ma'lumotni so'rovda `JOIN FETCH`, DTO'ga tranzaksiya ichida o'girish (entity'ni controller'ga chiqarmaslik — eng yaxshi amaliyot), `@Transactional(readOnly=true)` service darajasida. `spring.jpa.open-in-view=true` (Boot default!) — simptomni yashiradi, lekin DB ulanishini butun so'rov davomida ushlaydi; o'chirish tavsiya etiladi.",
+      "reviewed": false
+    },
+    {
+      "id": "java.data.006",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`@Transactional` ichida entity'ni o'zgartirsangiz, `save()` chaqirmasangiz ham DB'ga yoziladimi?",
+      "options": [
+        { "id": "a", "text": "Ha — managed entity'dagi o'zgarishlar dirty checking orqali aniqlanadi va tranzaksiya commit'ida (flush) avtomatik UPDATE qilinadi; `save()` faqat yangi (transient) entity uchun zarur", "correct": true },
+        { "id": "b", "text": "Yo'q — `save()` har doim shart", "hint": "Managed entity uchun `save()` ortiqcha (lekin zararsiz)." },
+        { "id": "c", "text": "Faqat `flush()` chaqirilsa yoziladi", "hint": "Commit avtomatik flush qiladi; qo'lda `flush()` — oraliq nuqta uchun." },
+        { "id": "d", "text": "Entity o'zgartirib bo'lmaydi, yangisini yaratish kerak", "hint": "Entity mutable — shunday ishlatish ko'zda tutilgan." }
+      ],
+      "explanation": "Persistence context — \"unit of work\": entity holatlari (transient, managed, detached, removed). Tranzaksiyasiz o'qilgan entity detached — o'zgarish yozilmaydi. Tuzoq: `@Transactional` metod ichida `setX()` chaqirib \"tasodifan\" DB'ni o'zgartirish — read-only bo'lsa `readOnly=true` qo'ying.",
+      "reviewed": false
+    },
+    {
+      "id": "java.data.007",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Tranzaksiya propagation `REQUIRED` va `REQUIRES_NEW` qanday farqlanadi va `REQUIRES_NEW` qayerda xavfli?",
+      "options": [
+        { "id": "a", "text": "`REQUIRED` — mavjud tranzaksiyaga qo'shiladi (yo'q bo'lsa yangi); `REQUIRES_NEW` — tashqini to'xtatib (suspend) mustaqil yangi tranzaksiya ochadi, u alohida commit/rollback bo'ladi. Xavf: ikkinchi DB ulanish (pool tugashi, deadlock), tashqi rollback ichkini qaytarmaydi (audit log qoladi — ba'zan aynan shu kerak)", "correct": true },
+        { "id": "b", "text": "Bir xil, faqat nomi boshqa", "hint": "Ichki xato tashqiga ta'siri butunlay farq qiladi." },
+        { "id": "c", "text": "`REQUIRES_NEW` tezroq", "hint": "Qo'shimcha ulanish va commit — sekinroq." },
+        { "id": "d", "text": "`REQUIRED` har doim yangi tranzaksiya ochadi", "hint": "Mavjud bo'lsa qo'shiladi — bu uning asosiy xususiyati." }
+      ],
+      "explanation": "Boshqalar: `SUPPORTS`, `MANDATORY`, `NOT_SUPPORTED`, `NEVER`, `NESTED` (savepoint, faqat JDBC). `REQUIRED` ichida ichki metod `RuntimeException` tashlab, tashqi ushlab olsa — tranzaksiya baribir rollback-only belgilangan: commit'da `UnexpectedRollbackException`. Bu tez-tez chalg'itadigan tuzoq.",
+      "reviewed": false
+    },
+    {
+      "id": "java.data.008",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Hibernate'da birinchi va ikkinchi darajali cache qanday farqlanadi?",
+      "options": [
+        { "id": "a", "text": "L1 — persistence context (sessiya/tranzaksiya) ichida, doim yoqilgan, bir xil ID'ni ikki marta yuklamaydi; L2 — `SessionFactory` darajasida, sessiyalar orasida (Ehcache, Infinispan, Caffeine), aniq yoqiladi, entity bo'yicha `@Cacheable`; invalidatsiya va klaster muammolari bor", "correct": true },
+        { "id": "b", "text": "Bir xil narsa, ikki nom", "hint": "Biri sessiya ichida, ikkinchisi butun ilova." },
+        { "id": "c", "text": "L2 default yoqilgan", "hint": "Default o'chirilgan — ongli qaror talab qiladi." },
+        { "id": "d", "text": "L1 cache'ni o'chirish mumkin", "hint": "L1 — JPA mexanizmining qismi, o'chirilmaydi (`clear()` bilan tozalash mumkin)." }
+      ],
+      "explanation": "L2 foydali: kam o'zgaradigan reference ma'lumot (mamlakatlar, kategoriyalar). Xavf: boshqa ilova DB'ni to'g'ridan-to'g'ri o'zgartirsa — eskirgan ma'lumot; klasterda cache sinxronizatsiyasi. Query cache — alohida, kamdan-kam foyda beradi. Ko'pincha ilova darajasidagi cache (Spring Cache + Redis) soddaroq.",
+      "reviewed": false
+    },
+    {
+      "id": "java.data.009",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Tranzaksiya izolyatsiya darajalari va ularni Spring/JPA ilovasida tanlash qanday?",
+      "options": [
+        { "id": "a", "text": "READ_UNCOMMITTED → READ_COMMITTED (PostgreSQL/Oracle default) → REPEATABLE_READ (MySQL default) → SERIALIZABLE; yuqori daraja — kamroq anomaliya (dirty/non-repeatable/phantom read), ko'proq qulf/konflikt. Default + biznes-kritik joyda optimistic locking (`@Version`) yoki `SELECT FOR UPDATE` — amaliy muvozanat", "correct": true },
+        { "id": "b", "text": "Doim SERIALIZABLE — eng xavfsiz", "hint": "Throughput keskin pasayadi, serialization failure'larga retry kerak." },
+        { "id": "c", "text": "Izolyatsiya JPA'da sozlanmaydi", "hint": "`@Transactional(isolation = ...)` bor." },
+        { "id": "d", "text": "Barcha DB'larda default bir xil", "hint": "PostgreSQL va MySQL defaultlari farq qiladi — migratsiyada tuzoq." }
+      ],
+      "explanation": "Lost update (ikki foydalanuvchi bir yozuvni tahrirlaydi) READ_COMMITTED'da oldini olinmaydi — `@Version` bilan `OptimisticLockException` va qayta urinish/foydalanuvchiga xabar. Pessimistic (`@Lock(PESSIMISTIC_WRITE)`) — qisqa, yuqori konfliktli operatsiyalarda (hisobdan yechish). Tanlov — anomaliya narxi vs throughput.",
+      "reviewed": false
+    },
+    {
+      "id": "java.data.010",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Katta loyihada JPA/Hibernate'dan qachon voz kechish yoki uni cheklash to'g'ri qaror?",
+      "options": [
+        { "id": "a", "text": "Hisobot/analitika va murakkab SQL (window function, CTE), yuqori throughput batch (JDBC batch, `jOOQ`/`JdbcTemplate`), DB-spetsifik imkoniyatlar; yondashuv — yozish/domen uchun JPA, o'qish/hisobot uchun SQL (CQRS ruhida); jamoa SQL'ni bilishi shart", "correct": true },
+        { "id": "b", "text": "Hech qachon — JPA hamma narsani qoplaydi", "hint": "Murakkab hisobot JPQL'da yo yozilmaydi, yo sekin." },
+        { "id": "c", "text": "Doim — ORM har doim sekin", "hint": "CRUD va domen mantiqida ORM unumdorlikni oshiradi; muammo noto'g'ri ishlatishda." },
+        { "id": "d", "text": "Faqat NoSQL'ga o'tganda", "hint": "Relyatsion DB'da qolib ham JPA'ni cheklash mumkin." }
+      ],
+      "explanation": "Senior belgisi: vositani vazifaga moslash. JPA kuchli tomoni — ob'ekt grafi, dirty checking, tranzaksiya; zaif — agregat so'rovlar, bulk update (`@Modifying` native), performance nazorati. Migratsiya (Flyway) alohida — `ddl-auto=update` production'da hech qachon.",
+      "reviewed": false
+    }
+  ]
+}

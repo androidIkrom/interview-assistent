@@ -110,12 +110,12 @@
     { "id": "node.db", "title": "DB, ORM, caching", "file": "node_db.json" },
     { "id": "node.arch", "title": "Arxitektura va masshtab", "file": "node_arch.json" },
 
-    { "id": "java.lang", "title": "Java tili va OOP" },
-    { "id": "java.collections", "title": "Collections va Stream API" },
-    { "id": "java.spring", "title": "Spring Core va Boot" },
-    { "id": "java.concurrency", "title": "Ko'p oqimlilik, virtual threads" },
-    { "id": "java.data", "title": "JPA/Hibernate, tranzaksiyalar" },
-    { "id": "java.arch", "title": "JVM, GC, mikroservislar" },
+    { "id": "java.lang", "title": "Java tili va OOP", "file": "java_lang.json" },
+    { "id": "java.collections", "title": "Collections va Stream API", "file": "java_collections.json" },
+    { "id": "java.spring", "title": "Spring Core va Boot", "file": "java_spring.json" },
+    { "id": "java.concurrency", "title": "Ko'p oqimlilik, virtual threads", "file": "java_concurrency.json" },
+    { "id": "java.data", "title": "JPA/Hibernate, tranzaksiyalar", "file": "java_data.json" },
+    { "id": "java.arch", "title": "JVM, GC, mikroservislar", "file": "java_arch.json" },
 
     { "id": "go.lang", "title": "Go tili" },
     { "id": "go.types", "title": "Slice, map, interface" },
