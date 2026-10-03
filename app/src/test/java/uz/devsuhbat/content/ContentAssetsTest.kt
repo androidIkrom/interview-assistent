@@ -187,6 +187,7 @@ class ContentAssetsTest {
         "node.arch", "node.async", "node.db", "node.js", "node.runtime", "node.web",
         "java.arch", "java.collections", "java.concurrency", "java.data", "java.lang", "java.spring",
         "flutter.arch", "flutter.async", "flutter.dart", "flutter.data", "flutter.state", "flutter.widgets",
+        "go.arch", "go.concurrency", "go.data", "go.lang", "go.types", "go.web",
     )
 
     /**

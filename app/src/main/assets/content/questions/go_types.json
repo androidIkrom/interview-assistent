@@ -8,12 +8,12 @@
       "kind": "concept",
       "prompt": "Go'da array va slice qanday farqlanadi?",
       "options": [
-        { "id": "a", "text": "Array — qattiq o'lchamli (`[5]int`), o'lcham turning qismi, qiymat bo'yicha nusxalanadi; slice — dinamik, ichida array'ga pointer + len + cap, funksiyaga uzatilganda ichki array baham ko'riladi", "correct": true },
+        { "id": "a", "text": "Array — qattiq o'lchamli, qiymat bo'yicha nusxalanadi; slice — array'ga pointer + len + cap", "correct": true },
         { "id": "b", "text": "Bir xil narsa", "hint": "`[3]int` va `[]int` — turli turlar; biri o'zgarmas o'lcham." },
         { "id": "c", "text": "Slice — array'ning eski nomi", "hint": "Slice — array ustidagi ko'rinish (view)." },
-        { "id": "d", "text": "Array dinamik, slice statik", "hint": "Teskari." }
+        { "id": "d", "text": "Array dinamik ravishda o'sadi, slice esa yaratilganda o'lchami qotib qoladigan statik tuzilma", "hint": "Teskari." }
       ],
-      "explanation": "Amalda deyarli doim slice. Array — faqat o'lcham ma'noli bo'lganda (`[16]byte` hash, `[3]float64` vektor). `arr[1:3]` — array'dan slice. Slice'ni funksiyaga uzatish arzon (3 so'z), lekin elementlar baham ko'rilgan — o'zgarish ko'rinadi.",
+      "explanation": "Slice uzatilganda ichki array baham ko'riladi; array'da o'lcham turning qismi (`[5]int`). Amalda deyarli doim slice. Array — faqat o'lcham ma'noli bo'lganda (`[16]byte` hash, `[3]float64` vektor). `arr[1:3]` — array'dan slice. Slice'ni funksiyaga uzatish arzon (3 so'z), lekin elementlar baham ko'rilgan — o'zgarish ko'rinadi.",
       "reviewed": false
     },
     {
@@ -23,12 +23,12 @@
       "kind": "concept",
       "prompt": "Go'da `map` qanday ishlatiladi va qaysi tuzoqlar bor?",
       "options": [
-        { "id": "a", "text": "`make(map[K]V)` yoki literal; `v, ok := m[k]` — mavjudlik tekshiruvi (yo'q kalit zero value beradi); nil map'ga yozish — panic; iteratsiya tartibi tasodifiy; ko'p goroutine'dan yozish — race (sync.Map yoki Mutex)", "correct": true },
-        { "id": "b", "text": "Map tartibli — qo'shish tartibida iteratsiya", "hint": "Tasodifiy (hatto har run'da boshqacha, ataylab)." },
+        { "id": "a", "text": "`v, ok := m[k]` bilan tekshirish; nil map'ga yozish — panic; tartib tasodifiy; parallel yozish — race", "correct": true },
+        { "id": "b", "text": "Map tartibli: elementlar har doim qo'shilgan tartibida, bir xil ketma-ketlikda qayta-qayta iteratsiya qilinadi", "hint": "Tasodifiy (hatto har run'da boshqacha, ataylab)." },
         { "id": "c", "text": "Yo'q kalit o'qish — panic", "hint": "Zero value qaytaradi; `ok` bilan farqlanadi." },
         { "id": "d", "text": "Map thread-safe", "hint": "Bir vaqtda yozish — \"concurrent map writes\" fatal error." }
       ],
-      "explanation": "Kalit — `comparable` tur (slice/map/func kalit bo'lolmaydi; struct — bo'ladi). `delete(m, k)`. Tartib kerak — kalitlarni slice'ga olib `sort`. Map o'zi reference semantikaga ega (ichida pointer) — funksiyaga uzatilsa o'zgarish ko'rinadi.",
+      "explanation": "Yo'q kalit zero value beradi; ko'p goroutine uchun `sync.Map` yoki Mutex kerak. Kalit — `comparable` tur (slice/map/func kalit bo'lolmaydi; struct — bo'ladi). `delete(m, k)`. Tartib kerak — kalitlarni slice'ga olib `sort`. Map o'zi reference semantikaga ega (ichida pointer) — funksiyaga uzatilsa o'zgarish ko'rinadi.",
       "reviewed": false
     },
     {
@@ -38,12 +38,12 @@
       "kind": "concept",
       "prompt": "Go'da interface qanday ishlaydi?",
       "options": [
-        { "id": "a", "text": "Metod to'plami; tur barcha metodlarni implement qilsa, avtomatik (implicit) interfeysni qanoatlantiradi — `implements` yozilmaydi (structural typing); interfeys qiymati — (tur, qiymat) juftligi", "correct": true },
-        { "id": "b", "text": "`implements` kalit so'zi bilan e'lon qilinadi", "hint": "Go'da yo'q — moslik avtomatik." },
+        { "id": "a", "text": "Metod to'plami: tur hamma metodni implement qilsa, interfeysga avtomatik mos keladi (implicit)", "correct": true },
+        { "id": "b", "text": "Tur interfeysni `implements` kalit so'zi bilan aniq e'lon qilishi shart, aks holda kompilyator uni mos deb hisoblamaydi", "hint": "Go'da yo'q — moslik avtomatik." },
         { "id": "c", "text": "Interface — abstract class", "hint": "Maydon yo'q, implementatsiya yo'q — faqat metod imzolari." },
         { "id": "d", "text": "Bitta tur bitta interfeysni implement qiladi", "hint": "Istalgancha — har mos metod to'plami uchun." }
       ],
-      "explanation": "Natija: interfeysni iste'molchi e'lon qiladi, ishlab chiqaruvchi emas (\"accept interfaces, return structs\"). Kichik interfeyslar — `io.Reader` (1 metod) — kuchli kompozitsiya. `any` = `interface{}`. Kompilyatsiya tekshiruvi: `var _ Shape = (*Circle)(nil)`.",
+      "explanation": "Interfeys qiymati — (tur, qiymat) juftligi; bu structural typing. Natija: interfeysni iste'molchi e'lon qiladi, ishlab chiqaruvchi emas (\"accept interfaces, return structs\"). Kichik interfeyslar — `io.Reader` (1 metod) — kuchli kompozitsiya. `any` = `interface{}`. Kompilyatsiya tekshiruvi: `var _ Shape = (*Circle)(nil)`.",
       "reviewed": false
     },
     {
@@ -69,12 +69,12 @@
       "kind": "concept",
       "prompt": "Go'da `string` qanday tur va `rune` bilan qanday bog'liq?",
       "options": [
-        { "id": "a", "text": "String — immutable bayt ketma-ketligi (UTF-8); `len(s)` — baytlar; `s[i]` — bayt; `for _, r := range s` — rune'lar (Unicode code point, `int32`); belgi soni — `utf8.RuneCountInString`", "correct": true },
-        { "id": "b", "text": "String — belgilar massivi, `len` — belgilar soni", "hint": "`len(\"salom\")` 5, lekin `len(\"салом\")` 10 — baytlar." },
+        { "id": "a", "text": "String — immutable UTF-8 baytlar: `len` baytlarni sanaydi, `range` esa rune'larni beradi", "correct": true },
+        { "id": "b", "text": "String — belgilar massivi: `len(s)` har doim satrdagi Unicode belgilar sonini aniq qaytaradi", "hint": "`len(\"salom\")` 5, lekin `len(\"салом\")` 10 — baytlar." },
         { "id": "c", "text": "String mutable — `s[0] = 'a'` ishlaydi", "hint": "Kompilyatsiya xatosi — immutable; `[]byte`/`[]rune`ga o'girish." },
         { "id": "d", "text": "`rune` — satr turi", "hint": "`rune` — bitta Unicode belgi (`int32`)." }
       ],
-      "explanation": "O'zbek/kirill matn bilan ishlashda `s[i]` baytni qaytarishi — tipik xato. `strings.Builder` — ko'p konkatenatsiya uchun (string immutable, `+` har safar yangi). `[]byte(s)` nusxalaydi (xavfsizlik uchun).",
+      "explanation": "`s[i]` — bayt; rune — `int32` code point; belgi soni — `utf8.RuneCountInString`. O'zbek/kirill matn bilan ishlashda `s[i]` baytni qaytarishi — tipik xato. `strings.Builder` — ko'p konkatenatsiya uchun (string immutable, `+` har safar yangi). `[]byte(s)` nusxalaydi (xavfsizlik uchun).",
       "reviewed": false
     },
     {
@@ -116,9 +116,9 @@
       "kind": "concept",
       "prompt": "Type assertion va type switch qanday ishlaydi?",
       "options": [
-        { "id": "a", "text": "`v, ok := i.(T)` — interfeys ichida `T` bormi, xavfsiz (`ok` false — zero value); `v := i.(T)` — xato bo'lsa panic; `switch v := i.(type) { case int: ...; case string: ... }` — bir nechta tur bo'yicha", "correct": true },
+        { "id": "a", "text": "`v, ok := i.(T)` — xavfsiz tekshiruv; `i.(T)` — xato bo'lsa panic; `switch i.(type)` — bir nechta tur", "correct": true },
         { "id": "b", "text": "Type assertion — turni o'zgartirish (cast)", "hint": "O'zgartirmaydi — interfeys ichidagi konkret turni oladi; `int(x)` — conversion, boshqa narsa." },
-        { "id": "c", "text": "Har doim panic xavfi, xavfsiz varianti yo'q", "hint": "`, ok` shakli xavfsiz." },
+        { "id": "c", "text": "Type assertion har doim panic xavfini tug'diradi — uning xavfsiz `ok` bilan varianti Go'da umuman mavjud emas", "hint": "`, ok` shakli xavfsiz." },
         { "id": "d", "text": "Faqat `any` uchun ishlaydi", "hint": "Har qanday interfeys uchun." }
       ],
       "explanation": "Ko'p `type switch` — dizayn hidi (polimorfizm interfeys metodi bilan yaxshiroq). O'rinli: `error` turini aniqlash (`errors.As` afzal), `json.Unmarshal` dinamik ma'lumot, `any` konteynerlar. Interfeysdan interfeysga assertion: `if w, ok := r.(io.Writer)` — qo'shimcha imkoniyat tekshiruvi.",
@@ -147,12 +147,12 @@
       "kind": "concept",
       "prompt": "Go'da interfeys qiymati xotirada qanday saqlanadi va bu performansga qanday ta'sir qiladi?",
       "options": [
-        { "id": "a", "text": "Ikki so'z: tur ko'rsatkichi (itab — tur + metod jadvali) va ma'lumot ko'rsatkichi; konkret qiymat interfeysga joylanganda ko'pincha heap'ga ko'chadi (boxing, escape); metod chaqiruvi — jadval orqali bilvosita (inlining yo'q); issiq yo'lda interfeys — allokatsiya va dispatch narxi", "correct": true },
+        { "id": "a", "text": "Ikki so'z: itab (tur + metodlar) va ma'lumot pointer'i; joylashda heap'ga ko'chishi va bilvosita chaqiruv narxi bor", "correct": true },
         { "id": "b", "text": "Interfeys — faqat tur nomi, narxi yo'q", "hint": "Boxing allokatsiya qiladi — `fmt.Println(42)` heap'ga." },
-        { "id": "c", "text": "Interfeys qiymati konkret qiymatni to'liq nusxalaydi", "hint": "Pointer saqlaydi (kichik qiymatlar ham heap'da)." },
+        { "id": "c", "text": "Interfeys qiymati konkret qiymatni har safar to'liq nusxalaydi, shuning uchun u hech qachon heap'ga chiqmay, har doim stack'da qoladi", "hint": "Pointer saqlaydi (kichik qiymatlar ham heap'da)." },
         { "id": "d", "text": "Interfeys metodlari generics'dan sekin", "hint": "Hamma holatda emas; GC shape stenciling ham dictionary orqali chaqirishi mumkin. O'lchang." }
       ],
-      "explanation": "`[]any` ga int'lar yozish — har biri allokatsiya. Type assertion — itab solishtirish (tez). Interfeys solishtirish `==` — ikkalasi comparable bo'lsa; slice ichidagi interfeys `==` — runtime panic. Optimizatsiya faqat profiler ko'rsatganda — interfeys abstraksiya qiymati odatda narxidan yuqori.",
+      "explanation": "Metod chaqiruvi jadval orqali bilvosita — inlining yo'q; issiq yo'lda allokatsiya va dispatch narxi seziladi. `[]any` ga int'lar yozish — har biri allokatsiya. Type assertion — itab solishtirish (tez). Interfeys solishtirish `==` — ikkalasi comparable bo'lsa; slice ichidagi interfeys `==` — runtime panic. Optimizatsiya faqat profiler ko'rsatganda — interfeys abstraksiya qiymati odatda narxidan yuqori.",
       "reviewed": false
     },
     {
