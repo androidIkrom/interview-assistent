@@ -8,8 +8,8 @@
       "kind": "concept",
       "prompt": "ORM (Django ORM, SQLAlchemy) nima beradi?",
       "options": [
-        { "id": "a", "text": "Jadvallarni Python klasslari, qatorlarni obyektlar sifatida ifodalaydi; so'rovlar Python kodida yoziladi va parametrlangan SQL'ga aylanadi", "correct": true },
-        { "id": "b", "text": "SQL'ni butunlay keraksiz qiladi", "hint": "Murakkab so'rovlar va optimizatsiya uchun SQL'ni bilish baribir kerak." },
+        { "id": "a", "text": "Jadvallarni klasslar, qatorlarni obyektlar sifatida ifodalaydi; so'rovlar parametrlangan SQL'ga aylanadi", "correct": true },
+        { "id": "b", "text": "SQL'ni butunlay keraksiz qiladi: dasturchi SQL bilmasa ham har qanday murakkab so'rovni samarali yoza oladi", "hint": "Murakkab so'rovlar va optimizatsiya uchun SQL'ni bilish baribir kerak." },
         { "id": "c", "text": "Bazani tezlashtiradi", "hint": "Aksincha, qo'shimcha qatlam; qulaylik uchun." },
         { "id": "d", "text": "Faqat NoSQL bilan ishlaydi", "hint": "ORM aynan relyatsion bazalar uchun." }
       ],
@@ -39,10 +39,10 @@
       "kind": "concept",
       "prompt": "Django modelida `ForeignKey` qanday bog'lanishni ifodalaydi?",
       "options": [
-        { "id": "a", "text": "Ko'pga-bir: ko'p `Order` bitta `User` ga tegishli; `on_delete` ota o'chirilganda nima bo'lishini belgilaydi", "correct": true },
+        { "id": "a", "text": "Ko'pga-bir: ko'p `Order` bitta `User` ga tegishli; `on_delete` o'chirishdagi xulqni belgilaydi", "correct": true },
         { "id": "b", "text": "Ko'pga-ko'p", "hint": "Bu `ManyToManyField`." },
         { "id": "c", "text": "Birga-bir", "hint": "Bu `OneToOneField`." },
-        { "id": "d", "text": "Hech qanday bog'lanish, faqat son saqlaydi", "hint": "U bazada tashqi kalit cheklovi yaratadi." }
+        { "id": "d", "text": "Hech qanday bog'lanish yo'q — u faqat boshqa jadvaldagi qator raqamini oddiy son sifatida saqlaydi", "hint": "U bazada tashqi kalit cheklovi yaratadi." }
       ],
       "explanation": "`user = ForeignKey(User, on_delete=CASCADE)` foydalanuvchi o'chirilganda buyurtmalarni ham o'chiradi; `PROTECT` o'chirishga yo'l qo'ymaydi, `SET_NULL` bo'shatadi. `on_delete` tanlovi ma'lumot yo'qotish xavfini belgilaydi.",
       "reviewed": false
@@ -70,9 +70,9 @@
       "kind": "concept",
       "prompt": "Django'da `transaction.atomic()` nima qiladi?",
       "options": [
-        { "id": "a", "text": "Blok ichidagi barcha baza amallarini bitta tranzaksiyaga oladi: xato bo'lsa hammasi bekor qilinadi, bo'lmasa commit", "correct": true },
+        { "id": "a", "text": "Blok ichidagi amallarni bitta tranzaksiyaga oladi: xato bo'lsa hammasi bekor, bo'lmasa commit", "correct": true },
         { "id": "b", "text": "So'rovlarni tezlashtiradi", "hint": "Maqsad tezlik emas, yaxlitlik (ba'zan ko'p yozuvda tezroq ham bo'ladi)." },
-        { "id": "c", "text": "Bazani qulflab, boshqa so'rovlarni to'xtatadi", "hint": "Faqat tegilgan qatorlar qulflanadi, butun baza emas." },
+        { "id": "c", "text": "Butun bazani qulflab, blok tugaguncha boshqa barcha foydalanuvchilarning so'rovlarini to'xtatib turadi", "hint": "Faqat tegilgan qatorlar qulflanadi, butun baza emas." },
         { "id": "d", "text": "Faqat o'qish uchun", "hint": "Aynan yozuvlar uchun muhim." }
       ],
       "explanation": "Pul o'tkazmasi, buyurtma + ombor yangilash — bitta `atomic` blok. Standart holatda Django autocommit rejimida: har so'rov alohida tranzaksiya. `select_for_update()` blok ichida qatorni qulflaydi (pessimistik qulflash).",
@@ -85,12 +85,12 @@
       "kind": "concept",
       "prompt": "SQLAlchemy'da session va `expire_on_commit` haqida qaysi fikr to'g'ri?",
       "options": [
-        { "id": "a", "text": "Session obyektlarni kuzatadi (unit of work); commit'dan keyin obyektlar standart holatda \"eskirgan\" deb belgilanadi va keyingi murojaat qayta so'rov yuboradi; async kodda bu kutilmagan I/O beradi", "correct": true },
+        { "id": "a", "text": "Session obyektlarni kuzatadi; commit'dan keyin ular eskirgan deb belgilanadi va qayta so'rov yuboradi", "correct": true },
         { "id": "b", "text": "Session — bu baza ulanishi", "hint": "Session ulanishni pool'dan oladi va qaytaradi; o'zi ulanish emas." },
-        { "id": "c", "text": "Session global va butun ilova uchun bitta bo'lishi kerak", "hint": "Session so'rov (yoki ish birligi) uchun; global session oqimlar orasida xavfli." },
+        { "id": "c", "text": "Session global bo'lishi kerak: butun ilova va barcha so'rovlar uchun bitta umumiy session ochiladi va yopilmaydi", "hint": "Session so'rov (yoki ish birligi) uchun; global session oqimlar orasida xavfli." },
         { "id": "d", "text": "Commit obyektlarni o'chiradi", "hint": "O'chirmaydi, eskirgan deb belgilaydi." }
       ],
-      "explanation": "Async SQLAlchemy'da `expire_on_commit=False` deyarli majburiy: aks holda commit'dan keyin `obj.name` ga murojaat yashirin lazy load qilib, `MissingGreenlet` xatosi beradi. Session hayot sikli so'rov bilan bir xil bo'lishi kerak.",
+      "explanation": "Async kodda bu kutilmagan I/O beradi (`expire_on_commit`). Async SQLAlchemy'da `expire_on_commit=False` deyarli majburiy: aks holda commit'dan keyin `obj.name` ga murojaat yashirin lazy load qilib, `MissingGreenlet` xatosi beradi. Session hayot sikli so'rov bilan bir xil bo'lishi kerak.",
       "reviewed": false
     },
     {
@@ -100,12 +100,12 @@
       "kind": "concept",
       "prompt": "Million qatorli jadvalni Django ORM bilan qayta ishlashda xotira tugayapti. Yechim?",
       "options": [
-        { "id": "a", "text": "`iterator(chunk_size=2000)` bilan server tomonidan kursor orqali bo'laklab o'qish, `only()`/`values()` bilan kerakli ustunlar, yozishda `bulk_update`/`bulk_create`", "correct": true },
-        { "id": "b", "text": "`list(queryset)` qilib keyin ishlash", "hint": "Bu hammasini xotiraga yuklaydi — muammoning o'zi." },
+        { "id": "a", "text": "`iterator(chunk_size=2000)` bilan bo'laklab o'qish, `only()`/`values()` va `bulk_update`", "correct": true },
+        { "id": "b", "text": "`list(queryset)` qilib hammasini bir martada xotiraga olib, keyin Python'da ishlov berish", "hint": "Bu hammasini xotiraga yuklaydi — muammoning o'zi." },
         { "id": "c", "text": "Serverga xotira qo'shish", "hint": "Keyingi million qatorda yana tugaydi." },
         { "id": "d", "text": "`for` o'rniga `while True` sikli", "hint": "Sikl turi xotirani o'zgartirmaydi." }
       ],
-      "explanation": "Oddiy iteratsiya QuerySet natijasini keshlaydi. `iterator()` keshlamaydi va PostgreSQL'da server kursoridan foydalanadi. Juda katta yangilanishlar uchun ORM'siz bitta `UPDATE ... WHERE` yoki partiyalab `bulk_update` tezroq.",
+      "explanation": "Kursor server tomonida ishlaydi; yozishda `bulk_create` ham foydali. Oddiy iteratsiya QuerySet natijasini keshlaydi. `iterator()` keshlamaydi va PostgreSQL'da server kursoridan foydalanadi. Juda katta yangilanishlar uchun ORM'siz bitta `UPDATE ... WHERE` yoki partiyalab `bulk_update` tezroq.",
       "reviewed": false
     },
     {
@@ -115,12 +115,12 @@
       "kind": "concept",
       "prompt": "Ikki foydalanuvchi bir vaqtda oxirgi bitta mahsulotni sotib olmoqda; ikkalasi ham muvaffaqiyatli bo'lyapti (overselling). Yechim?",
       "options": [
-        { "id": "a", "text": "Tranzaksiya ichida `select_for_update()` bilan qatorni qulflash yoki atomik `UPDATE ... SET stock = stock - 1 WHERE stock > 0` va ta'sirlangan qatorlar sonini tekshirish", "correct": true },
-        { "id": "b", "text": "Avval `stock` ni o'qib, Python'da tekshirib, keyin yozish", "hint": "Aynan shu race condition: ikkalasi 1 ni o'qiydi, ikkalasi 0 yozadi." },
+        { "id": "a", "text": "Tranzaksiyada `select_for_update()` bilan qulflash yoki atomik `UPDATE ... WHERE stock > 0`", "correct": true },
+        { "id": "b", "text": "Avval `stock` ni o'qib, Python'da `if stock > 0` bilan tekshirib, keyin yangi qiymatni yozish", "hint": "Aynan shu race condition: ikkalasi 1 ni o'qiydi, ikkalasi 0 yozadi." },
         { "id": "c", "text": "Ilova darajasida global `Lock`", "hint": "Bir nechta worker va server bo'lsa, u ishlamaydi." },
         { "id": "d", "text": "Keshdan tekshirish", "hint": "Kesh ham race'dan himoya qilmaydi." }
       ],
-      "explanation": "Yagona haqiqat bazada; raqobatni baza hal qilishi kerak. `F()` ifodalari (`stock=F('stock') - 1`) atomik yangilaydi. Yuqori raqobatda optimistik versiya (`WHERE version = ?`) yoki navbat orqali ketma-ketlashtirish ishlatiladi.",
+      "explanation": "Atomik UPDATE'da ta'sirlangan qatorlar sonini tekshirish kerak. Yagona haqiqat bazada; raqobatni baza hal qilishi kerak. `F()` ifodalari (`stock=F('stock') - 1`) atomik yangilaydi. Yuqori raqobatda optimistik versiya (`WHERE version = ?`) yoki navbat orqali ketma-ketlashtirish ishlatiladi.",
       "reviewed": false
     },
     {
@@ -130,12 +130,12 @@
       "kind": "concept",
       "prompt": "Django migratsiyalarini katta production bazada xavfsiz qo'llash qoidalari qanday?",
       "options": [
-        { "id": "a", "text": "Orqaga mos migratsiyalar (avval qo'shish, keyin ilovani o'tkazish, keyin o'chirish), uzoq qulf beradigan amallarni ajratish (`CONCURRENTLY` indeks, `NOT NULL` ni bosqichma-bosqich), ma'lumot migratsiyasini partiyalab, deploy'dan oldin staging'da haqiqiy hajmda sinash", "correct": true },
-        { "id": "b", "text": "`migrate` ni deploy skriptida avtomatik, tekshiruvsiz bajarish", "hint": "Og'ir migratsiya xizmatni daqiqalab to'xtatishi mumkin." },
+        { "id": "a", "text": "Orqaga mos migratsiyalar, uzoq qulfli amallarni ajratish, ma'lumotni partiyalab ko'chirish, staging'da sinash", "correct": true },
+        { "id": "b", "text": "`migrate` ni deploy skriptida avtomatik, hech qanday tekshiruv va sinovsiz bajarish — Django hamma narsani o'zi xavfsiz hal qiladi", "hint": "Og'ir migratsiya xizmatni daqiqalab to'xtatishi mumkin." },
         { "id": "c", "text": "Migratsiyalarni o'chirib, sxemani qo'lda o'zgartirish", "hint": "Muhitlar ajralib ketadi; takrorlanuvchanlik yo'qoladi." },
         { "id": "d", "text": "Jadvalni nusxalab, almashtirish har safar", "hint": "Og'ir va yozuvlar paytida ma'lumot yo'qotish xavfi." }
       ],
-      "explanation": "Django'ning `AddIndex` standart holatda jadvalni qulflaydi; PostgreSQL uchun `AddIndexConcurrently` va `atomic = False` kerak. Eski kod yangi sxema bilan ishlashi kerak (deploy paytida ikkala versiya bir vaqtda yashaydi). `django-pg-zero-downtime-migrations` kabi vositalar xavfli amallarni ushlaydi.",
+      "explanation": "Masalan, avval ustun qo'shiladi, keyin ilova o'tkaziladi, keyin eskisi o'chiriladi; indeks `CONCURRENTLY` bilan yaratiladi. Django'ning `AddIndex` standart holatda jadvalni qulflaydi; PostgreSQL uchun `AddIndexConcurrently` va `atomic = False` kerak. Eski kod yangi sxema bilan ishlashi kerak (deploy paytida ikkala versiya bir vaqtda yashaydi). `django-pg-zero-downtime-migrations` kabi vositalar xavfli amallarni ushlaydi.",
       "reviewed": false
     },
     {

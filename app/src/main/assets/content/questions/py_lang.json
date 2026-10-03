@@ -8,12 +8,12 @@
       "kind": "concept",
       "prompt": "Python'da `list` va `tuple` farqi nima?",
       "options": [
-        { "id": "a", "text": "`list` o'zgaruvchan (mutable), `tuple` o'zgarmas (immutable); shuning uchun tuple dict kaliti bo'la oladi va biroz tezroq", "correct": true },
-        { "id": "b", "text": "`tuple` faqat sonlarni saqlaydi", "hint": "Ikkalasi ham istalgan tipni saqlaydi." },
+        { "id": "a", "text": "`list` o'zgaruvchan, `tuple` o'zgarmas — shuning uchun tuple dict kaliti bo'la oladi", "correct": true },
+        { "id": "b", "text": "`tuple` faqat sonlarni saqlaydi, `list` esa istalgan tipdagi qiymatlarni aralash saqlay oladi", "hint": "Ikkalasi ham istalgan tipni saqlaydi." },
         { "id": "c", "text": "`list` tartibni saqlamaydi", "hint": "Ikkalasi ham tartibli." },
         { "id": "d", "text": "Farqi faqat qavslarda", "hint": "Qavslar sintaksis; asosiy farq o'zgaruvchanlikda." }
       ],
-      "explanation": "Tuple \"yozuv\" (koordinata, qaytariladigan juftlik) uchun, list esa o'zgaradigan to'plam uchun. O'zgarmaslik xatolardan himoya qiladi va `hash` imkonini beradi: `{(1, 2): 'a'}` ishlaydi, `{[1, 2]: 'a'}` xato.",
+      "explanation": "Tuple biroz tezroq ham ishlaydi. Tuple \"yozuv\" (koordinata, qaytariladigan juftlik) uchun, list esa o'zgaradigan to'plam uchun. O'zgarmaslik xatolardan himoya qiladi va `hash` imkonini beradi: `{(1, 2): 'a'}` ishlaydi, `{[1, 2]: 'a'}` xato.",
       "reviewed": false
     },
     {
@@ -55,9 +55,9 @@
       "kind": "concept",
       "prompt": "`is` va `==` farqi nima?",
       "options": [
-        { "id": "a", "text": "`==` qiymatlarni (`__eq__`) solishtiradi, `is` ikki nom aynan bitta obyektga ishora qilishini tekshiradi", "correct": true },
+        { "id": "a", "text": "`==` qiymatni (`__eq__`) solishtiradi, `is` — aynan bitta obyektmi, shuni tekshiradi", "correct": true },
         { "id": "b", "text": "Farqi yo'q", "hint": "`[1] == [1]` True, `[1] is [1]` False." },
-        { "id": "c", "text": "`is` tezroq, shuning uchun hamma joyda ishlatish kerak", "hint": "Qiymat solishtirish uchun `is` noto'g'ri natija beradi." },
+        { "id": "c", "text": "`is` tezroq ishlaydi, shuning uchun qiymatlarni solishtirishda ham hamma joyda ishlatish kerak", "hint": "Qiymat solishtirish uchun `is` noto'g'ri natija beradi." },
         { "id": "d", "text": "`is` faqat sonlar uchun", "hint": "`is` har qanday obyekt uchun identiklikni tekshiradi; sonlar uchun esa uni ishlatmaslik kerak." }
       ],
       "explanation": "`is` faqat singleton'lar bilan: `x is None`, `x is True`. Kichik butun sonlar keshlangani uchun `a is b` ba'zan True chiqadi va bu yolg'on ishonch beradi; qiymat uchun doim `==`.",
@@ -70,12 +70,12 @@
       "kind": "concept",
       "prompt": "`*args` va `**kwargs` nima?",
       "options": [
-        { "id": "a", "text": "`*args` ixtiyoriy sondagi pozitsion argumentlarni tuple sifatida, `**kwargs` nomli argumentlarni dict sifatida qabul qiladi", "correct": true },
+        { "id": "a", "text": "`*args` — pozitsion argumentlar tuple'da, `**kwargs` — nomli argumentlar dict'da", "correct": true },
         { "id": "b", "text": "Ko'rsatkichlar (pointer) sintaksisi", "hint": "Python'da ko'rsatkich yo'q; `*` bu yerda \"yoyish\" belgisi." },
         { "id": "c", "text": "Majburiy argumentlar", "hint": "Aksincha, ular ixtiyoriy va soni noma'lum." },
-        { "id": "d", "text": "Nomlari aynan `args` va `kwargs` bo'lishi shart", "hint": "Nom kelishuv; muhimi `*` va `**`." }
+        { "id": "d", "text": "Parametr nomlari aynan `args` va `kwargs` bo'lishi shart, boshqa nom bilan Python xato beradi", "hint": "Nom kelishuv; muhimi `*` va `**`." }
       ],
-      "explanation": "`def log(*args, **kwargs)` istalgan chaqiruvni qabul qiladi; dekoratorlar shu usulda asl funksiyaga argumentlarni uzatadi (`f(*args, **kwargs)`). `*` chaqiruvda ham ishlaydi: `print(*[1, 2, 3])`.",
+      "explanation": "Ular ixtiyoriy sondagi argumentlarni qabul qiladi. `def log(*args, **kwargs)` istalgan chaqiruvni qabul qiladi; dekoratorlar shu usulda asl funksiyaga argumentlarni uzatadi (`f(*args, **kwargs)`). `*` chaqiruvda ham ishlaydi: `print(*[1, 2, 3])`.",
       "reviewed": false
     },
     {
@@ -98,9 +98,9 @@
       "kind": "concept",
       "prompt": "Dekorator nima va qanday ishlaydi?",
       "options": [
-        { "id": "a", "text": "Funksiyani qabul qilib, uni o'rab olgan yangi funksiya qaytaradigan funksiya; `@dec` yozuvi `f = dec(f)` bilan teng", "correct": true },
+        { "id": "a", "text": "Funksiyani olib, uni o'ragan yangi funksiya qaytaradigan funksiya; `@dec` — `f = dec(f)`", "correct": true },
         { "id": "b", "text": "Klassga xususiyat qo'shadigan annotatsiya", "hint": "Bu Java'dagi annotatsiya haqida tasavvur; Python dekoratori oddiy funksiya chaqiruvi." },
-        { "id": "c", "text": "Faqat `@property` va `@staticmethod` degan ichki sintaksis", "hint": "Bular tayyor dekoratorlar; o'zingiznikini yozish mumkin." },
+        { "id": "c", "text": "Faqat `@property`, `@staticmethod` va `@classmethod` degan o'zgarmas ichki sintaksis, o'zingiz yoza olmaysiz", "hint": "Bular tayyor dekoratorlar; o'zingiznikini yozish mumkin." },
         { "id": "d", "text": "Funksiyani tezlashtiruvchi kompilyator ko'rsatmasi", "hint": "Tezlikka aloqasi yo'q (faqat `lru_cache` kabi dekorator kesh orqali tezlashtiradi)." }
       ],
       "explanation": "Log, kesh, retry, autentifikatsiya tekshiruvi — dekoratorlar bilan kesishuvchi mantiq bir joyda yoziladi. `functools.wraps` asl funksiyaning nomi va hujjatini saqlaydi; usiz debugging qiyinlashadi.",
@@ -129,12 +129,12 @@
       "kind": "concept",
       "prompt": "Context manager (`with`) nima uchun kerak va qanday yoziladi?",
       "options": [
-        { "id": "a", "text": "Resursni olish va xato bo'lsa ham albatta qaytarish uchun; `__enter__`/`__exit__` metodlari yoki `@contextmanager` dekoratorli generator bilan yoziladi", "correct": true },
+        { "id": "a", "text": "Resursni olish va xato bo'lsa ham albatta qaytarish uchun; `__enter__`/`__exit__` bilan yoziladi", "correct": true },
         { "id": "b", "text": "Faqat fayllar uchun maxsus sintaksis", "hint": "Fayl eng mashhur misol, lekin qulflar, tranzaksiyalar, ulanishlar ham." },
-        { "id": "c", "text": "`try/except` ning qisqa yozuvi", "hint": "U `try/finally` ga yaqinroq; xatoni ushlash majburiy emas." },
+        { "id": "c", "text": "`try/except` ning qisqa yozuvi: blok ichidagi barcha xatolarni ushlab, jimgina e'tiborsiz qoldiradi", "hint": "U `try/finally` ga yaqinroq; xatoni ushlash majburiy emas." },
         { "id": "d", "text": "Kodni tezlashtirish vositasi", "hint": "Tezlikka aloqasi yo'q; to'g'rilik uchun." }
       ],
-      "explanation": "`with open(p) as f:` blokdan chiqishda (exception bo'lsa ham) faylni yopadi. `__exit__` xatoni qabul qiladi va `True` qaytarsa uni yutadi. Baza tranzaksiyasi: `__exit__` da xato bo'lsa rollback, bo'lmasa commit.",
+      "explanation": "`@contextmanager` dekoratorli generator bilan ham yoziladi. `with open(p) as f:` blokdan chiqishda (exception bo'lsa ham) faylni yopadi. `__exit__` xatoni qabul qiladi va `True` qaytarsa uni yutadi. Baza tranzaksiyasi: `__exit__` da xato bo'lsa rollback, bo'lmasa commit.",
       "reviewed": false
     },
     {
@@ -144,9 +144,9 @@
       "kind": "concept",
       "prompt": "`@staticmethod`, `@classmethod` va oddiy metod farqi nima?",
       "options": [
-        { "id": "a", "text": "Oddiy metod `self` (nusxa) oladi; `classmethod` `cls` (klass) oladi va muqobil konstruktorlar uchun qulay; `staticmethod` hech narsa olmaydi, shunchaki klass ichidagi funksiya", "correct": true },
+        { "id": "a", "text": "Oddiy metod `self` oladi, `classmethod` — `cls` (muqobil konstruktorlar uchun), `staticmethod` — hech narsa", "correct": true },
         { "id": "b", "text": "`staticmethod` klass holatini o'zgartira oladi", "hint": "U klassga ham, nusxaga ham murojaat qilmaydi." },
-        { "id": "c", "text": "`classmethod` faqat meros olingan klasslarda ishlaydi", "hint": "Har qanday klassda ishlaydi; `cls` meros olinganda bola klass bo'ladi — bu uning afzalligi." },
+        { "id": "c", "text": "`classmethod` faqat meros olingan klasslarda ishlaydi va asosiy klassning o'zida chaqirilsa `TypeError` xatosini beradi", "hint": "Har qanday klassda ishlaydi; `cls` meros olinganda bola klass bo'ladi — bu uning afzalligi." },
         { "id": "d", "text": "Farqi yo'q, hammasi bir xil chaqiriladi", "hint": "Chaqirish sintaksisi o'xshash, lekin birinchi argument har xil." }
       ],
       "explanation": "`@classmethod def from_json(cls, s)` meros olingan klassda ham to'g'ri tipni qaytaradi. `staticmethod` klass bilan mantiqan bog'liq yordamchi funksiya uchun; ko'pincha oddiy modul funksiyasi ham yetadi.",
@@ -174,12 +174,12 @@
       "kind": "concept",
       "prompt": "MRO (method resolution order) nima va ko'p meroslilikda nega muhim?",
       "options": [
-        { "id": "a", "text": "Python metodni qaysi tartibda qidirishini belgilaydi (C3 linearization); `super()` zanjiri shu tartib bo'yicha yuradi, shuning uchun mixin'lar bashorat qilinadigan ishlaydi", "correct": true },
+        { "id": "a", "text": "Python metodni qidirish tartibi (C3 linearization); `super()` zanjiri shu tartib bo'yicha yuradi", "correct": true },
         { "id": "b", "text": "Metodlarni alifbo bo'yicha tartiblash", "hint": "Tartib klass ierarxiyasidan chiqadi, nomdan emas." },
         { "id": "c", "text": "Python ko'p meroslilikni qo'llamaydi", "hint": "Qo'llaydi; MRO aynan shuning uchun kerak." },
-        { "id": "d", "text": "Faqat `object` dan meros olganda ishlaydi", "hint": "Har klass oxir-oqibat `object` dan meros oladi; MRO hammasiga tegishli." }
+        { "id": "d", "text": "Faqat `object` dan to'g'ridan-to'g'ri meros olgan klasslarda ishlaydigan eski mexanizm, hozir kerak emas", "hint": "Har klass oxir-oqibat `object` dan meros oladi; MRO hammasiga tegishli." }
       ],
-      "explanation": "`class C(A, B)` da `C.__mro__` → C, A, B, object. `super().__init__()` \"ota klass\" emas, MRO'dagi keyingi klassni chaqiradi; shuning uchun har klass `super()` ni chaqirsa, zanjir to'liq o'tadi. Django'ning class-based view'lari shu printsipda.",
+      "explanation": "Shu tufayli mixin'lar bashorat qilinadigan ishlaydi. `class C(A, B)` da `C.__mro__` → C, A, B, object. `super().__init__()` \"ota klass\" emas, MRO'dagi keyingi klassni chaqiradi; shuning uchun har klass `super()` ni chaqirsa, zanjir to'liq o'tadi. Django'ning class-based view'lari shu printsipda.",
       "reviewed": false
     },
     {
