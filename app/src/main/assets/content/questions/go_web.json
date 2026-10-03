@@ -1,0 +1,202 @@
+{
+  "topic": "go.web",
+  "questions": [
+    {
+      "id": "go.web.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`net/http` da oddiy server qanday yaratiladi?",
+      "options": [
+        { "id": "a", "text": "`http.HandleFunc(\"/path\", func(w http.ResponseWriter, r *http.Request) {...})` yoki `http.ServeMux` + `http.ListenAndServe(\":8080\", mux)`; har so'rov alohida goroutine'da ishlanadi — framework shart emas", "correct": true },
+        { "id": "b", "text": "Faqat Gin/Echo framework bilan", "hint": "Standart kutubxona yetarli; framework — qulaylik." },
+        { "id": "c", "text": "`http.Server` har so'rovni ketma-ket ishlaydi", "hint": "Har so'rov — yangi goroutine, parallel." },
+        { "id": "d", "text": "Go'da HTTP server yozib bo'lmaydi", "hint": "`net/http` — production-ready, Go'ning kuchli tomoni." }
+      ],
+      "explanation": "Go 1.22 `ServeMux`: metod va path parametrlar (`mux.HandleFunc(\"GET /users/{id}\", ...)`, `r.PathValue(\"id\")`) — ko'p holatda router kutubxonasi kerak emas. Production: `http.Server{ReadTimeout, WriteTimeout, IdleTimeout}` — default timeout'siz server xavfli (slowloris).",
+      "reviewed": false
+    },
+    {
+      "id": "go.web.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`http.Handler` interfeysi va `http.HandlerFunc` qanday bog'liq?",
+      "options": [
+        { "id": "a", "text": "`Handler` — `ServeHTTP(w, r)` metodli interfeys; `HandlerFunc` — funksiya turi, u `ServeHTTP` implement qiladi (o'zini chaqiradi) — oddiy funksiyani `Handler`ga aylantiruvchi adapter; butun `net/http` shu bitta interfeys ustida", "correct": true },
+        { "id": "b", "text": "Bir xil narsa", "hint": "Biri interfeys, ikkinchisi funksiya turi (adapter)." },
+        { "id": "c", "text": "`HandlerFunc` — framework tushunchasi", "hint": "Standart kutubxonada." },
+        { "id": "d", "text": "`Handler` struct bo'lishi shart", "hint": "Istalgan tur — funksiya ham (`HandlerFunc` shuni ko'rsatadi)." }
+      ],
+      "explanation": "Bu Go idiomasi: funksiya turiga metod qo'shish. Natija: middleware, router, handler — hammasi `Handler`; istalgan kutubxona bir-biri bilan mos. `http.StripPrefix`, `http.FileServer`, `http.TimeoutHandler` — tayyor Handler'lar.",
+      "reviewed": false
+    },
+    {
+      "id": "go.web.003",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "HTTP handler'da JSON so'rovni o'qish va javob yozish qanday qilinadi?",
+      "options": [
+        { "id": "a", "text": "`json.NewDecoder(r.Body).Decode(&req)` (xatoni tekshirib 400), `w.Header().Set(\"Content-Type\", \"application/json\")`, `w.WriteHeader(status)` (header'lardan keyin, body'dan oldin), `json.NewEncoder(w).Encode(resp)`", "correct": true },
+        { "id": "b", "text": "`r.Body` satr sifatida o'qib, qo'lda parse qilish", "hint": "`encoding/json` bor — qo'lda parse xato manbai." },
+        { "id": "c", "text": "`fmt.Fprintf(w, \"%v\", resp)` — JSON chiqaradi", "hint": "Go sintaksisida chiqaradi, JSON emas." },
+        { "id": "d", "text": "`WriteHeader`ni body'dan keyin chaqirish", "hint": "Body yozilgach status 200 qotadi — \"superfluous WriteHeader\" ogohlantirish." }
+      ],
+      "explanation": "`http.MaxBytesReader(w, r.Body, 1<<20)` — katta body'dan himoya. `dec.DisallowUnknownFields()` — qattiq validatsiya. Struct teglar: `json:\"name,omitempty\"`. Xato javoblari — bir xil format (`{\"error\": ...}`) uchun helper. `r.Body` yopish shart emas (server yopadi), lekin to'liq o'qish keep-alive uchun foydali.",
+      "reviewed": false
+    },
+    {
+      "id": "go.web.004",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Quyidagi HTTP klient kodida qanday muammo bor?",
+      "code": "func getUser(id int) (*User, error) {\n    resp, err := http.Get(fmt.Sprintf(\"%s/users/%d\", base, id))\n    if err != nil {\n        return nil, err\n    }\n    var u User\n    json.NewDecoder(resp.Body).Decode(&u)\n    return &u, nil\n}",
+      "options": [
+        { "id": "a", "text": "`resp.Body.Close()` yo'q — ulanish sizadi (pool to'ladi); status kod tekshirilmaydi; `Decode` xatosi e'tiborsiz; `http.Get` default klient timeout'siz (abadiy osilishi mumkin); context yo'q", "correct": true },
+        { "id": "b", "text": "`fmt.Sprintf` o'rniga `url.JoinPath` — yagona muammo", "hint": "Yaxshi fikr, lekin resurs va xato muammolari jiddiyroq." },
+        { "id": "c", "text": "`*User` o'rniga `User` qaytarish kerak", "hint": "Uslub masalasi; to'g'rilik muammolari bor." },
+        { "id": "d", "text": "Muammo yo'q", "hint": "Har chaqiruvda TCP ulanish nima bo'ladi? Server 500 bersa?" }
+      ],
+      "explanation": "To'g'ri: `defer resp.Body.Close()`, `if resp.StatusCode != 200`, `if err := dec.Decode(&u); err != nil`. O'z klient: `&http.Client{Timeout: 10 * time.Second}` yoki `http.NewRequestWithContext(ctx, ...)`. Body'ni to'liq o'qish (`io.Copy(io.Discard, resp.Body)`) — ulanishni qayta ishlatish uchun.",
+      "reviewed": false
+    },
+    {
+      "id": "go.web.005",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Go'da HTTP middleware qanday yoziladi?",
+      "options": [
+        { "id": "a", "text": "`func(next http.Handler) http.Handler` — handler'ni o'rab, oldin/keyin ish qiladi va `next.ServeHTTP(w, r)` chaqiradi; zanjir: `logging(auth(mux))`; so'rovga ma'lumot qo'shish — `r.WithContext(context.WithValue(...))`", "correct": true },
+        { "id": "b", "text": "Har handler ichida kodni takrorlash", "hint": "Middleware aynan takrorlanishni yo'q qiladi." },
+        { "id": "c", "text": "Faqat framework'larda mavjud", "hint": "Oddiy funksiya kompozitsiyasi — standart kutubxonada." },
+        { "id": "d", "text": "Global o'zgaruvchi orqali", "hint": "Race va test muammosi; context/o'rama to'g'ri." }
+      ],
+      "explanation": "Status kodni log qilish — `ResponseWriter`ni o'rash (`WriteHeader`ni ushlash). Tartib muhim: recover eng tashqarida, auth router'dan oldin yoki marshrut bo'yicha. `alice`/`chi` — zanjir qulayligi, lekin g'oya bir xil. Middleware har so'rovda ishlaydi — yengil bo'lsin.",
+      "reviewed": false
+    },
+    {
+      "id": "go.web.006",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "HTTP handler'da `r.Context()` nima uchun ishlatiladi?",
+      "options": [
+        { "id": "a", "text": "Klient ulanishni uzsa yoki server Shutdown bo'lsa context bekor qilinadi — DB so'rov, tashqi chaqiruv, og'ir ish `ctx` orqali to'xtaydi (resurs tejash); middleware qiymatlari (request id, user) ham shu context'da; har pastki chaqiruvga `ctx` uzatiladi", "correct": true },
+        { "id": "b", "text": "So'rov header'larini saqlaydi", "hint": "Header — `r.Header`; context — bekor qilish va metadata." },
+        { "id": "c", "text": "Faqat timeout uchun", "hint": "Klient uzilishi — asosiy holat; timeout — `http.TimeoutHandler` yoki `WithTimeout`." },
+        { "id": "d", "text": "Ishlatish shart emas", "hint": "Klient ketgan so'rov uchun 5 soniyalik DB so'rovini davom ettirish — isrof." }
+      ],
+      "explanation": "Tuzoq: `r.Context()`ni javob yozilgandan keyin fon ishida ishlatish — bekor qilingan; `context.WithoutCancel(r.Context())` (1.21). Handler'dan goroutine boshlash — uning hayot siklini o'ylang. `ctx.Err()` — `Canceled` vs `DeadlineExceeded` farqlash (log/metrika).",
+      "reviewed": false
+    },
+    {
+      "id": "go.web.007",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Quyidagi middleware'da qanday xato bor?",
+      "code": "func Auth(next http.Handler) http.Handler {\n    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {\n        user, err := verify(r.Header.Get(\"Authorization\"))\n        if err != nil {\n            http.Error(w, \"unauthorized\", http.StatusUnauthorized)\n        }\n        ctx := context.WithValue(r.Context(), \"user\", user)\n        next.ServeHTTP(w, r.WithContext(ctx))\n    })\n}",
+      "options": [
+        { "id": "a", "text": "Xatodan keyin `return` yo'q — 401 yozilgach `next` baribir chaqiriladi (himoya ishlamaydi, \"superfluous WriteHeader\"); context kaliti satr (`\"user\"`) — kolliziya xavfi, tipli kalit (`type ctxKey struct{}`) kerak", "correct": true },
+        { "id": "b", "text": "`http.HandlerFunc` o'rniga struct kerak", "hint": "`HandlerFunc` — odatiy." },
+        { "id": "c", "text": "`r.WithContext` nusxalaydi — sekin", "hint": "Yengil shallow nusxa — odatiy usul." },
+        { "id": "d", "text": "Xato yo'q", "hint": "Token noto'g'ri bo'lsa — handler bajariladimi?" }
+      ],
+      "explanation": "\"Xatodan keyin return unutish\" — Go'da eng ko'p uchraydigan handler xatosi (exception yo'q, oqim davom etadi). Context kaliti: `type key int; const userKey key = 0` yoki `struct{}` — boshqa paket bilan to'qnashmaydi, `staticcheck SA1029` ogohlantiradi. Helper: `UserFrom(ctx) (User, bool)`.",
+      "reviewed": false
+    },
+    {
+      "id": "go.web.008",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Go HTTP handler'larini qanday test qilish kerak?",
+      "options": [
+        { "id": "a", "text": "`net/http/httptest`: `httptest.NewRequest` + `httptest.NewRecorder()` → `handler.ServeHTTP(rec, req)` → `rec.Code`, `rec.Body` tekshirish — serversiz, tez; tashqi API uchun `httptest.NewServer` fake server; table-driven testlar", "correct": true },
+        { "id": "b", "text": "Faqat real serverni ishga tushirib curl bilan", "hint": "Sekin, avtomatlashtirish qiyin; `httptest` — unit darajada." },
+        { "id": "c", "text": "Handler'larni test qilib bo'lmaydi", "hint": "`httptest` aynan shuning uchun." },
+        { "id": "d", "text": "Faqat mock framework bilan", "hint": "`ResponseWriter` uchun `NewRecorder` tayyor — mock kerak emas." }
+      ],
+      "explanation": "Handler bog'liqliklarini (service, repo) interfeys orqali inject qiling — testda fake. `t.Run` subtest'lar, `t.Parallel`. Butun router orqali (`mux.ServeHTTP`) — marshrutlash ham tekshiriladi. Golden fayllar JSON javob uchun. `-race` bilan.",
+      "reviewed": false
+    },
+    {
+      "id": "go.web.009",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Go HTTP klientida connection pool va timeout'lar qanday to'g'ri sozlanadi?",
+      "options": [
+        { "id": "a", "text": "Bitta `http.Client` qayta ishlatiladi (ichida `Transport` pool); `Transport{MaxIdleConns, MaxIdleConnsPerHost (default 2!), IdleConnTimeout}`; timeout qatlamlari — `Client.Timeout` (butun so'rov), `DialContext`, `TLSHandshakeTimeout`, `ResponseHeaderTimeout`; body'ni to'liq o'qib yopish — ulanish pool'ga qaytsin", "correct": true },
+        { "id": "b", "text": "Har so'rovda yangi `http.Client`", "hint": "Pool yo'qoladi — har so'rov yangi TCP/TLS; `TIME_WAIT` portlar tugaydi." },
+        { "id": "c", "text": "`http.DefaultClient` hamma uchun yetarli", "hint": "Timeout'siz — tashqi servis osilsa goroutine'lar to'planadi." },
+        { "id": "d", "text": "Timeout faqat serverda kerak", "hint": "Klient ham cheksiz kutmasligi kerak." }
+      ],
+      "explanation": "`MaxIdleConnsPerHost=2` default — bitta backend'ga ko'p so'rovda ulanishlar yopilib-ochiladi; 100 ga oshirish odatiy. Retry — faqat idempotent va `Request.GetBody` bilan. HTTP/2 — bitta ulanish, multiplekslash. `httptrace` — har bosqich vaqtini o'lchash.",
+      "reviewed": false
+    },
+    {
+      "id": "go.web.010",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "HTTP serverda panic'dan himoya va xatolarni markazlashtirilgan ishlov qanday tashkil qilinadi?",
+      "options": [
+        { "id": "a", "text": "Recover middleware eng tashqi qatlamda (`net/http` o'zi panic'ni ushlab ulanishni yopadi, lekin log/metrika/500 javob uchun o'zingiz); handler'lar `error` qaytaradigan o'z tipingiz (`func(w, r) error`) + adapter — xato turi bo'yicha status mapping bir joyda, loglash bir joyda", "correct": true },
+        { "id": "b", "text": "Har handler'da `defer recover()`", "hint": "Takror; bitta middleware yetadi." },
+        { "id": "c", "text": "`net/http` panic'ni o'zi ishlaydi, hech narsa kerak emas", "hint": "Ulanish yopiladi, lekin log kontekstsiz, metrika yo'q, klient tushunarsiz uzilish oladi." },
+        { "id": "d", "text": "Handler'da `log.Fatal`", "hint": "Butun server o'ladi — bitta so'rov uchun." }
+      ],
+      "explanation": "Pattern: `type HandlerE func(w, r) error`; adapter `ServeHTTP`da `errors.As(err, &apiErr)` → status, aks holda 500 + log + Sentry. `http.ErrAbortHandler` — ataylab panic (recover o'tkazib yuborsin). Handler'dan boshlangan goroutine'dagi panic — server recover'i ushlamaydi, butun jarayon o'ladi — alohida recover.",
+      "reviewed": false
+    },
+    {
+      "id": "go.web.011",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Go servisida rate limiting va so'rov hajmini cheklash qanday amalga oshiriladi?",
+      "options": [
+        { "id": "a", "text": "`golang.org/x/time/rate` (token bucket) — global yoki per-klient (map + Mutex/ttl bilan) middleware'da, 429 + `Retry-After`; `http.MaxBytesReader` body uchun; `Server.ReadHeaderTimeout` header uchun; konkurent so'rovlar — semafor channel; taqsimlangan limit — Redis", "correct": true },
+        { "id": "b", "text": "Rate limiting faqat API gateway'da bo'lishi kerak", "hint": "Gateway — birinchi qatlam; servis o'zini ham himoya qiladi (defense in depth)." },
+        { "id": "c", "text": "`time.Sleep` bilan so'rovlarni sekinlashtirish", "hint": "Goroutine'lar to'planadi — DoS'ga yordam." },
+        { "id": "d", "text": "Go'da cheklash kerak emas — goroutine'lar arzon", "hint": "Goroutine arzon, DB ulanish va xotira — yo'q." }
+      ],
+      "explanation": "`rate.NewLimiter(r, b)` — `Allow()` (rad) yoki `Wait(ctx)` (kutish). Per-IP map — eskirgan yozuvlarni tozalash (goroutine yoki LRU). Load shedding — navbat uzunligi/latency bo'yicha 503. Bu Go'da `net/http` ustida 50 qator — framework shart emas.",
+      "reviewed": false
+    },
+    {
+      "id": "go.web.012",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Go'da gRPC va REST o'rtasida tanlov va gRPC servis dizayni qanday?",
+      "options": [
+        { "id": "a", "text": "gRPC — servislar orasida: protobuf kontrakt (kod generatsiya, tur xavfsizligi, kichik hajm), HTTP/2 streaming, deadline/metadata tarqalishi, interceptor'lar (middleware); REST/JSON — tashqi/brauzer klientlar, oddiy debug; ko'p tizimda ikkalasi (grpc-gateway). Dizayn: `.proto` — API egasi, backward-compatible o'zgarish (maydon raqamlari), xato kodlari `status`, health check, reflection", "correct": true },
+        { "id": "b", "text": "gRPC doim REST'dan yaxshi", "hint": "Brauzer to'g'ridan-to'g'ri gRPC gaplasha olmaydi (grpc-web proxy); debug qiyinroq." },
+        { "id": "c", "text": "REST doim yetarli", "hint": "Yuqori yuklamali ichki trafik, streaming — gRPC sezilarli samara." },
+        { "id": "d", "text": "gRPC Go'da qo'llanmaydi", "hint": "gRPC Go — eng yetuk implementatsiyalardan biri." }
+      ],
+      "explanation": "Go gRPC: `protoc-gen-go` + `protoc-gen-go-grpc` yoki `buf` (lint, breaking change tekshiruvi). Interceptor — auth, logging, metrika, recovery. Context deadline — klientdan serverga avtomatik. Load balancing — klient tomonda (HTTP/2 uzoq ulanish — L4 LB taqsimlamaydi) yoki service mesh.",
+      "reviewed": false
+    },
+    {
+      "id": "go.web.013",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Go web servisida kuzatuvchanlik (observability) qanday tashkil qilinadi?",
+      "options": [
+        { "id": "a", "text": "Strukturali log (`log/slog`, 1.21+) request id/trace id bilan; metrikalar — Prometheus (`promhttp`, RED: rate, errors, duration — histogram) + `expvar`/runtime metrikalar; trace — OpenTelemetry SDK, HTTP/gRPC/DB instrumentatsiya, context orqali span tarqalishi; `net/http/pprof` endpoint (himoyalangan port) — production profiling; health/readiness endpoint'lar", "correct": true },
+        { "id": "b", "text": "`fmt.Println` loglar yetarli", "hint": "Strukturasiz, qidirish qiyin, level yo'q, kontekst yo'q." },
+        { "id": "c", "text": "Faqat metrika — loglar kerak emas", "hint": "Metrika \"nima\", log \"nega\" — ikkalasi." },
+        { "id": "d", "text": "pprof faqat lokal ishlab chiqishda", "hint": "Production'da pprof — Go'ning eng kuchli afzalliklaridan biri; faqat ichki portda." }
+      ],
+      "explanation": "`slog` — `slog.With(\"request_id\", id)` handler'ga uzatiladi; JSON output. Middleware RED metrikani har marshrut uchun (label kardinalligi — path shablon, real URL emas!). OTel — bitta SDK, exporter almashtiriladi (Jaeger, Tempo, vendor). Continuous profiling (Pyroscope, Parca) — pprof ustida.",
+      "reviewed": false
+    }
+  ]
+}

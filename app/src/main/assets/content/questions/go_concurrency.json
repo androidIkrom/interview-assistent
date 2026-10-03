@@ -1,0 +1,203 @@
+{
+  "topic": "go.concurrency",
+  "questions": [
+    {
+      "id": "go.concurrency.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Goroutine nima va u OS thread'dan nimasi bilan farq qiladi?",
+      "options": [
+        { "id": "a", "text": "Go runtime boshqaradigan yengil ijro birligi (`go f()`): boshlang'ich stack ~2 KB (o'sadi), yaratish mikrosekundlar, millionlab bo'lishi mumkin; runtime ularni kam sonli OS thread'larga multiplekslaydi (M:N scheduler)", "correct": true },
+        { "id": "b", "text": "OS thread bilan bir xil", "hint": "OS thread ~1 MB stack, yaratish qimmat; goroutine — yuzlab barobar yengil." },
+        { "id": "c", "text": "Alohida jarayon", "hint": "Bitta jarayon ichida." },
+        { "id": "d", "text": "Faqat bitta goroutine bir vaqtda ishlaydi", "hint": "GOMAXPROCS (default CPU soni) tagacha parallel." }
+      ],
+      "explanation": "`go func() { ... }()` — darhol qaytadi. `main` tugasa — barcha goroutine'lar o'ladi (kutish kerak: WaitGroup, channel). Goroutine ID yo'q (ataylab). Arzon, lekin bepul emas — cheksiz yaratish (har so'rovga nazoratsiz) — xotira.",
+      "reviewed": false
+    },
+    {
+      "id": "go.concurrency.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Channel nima uchun kerak?",
+      "options": [
+        { "id": "a", "text": "Goroutine'lar orasida qiymat uzatish va sinxronizatsiya — \"xotirani baham ko'rib muloqot qilmang, muloqot qilib xotirani baham ko'ring\"; `ch <- v` yuborish, `v := <-ch` qabul qilish, tipli", "correct": true },
+        { "id": "b", "text": "Tarmoq ulanishi", "hint": "Jarayon ichida; tarmoq — `net` paketi." },
+        { "id": "c", "text": "Goroutine yaratish", "hint": "Yaratish — `go`; channel — muloqot." },
+        { "id": "d", "text": "Global o'zgaruvchi almashtiruvchi", "hint": "Qiymat oqimi, holat saqlash emas." }
+      ],
+      "explanation": "`make(chan int)` — buferlanmagan; `make(chan int, 10)` — buferlangan. `close(ch)` — yuboruvchi yopadi; `v, ok := <-ch` — yopilganmi. `for v := range ch` — yopilguncha o'qish. Channel — har narsa uchun emas: oddiy hisoblagich — `Mutex`/`atomic` soddaroq.",
+      "reviewed": false
+    },
+    {
+      "id": "go.concurrency.003",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Quyidagi kod nimani chop etadi?",
+      "code": "func main() {\n    for i := 0; i < 3; i++ {\n        go fmt.Println(i)\n    }\n}",
+      "options": [
+        { "id": "a", "text": "Ehtimol hech narsa (yoki qismi) — `main` goroutine'lar ishlashini kutmay tugaydi", "correct": true },
+        { "id": "b", "text": "0 1 2 — doim", "hint": "`main` tugashi bilan dastur tugaydi; goroutine'lar ishga tushishga ulgurmasligi mumkin." },
+        { "id": "c", "text": "2 2 2", "hint": "Go 1.22+ da sikl o'zgaruvchisi har iteratsiyada yangi; va `fmt.Println(i)` argumenti `go` qatorida hisoblanadi — har biri o'z `i`." },
+        { "id": "d", "text": "Kompilyatsiya xatosi", "hint": "`go` bilan istalgan funksiya chaqiruvi — to'g'ri." }
+      ],
+      "explanation": "Kutish kerak: `var wg sync.WaitGroup; wg.Add(1); go func() { defer wg.Done(); ... }(); wg.Wait()`. `time.Sleep` — test uchun ham yomon (mo'rt). Go 1.22 dan oldin `for` o'zgaruvchisi baham ko'rilardi — closure'da `i`ni argument sifatida uzatish kerak edi.",
+      "reviewed": false
+    },
+    {
+      "id": "go.concurrency.004",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`sync.WaitGroup` nima uchun kerak?",
+      "options": [
+        { "id": "a", "text": "Bir guruh goroutine tugashini kutish: `Add(n)` — kutilayotganlar soni, har goroutine oxirida `Done()`, `Wait()` — hammasi tugaguncha bloklanadi", "correct": true },
+        { "id": "b", "text": "Goroutine'larni ketma-ket bajarish", "hint": "Parallel ishlaydi — faqat tugashini kutish." },
+        { "id": "c", "text": "Umumiy ma'lumotni himoya qilish", "hint": "Bu `Mutex`; WaitGroup — tugashni kutish." },
+        { "id": "d", "text": "Natijalarni yig'ish", "hint": "Natija uzatmaydi — channel yoki Mutex'li slice kerak." }
+      ],
+      "explanation": "Xatolar: `Add` goroutine ichida (race — `Wait` oldin tugashi mumkin), `Done` unutish (abadiy kutish), WaitGroup'ni nusxalash (pointer uzatish). Go 1.25: `wg.Go(func())` — `Add`/`Done` avtomatik. Xato ham kerak bo'lsa — `errgroup.Group`.",
+      "reviewed": false
+    },
+    {
+      "id": "go.concurrency.005",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Buferlangan va buferlanmagan channel qanday farqlanadi?",
+      "options": [
+        { "id": "a", "text": "Buferlanmagan — yuborish qabul qiluvchi tayyor bo'lguncha bloklanadi (sinxron uchrashuv, kafolatli yetkazish); buferlangan (cap n) — bufer to'lmaguncha yuborish bloklanmaydi, bo'sh bo'lguncha qabul bloklanadi (decoupling, lekin yetkazilganlik kafolati yo'q)", "correct": true },
+        { "id": "b", "text": "Buferlangan tezroq, doim u", "hint": "Bufer semantika o'zgartiradi — sinxronizatsiya yo'qoladi; hajmni asoslash kerak." },
+        { "id": "c", "text": "Buferlanmagan channel yo'q", "hint": "`make(chan int)` — default buferlanmagan." },
+        { "id": "d", "text": "Farqi faqat xotirada", "hint": "Bloklanish qoidalari — asosiy farq." }
+      ],
+      "explanation": "Buferlanmagan: `ch <- v` qaytganda qabul qiluvchi qiymatni olgan — happens-before. Buferlangan: semafor sifatida (`make(chan struct{}, maxConcurrent)`), portlashni yumshatish. Bufer hajmi \"tasodifiy 100\" — dizayn hidi; asoslang yoki 0/1.",
+      "reviewed": false
+    },
+    {
+      "id": "go.concurrency.006",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`select` nima qiladi?",
+      "options": [
+        { "id": "a", "text": "Bir nechta channel operatsiyasidan tayyor bo'lganini bajaradi (bir nechta tayyor — tasodifiy); `default` — hech biri tayyor bo'lmasa bloklanmaslik; timeout (`time.After`), bekor qilish (`ctx.Done()`) bilan birlashtirish uchun asosiy vosita", "correct": true },
+        { "id": "b", "text": "`switch`ning channel versiyasi, tartib bo'yicha", "hint": "Tartib yo'q — tayyorlardan tasodifiy (starvation oldini olish)." },
+        { "id": "c", "text": "Channel yaratadi", "hint": "Yaratmaydi — mavjudlar ustida tanlaydi." },
+        { "id": "d", "text": "Faqat bitta channel bilan ishlaydi", "hint": "Asosiy maqsad — ko'p channel." }
+      ],
+      "explanation": "Namuna: `select { case v := <-ch: ...; case <-ctx.Done(): return ctx.Err(); case <-time.After(5*time.Second): return ErrTimeout }`. `for { select {...} }` — event loop. Tuzoq: `time.After` siklda — har iteratsiyada timer (sizish; `time.NewTimer` + `Reset`). Nil channel `select`da hech qachon tayyor emas — case'ni o'chirish hiylasi.",
+      "reviewed": false
+    },
+    {
+      "id": "go.concurrency.007",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Quyidagi kodda qanday muammo bor?",
+      "code": "type Stats struct {\n    mu    sync.Mutex\n    count map[string]int\n}\n\nfunc (s Stats) Inc(key string) {\n    s.mu.Lock()\n    defer s.mu.Unlock()\n    s.count[key]++\n}",
+      "options": [
+        { "id": "a", "text": "Value receiver — `Stats` (va `Mutex`) nusxalanadi, har chaqiruv o'z nusxa qulfini oladi — himoya yo'q, map'ga race; `go vet` \"passes lock by value\" deydi; pointer receiver `(s *Stats)` kerak", "correct": true },
+        { "id": "b", "text": "`defer Unlock` sekin", "hint": "`defer` narxi arzimas; to'g'rilik muhim." },
+        { "id": "c", "text": "`map` o'rniga `sync.Map` shart", "hint": "`Mutex` + map — to'g'ri va ko'pincha tezroq; muammo receiver'da." },
+        { "id": "d", "text": "Muammo yo'q", "hint": "`s.mu` — qaysi Mutex? Asl yoki nusxa?" }
+      ],
+      "explanation": "Mutex'ni hech qachon nusxalamang: pointer receiver, struct'ni pointer bilan uzating, `sync` turlarini ichiga olgan struct'ni qiymat bo'yicha qaytarmang. `go vet -copylocks` ushlaydi. Map ichida `count` — reference, shu sabab nusxa ham o'sha map'ga yozadi — race ko'rinmas, lekin bor.",
+      "reviewed": false
+    },
+    {
+      "id": "go.concurrency.008",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`context.Context` nima uchun kerak va qanday ishlatiladi?",
+      "options": [
+        { "id": "a", "text": "Bekor qilish signali, deadline/timeout va so'rov doirasidagi qiymatlarni chaqiruv zanjiri bo'ylab uzatish; funksiyaning birinchi parametri (`ctx context.Context`), `ctx.Done()` channel'ini `select`da kuzatish, `context.WithTimeout/WithCancel` — `cancel()` doim `defer`", "correct": true },
+        { "id": "b", "text": "Global konfiguratsiya saqlash", "hint": "`ctx.Value` — faqat so'rov doirasidagi metadata (trace id); konfiguratsiya — aniq parametr." },
+        { "id": "c", "text": "Goroutine'ni to'g'ridan-to'g'ri o'ldirish", "hint": "Go'da goroutine'ni tashqaridan o'ldirib bo'lmaydi — context signal, goroutine o'zi tekshirib chiqadi." },
+        { "id": "d", "text": "Faqat HTTP serverda", "hint": "DB, gRPC, har qanday uzoq operatsiya." }
+      ],
+      "explanation": "Zanjir: HTTP `r.Context()` → service → `db.QueryContext(ctx, ...)` — klient uzilsa hammasi bekor. `ctx.Value` tur-xavfsiz kalit bilan, kamdan-kam. Context'ni struct'da saqlamaslik, `nil` uzatmaslik (`context.TODO()`). `context.WithoutCancel` (1.21) — fon ishi uchun.",
+      "reviewed": false
+    },
+    {
+      "id": "go.concurrency.009",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Data race nima va Go'da qanday aniqlanadi?",
+      "options": [
+        { "id": "a", "text": "Ikki goroutine bir xotiraga sinxronizatsiyasiz kiradi, kamida biri yozadi — natija aniqlanmagan (noto'g'ri qiymat, buzilgan tuzilma, crash); `go test -race` / `go run -race` — race detector runtime'da aniqlaydi (10x sekin, faqat bajarilgan yo'llar); CI'da shart", "correct": true },
+        { "id": "b", "text": "Ikki goroutine bir-birini kutishi", "hint": "Bu deadlock; race — nazoratsiz kirish." },
+        { "id": "c", "text": "Kompilyator race'ni ushlaydi", "hint": "Statik aniqlamaydi — runtime detector kerak." },
+        { "id": "d", "text": "Race Go'da bo'lmaydi — channel'lar himoya qiladi", "hint": "Channel to'g'ri ishlatilsa — ha; umumiy map/slice/counter — race." }
+      ],
+      "explanation": "Go memory model: race'li dastur — noto'g'ri dastur (\"benign race\" yo'q). Yechimlar: `Mutex`/`RWMutex`, `atomic`, channel orqali egalik uzatish, goroutine'ga xos ma'lumot. `-race` xotirani ham 5–10x oshiradi — production'da emas, test/staging'da.",
+      "reviewed": false
+    },
+    {
+      "id": "go.concurrency.010",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Quyidagi kodda goroutine leak qayerda?",
+      "code": "func fetchFirst(urls []string) string {\n    ch := make(chan string)\n    for _, u := range urls {\n        go func(u string) {\n            ch <- fetch(u)\n        }(u)\n    }\n    return <-ch   // birinchi javob\n}",
+      "options": [
+        { "id": "a", "text": "Faqat bitta qiymat o'qiladi; qolgan goroutine'lar buferlanmagan channel'ga yozishda abadiy bloklanadi — har chaqiruvda `len(urls)-1` goroutine sizadi. Yechim: `make(chan string, len(urls))` yoki context bilan bekor qilish + `select`", "correct": true },
+        { "id": "b", "text": "`u` closure'da baham ko'rilgan", "hint": "Argument sifatida uzatilgan — to'g'ri (1.22+ da shart ham emas)." },
+        { "id": "c", "text": "Channel yopilmagan — bu leak", "hint": "Yopmaslik o'zi leak emas; bloklangan yuboruvchilar — leak." },
+        { "id": "d", "text": "Leak yo'q", "hint": "3 URL, 1 o'qish — qolgan 2 goroutine qayerda?" }
+      ],
+      "explanation": "Qoida: goroutine boshlaganda u qanday tugashini biling. Leak aniqlash: `runtime.NumGoroutine()` testda oldin/keyin, `goleak` (Uber) paketi, pprof `goroutine` profili production'da. Bu klassik \"first response wins\" patterni — bufer eng oddiy tuzatish.",
+      "reviewed": false
+    },
+    {
+      "id": "go.concurrency.011",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Go scheduler (G-M-P) qanday ishlaydi?",
+      "options": [
+        { "id": "a", "text": "G — goroutine, M — OS thread, P — processor (mantiqiy, GOMAXPROCS ta, lokal run queue bilan); M P'ni olib G'larni bajaradi; bo'sh P boshqasidan ish o'g'irlaydi (work stealing); syscall'da bloklangan M P'ni bo'shatadi; 1.14+ preemption (uzun sikl boshqalarni to'xtatmaydi)", "correct": true },
+        { "id": "b", "text": "Har goroutine o'z OS thread'ida", "hint": "Unda goroutine yengil bo'lmasdi — M:N multipleksing." },
+        { "id": "c", "text": "Bitta global navbat, bitta thread", "hint": "Lokal navbatlar + global; GOMAXPROCS parallel." },
+        { "id": "d", "text": "OS scheduler'i goroutine'larni boshqaradi", "hint": "OS thread'larni (M) boshqaradi; goroutine'lar — Go runtime." }
+      ],
+      "explanation": "Amaliy oqibat: tarmoq I/O netpoller orqali — goroutine bloklanmaydi, M bo'shamaydi; CGO/syscall — M bloklanadi, runtime yangi M yaratadi. Konteynerda GOMAXPROCS CPU limitiga mos emas edi (1.25 dan avtomatik; oldin `automaxprocs`). `runtime.Gosched()` — kamdan-kam kerak.",
+      "reviewed": false
+    },
+    {
+      "id": "go.concurrency.012",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Worker pool, fan-out/fan-in va pipeline patternlari yuqori yuklamada qanday qo'llaniladi?",
+      "options": [
+        { "id": "a", "text": "Worker pool — N goroutine bitta ish channel'idan o'qiydi (konkurentlikni cheklash: DB ulanish, tashqi API limiti); fan-out — ishni bir nechta goroutine'ga taqsimlash, fan-in — natijalarni bitta channel'ga yig'ish (WaitGroup bilan yopish); pipeline — bosqichlar channel'lar bilan bog'langan; har birida context bekor qilish, xato tarqalishi (`errgroup`), backpressure (buferlanmagan/kichik bufer)", "correct": true },
+        { "id": "b", "text": "Har ish uchun goroutine — Go arzon, cheklash kerak emas", "hint": "100 000 so'rov → 100 000 DB ulanish urinishi; cheklash shart." },
+        { "id": "c", "text": "Bitta goroutine hamma ishni ketma-ket", "hint": "CPU'lar bo'sh; parallelizm foydasi yo'qoladi." },
+        { "id": "d", "text": "Pattern'lar kerak emas, `sync.Mutex` yetarli", "hint": "Mutex — holatni himoya qiladi, oqimni tashkil qilmaydi." }
+      ],
+      "explanation": "`errgroup.Group` + `SetLimit(n)` (1.20+ x/sync) — worker pool + xato + context bir joyda. Yopish qoidasi: faqat yuboruvchi yopadi, fan-in'da WaitGroup kutib keyin `close`. Semafor — `chan struct{}` yoki `semaphore.Weighted`. Pipeline'da bir bosqich sekin — hammasi sekin (backpressure — xususiyat, xato emas).",
+      "reviewed": false
+    },
+    {
+      "id": "go.concurrency.013",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Production Go servisida graceful shutdown qanday amalga oshiriladi?",
+      "options": [
+        { "id": "a", "text": "SIGTERM/SIGINT ni `signal.NotifyContext` bilan ushlash → `http.Server.Shutdown(ctx)` (yangi ulanishlarni rad, faollarini timeout ichida tugatish) → fon worker'larga context bekor qilish, WaitGroup bilan kutish → DB/broker ulanishlarini yopish → readiness probe'ni oldinroq \"not ready\" qilish (load balancer trafikni to'xtatsin); umumiy timeout (Kubernetes `terminationGracePeriodSeconds`)", "correct": true },
+        { "id": "b", "text": "`os.Exit(0)` — yetarli", "hint": "Faol so'rovlar uziladi, tranzaksiyalar yarim qoladi, navbat xabarlari yo'qoladi." },
+        { "id": "c", "text": "Faqat `http.Server.Close()`", "hint": "`Close` darhol uzadi; `Shutdown` — tugatishni kutadi." },
+        { "id": "d", "text": "Kubernetes o'zi hal qiladi", "hint": "K8s signal yuboradi va kutadi — javob berish ilovaning ishi." }
+      ],
+      "explanation": "Tartib muhim: avval trafikni to'xtatish (readiness false + kichik kutish — LB yangilanishi), keyin Shutdown, keyin fon ishlar, oxirida resurslar. In-flight navbat xabarlari — ack qilmaslik (qayta yetkaziladi) yoki tugatish. Test: `kill -TERM` bilan lokal tekshirish, loglar bilan.",
+      "reviewed": false
+    }
+  ]
+}

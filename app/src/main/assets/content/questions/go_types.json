@@ -1,0 +1,190 @@
+{
+  "topic": "go.types",
+  "questions": [
+    {
+      "id": "go.types.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Go'da array va slice qanday farqlanadi?",
+      "options": [
+        { "id": "a", "text": "Array — qattiq o'lchamli (`[5]int`), o'lcham turning qismi, qiymat bo'yicha nusxalanadi; slice — dinamik, ichida array'ga pointer + len + cap, funksiyaga uzatilganda ichki array baham ko'riladi", "correct": true },
+        { "id": "b", "text": "Bir xil narsa", "hint": "`[3]int` va `[]int` — turli turlar; biri o'zgarmas o'lcham." },
+        { "id": "c", "text": "Slice — array'ning eski nomi", "hint": "Slice — array ustidagi ko'rinish (view)." },
+        { "id": "d", "text": "Array dinamik, slice statik", "hint": "Teskari." }
+      ],
+      "explanation": "Amalda deyarli doim slice. Array — faqat o'lcham ma'noli bo'lganda (`[16]byte` hash, `[3]float64` vektor). `arr[1:3]` — array'dan slice. Slice'ni funksiyaga uzatish arzon (3 so'z), lekin elementlar baham ko'rilgan — o'zgarish ko'rinadi.",
+      "reviewed": false
+    },
+    {
+      "id": "go.types.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Go'da `map` qanday ishlatiladi va qaysi tuzoqlar bor?",
+      "options": [
+        { "id": "a", "text": "`make(map[K]V)` yoki literal; `v, ok := m[k]` — mavjudlik tekshiruvi (yo'q kalit zero value beradi); nil map'ga yozish — panic; iteratsiya tartibi tasodifiy; ko'p goroutine'dan yozish — race (sync.Map yoki Mutex)", "correct": true },
+        { "id": "b", "text": "Map tartibli — qo'shish tartibida iteratsiya", "hint": "Tasodifiy (hatto har run'da boshqacha, ataylab)." },
+        { "id": "c", "text": "Yo'q kalit o'qish — panic", "hint": "Zero value qaytaradi; `ok` bilan farqlanadi." },
+        { "id": "d", "text": "Map thread-safe", "hint": "Bir vaqtda yozish — \"concurrent map writes\" fatal error." }
+      ],
+      "explanation": "Kalit — `comparable` tur (slice/map/func kalit bo'lolmaydi; struct — bo'ladi). `delete(m, k)`. Tartib kerak — kalitlarni slice'ga olib `sort`. Map o'zi reference semantikaga ega (ichida pointer) — funksiyaga uzatilsa o'zgarish ko'rinadi.",
+      "reviewed": false
+    },
+    {
+      "id": "go.types.003",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Go'da interface qanday ishlaydi?",
+      "options": [
+        { "id": "a", "text": "Metod to'plami; tur barcha metodlarni implement qilsa, avtomatik (implicit) interfeysni qanoatlantiradi — `implements` yozilmaydi (structural typing); interfeys qiymati — (tur, qiymat) juftligi", "correct": true },
+        { "id": "b", "text": "`implements` kalit so'zi bilan e'lon qilinadi", "hint": "Go'da yo'q — moslik avtomatik." },
+        { "id": "c", "text": "Interface — abstract class", "hint": "Maydon yo'q, implementatsiya yo'q — faqat metod imzolari." },
+        { "id": "d", "text": "Bitta tur bitta interfeysni implement qiladi", "hint": "Istalgancha — har mos metod to'plami uchun." }
+      ],
+      "explanation": "Natija: interfeysni iste'molchi e'lon qiladi, ishlab chiqaruvchi emas (\"accept interfaces, return structs\"). Kichik interfeyslar — `io.Reader` (1 metod) — kuchli kompozitsiya. `any` = `interface{}`. Kompilyatsiya tekshiruvi: `var _ Shape = (*Circle)(nil)`.",
+      "reviewed": false
+    },
+    {
+      "id": "go.types.004",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Quyidagi kod nimani chop etadi?",
+      "code": "func main() {\n    a := []int{1, 2, 3}\n    b := a[:2]\n    b[0] = 99\n    fmt.Println(a, b, len(b), cap(b))\n}",
+      "options": [
+        { "id": "a", "text": "[99 2 3] [99 2] 2 3", "correct": true },
+        { "id": "b", "text": "[1 2 3] [99 2] 2 2", "hint": "`b` `a` bilan bitta ichki array'ni baham ko'radi — o'zgarish ikkalasida; `cap` — slice boshidan array oxirigacha." },
+        { "id": "c", "text": "[99 2 3] [99 2] 2 2", "hint": "`cap(b)` — `a` boshidan oxirigacha 3 element qoladi." },
+        { "id": "d", "text": "Kompilyatsiya xatosi", "hint": "Kod to'g'ri." }
+      ],
+      "explanation": "Slice — view: `b[0]` va `a[0]` bir xotira. `cap` — qayta allokatsiyasiz nechta element sig'ishi. Mustaqil nusxa: `b := make([]int, 2); copy(b, a)` yoki `slices.Clone`. Bu baham ko'rish — Go'dagi eng ko'p uchraydigan nozik xatolar manbai.",
+      "reviewed": false
+    },
+    {
+      "id": "go.types.005",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Go'da `string` qanday tur va `rune` bilan qanday bog'liq?",
+      "options": [
+        { "id": "a", "text": "String — immutable bayt ketma-ketligi (UTF-8); `len(s)` — baytlar; `s[i]` — bayt; `for _, r := range s` — rune'lar (Unicode code point, `int32`); belgi soni — `utf8.RuneCountInString`", "correct": true },
+        { "id": "b", "text": "String — belgilar massivi, `len` — belgilar soni", "hint": "`len(\"salom\")` 5, lekin `len(\"салом\")` 10 — baytlar." },
+        { "id": "c", "text": "String mutable — `s[0] = 'a'` ishlaydi", "hint": "Kompilyatsiya xatosi — immutable; `[]byte`/`[]rune`ga o'girish." },
+        { "id": "d", "text": "`rune` — satr turi", "hint": "`rune` — bitta Unicode belgi (`int32`)." }
+      ],
+      "explanation": "O'zbek/kirill matn bilan ishlashda `s[i]` baytni qaytarishi — tipik xato. `strings.Builder` — ko'p konkatenatsiya uchun (string immutable, `+` har safar yangi). `[]byte(s)` nusxalaydi (xavfsizlik uchun).",
+      "reviewed": false
+    },
+    {
+      "id": "go.types.006",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Quyidagi kod nimani chop etadi?",
+      "code": "func add(s []int) {\n    s = append(s, 4)\n    s[0] = 100\n}\n\nfunc main() {\n    a := make([]int, 3, 3)   // [0 0 0], cap 3\n    add(a)\n    fmt.Println(a)\n\n    b := make([]int, 3, 10)  // [0 0 0], cap 10\n    add(b)\n    fmt.Println(b)\n}",
+      "options": [
+        { "id": "a", "text": "[0 0 0]\n[100 0 0]", "correct": true },
+        { "id": "b", "text": "[100 0 0]\n[100 0 0]", "hint": "`a` da cap to'lgan — `append` yangi array yaratadi, `s[0]=100` yangisiga yoziladi, `a` o'zgarmaydi." },
+        { "id": "c", "text": "[0 0 0]\n[0 0 0]", "hint": "`b` da cap yetarli — `append` o'sha array'da, `s[0]=100` `b`ga ham ta'sir qiladi." },
+        { "id": "d", "text": "[100 0 0 4]\n[100 0 0 4]", "hint": "`len` chaqiruvchida o'zgarmaydi (slice header nusxa) — 4-element ko'rinmaydi." }
+      ],
+      "explanation": "`append` cap yetarli bo'lsa — joyida, bo'lmasa — yangi array (2x o'sish). Slice header (ptr, len, cap) qiymat bo'yicha uzatiladi — chaqiruvchining `len`i o'zgarmaydi. Qoida: `append` natijasini doim qaytaring (`s = append(s, x)`) va slice'ni o'zgartiradigan funksiya uni qaytarsin.",
+      "reviewed": false
+    },
+    {
+      "id": "go.types.007",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Quyidagi kod nimani chop etadi?",
+      "code": "type MyErr struct{}\nfunc (*MyErr) Error() string { return \"my error\" }\n\nfunc find() error {\n    var e *MyErr = nil\n    return e\n}\n\nfunc main() {\n    err := find()\n    fmt.Println(err == nil)\n}",
+      "options": [
+        { "id": "a", "text": "false", "correct": true },
+        { "id": "b", "text": "true", "hint": "Interfeys qiymati — (tur, qiymat). Tur `*MyErr`, qiymat nil — interfeys o'zi nil emas." },
+        { "id": "c", "text": "panic", "hint": "`==` solishtirish panic bermaydi." },
+        { "id": "d", "text": "Kompilyatsiya xatosi", "hint": "Kod to'g'ri — bu aynan Go'ning mashhur tuzog'i." }
+      ],
+      "explanation": "\"Nil interface\" tuzog'i: nil interfeys — tur ham, qiymat ham nil. Tipli nil pointer interfeysga joylansa — interfeys nil emas. Yechim: xato yo'q bo'lsa aniq `return nil` (interfeys turida), konkret pointer qaytarmaslik. `go vet` ba'zi holatlarni ushlaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "go.types.008",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Type assertion va type switch qanday ishlaydi?",
+      "options": [
+        { "id": "a", "text": "`v, ok := i.(T)` — interfeys ichida `T` bormi, xavfsiz (`ok` false — zero value); `v := i.(T)` — xato bo'lsa panic; `switch v := i.(type) { case int: ...; case string: ... }` — bir nechta tur bo'yicha", "correct": true },
+        { "id": "b", "text": "Type assertion — turni o'zgartirish (cast)", "hint": "O'zgartirmaydi — interfeys ichidagi konkret turni oladi; `int(x)` — conversion, boshqa narsa." },
+        { "id": "c", "text": "Har doim panic xavfi, xavfsiz varianti yo'q", "hint": "`, ok` shakli xavfsiz." },
+        { "id": "d", "text": "Faqat `any` uchun ishlaydi", "hint": "Har qanday interfeys uchun." }
+      ],
+      "explanation": "Ko'p `type switch` — dizayn hidi (polimorfizm interfeys metodi bilan yaxshiroq). O'rinli: `error` turini aniqlash (`errors.As` afzal), `json.Unmarshal` dinamik ma'lumot, `any` konteynerlar. Interfeysdan interfeysga assertion: `if w, ok := r.(io.Writer)` — qo'shimcha imkoniyat tekshiruvi.",
+      "reviewed": false
+    },
+    {
+      "id": "go.types.009",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Quyidagi kodda qanday muammo bor?",
+      "code": "func names(users []User) []string {\n    var result []string\n    for _, u := range users {\n        result = append(result, u.Name)\n    }\n    return result\n}",
+      "options": [
+        { "id": "a", "text": "Ishlaydi, lekin cap ko'rsatilmagan — `append` bir necha marta qayta allokatsiya qiladi; `make([]string, 0, len(users))` bir marta ajratadi. Yana: bo'sh kirishda `nil` qaytaradi — JSON'da `null` (bo'sh `[]` kerak bo'lsa `make` zarur)", "correct": true },
+        { "id": "b", "text": "`range` indeksni ham qaytarishi kerak", "hint": "`_` bilan tashlash — normal." },
+        { "id": "c", "text": "Pointer slice qaytarish kerak", "hint": "Slice o'zi arzon (3 so'z) — pointer kerak emas." },
+        { "id": "d", "text": "Hech qanday muammo yo'q", "hint": "10 000 element uchun `append` nechta allokatsiya qiladi? `nil` slice JSON'da nima bo'ladi?" }
+      ],
+      "explanation": "Hajm ma'lum bo'lsa — oldindan ajrating (`prealloc` linter). `nil` slice vs bo'sh slice: `len` ikkalasida 0, `range` ishlaydi, lekin `json.Marshal` `null` vs `[]`, `reflect.DeepEqual` farq qiladi. API javobida odatda `[]` kutiladi.",
+      "reviewed": false
+    },
+    {
+      "id": "go.types.010",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Go'da interfeys qiymati xotirada qanday saqlanadi va bu performansga qanday ta'sir qiladi?",
+      "options": [
+        { "id": "a", "text": "Ikki so'z: tur ko'rsatkichi (itab — tur + metod jadvali) va ma'lumot ko'rsatkichi; konkret qiymat interfeysga joylanganda ko'pincha heap'ga ko'chadi (boxing, escape); metod chaqiruvi — jadval orqali bilvosita (inlining yo'q); issiq yo'lda interfeys — allokatsiya va dispatch narxi", "correct": true },
+        { "id": "b", "text": "Interfeys — faqat tur nomi, narxi yo'q", "hint": "Boxing allokatsiya qiladi — `fmt.Println(42)` heap'ga." },
+        { "id": "c", "text": "Interfeys qiymati konkret qiymatni to'liq nusxalaydi", "hint": "Pointer saqlaydi (kichik qiymatlar ham heap'da)." },
+        { "id": "d", "text": "Interfeys metodlari generics'dan sekin", "hint": "Hamma holatda emas; GC shape stenciling ham dictionary orqali chaqirishi mumkin. O'lchang." }
+      ],
+      "explanation": "`[]any` ga int'lar yozish — har biri allokatsiya. Type assertion — itab solishtirish (tez). Interfeys solishtirish `==` — ikkalasi comparable bo'lsa; slice ichidagi interfeys `==` — runtime panic. Optimizatsiya faqat profiler ko'rsatganda — interfeys abstraksiya qiymati odatda narxidan yuqori.",
+      "reviewed": false
+    },
+    {
+      "id": "go.types.011",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Quyidagi kodda qanday xavf bor?",
+      "code": "func firstTwo(data []byte) []byte {\n    return data[:2]\n}\n\nfunc main() {\n    big := readHugeFile()        // 100 MB\n    header := firstTwo(big)\n    big = nil\n    cache[\"hdr\"] = header        // uzoq saqlanadi\n}",
+      "options": [
+        { "id": "a", "text": "`header` 100 MB ichki array'ga ishora qiladi — 2 bayt uchun butun massiv GC'dan qutulmaydi (xotira sizishi); `slices.Clone(data[:2])` yoki `append([]byte(nil), data[:2]...)` bilan nusxa olish kerak", "correct": true },
+        { "id": "b", "text": "`data[:2]` panic — bo'sh fayl", "hint": "Bo'sh faylda panic bo'lardi (len tekshiruvi kerak), lekin asosiy xavf xotirada." },
+        { "id": "c", "text": "`big = nil` xotirani bo'shatadi — muammo yo'q", "hint": "`header` hali array'ga ishora qiladi — GC ushlab turadi." },
+        { "id": "d", "text": "`[]byte` o'rniga `string` kerak", "hint": "`string(data[:2])` nusxa oladi — bu ham yechim, lekin sabab muhim." }
+      ],
+      "explanation": "Slice — view, GC butun ichki array'ni saqlaydi. Katta buferdan kichik qism uzoq saqlansa — doim nusxa. Xuddi shu: `bufio.Scanner.Bytes()` keyingi chaqiruvda qayta yoziladi — saqlash uchun nusxa. `full slice expression` `s[a:b:c]` — cap cheklash, `append` eski ma'lumotni buzmasligi uchun.",
+      "reviewed": false
+    },
+    {
+      "id": "go.types.012",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Katta Go loyihasida interfeyslarni qayerda e'lon qilish va qanchalik katta qilish kerak?",
+      "options": [
+        { "id": "a", "text": "Iste'molchi paketida, faqat kerakli metodlar bilan (1–3 metod) — bog'liqlik yo'nalishi to'g'ri, test uchun fake yozish oson, implementatsiya paketi interfeysni bilmaydi; katta \"hamma metod\" interfeyslar va ishlab chiqaruvchi tomonda oldindan e'lon — Java odati, Go'da ortiqcha", "correct": true },
+        { "id": "b", "text": "Har struct uchun oldindan interfeys yaratish", "hint": "Bitta implementatsiya — interfeys kerak emas (YAGNI); kerak bo'lganda iste'molchi yaratadi." },
+        { "id": "c", "text": "Barcha interfeyslar bitta `interfaces` paketida", "hint": "Markaziy paket — hamma unga bog'lanadi, siklik import xavfi, Go idiomasiga zid." },
+        { "id": "d", "text": "Interfeyssiz — faqat konkret turlar", "hint": "Test va almashtirish uchun chegaralarda interfeys zarur." }
+      ],
+      "explanation": "Misol: `service` paketi `type UserStore interface { Get(ctx, id) (User, error) }` e'lon qiladi, `postgres.UserRepo` uni bilmasdan qanoatlantiradi. Mock generatsiya (`mockery`, `gomock`) — kichik interfeysda oson. `io.Reader`/`io.Writer` — namuna: 1 metod, cheksiz kompozitsiya.",
+      "reviewed": false
+    }
+  ]
+}

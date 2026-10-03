@@ -1,0 +1,157 @@
+{
+  "topic": "go.data",
+  "questions": [
+    {
+      "id": "go.data.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Go'da `database/sql` paketi nima va drayver bilan qanday ishlaydi?",
+      "options": [
+        { "id": "a", "text": "DB bilan ishlash uchun umumiy interfeys (ulanish pool, so'rov, tranzaksiya); konkret DB — alohida drayver paketi (`pgx`, `lib/pq`, `go-sql-driver/mysql`) `_` import bilan ro'yxatdan o'tadi; `sql.Open(\"postgres\", dsn)` — pool yaratadi, ulanishni darhol ochmaydi (`db.Ping` tekshiradi)", "correct": true },
+        { "id": "b", "text": "ORM", "hint": "ORM emas — past darajali, SQL o'zingiz yozasiz." },
+        { "id": "c", "text": "Faqat PostgreSQL uchun", "hint": "Drayver orqali har qanday DB." },
+        { "id": "d", "text": "`sql.Open` har chaqiruvda yangi ulanish ochadi", "hint": "Bir marta chaqiriladi, pool qaytaradi — global/DI bilan baham ko'riladi." }
+      ],
+      "explanation": "`*sql.DB` — thread-safe pool, ilova davomida bitta. `QueryRowContext`, `QueryContext` + `rows.Close()`, `ExecContext`. Parametrlar — `$1` (postgres) / `?` (mysql) — hech qachon satr konkatenatsiya (SQL injection). `pgx` — PostgreSQL uchun o'z API'si tezroq va boyroq.",
+      "reviewed": false
+    },
+    {
+      "id": "go.data.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Quyidagi kodda qanday muammolar bor?",
+      "code": "func users(db *sql.DB, minAge int) ([]User, error) {\n    rows, err := db.Query(\"SELECT id, name FROM users WHERE age > \" + strconv.Itoa(minAge))\n    if err != nil {\n        return nil, err\n    }\n    var out []User\n    for rows.Next() {\n        var u User\n        rows.Scan(&u.ID, &u.Name)\n        out = append(out, u)\n    }\n    return out, nil\n}",
+      "options": [
+        { "id": "a", "text": "`rows.Close()` yo'q (ulanish pool'ga qaytmaydi); `rows.Scan` xatosi tekshirilmaydi; sikldan keyin `rows.Err()` tekshirilmaydi; satr konkatenatsiya — parametr (`$1`) ishlatish kerak (bu yerda int, lekin odat xavfli); context yo'q", "correct": true },
+        { "id": "b", "text": "`[]User` o'rniga `[]*User` kerak", "hint": "Uslub; to'g'rilik muammolari asosiy." },
+        { "id": "c", "text": "`db.Query` o'rniga `db.Exec`", "hint": "`Exec` natija qaytarmaydi — SELECT uchun `Query` to'g'ri." },
+        { "id": "d", "text": "Muammo yo'q", "hint": "100 chaqiruvdan keyin pool'da nechta ulanish bo'sh?" }
+      ],
+      "explanation": "`defer rows.Close()` darhol `Query`dan keyin. `rows.Err()` — iteratsiya paytidagi tarmoq xatosi; tekshirilmasa qisman natija \"to'liq\" ko'rinadi. `sqlc`/`sqlx`/`pgx` scan'ni soddalashtiradi. `errcheck` linter `Scan` xatosini ko'rsatadi.",
+      "reviewed": false
+    },
+    {
+      "id": "go.data.003",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`sql.ErrNoRows` qachon qaytadi va qanday ishlanadi?",
+      "options": [
+        { "id": "a", "text": "`QueryRow(...).Scan(...)` natija bo'lmasa — bu xato, lekin ko'pincha \"topilmadi\" biznes holati; `errors.Is(err, sql.ErrNoRows)` bilan farqlab, domen xatosiga (`ErrUserNotFound`) aylantirish; `Query` (ko'p qator) bo'sh natijada xato bermaydi", "correct": true },
+        { "id": "b", "text": "Har qanday DB xatosi", "hint": "Faqat `QueryRow` + bo'sh natija." },
+        { "id": "c", "text": "`Query` bo'sh natijada", "hint": "`Query` bo'sh natijada `rows.Next()` false — xato yo'q." },
+        { "id": "d", "text": "Hech qachon — Go nil qaytaradi", "hint": "`QueryRow.Scan` aniq `sql.ErrNoRows` qaytaradi." }
+      ],
+      "explanation": "Repository qatlami: `if errors.Is(err, sql.ErrNoRows) { return nil, ErrNotFound }` — handler 404 beradi, `database/sql`ga bog'lanmaydi. `pgx` o'z `pgx.ErrNoRows` — drayverga qarab. Bu Go'da \"xato — qiymat\" falsafasining tipik misoli.",
+      "reviewed": false
+    },
+    {
+      "id": "go.data.004",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`database/sql` ulanish pool'i qanday sozlanadi va nima uchun?",
+      "options": [
+        { "id": "a", "text": "`SetMaxOpenConns` (DB limiti va boshqa servislar hisobga olinib), `SetMaxIdleConns` (bo'sh ulanishlar — qayta ochish narxidan qochish), `SetConnMaxLifetime` (eski ulanishlarni yangilash — LB/failover uchun), `SetConnMaxIdleTime`; default `MaxOpen` cheksiz — DB'ni ulanishlar bilan bostirish xavfi", "correct": true },
+        { "id": "b", "text": "Pool sozlanmaydi — avtomatik optimal", "hint": "Default cheksiz ochiq ulanish — production'da xavfli." },
+        { "id": "c", "text": "`MaxOpenConns` qanchalik katta — shuncha yaxshi", "hint": "PostgreSQL ~100 ulanishdan keyin degradatsiya; ko'p pod × ko'p ulanish = DB yiqiladi." },
+        { "id": "d", "text": "Har so'rov uchun yangi `sql.Open`", "hint": "Pool foydasi yo'qoladi." }
+      ],
+      "explanation": "Hisob: DB max_connections / pod soni − zaxira. Pool to'lsa so'rov kutadi — `ctx` timeout bilan `QueryContext`, aks holda goroutine'lar to'planadi. `db.Stats()` — `WaitCount`, `WaitDuration` metrikaga chiqarish. PgBouncer — ko'p servis uchun tashqi pool.",
+      "reviewed": false
+    },
+    {
+      "id": "go.data.005",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Quyidagi tranzaksiya kodida qanday xato bor?",
+      "code": "func transfer(ctx context.Context, db *sql.DB, from, to int, amt int) error {\n    tx, err := db.BeginTx(ctx, nil)\n    if err != nil {\n        return err\n    }\n    if _, err := tx.ExecContext(ctx, \"UPDATE acc SET bal = bal - $1 WHERE id = $2\", amt, from); err != nil {\n        return err\n    }\n    if _, err := tx.ExecContext(ctx, \"UPDATE acc SET bal = bal + $1 WHERE id = $2\", amt, to); err != nil {\n        return err\n    }\n    return tx.Commit()\n}",
+      "options": [
+        { "id": "a", "text": "Xato yo'llarida `tx.Rollback()` yo'q — tranzaksiya ochiq qoladi, ulanish pool'ga qaytmaydi (context bekor bo'lguncha); `defer tx.Rollback()` darhol `BeginTx`dan keyin (Commit'dan keyin `ErrTxDone` qaytaradi — zararsiz) yoki helper funksiya", "correct": true },
+        { "id": "b", "text": "`BeginTx` o'rniga `Begin`", "hint": "`BeginTx` context bilan — to'g'ri." },
+        { "id": "c", "text": "Ikki UPDATE bitta so'rovga birlashtirilishi shart", "hint": "Tranzaksiya aynan ko'p so'rov uchun; muammo tozalashda." },
+        { "id": "d", "text": "Xato yo'q", "hint": "Ikkinchi UPDATE xato bersa, birinchi UPDATE nima bo'ladi? Ulanish?" }
+      ],
+      "explanation": "Idiomatik: `defer func() { if err != nil { tx.Rollback() } }()` yoki `WithTx(ctx, db, func(tx *sql.Tx) error {...})` helper — begin/commit/rollback bir joyda, panic'da ham rollback. Balans tekshiruvi (`bal - $1 >= 0`) va qator tartibi (deadlock) — keyingi qadam.",
+      "reviewed": false
+    },
+    {
+      "id": "go.data.006",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Go'da SQL bilan ishlash uchun `sqlc`, `sqlx`, `GORM`, xom `database/sql` qanday tanlanadi?",
+      "options": [
+        { "id": "a", "text": "Xom `database/sql`/`pgx` — to'liq nazorat, ko'p boilerplate; `sqlx` — scan'ni struct'ga soddalashtiradi; `sqlc` — SQL yozasiz, tur-xavfsiz Go kodi generatsiya (Go jamoasida mashhur, kompilyatsiya vaqtida xato); `GORM`/`ent` — ORM, tez CRUD, lekin yashirin so'rovlar va performance tuzoqlari", "correct": true },
+        { "id": "b", "text": "Doim ORM — SQL yozmaslik uchun", "hint": "Go jamoasi SQL'ni ochiq yozishni afzal ko'radi; ORM N+1 va murakkab so'rovlarda qiyin." },
+        { "id": "c", "text": "Faqat xom `database/sql`", "hint": "50 jadval uchun qo'lda scan — xato manbai; `sqlc` yoki `sqlx` boilerplate'ni olib tashlaydi." },
+        { "id": "d", "text": "Farqi yo'q", "hint": "Tur xavfsizligi, performance ko'rinishi, migratsiya oqimi farq qiladi." }
+      ],
+      "explanation": "`sqlc`: `-- name: GetUser :one` izohli SQL → `func (q *Queries) GetUser(ctx, id) (User, error)`. Migratsiya alohida — `golang-migrate`, `goose`, `atlas`. Tanlov: jamoa SQL bilishi (Go'da — kutiladi), domen murakkabligi, performance talabi.",
+      "reviewed": false
+    },
+    {
+      "id": "go.data.007",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Repository qatlamida tranzaksiyani bir nechta repository metodi orasida qanday uzatish kerak?",
+      "options": [
+        { "id": "a", "text": "Variantlar: (1) `context` orqali tx uzatish — repository `txFromContext(ctx)` yoki `db` ishlatadi, service `WithTx(ctx, fn)` bilan chegara belgilaydi; (2) repository metodlari `DBTX` interfeysini (`*sql.DB` va `*sql.Tx` ikkalasi qanoatlantiradi) qabul qiladi; (3) Unit of Work. Tranzaksiya chegarasi — use case'da, repository ichida emas", "correct": true },
+        { "id": "b", "text": "Har repository metodi o'z tranzaksiyasini ochadi", "hint": "Ikki metod — ikki tranzaksiya, atomiklik yo'q." },
+        { "id": "c", "text": "Global `*sql.Tx` o'zgaruvchi", "hint": "Ko'p so'rov parallel — race; test imkonsiz." },
+        { "id": "d", "text": "Tranzaksiya faqat bitta jadvalda ishlaydi", "hint": "Tranzaksiya — ulanish darajasida, istalgancha jadval." }
+      ],
+      "explanation": "`sqlc` `DBTX` interfeysini generatsiya qiladi — `New(tx)` bilan tranzaksiya ichida ishlash. Context'da tx — qulay, lekin yashirin (tx bo'lmasa jim `db` ishlatish — xato yashiradi). Uzun tranzaksiya (tashqi API chaqiruvi ichida) — qulf va pool bandligi — qisqa saqlang.",
+      "reviewed": false
+    },
+    {
+      "id": "go.data.008",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Go servisida DB so'rovlarini tekshiruvchi testlar qanday yoziladi?",
+      "options": [
+        { "id": "a", "text": "Real DB bilan integration test: `testcontainers-go` (Docker'da PostgreSQL) yoki CI service, har test tranzaksiya rollback yoki alohida sxema, migratsiyalar test boshida; `sqlmock` — faqat SQL matnini tekshiradi (mo'rt, DB semantikasini isbotlamaydi); build tag/`-short` bilan ajratish", "correct": true },
+        { "id": "b", "text": "Faqat `sqlmock` — tez va yetarli", "hint": "SQL sintaksis xatosi, constraint, indeks — mock ko'rmaydi." },
+        { "id": "c", "text": "DB kodi test qilinmaydi", "hint": "DB qatlami — xatolar ko'p joy; integration test shart." },
+        { "id": "d", "text": "Production DB'da test", "hint": "Hech qachon." }
+      ],
+      "explanation": "`testcontainers-go`: `postgres.Run(ctx, \"postgres:16\")` → DSN → migratsiya → testlar; `TestMain`da bir marta konteyner, testlar parallel alohida sxemalarda. `pgx` + `pgxpool` bilan `pgtestdb`. SQLite in-memory — PostgreSQL semantikasi farq qiladi, tavsiya etilmaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "go.data.009",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Yuqori yuklamali Go servisida DB qatlami performansini qanday ta'minlash kerak?",
+      "options": [
+        { "id": "a", "text": "Pool to'g'ri o'lchamda + PgBouncer, prepared statement'lar (pgx avtomatik cache), batch (`pgx.Batch`, `COPY` bulk insert), N+1 yo'q (`IN`/join), read replica'ga o'qish, pagination keyset, context timeout har so'rovda, slow query log + `pg_stat_statements`, so'rov metrikalari (histogram), kerak joyda cache (Redis) va tranzaksiyalarni qisqa saqlash", "correct": true },
+        { "id": "b", "text": "Go tez — DB qatlami optimizatsiya talab qilmaydi", "hint": "Deyarli har web servis bottleneck'i — DB." },
+        { "id": "c", "text": "Hamma narsani xotirada cache qilish", "hint": "Invalidatsiya, xotira, konsistentlik — faqat o'lchangan issiq ma'lumot." },
+        { "id": "d", "text": "ORM'ga o'tish", "hint": "ORM performans muammolarini ko'pincha yashiradi, hal qilmaydi." }
+      ],
+      "explanation": "O'lchov birinchi: pprof + so'rov vaqti histogrammasi + DB tomonidan `EXPLAIN ANALYZE`. `pgx` `CollectRows`, `pgxpool` — standart `database/sql`dan tezroq (binary protokol). Konteynerda 20 pod × 25 ulanish = 500 — PostgreSQL uchun ko'p; PgBouncer transaction mode.",
+      "reviewed": false
+    },
+    {
+      "id": "go.data.010",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Go servisida DB migratsiyalari va sxema evolyutsiyasi qanday boshqariladi?",
+      "options": [
+        { "id": "a", "text": "Versiyalangan migratsiya fayllari repoda (`golang-migrate`, `goose`, `atlas`), CI'da tekshirish, deploy'da alohida qadam yoki init container (ilova startida emas — ko'p pod race), backward-compatible o'zgarishlar (expand → migrate → contract), katta jadvalda `CREATE INDEX CONCURRENTLY`, qulf tutmaydigan qadamlar, rollback rejasi", "correct": true },
+        { "id": "b", "text": "GORM `AutoMigrate` production'da", "hint": "Nazoratsiz sxema o'zgarishi; ustun o'chirmaydi; ko'p pod birga ishga tushsa — konflikt." },
+        { "id": "c", "text": "Qo'lda SQL production'da", "hint": "Takrorlanmaydi, muhitlar farqlanadi, tarix yo'q." },
+        { "id": "d", "text": "Sxema hech qachon o'zgarmaydi", "hint": "Har loyiha o'zgaradi — jarayon kerak." }
+      ],
+      "explanation": "Expand-contract: ustun qo'sh (nullable) → kod ikkalasiga yozadi → backfill → kod yangisini o'qiydi → eskisini o'chir. `ALTER TABLE ... ADD COLUMN NOT NULL DEFAULT` — PostgreSQL 11+ tez, eski versiyada butun jadval qayta yoziladi. `atlas` — deklarativ sxema + lint (xavfli migratsiyalarni ogohlantiradi).",
+      "reviewed": false
+    }
+  ]
+}
