@@ -142,6 +142,7 @@ private fun ReadinessCard(state: HomeUiState) {
                 LinearProgressIndicator(
                     progress = { state.readiness.mastered.toFloat() / state.readiness.total },
                     modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                    drawStopIndicator = {},
                 )
                 Text(
                     text = stringResource(R.string.home_mastered, state.readiness.mastered, state.readiness.total),
