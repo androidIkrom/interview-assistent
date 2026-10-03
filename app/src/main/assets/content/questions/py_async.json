@@ -1,0 +1,200 @@
+{
+  "topic": "py.async",
+  "questions": [
+    {
+      "id": "py.async.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "GIL (Global Interpreter Lock) nima?",
+      "options": [
+        { "id": "a", "text": "CPython'da bir vaqtda faqat bitta oqim Python bayt-kodini bajarishiga ruxsat beradigan qulf", "correct": true },
+        { "id": "b", "text": "Ma'lumotlar bazasi qulfi", "hint": "Bazaga aloqasi yo'q; interpretator ichidagi mexanizm." },
+        { "id": "c", "text": "Python'da ko'p oqimlilikni butunlay taqiqlaydigan qoida", "hint": "Oqimlar bor va ishlaydi; faqat Python kodi parallel bajarilmaydi." },
+        { "id": "d", "text": "Faqat Python 2 da bo'lgan", "hint": "CPython'da hali ham bor (free-threaded build tajribaviy)." }
+      ],
+      "explanation": "GIL xotira boshqaruvini soddalashtiradi, lekin CPU-og'ir ishlarda oqimlar parallel ishlamaydi. I/O kutishda GIL bo'shatiladi, shuning uchun tarmoq va fayl ishlari uchun oqimlar baribir foydali.",
+      "reviewed": false
+    },
+    {
+      "id": "py.async.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`async def` funksiyani oddiy chaqirsangiz (`f()`, `await` siz) nima bo'ladi?",
+      "options": [
+        { "id": "a", "text": "Tanasi bajarilmaydi; coroutine obyekti qaytadi va uni `await` qilish yoki event loop'ga berish kerak", "correct": true },
+        { "id": "b", "text": "Funksiya oddiy sinxron bajariladi", "hint": "`async def` har doim coroutine qaytaradi." },
+        { "id": "c", "text": "Xato chiqadi", "hint": "Xato emas, faqat `RuntimeWarning: coroutine was never awaited` ogohlantirishi." },
+        { "id": "d", "text": "Funksiya fon oqimida ishlaydi", "hint": "Hech qanday oqim ochilmaydi." }
+      ],
+      "explanation": "Unutilgan `await` eng ko'p uchraydigan asyncio xatosi: kod jim ishlamaydi. `asyncio.run(main())` kirish nuqtasi; ichida `await f()` ketma-ket, `asyncio.gather(f(), g())` parallel.",
+      "reviewed": false
+    },
+    {
+      "id": "py.async.003",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Threading, multiprocessing va asyncio qachon ishlatiladi?",
+      "options": [
+        { "id": "a", "text": "I/O kutish ko'p bo'lsa — asyncio (yoki thread'lar); CPU-og'ir hisob — multiprocessing (GIL'ni chetlab o'tadi); bloklovchi kutubxonalar bilan I/O — thread'lar", "correct": true },
+        { "id": "b", "text": "Hamma narsa uchun threading", "hint": "CPU ishida GIL sabab tezlashuv bo'lmaydi." },
+        { "id": "c", "text": "Hamma narsa uchun asyncio", "hint": "Asyncio CPU-og'ir ishni parallel qilmaydi va bloklovchi kutubxonalar bilan ishlamaydi." },
+        { "id": "d", "text": "Hamma narsa uchun multiprocessing", "hint": "Jarayonlar og'ir va ma'lumot almashish qimmat; I/O uchun ortiqcha." }
+      ],
+      "explanation": "Qoida: \"kutyapmanmi yoki hisoblayapmanmi\". Minglab tarmoq ulanishi — asyncio; rasm qayta ishlash — `ProcessPoolExecutor`; eski sinxron SDK — `ThreadPoolExecutor`. Ularni aralashtirish mumkin: asyncio ichida `run_in_executor`.",
+      "reviewed": false
+    },
+    {
+      "id": "py.async.004",
+      "level": "junior",
+      "type": "single",
+      "kind": "true_false",
+      "prompt": "Quyidagi fikr to'g'rimi?\n\n`asyncio` da `await` boshqa coroutine'larga ishlash imkonini beradigan to'xtash nuqtasi; `await` siz uzoq sikl boshqa hamma narsani kutishga majbur qiladi.",
+      "options": [
+        { "id": "a", "text": "Ha", "correct": true },
+        { "id": "b", "text": "Yo'q", "hint": "Asyncio kooperativ: coroutine faqat `await` da boshqaruvni beradi. `for i in range(10**8)` kabi sikl event loop'ni to'liq band qiladi va barcha so'rovlar to'xtaydi." }
+      ],
+      "explanation": "Shuning uchun asyncio'da bloklovchi chaqiruvlar (`time.sleep`, `requests`, og'ir hisob) taqiqlangan; `asyncio.sleep`, `httpx`, `run_in_executor` ishlatiladi. Uzun hisobni bo'laklab, oraliqda `await asyncio.sleep(0)` qo'yish ham usul.",
+      "reviewed": false
+    },
+    {
+      "id": "py.async.005",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Bu kod taxminan qancha vaqt ishlaydi?",
+      "code": "import asyncio\n\nasync def fetch(n):\n    await asyncio.sleep(1)\n    return n\n\nasync def main():\n    results = await asyncio.gather(fetch(1), fetch(2), fetch(3))\n    print(results)\n\nasyncio.run(main())",
+      "options": [
+        { "id": "a", "text": "Taxminan 1 soniya, `[1, 2, 3]` chiqaradi", "correct": true },
+        { "id": "b", "text": "Taxminan 3 soniya", "hint": "`gather` coroutine'larni bir vaqtda ishga tushiradi; kutishlar ustma-ust tushadi." },
+        { "id": "c", "text": "Darhol, `[None, None, None]`", "hint": "`gather` natijalarni kutadi va tartibda qaytaradi." },
+        { "id": "d", "text": "Xato: `gather` ro'yxat qabul qiladi", "hint": "U alohida argumentlar qabul qiladi (`*coros`)." }
+      ],
+      "explanation": "`await fetch(1); await fetch(2); await fetch(3)` ketma-ket 3 soniya bo'lardi. `gather` hammasini birga boshlaydi va natijalarni kiritilgan tartibda beradi. Xatolarni alohida ko'rish uchun `return_exceptions=True`, cheklangan parallellik uchun `Semaphore`.",
+      "reviewed": false
+    },
+    {
+      "id": "py.async.006",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Oqimlar (thread) bilan umumiy o'zgaruvchini oshirishda nega `Lock` kerak, GIL bo'lsa ham?",
+      "options": [
+        { "id": "a", "text": "`counter += 1` bir nechta bayt-kod amali; GIL ular orasida boshqa oqimga o'tishi mumkin va yangilanish yo'qoladi (race condition)", "correct": true },
+        { "id": "b", "text": "Kerak emas, GIL hamma narsani himoya qiladi", "hint": "GIL interpretatorni himoya qiladi, sizning mantiqingizni emas." },
+        { "id": "c", "text": "Faqat `multiprocessing` da kerak", "hint": "Jarayonlar xotirani ulashmaydi; muammo oqimlarda." },
+        { "id": "d", "text": "`Lock` kodni tezlashtiradi", "hint": "Aksincha, u ketma-ketlashtiradi; maqsad to'g'rilik." }
+      ],
+      "explanation": "O'qish → qo'shish → yozish orasida boshqa oqim eski qiymatni o'qib, keyin ustiga yozadi. `with lock:` blokni atomik qiladi. Asyncio'da bitta oqim bo'lgani uchun oddiy amallar xavfsiz, lekin `await` o'rtasida bo'lsa, `asyncio.Lock` kerak bo'lishi mumkin.",
+      "reviewed": false
+    },
+    {
+      "id": "py.async.007",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`ThreadPoolExecutor` va `ProcessPoolExecutor` qanday tanlanadi?",
+      "options": [
+        { "id": "a", "text": "I/O-og'ir vazifalar (so'rovlar, fayllar) — thread pool (yengil, xotira ulashiladi); CPU-og'ir vazifalar — process pool (har jarayon o'z GIL'i bilan, haqiqiy parallellik)", "correct": true },
+        { "id": "b", "text": "Process pool har doim tezroq", "hint": "Jarayon yaratish va ma'lumot uzatish (pickle) qimmat; I/O uchun thread'lar yetadi." },
+        { "id": "c", "text": "Thread pool CPU hisobni parallel qiladi", "hint": "GIL sabab yo'q." },
+        { "id": "d", "text": "Farqi faqat nomda", "hint": "Biri oqimlar, ikkinchisi alohida jarayonlar." }
+      ],
+      "explanation": "`concurrent.futures` ikkalasiga bir xil API beradi: `executor.map(f, items)`. Process pool'ga uzatiladigan funksiya va ma'lumot pickle qilinadigan bo'lishi kerak (lambda emas). Asyncio bilan `loop.run_in_executor(pool, f)`.",
+      "reviewed": false
+    },
+    {
+      "id": "py.async.008",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Asyncio'da yaratilgan task'ni (`asyncio.create_task`) havolasiz qoldirish nega xavfli?",
+      "options": [
+        { "id": "a", "text": "Event loop task'larga kuchsiz havola saqlaydi; havola bo'lmasa GC uni tugamasdan o'chirishi mumkin va xatolar ham ko'rinmaydi; task'ni to'plamda saqlash yoki `TaskGroup` ishlatish kerak", "correct": true },
+        { "id": "b", "text": "Xavfi yo'q", "hint": "Hujjatning o'zi task havolasini saqlashni talab qiladi." },
+        { "id": "c", "text": "Task darhol bajariladi va natija yo'qoladi", "hint": "Task darhol emas, keyingi `await` da boshlanadi; muammo yo'qolishda." },
+        { "id": "d", "text": "Task ikki marta bajariladi", "hint": "Hech qachon ikki marta emas." }
+      ],
+      "explanation": "Python 3.11+ da `async with asyncio.TaskGroup() as tg: tg.create_task(...)` strukturaviy konkurentlik beradi: barcha task'lar blok tugaguncha kutiladi, xatolar tarqaladi va bekor qilish to'g'ri ishlaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "py.async.009",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Bu kod 1000 ta URL'ni yuklashda `Too many open files` yoki server tomonidan bloklanish beradi. Nima yetishmaydi?",
+      "code": "async def crawl(urls):\n    async with httpx.AsyncClient() as client:\n        tasks = [client.get(u) for u in urls]\n        return await asyncio.gather(*tasks)",
+      "options": [
+        { "id": "a", "text": "Parallellik cheklanmagan: 1000 so'rov bir vaqtda; `asyncio.Semaphore(20)` bilan cheklash (yoki klient limitlari) kerak", "correct": true },
+        { "id": "b", "text": "`gather` o'rniga `for` sikli kerak", "hint": "Unda butunlay ketma-ket bo'lib, juda sekinlashadi; o'rtacha yo'l — cheklangan parallellik." },
+        { "id": "c", "text": "`AsyncClient` o'rniga `requests` kerak", "hint": "Sinxron klient event loop'ni bloklaydi." },
+        { "id": "d", "text": "Kod to'g'ri, server xato", "hint": "Bir manbadan 1000 bir vaqtli so'rov odatda rate limit'ga tushadi." }
+      ],
+      "explanation": "`sem = asyncio.Semaphore(20); async def one(u): async with sem: return await client.get(u)`. Bu resurslarni (fayl deskriptorlari, ulanishlar) va serverga yukni cheklaydi; `httpx.Limits` ham ulanishlar sonini boshqaradi. Retry va timeout qo'shish ham shart.",
+      "reviewed": false
+    },
+    {
+      "id": "py.async.010",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Asyncio'da bekor qilish (cancellation) qanday ishlaydi va qanday xatolar bo'ladi?",
+      "options": [
+        { "id": "a", "text": "`task.cancel()` keyingi `await` da `CancelledError` tashlaydi; uni yutib yuborish (`except Exception` ushlamaydi, lekin yalang'och `except:` ushlaydi) bekor qilishni buzadi; tozalash `finally` da", "correct": true },
+        { "id": "b", "text": "`cancel()` task'ni darhol to'xtatadi", "hint": "Kooperativ: faqat `await` nuqtasida." },
+        { "id": "c", "text": "Bekor qilingan task xato bermaydi", "hint": "`CancelledError` ko'tariladi; bu `BaseException` vorisi." },
+        { "id": "d", "text": "Bekor qilish faqat `gather` da ishlaydi", "hint": "Har qanday task uchun." }
+      ],
+      "explanation": "`asyncio.timeout()` va `wait_for` ham bekor qilish orqali ishlaydi. `CancelledError` ni ushlab, qayta ko'tarmaslik \"o'lmas\" task'lar yaratadi: server to'xtamaydi. `finally` da resurs tozalash va kerak bo'lsa `asyncio.shield`.",
+      "reviewed": false
+    },
+    {
+      "id": "py.async.011",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Python 3.13 dagi free-threaded (GIL'siz) rejim nimani o'zgartiradi va qanday ehtiyot kerak?",
+      "options": [
+        { "id": "a", "text": "Oqimlar CPU ishda haqiqatan parallel bo'ladi; lekin GIL'ga tayangan kod va C-kengaytmalar race condition'ga uchrashi mumkin, kutubxonalar moslashishi kerak; bir oqimli kod biroz sekinroq bo'lishi mumkin", "correct": true },
+        { "id": "b", "text": "Hamma kod avtomatik tezlashadi", "hint": "Faqat ko'p oqimli CPU-og'ir kod; qolgani o'zgarmaydi yoki biroz sekinlashadi." },
+        { "id": "c", "text": "`multiprocessing` endi kerak emas", "hint": "Ko'p hollarda thread'lar yetadi, lekin izolyatsiya uchun jarayonlar qoladi." },
+        { "id": "d", "text": "Bu standart va majburiy rejim", "hint": "Alohida build (`python3.13t`), tajribaviy." }
+      ],
+      "explanation": "GIL ko'p yillik \"bepul\" xavfsizlik bergan: `dict` va `list` amallari atomik ko'ringan. GIL'siz dunyoda aniq qulflar va thread-safe tuzilmalar kerak. Interview'da bu mavzu \"Python konkurentligi qayerga ketyapti\" degan savol sifatida chiqadi.",
+      "reviewed": false
+    },
+    {
+      "id": "py.async.012",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Mavjud katta sinxron Django/Flask kod bazasida async'dan foyda olish strategiyasi qanday?",
+      "options": [
+        { "id": "a", "text": "Tanlab: eng ko'p I/O kutadigan endpoint'lar yoki alohida servisni async qilish, sinxron va async chegarasini aniq boshqarish (`sync_to_async`), ORM va kutubxonalar async qo'llab-quvvatlashini tekshirish; hammasini qayta yozmaslik", "correct": true },
+        { "id": "b", "text": "Barcha funksiyalarga `async` qo'shib chiqish", "hint": "Ichida bloklovchi chaqiruv qolsa, async hech narsa bermaydi va hatto yomonlashtiradi." },
+        { "id": "c", "text": "Async foydasiz, faqat worker sonini oshirish", "hint": "Worker'lar xotira oladi; minglab sekin ulanish uchun async ancha arzon." },
+        { "id": "d", "text": "Freymvorkni butunlay almashtirish", "hint": "Qimmat va xavfli; Django o'zi ham ASGI va async view'larni qo'llaydi." }
+      ],
+      "explanation": "Async faqat kutish ko'p bo'lgan joyda foyda beradi (tashqi API'lar, WebSocket, uzun ulanishlar). CPU-og'ir yoki bazaga bog'liq endpoint'larda foydasi kam. Aralash kodda eng katta xavf: async kontekstda bloklovchi chaqiruv — kuzatuv (`asyncio` debug rejimi) bilan topiladi.",
+      "reviewed": false
+    },
+    {
+      "id": "py.async.013",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Yuqori yuklamali Python servisida CPU-og'ir ishni (rasm, PDF, ML) qanday tashkil qilish to'g'ri?",
+      "options": [
+        { "id": "a", "text": "Veb-jarayondan chiqarib, alohida worker'larga (navbat orqali) yoki process pool'ga berish; natijani asinxron qaytarish (polling, webhook, WebSocket); veb-worker'lar faqat I/O bilan band bo'lsin", "correct": true },
+        { "id": "b", "text": "Veb-worker ichida thread'larda bajarish", "hint": "GIL sabab parallellik yo'q va so'rovlarga xizmat sekinlashadi." },
+        { "id": "c", "text": "`async def` ichida to'g'ridan-to'g'ri hisoblash", "hint": "Event loop to'xtaydi, barcha so'rovlar kutadi." },
+        { "id": "d", "text": "Faqat worker sonini oshirish", "hint": "Har og'ir so'rov bitta worker'ni band qiladi; yuk oshsa, hammasi band bo'ladi." }
+      ],
+      "explanation": "Veb qatlam tez javob berishi, og'ir ish esa mustaqil masshtablanishi kerak. Celery worker'lari yoki alohida servis (Go/Rust yoki C-kengaytmali Python) og'ir ishni oladi. Vaqt oladigan ish uchun foydalanuvchiga `202 Accepted` va holat endpoint'i beriladi.",
+      "reviewed": false
+    }
+  ]
+}

@@ -1,0 +1,157 @@
+{
+  "topic": "py.db",
+  "questions": [
+    {
+      "id": "py.db.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "ORM (Django ORM, SQLAlchemy) nima beradi?",
+      "options": [
+        { "id": "a", "text": "Jadvallarni Python klasslari, qatorlarni obyektlar sifatida ifodalaydi; so'rovlar Python kodida yoziladi va parametrlangan SQL'ga aylanadi", "correct": true },
+        { "id": "b", "text": "SQL'ni butunlay keraksiz qiladi", "hint": "Murakkab so'rovlar va optimizatsiya uchun SQL'ni bilish baribir kerak." },
+        { "id": "c", "text": "Bazani tezlashtiradi", "hint": "Aksincha, qo'shimcha qatlam; qulaylik uchun." },
+        { "id": "d", "text": "Faqat NoSQL bilan ishlaydi", "hint": "ORM aynan relyatsion bazalar uchun." }
+      ],
+      "explanation": "`User.objects.filter(age__gte=18)` → `SELECT ... WHERE age >= 18`. ORM injection'dan himoya qiladi, migratsiyalarni boshqaradi va bazalar orasida ko'chishni osonlashtiradi. Narxi: yashirin N+1 va noqulay murakkab so'rovlar.",
+      "reviewed": false
+    },
+    {
+      "id": "py.db.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Bu kodda qanday xavf bor?",
+      "code": "cursor.execute(f\"SELECT * FROM users WHERE email = '{email}'\")",
+      "options": [
+        { "id": "a", "text": "SQL injection: `email` so'rovga matn sifatida qo'shilgan; `cursor.execute(\"... WHERE email = %s\", (email,))` kerak", "correct": true },
+        { "id": "b", "text": "f-string sekin", "hint": "Tezlik emas, xavfsizlik muammosi." },
+        { "id": "c", "text": "`SELECT *` yomon uslub", "hint": "Uslub masalasi; injection'ga nisbatan arzimas." },
+        { "id": "d", "text": "Xavf yo'q, email har doim xavfsiz", "hint": "`' OR '1'='1` kabi qiymat butun jadvalni ochadi." }
+      ],
+      "explanation": "Parametrlangan so'rovda drayver qiymatni alohida uzatadi va u hech qachon SQL kodi sifatida talqin qilinmaydi. ORM buni avtomatik qiladi; `raw()` va `extra()` kabi joylarda esa yana e'tibor kerak.",
+      "reviewed": false
+    },
+    {
+      "id": "py.db.003",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Django modelida `ForeignKey` qanday bog'lanishni ifodalaydi?",
+      "options": [
+        { "id": "a", "text": "Ko'pga-bir: ko'p `Order` bitta `User` ga tegishli; `on_delete` ota o'chirilganda nima bo'lishini belgilaydi", "correct": true },
+        { "id": "b", "text": "Ko'pga-ko'p", "hint": "Bu `ManyToManyField`." },
+        { "id": "c", "text": "Birga-bir", "hint": "Bu `OneToOneField`." },
+        { "id": "d", "text": "Hech qanday bog'lanish, faqat son saqlaydi", "hint": "U bazada tashqi kalit cheklovi yaratadi." }
+      ],
+      "explanation": "`user = ForeignKey(User, on_delete=CASCADE)` foydalanuvchi o'chirilganda buyurtmalarni ham o'chiradi; `PROTECT` o'chirishga yo'l qo'ymaydi, `SET_NULL` bo'shatadi. `on_delete` tanlovi ma'lumot yo'qotish xavfini belgilaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "py.db.004",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "100 ta buyurtma uchun bu kod 101 ta SQL so'rov yuboryapti. Yechim?",
+      "code": "orders = Order.objects.all()[:100]\nfor order in orders:\n    print(order.user.email)",
+      "options": [
+        { "id": "a", "text": "`Order.objects.select_related('user')[:100]`: foydalanuvchi `JOIN` bilan bitta so'rovda keladi", "correct": true },
+        { "id": "b", "text": "`prefetch_related('user')`", "hint": "Ishlaydi (2 so'rov), lekin ko'pga-bir uchun `select_related` `JOIN` bilan samaraliroq; `prefetch` ko'pga-ko'p va teskari bog'lanish uchun." },
+        { "id": "c", "text": "`order.user_id` ni chiqarish", "hint": "Emailsiz qoladi; so'rov emas, talab o'zgaradi." },
+        { "id": "d", "text": "`.all()` o'rniga `.filter()`", "hint": "Filtr N+1 ni o'zgartirmaydi." }
+      ],
+      "explanation": "`order.user` ga birinchi murojaat alohida so'rov yuboradi — har buyurtma uchun. `select_related` `JOIN` qiladi (ForeignKey, OneToOne), `prefetch_related` ikkinchi so'rov bilan yig'ib Python'da bog'laydi (ManyToMany, teskari FK). Django Debug Toolbar so'rovlar sonini ko'rsatadi.",
+      "reviewed": false
+    },
+    {
+      "id": "py.db.005",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Django'da `transaction.atomic()` nima qiladi?",
+      "options": [
+        { "id": "a", "text": "Blok ichidagi barcha baza amallarini bitta tranzaksiyaga oladi: xato bo'lsa hammasi bekor qilinadi, bo'lmasa commit", "correct": true },
+        { "id": "b", "text": "So'rovlarni tezlashtiradi", "hint": "Maqsad tezlik emas, yaxlitlik (ba'zan ko'p yozuvda tezroq ham bo'ladi)." },
+        { "id": "c", "text": "Bazani qulflab, boshqa so'rovlarni to'xtatadi", "hint": "Faqat tegilgan qatorlar qulflanadi, butun baza emas." },
+        { "id": "d", "text": "Faqat o'qish uchun", "hint": "Aynan yozuvlar uchun muhim." }
+      ],
+      "explanation": "Pul o'tkazmasi, buyurtma + ombor yangilash — bitta `atomic` blok. Standart holatda Django autocommit rejimida: har so'rov alohida tranzaksiya. `select_for_update()` blok ichida qatorni qulflaydi (pessimistik qulflash).",
+      "reviewed": false
+    },
+    {
+      "id": "py.db.006",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "SQLAlchemy'da session va `expire_on_commit` haqida qaysi fikr to'g'ri?",
+      "options": [
+        { "id": "a", "text": "Session obyektlarni kuzatadi (unit of work); commit'dan keyin obyektlar standart holatda \"eskirgan\" deb belgilanadi va keyingi murojaat qayta so'rov yuboradi; async kodda bu kutilmagan I/O beradi", "correct": true },
+        { "id": "b", "text": "Session — bu baza ulanishi", "hint": "Session ulanishni pool'dan oladi va qaytaradi; o'zi ulanish emas." },
+        { "id": "c", "text": "Session global va butun ilova uchun bitta bo'lishi kerak", "hint": "Session so'rov (yoki ish birligi) uchun; global session oqimlar orasida xavfli." },
+        { "id": "d", "text": "Commit obyektlarni o'chiradi", "hint": "O'chirmaydi, eskirgan deb belgilaydi." }
+      ],
+      "explanation": "Async SQLAlchemy'da `expire_on_commit=False` deyarli majburiy: aks holda commit'dan keyin `obj.name` ga murojaat yashirin lazy load qilib, `MissingGreenlet` xatosi beradi. Session hayot sikli so'rov bilan bir xil bo'lishi kerak.",
+      "reviewed": false
+    },
+    {
+      "id": "py.db.007",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Million qatorli jadvalni Django ORM bilan qayta ishlashda xotira tugayapti. Yechim?",
+      "options": [
+        { "id": "a", "text": "`iterator(chunk_size=2000)` bilan server tomonidan kursor orqali bo'laklab o'qish, `only()`/`values()` bilan kerakli ustunlar, yozishda `bulk_update`/`bulk_create`", "correct": true },
+        { "id": "b", "text": "`list(queryset)` qilib keyin ishlash", "hint": "Bu hammasini xotiraga yuklaydi — muammoning o'zi." },
+        { "id": "c", "text": "Serverga xotira qo'shish", "hint": "Keyingi million qatorda yana tugaydi." },
+        { "id": "d", "text": "`for` o'rniga `while True` sikli", "hint": "Sikl turi xotirani o'zgartirmaydi." }
+      ],
+      "explanation": "Oddiy iteratsiya QuerySet natijasini keshlaydi. `iterator()` keshlamaydi va PostgreSQL'da server kursoridan foydalanadi. Juda katta yangilanishlar uchun ORM'siz bitta `UPDATE ... WHERE` yoki partiyalab `bulk_update` tezroq.",
+      "reviewed": false
+    },
+    {
+      "id": "py.db.008",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Ikki foydalanuvchi bir vaqtda oxirgi bitta mahsulotni sotib olmoqda; ikkalasi ham muvaffaqiyatli bo'lyapti (overselling). Yechim?",
+      "options": [
+        { "id": "a", "text": "Tranzaksiya ichida `select_for_update()` bilan qatorni qulflash yoki atomik `UPDATE ... SET stock = stock - 1 WHERE stock > 0` va ta'sirlangan qatorlar sonini tekshirish", "correct": true },
+        { "id": "b", "text": "Avval `stock` ni o'qib, Python'da tekshirib, keyin yozish", "hint": "Aynan shu race condition: ikkalasi 1 ni o'qiydi, ikkalasi 0 yozadi." },
+        { "id": "c", "text": "Ilova darajasida global `Lock`", "hint": "Bir nechta worker va server bo'lsa, u ishlamaydi." },
+        { "id": "d", "text": "Keshdan tekshirish", "hint": "Kesh ham race'dan himoya qilmaydi." }
+      ],
+      "explanation": "Yagona haqiqat bazada; raqobatni baza hal qilishi kerak. `F()` ifodalari (`stock=F('stock') - 1`) atomik yangilaydi. Yuqori raqobatda optimistik versiya (`WHERE version = ?`) yoki navbat orqali ketma-ketlashtirish ishlatiladi.",
+      "reviewed": false
+    },
+    {
+      "id": "py.db.009",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Django migratsiyalarini katta production bazada xavfsiz qo'llash qoidalari qanday?",
+      "options": [
+        { "id": "a", "text": "Orqaga mos migratsiyalar (avval qo'shish, keyin ilovani o'tkazish, keyin o'chirish), uzoq qulf beradigan amallarni ajratish (`CONCURRENTLY` indeks, `NOT NULL` ni bosqichma-bosqich), ma'lumot migratsiyasini partiyalab, deploy'dan oldin staging'da haqiqiy hajmda sinash", "correct": true },
+        { "id": "b", "text": "`migrate` ni deploy skriptida avtomatik, tekshiruvsiz bajarish", "hint": "Og'ir migratsiya xizmatni daqiqalab to'xtatishi mumkin." },
+        { "id": "c", "text": "Migratsiyalarni o'chirib, sxemani qo'lda o'zgartirish", "hint": "Muhitlar ajralib ketadi; takrorlanuvchanlik yo'qoladi." },
+        { "id": "d", "text": "Jadvalni nusxalab, almashtirish har safar", "hint": "Og'ir va yozuvlar paytida ma'lumot yo'qotish xavfi." }
+      ],
+      "explanation": "Django'ning `AddIndex` standart holatda jadvalni qulflaydi; PostgreSQL uchun `AddIndexConcurrently` va `atomic = False` kerak. Eski kod yangi sxema bilan ishlashi kerak (deploy paytida ikkala versiya bir vaqtda yashaydi). `django-pg-zero-downtime-migrations` kabi vositalar xavfli amallarni ushlaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "py.db.010",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Backend'da baza ulanishlari (connection pool) va worker'lar sonini qanday muvofiqlashtirish kerak?",
+      "options": [
+        { "id": "a", "text": "Umumiy ulanishlar = worker'lar × har worker pool'i; bu baza limitidan (`max_connections`) kam bo'lishi kerak; ko'p servis bo'lsa, PgBouncer kabi tashqi pooler; async worker'da pool ayniqsa cheklanishi kerak", "correct": true },
+        { "id": "b", "text": "Har worker cheksiz ulanish ochsin, baza o'zi boshqaradi", "hint": "Baza limitga yetgach yangi ulanishlarni rad etadi; hamma xato oladi." },
+        { "id": "c", "text": "Bitta global ulanish hamma uchun", "hint": "Ketma-ketlashadi va oqimlar orasida xavfli." },
+        { "id": "d", "text": "Ulanishlar sonining ahamiyati yo'q", "hint": "PostgreSQL'da har ulanish jarayon va xotira; ortiqchasi bazani sekinlashtiradi." }
+      ],
+      "explanation": "Misol: 8 server × 4 worker × pool 10 = 320 ulanish; PostgreSQL standart limiti 100. PgBouncer (transaction rejimi) minglab klient ulanishini o'nlab baza ulanishiga multiplekslaydi. Django'da `CONN_MAX_AGE` yoki Django 5.1+ ichki pool sozlanadi.",
+      "reviewed": false
+    }
+  ]
+}

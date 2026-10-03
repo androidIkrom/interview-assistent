@@ -1,0 +1,189 @@
+{
+  "topic": "py.idioms",
+  "questions": [
+    {
+      "id": "py.idioms.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Bu kod nima chiqaradi?",
+      "code": "nums = [1, 2, 3, 4, 5]\nprint([n * n for n in nums if n % 2 == 1])",
+      "options": [
+        { "id": "a", "text": "[1, 9, 25]", "correct": true },
+        { "id": "b", "text": "[1, 4, 9, 16, 25]", "hint": "`if` sharti toq sonlarni qoldiradi." },
+        { "id": "c", "text": "[4, 16]", "hint": "`n % 2 == 1` toq sonlar uchun to'g'ri." },
+        { "id": "d", "text": "[1, 3, 5]", "hint": "Element `n * n` sifatida qo'shiladi, `n` emas." }
+      ],
+      "explanation": "List comprehension: `[ifoda for element in to'plam if shart]`. U sikl + `append` dan qisqa va odatda tezroq. `dict` va `set` uchun ham bor: `{k: v for ...}`, `{x for ...}`.",
+      "reviewed": false
+    },
+    {
+      "id": "py.idioms.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Lug'atdan kalit bo'lmasa ham xatosiz qiymat olish uchun nima ishlatiladi?",
+      "options": [
+        { "id": "a", "text": "`d.get(key, default)`", "correct": true },
+        { "id": "b", "text": "`d[key]`, u `None` qaytaradi", "hint": "Kalit bo'lmasa `KeyError` chiqadi." },
+        { "id": "c", "text": "`d.find(key)`", "hint": "Lug'atda bunday metod yo'q." },
+        { "id": "d", "text": "`d.key`", "hint": "Nuqta sintaksisi lug'at kalitlari uchun ishlamaydi." }
+      ],
+      "explanation": "`get` yo'q kalit uchun `None` yoki berilgan standart qiymatni qaytaradi. Sanash uchun `d[k] = d.get(k, 0) + 1`, yoki `collections.Counter` va `defaultdict(int)` yanada qulay.",
+      "reviewed": false
+    },
+    {
+      "id": "py.idioms.003",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`set` ro'yxatdan qachon afzal?",
+      "options": [
+        { "id": "a", "text": "Takrorlarni yo'qotish va a'zolikni (`x in s`) tez tekshirish kerak bo'lganda; tartib muhim bo'lmaganda", "correct": true },
+        { "id": "b", "text": "Elementlarni indeks bo'yicha olish kerak bo'lganda", "hint": "Set'da indeks yo'q." },
+        { "id": "c", "text": "Tartibni saqlash kerak bo'lganda", "hint": "Set tartibni kafolatlamaydi." },
+        { "id": "d", "text": "Hech qachon, ro'yxat har doim yaxshi", "hint": "`x in list` O(n), `x in set` O(1)." }
+      ],
+      "explanation": "`set(a) & set(b)` kesishma, `|` birlashma, `-` farq — to'plam amallari sikl yozmasdan bajariladi. Elementlar hash qilinadigan (o'zgarmas) bo'lishi kerak.",
+      "reviewed": false
+    },
+    {
+      "id": "py.idioms.004",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Bu kod nima chiqaradi?",
+      "code": "names = [\"Ali\", \"Vali\"]\nfor i, name in enumerate(names, start=1):\n    print(i, name)",
+      "options": [
+        { "id": "a", "text": "1 Ali, 2 Vali", "correct": true },
+        { "id": "b", "text": "0 Ali, 1 Vali", "hint": "`start=1` sanashni 1 dan boshlaydi." },
+        { "id": "c", "text": "Ali, Vali", "hint": "`enumerate` juftlik (indeks, element) beradi." },
+        { "id": "d", "text": "Xato", "hint": "`enumerate` ikkinchi argument sifatida boshlang'ich sonni qabul qiladi." }
+      ],
+      "explanation": "`for i in range(len(names))` o'rniga `enumerate` Python uslubi (pythonic). Ikki ro'yxatni parallel yurish uchun `zip(a, b)`, teskari tartib uchun `reversed`.",
+      "reviewed": false
+    },
+    {
+      "id": "py.idioms.005",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Fayldan satrlarni o'qishning to'g'ri usuli qaysi?",
+      "options": [
+        { "id": "a", "text": "`with open(path, encoding='utf-8') as f:` va `for line in f:` — fayl avtomatik yopiladi va satrlar birma-bir o'qiladi", "correct": true },
+        { "id": "b", "text": "`f = open(path); data = f.read()` — yopish shart emas", "hint": "Yopilmagan fayl resurs sizib chiqishi; xato bo'lsa, u ochiq qoladi." },
+        { "id": "c", "text": "`f.readlines()` har doim eng yaxshi", "hint": "Butun faylni xotiraga yuklaydi; katta fayl uchun yomon." },
+        { "id": "d", "text": "`open` faqat `pathlib` orqali ishlaydi", "hint": "`open` satr yo'l bilan ham ishlaydi; `pathlib` qulaylik." }
+      ],
+      "explanation": "Fayl obyekti iterator: `for line in f` bir vaqtda bitta satr saqlaydi. `encoding` ni aniq ko'rsatish platformalar orasidagi farqdan himoya qiladi (Windows'da standart UTF-8 emas bo'lishi mumkin).",
+      "reviewed": false
+    },
+    {
+      "id": "py.idioms.006",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`@dataclass` nima beradi?",
+      "options": [
+        { "id": "a", "text": "Maydon e'lonlaridan `__init__`, `__repr__`, `__eq__` (va ixtiyoriy `order`, `frozen`, `slots`) ni avtomatik generatsiya qiladi", "correct": true },
+        { "id": "b", "text": "Klassni ma'lumotlar bazasiga bog'laydi", "hint": "ORM emas; faqat sintaktik qulaylik." },
+        { "id": "c", "text": "Klassni avtomatik immutable qiladi", "hint": "Faqat `frozen=True` berilsa." },
+        { "id": "d", "text": "JSON serializatsiya qo'shadi", "hint": "`asdict` bor, lekin to'liq serializatsiya uchun pydantic kabi kutubxona kerak." }
+      ],
+      "explanation": "`@dataclass class User: name: str; age: int = 0` — konstruktor, chiroyli `repr` va qiymat bo'yicha taqqoslash tayyor. Validatsiya va tashqi ma'lumot uchun pydantic, oddiy ichki tuzilma uchun dataclass yetadi.",
+      "reviewed": false
+    },
+    {
+      "id": "py.idioms.007",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Bu kod nima chiqaradi?",
+      "code": "from collections import defaultdict\n\ngroups = defaultdict(list)\nfor word in [\"apple\", \"avocado\", \"banana\"]:\n    groups[word[0]].append(word)\n\nprint(dict(groups))",
+      "options": [
+        { "id": "a", "text": "{'a': ['apple', 'avocado'], 'b': ['banana']}", "correct": true },
+        { "id": "b", "text": "KeyError", "hint": "`defaultdict` yo'q kalit uchun `list()` chaqirib, bo'sh ro'yxat yaratadi." },
+        { "id": "c", "text": "{'a': 'avocado', 'b': 'banana'}", "hint": "Qiymatlar ro'yxat; `append` ustiga yozmaydi." },
+        { "id": "d", "text": "{'apple': 'a', 'avocado': 'a', 'banana': 'b'}", "hint": "Kalit birinchi harf, qiymat so'zlar ro'yxati." }
+      ],
+      "explanation": "`defaultdict(list)` guruhlash uchun idiomatik usul: `if key not in d: d[key] = []` qatorlari yo'qoladi. Sanash uchun `defaultdict(int)` yoki `Counter`, ichma-ich uchun `defaultdict(lambda: defaultdict(int))`.",
+      "reviewed": false
+    },
+    {
+      "id": "py.idioms.008",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Katta faylni (10 GB) qayta ishlashda generator ifodasi `(f(x) for x in data)` list comprehension'dan nimasi bilan yaxshi?",
+      "options": [
+        { "id": "a", "text": "U elementlarni birma-bir, talab bo'yicha hosil qiladi va butun natijani xotirada saqlamaydi", "correct": true },
+        { "id": "b", "text": "U tezroq hisoblaydi", "hint": "Element boshiga vaqt deyarli bir xil; farq xotirada." },
+        { "id": "c", "text": "Uni bir necha marta aylanib chiqish mumkin", "hint": "Aksincha: generator bir marta o'tiladi va tugaydi." },
+        { "id": "d", "text": "Farqi yo'q", "hint": "List comprehension natijani to'liq xotiraga yig'adi." }
+      ],
+      "explanation": "`sum(x * x for x in range(10**9))` xotira olmaydi, `sum([x * x for ...])` esa milliard elementli ro'yxat yaratadi. Generatorlar zanjirini (`map`, `filter`, `itertools`) oqim (pipeline) sifatida qurish mumkin.",
+      "reviewed": false
+    },
+    {
+      "id": "py.idioms.009",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Istisnolarni (exception) ushlashda qaysi yondashuv to'g'ri?",
+      "options": [
+        { "id": "a", "text": "Aniq tipni ushlash (`except ValueError`), xatoni loglash yoki qayta ko'tarish; yalang'och `except:` va jim o'tkazishdan qochish", "correct": true },
+        { "id": "b", "text": "Har joyda `except Exception: pass`", "hint": "Xatolar yashiriladi va dastur noto'g'ri holatda davom etadi." },
+        { "id": "c", "text": "Istisnolarni umuman ushlamaslik", "hint": "Kutilgan xatolar (fayl yo'q, tarmoq) uchun ishlov kerak." },
+        { "id": "d", "text": "Istisno o'rniga har doim xato kodi qaytarish", "hint": "Bu Python uslubiga zid (EAFP); istisnolar tilning asosiy mexanizmi." }
+      ],
+      "explanation": "Yalang'och `except:` `KeyboardInterrupt` va `SystemExit` ni ham ushlaydi. Python falsafasi EAFP: \"kechirim so'rash osonroq\" — avval urinib, keyin aniq istisnoni ushlash. O'z istisnolaringizni ierarxiya qilib yaratish ishlov berishni soddalashtiradi.",
+      "reviewed": false
+    },
+    {
+      "id": "py.idioms.010",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Bu funksiya katta ro'yxatlarda juda sekin. Nega va yechim?",
+      "code": "def common(a: list, b: list) -> list:\n    result = []\n    for x in a:\n        if x in b and x not in result:\n            result.append(x)\n    return result",
+      "options": [
+        { "id": "a", "text": "`x in b` va `x not in result` ro'yxatda O(n): jami O(n·m); `set(a) & set(b)` (yoki `b` ni set qilish) O(n + m) beradi", "correct": true },
+        { "id": "b", "text": "`append` sekin", "hint": "`append` amortizatsiyalangan O(1)." },
+        { "id": "c", "text": "Type hint'lar sekinlashtiradi", "hint": "Hint'lar runtime'ga ta'sir qilmaydi." },
+        { "id": "d", "text": "`for` o'rniga `while` kerak", "hint": "Sikl turi murakkablikni o'zgartirmaydi." }
+      ],
+      "explanation": "Agar tartib muhim bo'lsa: `bs = set(b); seen = set(); [x for x in a if x in bs and not (x in seen or seen.add(x))]` yoki `dict.fromkeys` bilan tartibli takrorsiz ro'yxat. \"Ro'yxatda `in`\" — Python'dagi eng ko'p uchraydigan performance xatosi.",
+      "reviewed": false
+    },
+    {
+      "id": "py.idioms.011",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`functools.lru_cache` qachon mos va qanday xavfi bor?",
+      "options": [
+        { "id": "a", "text": "Sof (pure), argumentlari hash qilinadigan va qayta chaqiriladigan funksiyalar uchun; xavfi: cheksiz kesh xotirani yeydi, metodlarda `self` ni ushlab qolib leak beradi, o'zgaruvchan argumentlar bilan ishlamaydi", "correct": true },
+        { "id": "b", "text": "Har qanday funksiyani tezlashtiradi", "hint": "Yon ta'sirli yoki har safar har xil natija beradigan funksiya uchun u xato natija beradi." },
+        { "id": "c", "text": "Faqat rekursiya uchun", "hint": "Rekursiyada (fibonacci) mashhur, lekin umumiy vosita." },
+        { "id": "d", "text": "Natijani diskka saqlaydi", "hint": "Faqat jarayon xotirasida." }
+      ],
+      "explanation": "`maxsize` ni cheklash (`lru_cache(maxsize=1024)`) yoki `cache_info()` bilan kuzatish kerak. Nusxa metodlarida kesh klass darajasida va `self` ni kalit qiladi — nusxalar hech qachon o'chmaydi; `cached_property` yoki nusxa ichidagi kesh yaxshiroq.",
+      "reviewed": false
+    },
+    {
+      "id": "py.idioms.012",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Python'da protokol (structural typing, `typing.Protocol`) va abstrakt klass (`abc.ABC`) o'rtasida qanday tanlanadi?",
+      "options": [
+        { "id": "a", "text": "Protocol — \"o'rdak tipi\" ni statik ifodalash: klass meros olmasdan mos keladi, uchinchi tomon klasslari uchun qulay; ABC — aniq ierarxiya, umumiy implementatsiya va runtime tekshiruv kerak bo'lganda", "correct": true },
+        { "id": "b", "text": "Protocol runtime'da tiplarni tekshiradi", "hint": "Standart holatda faqat statik; `@runtime_checkable` cheklangan `isinstance` beradi." },
+        { "id": "c", "text": "ABC eskirgan", "hint": "Ikkalasi ham o'z o'rnida." },
+        { "id": "d", "text": "Farqi yo'q", "hint": "Biri nominal (meros), ikkinchisi strukturaviy (shakl) moslik." }
+      ],
+      "explanation": "`class Repo(Protocol): def get(self, id: str) -> User: ...` — har qanday `get` metodli obyekt mos keladi, testdagi fake ham. Bu dependency inversion'ni Python uslubida beradi: yuqori qatlam interfeysga bog'lanadi, implementatsiya meros olmaydi.",
+      "reviewed": false
+    }
+  ]
+}

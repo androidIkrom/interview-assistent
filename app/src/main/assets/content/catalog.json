@@ -96,12 +96,12 @@
     { "id": "fe.browser", "title": "Brauzer, tarmoq, Next.js", "file": "fe_browser.json" },
     { "id": "fe.arch", "title": "Performance, arxitektura, accessibility", "file": "fe_arch.json" },
 
-    { "id": "py.lang", "title": "Python tili" },
-    { "id": "py.idioms", "title": "Ma'lumot tuzilmalari va idiomalar" },
-    { "id": "py.web", "title": "Django va FastAPI" },
-    { "id": "py.async", "title": "Konkurentlik: GIL, asyncio" },
-    { "id": "py.db", "title": "ORM va DB" },
-    { "id": "py.arch", "title": "Arxitektura, caching, queue" },
+    { "id": "py.lang", "title": "Python tili", "file": "py_lang.json" },
+    { "id": "py.idioms", "title": "Ma'lumot tuzilmalari va idiomalar", "file": "py_idioms.json" },
+    { "id": "py.web", "title": "Django va FastAPI", "file": "py_web.json" },
+    { "id": "py.async", "title": "Konkurentlik: GIL, asyncio", "file": "py_async.json" },
+    { "id": "py.db", "title": "ORM va DB", "file": "py_db.json" },
+    { "id": "py.arch", "title": "Arxitektura, caching, queue", "file": "py_arch.json" },
 
     { "id": "node.js", "title": "JavaScript/TypeScript asoslari" },
     { "id": "node.runtime", "title": "Event loop va runtime" },
