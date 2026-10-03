@@ -276,6 +276,7 @@ Tugallangan mavzular `ContentAssetsTest.completedTopics` ro'yxatida turadi: test
 | Partiya | Holat | Savollar |
 |---|---|---|
 | 1. Android (6 mavzu) + `core.mobile` | yozildi (2026-10-02), inson tekshiruvi kutilmoqda | 94 / 1312 |
+| 2. `core.git` + `core.http` | yozildi (2026-10-03), inson tekshiruvi kutilmoqda | 172 / 1312 |
 
 ## 6. Manbalar
 

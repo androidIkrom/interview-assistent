@@ -83,6 +83,8 @@ class ContentAssetsTest {
         "android.data" to listOf(3, 3, 2, 2),
         "android.arch" to listOf(2, 2, 2, 2),
         "core.mobile" to listOf(6, 8, 6, 4),
+        "core.git" to listOf(14, 10, 6, 2),
+        "core.http" to listOf(16, 14, 10, 6),
     )
 
     @Test
