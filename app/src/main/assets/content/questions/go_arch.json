@@ -1,0 +1,126 @@
+{
+  "topic": "go.arch",
+  "questions": [
+    {
+      "id": "go.arch.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Go loyihasining tipik papka tuzilmasi qanday?",
+      "options": [
+        { "id": "a", "text": "`cmd/<app>/main.go` — kirish nuqtalari (yupqa), `internal/` — tashqaridan import qilinmaydigan kod, `pkg/` — qayta ishlatiladigan ochiq kod (ixtiyoriy), paketlar vazifa bo'yicha (`user`, `order`), `util`/`common` nomlaridan qochish; kichik loyiha — tekis tuzilma yetarli", "correct": true },
+        { "id": "b", "text": "Java kabi `src/main/...` chuqur ierarxiya", "hint": "Go'da modul ildizi va paketlar — soddaroq." },
+        { "id": "c", "text": "Barcha fayllar ildizda, bitta paket", "hint": "Kichik vosita uchun — ha; servis uchun paketlar kerak." },
+        { "id": "d", "text": "Rasmiy majburiy tuzilma bor", "hint": "Yo'q — `golang-standards/project-layout` norasmiy; Go jamoasi minimalizmni tavsiya qiladi." }
+      ],
+      "explanation": "Paket nomi — nima qiladi, nima ekani emas (`controllers` emas, `http`; `models` emas, domen nomi). Siklik import taqiqlangan — tuzilma bog'liqlik yo'nalishini majburlaydi. `internal/` — kompilyator darajasida chegara.",
+      "reviewed": false
+    },
+    {
+      "id": "go.arch.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Go'da testlar qanday yoziladi?",
+      "options": [
+        { "id": "a", "text": "`*_test.go` fayllar, `func TestXxx(t *testing.T)`, standart `testing` paketi (assert kutubxonasi shart emas, `testify` — ixtiyoriy), table-driven testlar + `t.Run` subtest, `go test ./...`, `-race`, `-cover`; benchmark `BenchmarkXxx(b *testing.B)`; `Example` funksiyalar — hujjat + test", "correct": true },
+        { "id": "b", "text": "Alohida test framework o'rnatish shart", "hint": "`testing` — standart, yetarli." },
+        { "id": "c", "text": "Testlar alohida repoda", "hint": "Kod yonida — `_test.go`." },
+        { "id": "d", "text": "Go'da test yozilmaydi", "hint": "Test — Go madaniyatining markazida." }
+      ],
+      "explanation": "Table-driven: `tests := []struct{name string; in, want int}{...}; for _, tc := range tests { t.Run(tc.name, func(t *testing.T) {...}) }`. `t.Parallel()`, `t.Cleanup`, `t.TempDir`. Ichki test (`package foo`) vs tashqi (`package foo_test`) — API orqali test. `go test -run TestName/subtest`.",
+      "reviewed": false
+    },
+    {
+      "id": "go.arch.003",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`pprof` nima va Go servisida qanday ishlatiladi?",
+      "options": [
+        { "id": "a", "text": "Runtime profiler: CPU, heap (allokatsiya), goroutine, block, mutex profillari; `import _ \"net/http/pprof\"` — `/debug/pprof/` endpoint (ichki portda!), `go tool pprof -http=:8081 <url>` — flame graph; test uchun `go test -cpuprofile`; production'da arzon, doim yoqilgan", "correct": true },
+        { "id": "b", "text": "Faqat lokal ishlab chiqish vositasi", "hint": "Production'da pprof — Go'ning kuchli tomoni; muammo faqat real yukda ko'rinadi." },
+        { "id": "c", "text": "Linter", "hint": "Statik emas — runtime o'lchov." },
+        { "id": "d", "text": "Uchinchi tomon paketi", "hint": "Standart kutubxona (`runtime/pprof`, `net/http/pprof`)." }
+      ],
+      "explanation": "Tipik oqim: latency oshdi → CPU profil 30 s → flame graph'da JSON marshal 40% → optimizatsiya. Xotira o'sadi → heap profil `inuse_space`, ikki vaqt nuqtasini `-base` bilan solishtirish. Goroutine soni o'sadi → goroutine profil — qayerda bloklangan. Qoida: taxmin emas, profil.",
+      "reviewed": false
+    },
+    {
+      "id": "go.arch.004",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Go servisida dependency injection qanday qilinadi?",
+      "options": [
+        { "id": "a", "text": "Konstruktor funksiyalar (`NewService(repo Repo, log *slog.Logger) *Service`) va `main`da qo'lda yig'ish (composition root) — aniq, kompilyator tekshiradi, framework yo'q; katta grafda `wire` (kompilyatsiya vaqtida generatsiya) yoki `fx`/`dig` (runtime reflection) — jamoa tanlovi", "correct": true },
+        { "id": "b", "text": "Global o'zgaruvchilar va `init()`", "hint": "Yashirin bog'liqlik, test qiyin — Go jamoasi qochadi." },
+        { "id": "c", "text": "DI framework shart", "hint": "Ko'p Go loyihasi qo'lda DI bilan — 50 qator `main`." },
+        { "id": "d", "text": "Service locator pattern", "hint": "Bog'liqlik yashirin; Go'da konstruktor orqali aniq uzatish idiomatik." }
+      ],
+      "explanation": "Interfeyslar iste'molchi tomonida — konstruktor interfeys qabul qiladi, konkret struct qaytaradi. `main`: config → db → repo → service → handler → server. Test: fake repo konstruktorga. `wire` — `main`ni generatsiya qiladi, xato — kompilyatsiyada (reflection yo'q).",
+      "reviewed": false
+    },
+    {
+      "id": "go.arch.005",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Go GC qanday ishlaydi va `GOGC`/`GOMEMLIMIT` nima uchun?",
+      "options": [
+        { "id": "a", "text": "Konkurent, tri-color mark-sweep, generatsiyasiz, qisqa STW pauzalar (<1 ms); `GOGC` (default 100) — heap 2x o'sganda GC; `GOMEMLIMIT` (1.19+) — xotira limiti, konteynerda OOM'dan qochish (limitga yaqinlashganda GC tezroq); `GOGC=off` + `GOMEMLIMIT` — xotira to'lguncha GC yo'q (throughput)", "correct": true },
+        { "id": "b", "text": "Reference counting", "hint": "Tracing GC — mark-sweep." },
+        { "id": "c", "text": "GC sozlanmaydi", "hint": "Ikki asosiy tugma — `GOGC`, `GOMEMLIMIT`; ko'p flag ataylab yo'q." },
+        { "id": "d", "text": "Java kabi generatsion GC", "hint": "Go GC generatsiyasiz — escape analysis ko'p qisqa umrli ob'ektni stack'da ushlaydi." }
+      ],
+      "explanation": "GC narxi — CPU (~25% GC ishlayotganda); kam allokatsiya = kam GC. Konteynerda: `GOMEMLIMIT` = limit × 0.9. GC trace: `GODEBUG=gctrace=1`. Allokatsiyani kamaytirish: `sync.Pool`, slice preallocation, `strings.Builder`, pointer'siz struct'lar (GC skanerlamaydi).",
+      "reviewed": false
+    },
+    {
+      "id": "go.arch.006",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Quyidagi servis tuzilmasida qanday dizayn muammosi bor?",
+      "code": "// internal/handler/user.go\nfunc GetUser(w http.ResponseWriter, r *http.Request) {\n    id := r.PathValue(\"id\")\n    row := db.Conn.QueryRow(\"SELECT ... WHERE id=$1\", id)   // global db\n    var u User\n    row.Scan(&u.ID, &u.Name)\n    if u.Plan == \"pro\" { u.Limit = 1000 }                   // biznes qoida\n    json.NewEncoder(w).Encode(u)\n}",
+      "options": [
+        { "id": "a", "text": "Handler HTTP, SQL va biznes qoidani aralashtiradi; global `db` — test uchun almashtirib bo'lmaydi; qatlamlar yo'q — handler → service (biznes) → repository (SQL), bog'liqliklar konstruktor orqali; handler faqat so'rovni parse va javobni yozadi", "correct": true },
+        { "id": "b", "text": "`PathValue` eskirgan", "hint": "1.22+ standart." },
+        { "id": "c", "text": "Faqat `Scan` xatosi tekshirilmagani", "hint": "To'g'ri, lekin asosiy muammo tuzilmada." },
+        { "id": "d", "text": "Muammo yo'q — Go'da sodda yoziladi", "hint": "Soddalik ≠ qatlamsizlik; biznes qoidani handler'siz qanday test qilasiz?" }
+      ],
+      "explanation": "Go'da \"clean architecture\" ko'pincha 3 qatlam: transport (http/grpc), service (domen), storage. Interfeyslar iste'molchida (`service` paketi `UserRepo` e'lon qiladi). Handler struct `type UserHandler struct { svc UserService }` — metodlar handler. Ortiqcha qatlam ham yomon — vazifaga mos.",
+      "reviewed": false
+    },
+    {
+      "id": "go.arch.007",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Production'da Go servisining xotirasi doimiy o'sadi — qanday tekshiriladi?",
+      "options": [
+        { "id": "a", "text": "Avval RSS vs Go heap farqi (runtime metrikalar: `HeapInuse`, `HeapIdle`, `Sys`) — GC heap'ni OS'ga qaytarmasligi mumkin (normal); keyin heap profil ikki nuqtada (`-base`), `inuse_space` — kim ushlab turibdi; goroutine profil — goroutine leak (har biri stack + ushlab turgan ob'ektlar); tipik sabablar: cheksiz map/cache, yopilmagan body/rows, goroutine leak, katta slice'dan kichik subslice, `time.After` siklda", "correct": true },
+        { "id": "b", "text": "`GOGC` oshirish", "hint": "GC tezroq ishlashi erishiladigan ob'ektni o'chirmaydi — sizish qoladi." },
+        { "id": "c", "text": "Pod'ni har kecha restart", "hint": "Simptomni yashirish." },
+        { "id": "d", "text": "Go'da sizish bo'lmaydi — GC bor", "hint": "GC erishib bo'lmaydiganni tozalaydi; erishiladigan keraksiz ob'ekt — sizish." }
+      ],
+      "explanation": "Continuous profiling (Pyroscope/Parca/Datadog) — vaqt bo'yicha solishtirish, insidentda tayyor ma'lumot. `runtime/metrics` → Prometheus. `GOMEMLIMIT` — OOM'dan oldin GC agressiv, lekin sizishda baribir o'ladi — sabab topish shart. `goleak` testlarda.",
+      "reviewed": false
+    },
+    {
+      "id": "go.arch.008",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Go mikroservislar tizimida servislar orasidagi chegaralar va kod ulashish qanday boshqariladi?",
+      "options": [
+        { "id": "a", "text": "Har servis o'z ma'lumotiga egalik qiladi, kontrakt — protobuf/OpenAPI alohida repoda yoki monorepo'da versiyalangan; umumiy kod — kichik, barqaror kutubxonalar (logging, auth middleware, errors), domen modelini ulashmaslik (coupling); monorepo + `go work` yoki multi-repo + semver tag; `internal/` chegaralari; generatsiya qilingan klientlar", "correct": true },
+        { "id": "b", "text": "Bitta katta `common` kutubxona, hamma model ichida", "hint": "Hamma servis bir vaqtda o'zgaradi — distributed monolith." },
+        { "id": "c", "text": "Servislar bir-birining DB'siga to'g'ridan-to'g'ri ulanadi", "hint": "Sxema o'zgarishi hammani buzadi; API/event orqali." },
+        { "id": "d", "text": "Kod umuman ulashilmaydi — har servis hamma narsani qayta yozadi", "hint": "Kesishgan infratuzilma (logging, metrika) — ulashish mantiqiy; domen — yo'q." }
+      ],
+      "explanation": "Go'da monorepo qulay: `go work`, bitta CI, atomik kontrakt o'zgarishi, `buf` breaking change tekshiruvi. Multi-repo — mustaqil versiyalash, lekin bog'liqlik yangilash yuki. Qoida: ulashilgan kutubxona o'zgarishi hamma servisni deploy qilishni talab qilsa — u kutubxona emas, bog'lanish.",
+      "reviewed": false
+    }
+  ]
+}

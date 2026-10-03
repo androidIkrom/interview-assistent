@@ -1,0 +1,219 @@
+{
+  "topic": "go.lang",
+  "questions": [
+    {
+      "id": "go.lang.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Go'da zero value nima?",
+      "options": [
+        { "id": "a", "text": "E'lon qilingan, lekin qiymat berilmagan o'zgaruvchining avtomatik boshlang'ich qiymati: `0`, `\"\"`, `false`, pointer/slice/map/channel/interface uchun `nil` — Go'da \"initsializatsiya qilinmagan\" o'zgaruvchi yo'q", "correct": true },
+        { "id": "b", "text": "Faqat `0` raqami", "hint": "Har tur uchun o'z zero value: satr uchun `\"\"`, bool uchun `false`." },
+        { "id": "c", "text": "`null`", "hint": "Go'da `null` yo'q; `nil` — faqat reference turlar uchun." },
+        { "id": "d", "text": "Kompilyatsiya xatosi — qiymat berish shart", "hint": "`var x int` — to'g'ri kod, `x == 0`." }
+      ],
+      "explanation": "Dizayn tamoyili: zero value foydali bo'lsin — `var buf bytes.Buffer` darhol ishlatiladi, `var mu sync.Mutex` tayyor. Tuzoq: `var m map[string]int` — nil map, o'qish ishlaydi, yozish panic; `make` kerak.",
+      "reviewed": false
+    },
+    {
+      "id": "go.lang.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Go'da pointer nima uchun kerak?",
+      "options": [
+        { "id": "a", "text": "Qiymatning xotira manzilini saqlash — funksiya argumentni nusxalamasdan o'zgartira olishi (`*T`), katta struct'ni nusxalamaslik, va \"yo'q\" holatini `nil` bilan ifodalash; arifmetika yo'q (C'dan farqli)", "correct": true },
+        { "id": "b", "text": "Go'da pointer yo'q", "hint": "`&x`, `*p` — bor; arifmetikasi yo'q." },
+        { "id": "c", "text": "Faqat performance uchun", "hint": "Asosiy sabab — o'zgartirish semantikasi (mutability)." },
+        { "id": "d", "text": "Pointer'siz struct o'zgartirib bo'lmaydi", "hint": "Nusxani o'zgartirish mumkin, lekin asliga ta'sir qilmaydi — shu farq." }
+      ],
+      "explanation": "Go'da hamma narsa qiymat bo'yicha uzatiladi (pass by value). `func inc(n int)` — nusxa; `func inc(n *int)` — asl. Slice/map/channel ichida pointer bor — ularni pointer'siz uzatsa ham ichki ma'lumot o'zgaradi (lekin slice `append` — alohida tuzoq).",
+      "reviewed": false
+    },
+    {
+      "id": "go.lang.003",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Quyidagi kod nimani chop etadi?",
+      "code": "type Counter struct{ n int }\n\nfunc (c Counter) IncVal()  { c.n++ }\nfunc (c *Counter) IncPtr() { c.n++ }\n\nfunc main() {\n    c := Counter{}\n    c.IncVal()\n    c.IncPtr()\n    fmt.Println(c.n)\n}",
+      "options": [
+        { "id": "a", "text": "1", "correct": true },
+        { "id": "b", "text": "2", "hint": "Value receiver (`c Counter`) nusxa ustida ishlaydi — asl o'zgarmaydi." },
+        { "id": "c", "text": "0", "hint": "Pointer receiver (`*Counter`) aslini o'zgartiradi — `c.IncPtr()` ishlaydi (Go avtomatik `&c` oladi)." },
+        { "id": "d", "text": "Kompilyatsiya xatosi", "hint": "Addressable o'zgaruvchida pointer metodini chaqirish ruxsat etilgan." }
+      ],
+      "explanation": "Qoida: struct'ni o'zgartiradigan metod — pointer receiver; bitta turda aralashtirmaslik (izchillik). Katta struct — pointer (nusxalamaslik). Interfeys: `*Counter` metodlar to'plami `Counter`nikidan katta — `Counter{}` pointer-receiver interfeysni qanoatlantirmaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "go.lang.004",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Go'da xatolar qanday ishlanadi?",
+      "options": [
+        { "id": "a", "text": "Xato — oddiy qiymat (`error` interfeysi), funksiya oxirgi qaytarish qiymati sifatida qaytaradi; chaqiruvchi `if err != nil { return err }` bilan darhol tekshiradi; exception/try-catch yo'q, `panic` — faqat tiklab bo'lmaydigan holat", "correct": true },
+        { "id": "b", "text": "`try/catch` bilan", "hint": "Go'da yo'q — xato qiymat sifatida qaytadi." },
+        { "id": "c", "text": "Har xatoda `panic`", "hint": "`panic` — dasturchi xatosi/tiklab bo'lmaydigan holat; oddiy xato — `error`." },
+        { "id": "d", "text": "Xatolar e'tiborsiz qoldiriladi", "hint": "`_ = f()` — mumkin, lekin linter (`errcheck`) ogohlantiradi va bu yomon amaliyot." }
+      ],
+      "explanation": "Go falsafasi: xato — normal oqimning qismi, aniq va ko'rinadigan. `fmt.Errorf(\"load user %d: %w\", id, err)` — kontekst qo'shib o'rash. `errors.New` — sentinel (`ErrNotFound`). Yozilishi ko'p, lekin har xato yo'li aniq ko'rinadi.",
+      "reviewed": false
+    },
+    {
+      "id": "go.lang.005",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Quyidagi kod nimani chop etadi?",
+      "code": "func main() {\n    for i := 0; i < 3; i++ {\n        defer fmt.Print(i, \" \")\n    }\n    fmt.Print(\"end \")\n}",
+      "options": [
+        { "id": "a", "text": "end 2 1 0", "correct": true },
+        { "id": "b", "text": "0 1 2 end", "hint": "`defer` funksiya tugashida bajariladi, `end`dan keyin." },
+        { "id": "c", "text": "end 0 1 2", "hint": "`defer`lar LIFO (stack) tartibida — oxirgisi birinchi." },
+        { "id": "d", "text": "end 3 3 3", "hint": "Argumentlar `defer` qatorida hisoblanadi — har iteratsiyada o'z `i` qiymati." }
+      ],
+      "explanation": "`defer` — resurs yopish uchun (`defer f.Close()`, `defer mu.Unlock()`) — xato yo'lida ham bajariladi. Argumentlar darhol hisoblanadi, closure ichidagi o'zgaruvchi — keyin. Sikl ichida `defer` — funksiya tugaguncha to'planadi (fayl deskriptor sizishi mumkin) — alohida funksiyaga ajratish.",
+      "reviewed": false
+    },
+    {
+      "id": "go.lang.006",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Go'da paket va modul qanday farqlanadi?",
+      "options": [
+        { "id": "a", "text": "Paket — bitta katalogdagi `.go` fayllar to'plami, bitta `package` nomi, kod tashkil qilish birligi (export — bosh harf); modul — `go.mod` bilan versiyalanadigan paketlar to'plami, bog'liqlik boshqaruv birligi", "correct": true },
+        { "id": "b", "text": "Bir xil narsa", "hint": "Modul ichida ko'p paket bo'ladi." },
+        { "id": "c", "text": "Modul — bitta fayl", "hint": "Modul — `go.mod` bilan daraxt; paket — katalog." },
+        { "id": "d", "text": "Paket `import` qilinmaydi", "hint": "Aynan paketlar import qilinadi." }
+      ],
+      "explanation": "Export qoidasi: `Foo` — tashqariga ochiq, `foo` — paket ichida. `internal/` katalogi — faqat ota modul ichidan import. `go mod tidy` — bog'liqliklarni tozalash. Minimal version selection — Go'ning bog'liqlik yechish strategiyasi (lock fayl o'rniga `go.sum` tekshiruv).",
+      "reviewed": false
+    },
+    {
+      "id": "go.lang.007",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`errors.Is` va `errors.As` qanday farqlanadi va xatoni o'rash (`%w`) nima uchun kerak?",
+      "options": [
+        { "id": "a", "text": "`%w` xatoni zanjirga o'raydi (kontekst qo'shib, aslini saqlab); `errors.Is(err, target)` — zanjirda sentinel qiymat bormi (`ErrNotFound`); `errors.As(err, &target)` — zanjirda ma'lum tur bormi va unga tayinlaydi (`*PathError`)", "correct": true },
+        { "id": "b", "text": "Bir xil, `Is` eski nom", "hint": "`Is` — qiymat tengligi, `As` — tur mosligi." },
+        { "id": "c", "text": "`%v` bilan o'rash yetarli", "hint": "`%v` — faqat matn, asl xato yo'qoladi — `Is`/`As` ishlamaydi." },
+        { "id": "d", "text": "`err == ErrNotFound` doim to'g'ri", "hint": "O'ralgan xato uchun `==` false — `errors.Is` kerak." }
+      ],
+      "explanation": "`fmt.Errorf(\"get user: %w\", err)` — har qatlam kontekst qo'shadi, oxirida \"handler: service: get user: sql: no rows\" — to'liq yo'l. `errors.Join` (1.20+) — bir nechta xato. O'z xato turi `Unwrap()` implement qilsa, zanjirga qo'shiladi.",
+      "reviewed": false
+    },
+    {
+      "id": "go.lang.008",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Quyidagi kod nimani chop etadi?",
+      "code": "func read() (result string, err error) {\n    defer func() {\n        if r := recover(); r != nil {\n            err = fmt.Errorf(\"recovered: %v\", r)\n        }\n    }()\n    var m map[string]int\n    m[\"a\"] = 1\n    return \"ok\", nil\n}\n\nfunc main() {\n    r, err := read()\n    fmt.Println(r, err)\n}",
+      "options": [
+        { "id": "a", "text": " recovered: assignment to entry in nil map", "correct": true },
+        { "id": "b", "text": "ok <nil>", "hint": "`var m map[string]int` — nil map; yozish panic." },
+        { "id": "c", "text": "Dastur panic bilan tugaydi", "hint": "`defer` ichidagi `recover()` panic'ni ushlaydi." },
+        { "id": "d", "text": "ok recovered: ...", "hint": "`return \"ok\"` qatoriga yetmaydi — panic oldin; `result` zero value (bo'sh satr)." }
+      ],
+      "explanation": "Named return + defer — recover'dan keyin xato qaytarish usuli. `recover` faqat `defer` ichida ishlaydi. Panic'ni ushlash — chegara joylarda (HTTP handler middleware, goroutine), hamma joyda emas — panic odatda dasturchi xatosi, tez yiqilish yaxshi.",
+      "reviewed": false
+    },
+    {
+      "id": "go.lang.009",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Go'da struct embedding nima va u merosdan nimasi bilan farq qiladi?",
+      "options": [
+        { "id": "a", "text": "Struct ichiga boshqa struct'ni nomsiz joylash — uning maydon va metodlari tashqi struct'da \"ko'tariladi\" (promotion); bu kompozitsiya: `is-a` emas, `has-a`, polimorfizm yo'q (ichki metod tashqi override'ni ko'rmaydi), tur ierarxiyasi yo'q", "correct": true },
+        { "id": "b", "text": "Go'dagi klassik meros", "hint": "Go'da meros yo'q — embedding sintaktik qulaylik bilan kompozitsiya." },
+        { "id": "c", "text": "Faqat interfeyslar uchun", "hint": "Struct va interfeys ikkalasi embed qilinadi." },
+        { "id": "d", "text": "Maydonlarni nusxalaydi", "hint": "Nusxa emas — ichki struct maydon sifatida saqlanadi, kirish qisqartiriladi." }
+      ],
+      "explanation": "`type Server struct { *log.Logger; sync.Mutex }` — `s.Println`, `s.Lock()` to'g'ridan-to'g'ri. Interfeys embedding: `type ReadWriter interface { Reader; Writer }`. Tuzoq: embedded tur eksport qilinadigan metodlarni tashqariga ochadi (JSON marshal ham ko'radi).",
+      "reviewed": false
+    },
+    {
+      "id": "go.lang.010",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Quyidagi kodda qanday muammo bor?",
+      "code": "func process(files []string) error {\n    for _, name := range files {\n        f, err := os.Open(name)\n        if err != nil {\n            return err\n        }\n        defer f.Close()\n        // ... f bilan ishlash\n    }\n    return nil\n}",
+      "options": [
+        { "id": "a", "text": "`defer f.Close()` sikl ichida — barcha fayllar funksiya tugaguncha ochiq qoladi (10 000 fayl → deskriptor limiti); sikl tanasini alohida funksiyaga ajratish yoki `f.Close()`ni aniq chaqirish kerak", "correct": true },
+        { "id": "b", "text": "`os.Open` o'rniga `os.ReadFile` shart", "hint": "Vosita tanlovi; `defer` joylashuvi asosiy muammo." },
+        { "id": "c", "text": "`return err` kontekstsiz — yagona muammo", "hint": "`fmt.Errorf(\"open %s: %w\", name, err)` yaxshiroq, lekin resurs muammosi jiddiyroq." },
+        { "id": "d", "text": "Muammo yo'q", "hint": "100 000 fayl bo'lsa nechta bir vaqtda ochiq?" }
+      ],
+      "explanation": "`defer` funksiya darajasida, blok darajasida emas. Yechim: `for ... { if err := processOne(name); err != nil { return err } }` — har fayl o'z funksiyasida yopiladi. `Close()` xatosini tekshirish (yozishda muhim): `defer func() { err = errors.Join(err, f.Close()) }()`.",
+      "reviewed": false
+    },
+    {
+      "id": "go.lang.011",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Go'da `init()` funksiyasi va paket darajasidagi o'zgaruvchilar qanday ishlaydi, nega ehtiyot bo'lish kerak?",
+      "options": [
+        { "id": "a", "text": "`init()` paket import qilinganda, `main`dan oldin, bir marta avtomatik chaqiriladi (bir paketda bir nechta bo'lishi mumkin); paket o'zgaruvchilari bog'liqlik tartibida initsializatsiya qilinadi. Xavf: yashirin yon ta'sir, test qilish qiyin, import tartibiga bog'liqlik, global holat", "correct": true },
+        { "id": "b", "text": "`init()` har funksiya chaqiruvida ishlaydi", "hint": "Bir marta — paket yuklanganda." },
+        { "id": "c", "text": "`init()` qo'lda chaqiriladi", "hint": "Chaqirib bo'lmaydi — faqat runtime." },
+        { "id": "d", "text": "Global o'zgaruvchilar Go'da taqiqlangan", "hint": "Ruxsat etilgan, lekin ko'p global mutable holat — yomon dizayn." }
+      ],
+      "explanation": "`init()` o'rinli: driver ro'yxatdan o'tkazish (`database/sql` drayverlar `_ \"github.com/lib/pq\"`), regexp kompilyatsiya. Yaxshiroq: aniq konstruktor (`NewServer(cfg)`) — bog'liqliklar ko'rinadi, testda almashtiriladi. `go vet` va `gochecknoinits` linter.",
+      "reviewed": false
+    },
+    {
+      "id": "go.lang.012",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Go generics (1.18+) qanday ishlaydi va qachon ishlatish o'rinli?",
+      "options": [
+        { "id": "a", "text": "Tur parametrlari `[T any]`, constraint'lar interfeys orqali (`comparable`, `constraints.Ordered`, metod to'plami, tur to'plami `~int | ~string`); o'rinli — kolleksiya/algoritm utility'lari (`Map`, `Filter`, `Set[T]`), tur-xavfsiz konteynerlar; o'rinsiz — faqat interfeys yetadigan joyda, biznes mantiqda ortiqcha abstraksiya", "correct": true },
+        { "id": "b", "text": "Go'da generics yo'q", "hint": "1.18 (2022) dan bor." },
+        { "id": "c", "text": "Generics `interface{}`ni to'liq almashtiradi", "hint": "Dinamik polimorfizm uchun interfeys qoladi; generics — statik tur xavfsizligi." },
+        { "id": "d", "text": "Hamma funksiyani generic qilish kerak", "hint": "Go jamoasi: \"avval aniq kod yozing, takror ko'rsangiz — generics\"." }
+      ],
+      "explanation": "Implementatsiya: GC shape stenciling — bir xil xotira shaklidagi turlar bitta kod + dictionary; interfeysdan tezroq bo'lishi shart emas. Generics'da metod tur parametri ololmaydi. `slices`, `maps` standart paketlar (1.21) — generics'ning amaliy natijasi.",
+      "reviewed": false
+    },
+    {
+      "id": "go.lang.013",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Escape analysis nima va u Go performansiga qanday ta'sir qiladi?",
+      "options": [
+        { "id": "a", "text": "Kompilyator o'zgaruvchi funksiya chegarasidan \"qochib ketadimi\" (pointer qaytariladi, interfeysga joylanadi, goroutine'da ishlatiladi) tahlil qiladi: qochmasa — stack (arzon, GC yo'q), qochsa — heap (allokatsiya, GC bosimi); `go build -gcflags=-m` ko'rsatadi", "correct": true },
+        { "id": "b", "text": "Xavfsizlik tekshiruvi (buffer overflow)", "hint": "Xavfsizlik emas — xotira joylashuvi qarori." },
+        { "id": "c", "text": "Dasturchi `new` vs `&T{}` bilan boshqaradi", "hint": "Go'da sintaksis emas, kompilyator hal qiladi — ikkalasi stack'da bo'lishi mumkin." },
+        { "id": "d", "text": "Performance'ga ta'sir qilmaydi", "hint": "Issiq yo'lda heap allokatsiya — GC vaqti; ko'p optimizatsiya aynan shu." }
+      ],
+      "explanation": "Tipik qochish sabablari: `fmt.Println(x)` (interfeysga boxing), slice hajmi noma'lum, closure'da ushlanish, katta hajm (>64 KB). `sync.Pool` — qayta ishlatish. Benchmark `-benchmem` — allocs/op. Optimizatsiya — faqat profiler ko'rsatgan joyda.",
+      "reviewed": false
+    },
+    {
+      "id": "go.lang.014",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Katta Go kod bazasida til darajasidagi qoidalar va vositalar (idiomatik Go) qanday ta'minlanadi?",
+      "options": [
+        { "id": "a", "text": "`gofmt`/`goimports` majburiy (format bahsi yo'q), `go vet` + `golangci-lint` (errcheck, staticcheck, govet, gosec...) CI'da, Effective Go va Go Code Review Comments konvensiyalari, kichik interfeyslar, xatoni o'rash standarti, paket nomlash (`util` yo'q), `internal/` chegaralari, `go test -race` CI'da", "correct": true },
+        { "id": "b", "text": "Har dasturchi o'z uslubida — Go erkin", "hint": "Go aynan izchillik uchun yaratilgan (`gofmt` — bitta uslub)." },
+        { "id": "c", "text": "Faqat kod review yetarli", "hint": "Review — odam vaqti; mexanik tekshiruvlar avtomatlashtiriladi." },
+        { "id": "d", "text": "Go'da linter kerak emas, kompilyator hammasini ushlaydi", "hint": "Kompilyator tekshirilmagan xatoni, shadowing'ni, race'ni ushlamaydi." }
+      ],
+      "explanation": "Go'ning kuchi — kam xususiyat, yuqori o'qiluvchanlik; buni saqlash uchun intizom. `go vet` shadowing, printf xatolari, nusxalangan mutex; `staticcheck` eskirgan API; `gosec` xavfsizlik. Monorepo'da `go work`. Go versiya yangilanishi — odatda og'riqsiz (compatibility promise).",
+      "reviewed": false
+    }
+  ]
+}
