@@ -8,12 +8,12 @@
       "kind": "concept",
       "prompt": "Eloquent nima va Active Record pattern qanday ishlaydi?",
       "options": [
-        { "id": "a", "text": "Laravel ORM: har model klass — jadval, instansiya — qator; model o'zi saqlaydi/o'chiradi (`$user->save()`, `User::find()`, `User::where()->get()`); konvensiyalar — `users` jadval, `id` PK, `created_at`/`updated_at` avtomatik; relation'lar metod sifatida", "correct": true },
+        { "id": "a", "text": "Laravel ORM: model — jadval, instansiya — qator; model o'zini saqlaydi va o'chiradi (`save()`, `find()`)", "correct": true },
         { "id": "b", "text": "Faqat SQL yozish vositasi", "hint": "Query Builder — SQL vosita; Eloquent — ob'ekt mapping ustida." },
-        { "id": "c", "text": "Data Mapper (Doctrine kabi) — model DB'ni bilmaydi", "hint": "Eloquent — Active Record: model DB bilan bevosita ishlaydi." },
+        { "id": "c", "text": "Data Mapper (Doctrine kabi): model bazani bilmaydi, saqlashni esa alohida EntityManager klassi o'zi bajaradi", "hint": "Eloquent — Active Record: model DB bilan bevosita ishlaydi." },
         { "id": "d", "text": "NoSQL uchun", "hint": "Relyatsion DB (MySQL, PostgreSQL, SQLite, SQL Server)." }
       ],
-      "explanation": "Active Record — tez va qulay, lekin model DB'ga bog'liq (domen mantiqi va persistence aralash — trade-off). `$table`, `$primaryKey`, `$timestamps = false` — konvensiyani o'zgartirish. `$fillable`/`$guarded` — mass assignment. `$casts` — tur o'girish (`'is_active' => 'boolean'`, `'meta' => 'array'`, enum).",
+      "explanation": "Konvensiyalar: `users` jadval, `id` PK, `created_at`/`updated_at` avtomatik; relation'lar metod sifatida. Active Record — tez va qulay, lekin model DB'ga bog'liq (domen mantiqi va persistence aralash — trade-off). `$table`, `$primaryKey`, `$timestamps = false` — konvensiyani o'zgartirish. `$fillable`/`$guarded` — mass assignment. `$casts` — tur o'girish (`'is_active' => 'boolean'`, `'meta' => 'array'`, enum).",
       "reviewed": false
     },
     {
@@ -23,12 +23,12 @@
       "kind": "concept",
       "prompt": "Eloquent'da `find`, `findOrFail`, `first`, `firstOrFail`, `get` qanday farqlanadi?",
       "options": [
-        { "id": "a", "text": "`find($id)` — PK bo'yicha bitta model yoki `null`; `findOrFail` — topilmasa `ModelNotFoundException` (404 ga aylanadi); `first()` — so'rovning birinchi qatori yoki `null`; `firstOrFail` — exception; `get()` — `Collection` (bo'sh bo'lsa ham, `null` emas)", "correct": true },
+        { "id": "a", "text": "`find` — PK bo'yicha model yoki `null`; `*OrFail` — exception (404); `first` — birinchi qator; `get` — Collection", "correct": true },
         { "id": "b", "text": "Hammasi bir xil, uslub farqi", "hint": "`null` vs exception vs Collection — xato ishlovi farq qiladi." },
         { "id": "c", "text": "`get()` bitta model qaytaradi", "hint": "Collection — ko'p model." },
-        { "id": "d", "text": "`find` topilmasa exception", "hint": "`null` — `findOrFail` exception." }
+        { "id": "d", "text": "`find` topilmasa exception tashlaydi, `findOrFail` esa `null` qaytaradi — ularning nomlari aslida aksincha ishlaydi", "hint": "`null` — `findOrFail` exception." }
       ],
-      "explanation": "Controller'da `findOrFail` yoki route model binding — 404 avtomatik. `firstOrCreate`/`updateOrCreate` — race condition'ga e'tibor (unique constraint + retry). `find([1,2,3])` — Collection. `sole()` — aniq bitta, ko'p/yo'q bo'lsa exception. `value('name')` — bitta ustun.",
+      "explanation": "`get()` bo'sh bo'lsa ham `null` emas, bo'sh Collection qaytaradi; `ModelNotFoundException` 404 ga aylanadi. Controller'da `findOrFail` yoki route model binding — 404 avtomatik. `firstOrCreate`/`updateOrCreate` — race condition'ga e'tibor (unique constraint + retry). `find([1,2,3])` — Collection. `sole()` — aniq bitta, ko'p/yo'q bo'lsa exception. `value('name')` — bitta ustun.",
       "reviewed": false
     },
     {
@@ -38,12 +38,12 @@
       "kind": "concept",
       "prompt": "Eloquent relation'lar (`hasMany`, `belongsTo`, `belongsToMany`) qanday aniqlanadi?",
       "options": [
-        { "id": "a", "text": "Model metodi relation ob'ektini qaytaradi: `User::posts()` → `hasMany(Post::class)` (posts.user_id), `Post::user()` → `belongsTo(User::class)`, `User::roles()` → `belongsToMany(Role::class)` (pivot `role_user`); `$user->posts` — yuklangan Collection, `$user->posts()` — query builder", "correct": true },
+        { "id": "a", "text": "Model metodi relation qaytaradi: `hasMany`, `belongsTo`, `belongsToMany` (pivot); `$user->posts` — Collection", "correct": true },
         { "id": "b", "text": "Relation'lar migratsiyada e'lon qilinadi", "hint": "Migratsiya — foreign key; relation — modelda." },
-        { "id": "c", "text": "`$user->posts` va `$user->posts()` bir xil", "hint": "Property — natija (cache), metod — so'rov (filtr qo'shish mumkin)." },
+        { "id": "c", "text": "`$user->posts` va `$user->posts()` bir xil natija beradi — ikkalasi ham bazadan yuklangan tayyor Collection qaytaradi", "hint": "Property — natija (cache), metod — so'rov (filtr qo'shish mumkin)." },
         { "id": "d", "text": "Faqat bir turdagi relation bor", "hint": "hasOne, hasMany, belongsTo, belongsToMany, hasManyThrough, morph*." }
       ],
-      "explanation": "Konvensiya: `user_id` tashqi kalit, pivot `role_user` (alifbo). O'zgartirish — parametrlar. `withPivot`, `withTimestamps`. Polymorphic (`morphMany`) — bitta jadval ko'p modelga (comments). `hasManyThrough` — oraliq orqali. Relation metodida `->where()` — scoped relation.",
+      "explanation": "`$user->posts()` esa query builder qaytaradi; masalan, `posts.user_id`, pivot `role_user`. Konvensiya: `user_id` tashqi kalit, pivot `role_user` (alifbo). O'zgartirish — parametrlar. `withPivot`, `withTimestamps`. Polymorphic (`morphMany`) — bitta jadval ko'p modelga (comments). `hasManyThrough` — oraliq orqali. Relation metodida `->where()` — scoped relation.",
       "reviewed": false
     },
     {
@@ -69,12 +69,12 @@
       "kind": "concept",
       "prompt": "Eloquent va Query Builder qanday farqlanadi va qachon qaysi biri?",
       "options": [
-        { "id": "a", "text": "Eloquent — model ob'ektlari, relation, event, cast, accessor (qulay, lekin har qator uchun ob'ekt — xotira); Query Builder (`DB::table()`) — xom qatorlar (`stdClass`), tezroq, agregat/hisobot/bulk uchun; Eloquent ustida ham builder bor (`User::query()`); hisobot va katta hajm — builder, domen CRUD — Eloquent", "correct": true },
+        { "id": "a", "text": "Eloquent — model, relation, cast (qulay, xotira ko'p); Query Builder — xom qatorlar, tezroq, hisobot va bulk uchun", "correct": true },
         { "id": "b", "text": "Query Builder eskirgan", "hint": "Eloquent uning ustida qurilgan — ikkalasi ham faol." },
         { "id": "c", "text": "Eloquent doim tezroq", "hint": "Ob'ekt hydration — 100 000 qatorda sezilarli sekin." },
-        { "id": "d", "text": "Query Builder SQL injection'dan himoyalamaydi", "hint": "Ikkalasi ham binding ishlatadi; faqat `DB::raw`/`whereRaw`da ehtiyot." }
+        { "id": "d", "text": "Query Builder SQL injection'dan himoyalamaydi, shuning uchun foydalanuvchi ma'lumoti bilan faqat Eloquent ishlatiladi", "hint": "Ikkalasi ham binding ishlatadi; faqat `DB::raw`/`whereRaw`da ehtiyot." }
       ],
-      "explanation": "Katta eksport: `User::query()->chunk(1000, fn($users) => ...)` yoki `cursor()`/`lazy()` (generator, bir vaqtda bitta model xotirada). `toBase()` — Eloquent so'rovni builder natijaga. `DB::raw('COUNT(*) as total')` — parametr bog'lash bilan (`selectRaw('... ?', [$x])`).",
+      "explanation": "Eloquent ustida ham builder bor (`User::query()`); domen CRUD — Eloquent, hisobot — builder. Katta eksport: `User::query()->chunk(1000, fn($users) => ...)` yoki `cursor()`/`lazy()` (generator, bir vaqtda bitta model xotirada). `toBase()` — Eloquent so'rovni builder natijaga. `DB::raw('COUNT(*) as total')` — parametr bog'lash bilan (`selectRaw('... ?', [$x])`).",
       "reviewed": false
     },
     {
@@ -84,12 +84,12 @@
       "kind": "concept",
       "prompt": "Eloquent accessor, mutator va cast qanday ishlaydi?",
       "options": [
-        { "id": "a", "text": "Accessor/mutator (Laravel 9+ `Attribute::make(get: fn, set: fn)`) — o'qish/yozishda o'girish (`full_name`, parol hash); cast (`$casts`) — DB tur ↔ PHP tur (`datetime`, `array`/`json`, `boolean`, `encrypted`, enum, custom `CastsAttributes`); `$appends` — accessor'ni JSON'ga qo'shish", "correct": true },
-        { "id": "b", "text": "Cast — DB ustun turini o'zgartiradi", "hint": "DB o'zgarmaydi — PHP tomonida o'girish." },
+        { "id": "a", "text": "Accessor/mutator — o'qish/yozishda o'girish (`Attribute::make`); cast — DB tur ↔ PHP tur (`datetime`, `array`, enum)", "correct": true },
+        { "id": "b", "text": "Cast DB'dagi ustun turini o'zgartiradi: masalan, `boolean` cast ustunni migratsiyasiz avtomatik `BOOLEAN` turiga o'tkazadi", "hint": "DB o'zgarmaydi — PHP tomonida o'girish." },
         { "id": "c", "text": "Accessor DB'ga saqlanadi", "hint": "Hisoblangan — saqlanmaydi (agar `$appends`/serializatsiya bo'lmasa, JSON'da ham ko'rinmaydi)." },
         { "id": "d", "text": "Bir xil narsa", "hint": "Cast — tur, accessor/mutator — ixtiyoriy mantiq." }
       ],
-      "explanation": "Value object cast: `'money' => MoneyCast::class` — `get()` DB qiymatdan VO, `set()` VO'dan massiv (bir nechta ustunga ham). `'settings' => AsArrayObject::class`/`AsCollection::class`. Accessor'da relation ishlatish — N+1 xavfi (`$appends` bilan birga). `immutable_datetime` cast.",
+      "explanation": "`$appends` accessor'ni JSON'ga qo'shadi; `encrypted` va custom `CastsAttributes` ham bor. Value object cast: `'money' => MoneyCast::class` — `get()` DB qiymatdan VO, `set()` VO'dan massiv (bir nechta ustunga ham). `'settings' => AsArrayObject::class`/`AsCollection::class`. Accessor'da relation ishlatish — N+1 xavfi (`$appends` bilan birga). `immutable_datetime` cast.",
       "reviewed": false
     },
     {
@@ -115,12 +115,12 @@
       "kind": "concept",
       "prompt": "Eloquent query scope'lar nima va qanday ishlatiladi?",
       "options": [
-        { "id": "a", "text": "Local scope — modelda `scopeActive($query)` metod → `User::active()->get()`, takrorlanuvchi shartlarni nomlash, zanjirlanadi; global scope — har so'rovga avtomatik (`SoftDeletes` shunday: `whereNull('deleted_at')`), `withoutGlobalScope` bilan o'chirish; dinamik scope parametr bilan", "correct": true },
+        { "id": "a", "text": "Local scope — `scopeActive($query)` → `User::active()`; global scope — har so'rovga avtomatik (`SoftDeletes`)", "correct": true },
         { "id": "b", "text": "Scope — DB view", "hint": "PHP darajasida so'rov qismi, DB ob'ekti emas." },
         { "id": "c", "text": "Faqat `where` uchun", "hint": "`orderBy`, `with`, `join` — har qanday builder metodi." },
-        { "id": "d", "text": "Global scope o'chirilmaydi", "hint": "`withoutGlobalScope(...)`, `withTrashed()` (SoftDeletes)." }
+        { "id": "d", "text": "Global scope modelga o'rnatilgandan keyin uni biror so'rov uchun vaqtincha ham o'chirishning hech qanday usuli yo'q", "hint": "`withoutGlobalScope(...)`, `withTrashed()` (SoftDeletes)." }
       ],
-      "explanation": "Laravel 12: `#[Scope]` attribute. Global scope xavfi: tenant scope — admin so'rovlarda unutish yoki aksincha, ko'rinmas filtr debug'ni qiyinlashtiradi. Scope + `when($cond, fn)` — dinamik filtr. Scope ichida relation `whereHas` — subquery performance'ga e'tibor.",
+      "explanation": "`withoutGlobalScope` bilan o'chiriladi; local scope'lar zanjirlanadi va parametr ham oladi. Laravel 12: `#[Scope]` attribute. Global scope xavfi: tenant scope — admin so'rovlarda unutish yoki aksincha, ko'rinmas filtr debug'ni qiyinlashtiradi. Scope + `when($cond, fn)` — dinamik filtr. Scope ichida relation `whereHas` — subquery performance'ga e'tibor.",
       "reviewed": false
     },
     {
@@ -130,12 +130,12 @@
       "kind": "concept",
       "prompt": "Laravel'da DB tranzaksiya va qulflar (lock) qanday ishlatiladi?",
       "options": [
-        { "id": "a", "text": "`DB::transaction(fn() => {...}, attempts: 3)` — exception'da rollback, deadlock'da retry; qo'lda `beginTransaction/commit/rollBack`; pessimistic — `lockForUpdate()` (`SELECT ... FOR UPDATE`, tranzaksiya ichida), `sharedLock()`; optimistic — versiya ustun + `where('version', $v)->update(...)` natijani tekshirish; tranzaksiya qisqa, tashqi API chaqiruvi ichida emas", "correct": true },
-        { "id": "b", "text": "Eloquent `save()` avtomatik tranzaksiyada", "hint": "Bitta so'rov — atomik; ko'p so'rov — aniq tranzaksiya kerak." },
+        { "id": "a", "text": "`DB::transaction` (rollback, deadlock'da retry); `lockForUpdate` — pessimistik; versiya ustuni — optimistik", "correct": true },
+        { "id": "b", "text": "Eloquent `save()` har doim avtomatik tranzaksiyada ishlaydi, shuning uchun qo'lda tranzaksiya ochish umuman kerak emas", "hint": "Bitta so'rov — atomik; ko'p so'rov — aniq tranzaksiya kerak." },
         { "id": "c", "text": "`lockForUpdate` tranzaksiyasiz ishlaydi", "hint": "Qulf tranzaksiya tugashigacha — tashqarida darhol bo'shaydi (ma'nosiz)." },
         { "id": "d", "text": "Tranzaksiya faqat MySQL'da", "hint": "Barcha qo'llanadigan DB'lar." }
       ],
-      "explanation": "Balans yechish: `DB::transaction(function() use ($id, $amt) { $acc = Account::lockForUpdate()->find($id); if ($acc->balance < $amt) throw ...; $acc->decrement('balance', $amt); })`. Tranzaksiya ichida job dispatch — `afterCommit` (aks holda job tranzaksiya commit'idan oldin ishlashi mumkin). Testda `RefreshDatabase` — nested tranzaksiya (savepoint).",
+      "explanation": "`lockForUpdate` faqat tranzaksiya ichida ishlaydi; tranzaksiya qisqa bo'lsin, tashqi API chaqiruvi ichida bo'lmasin. Balans yechish: `DB::transaction(function() use ($id, $amt) { $acc = Account::lockForUpdate()->find($id); if ($acc->balance < $amt) throw ...; $acc->decrement('balance', $amt); })`. Tranzaksiya ichida job dispatch — `afterCommit` (aks holda job tranzaksiya commit'idan oldin ishlashi mumkin). Testda `RefreshDatabase` — nested tranzaksiya (savepoint).",
       "reviewed": false
     },
     {
@@ -161,12 +161,12 @@
       "kind": "concept",
       "prompt": "Eloquent model event'lari va observer'lar qanday ishlaydi, qanday tuzoqlari bor?",
       "options": [
-        { "id": "a", "text": "`creating/created/updating/updated/saving/saved/deleting/deleted/restored` — model hayot sikli; Observer klass (`User::observe(UserObserver::class)`) yoki `$dispatchesEvents`; `creating`da `false` qaytarish — bekor; tuzoqlar: bulk `update()/delete()` chaqirmaydi, yashirin yon ta'sir (debug qiyin), testda `withoutEvents()`, Octane'da registratsiya", "correct": true },
+        { "id": "a", "text": "Hayot sikli event'lari va Observer; tuzoqlar — bulk `update()/delete()` ularni chaqirmaydi, yon ta'sir yashirin", "correct": true },
         { "id": "b", "text": "Event'lar faqat `save()`da", "hint": "Delete, restore, retrieved ham." },
         { "id": "c", "text": "Observer — DB trigger", "hint": "PHP darajasida; xom SQL/bulk uni chetlab o'tadi." },
-        { "id": "d", "text": "Observer'da og'ir ish (email) qilish to'g'ri", "hint": "Sinxron — so'rovni sekinlashtiradi; job dispatch (`afterCommit`)." }
+        { "id": "d", "text": "Observer ichida og'ir ishlarni (email, tashqi API) sinxron bajarish to'g'ri va rasman tavsiya etilgan yondashuv", "hint": "Sinxron — so'rovni sekinlashtiradi; job dispatch (`afterCommit`)." }
       ],
-      "explanation": "Observer'ga biznes mantiq yig'ish — \"sehr\": `User::create()` chaqirgan dasturchi email ketganini bilmaydi. Alternativa — aniq service/action klass (`CreateUser` action: yaratish + event dispatch). `UUID` generatsiya `creating`da — `HasUuids` trait buni qiladi. `saveQuietly()` — eventsiz.",
+      "explanation": "`creating/updating/deleting...`; `creating`da `false` qaytarish bekor qiladi; testda `withoutEvents()`. Observer'ga biznes mantiq yig'ish — \"sehr\": `User::create()` chaqirgan dasturchi email ketganini bilmaydi. Alternativa — aniq service/action klass (`CreateUser` action: yaratish + event dispatch). `UUID` generatsiya `creating`da — `HasUuids` trait buni qiladi. `saveQuietly()` — eventsiz.",
       "reviewed": false
     },
     {
@@ -176,12 +176,12 @@
       "kind": "concept",
       "prompt": "Katta Laravel loyihasida Eloquent modelni domen mantiqidan qanday ajratish kerak?",
       "options": [
-        { "id": "a", "text": "Variantlar: (1) Eloquent qoladi, lekin \"semiz model\"dan qochish — action/service klasslar, DTO (spatie/laravel-data), Resource; (2) repository interfeys + Eloquent implementatsiya — domen Eloquent'ni bilmaydi (ko'p boilerplate, Eloquent afzalliklari yo'qoladi); (3) DDD — domen entity alohida, Eloquent faqat persistence (mapper). Tanlov murakkablik bo'yicha; ko'pchilik — (1)", "correct": true },
-        { "id": "b", "text": "Hamma mantiq modelda — Active Record shunday", "hint": "1000 qatorli `User` model — God object." },
+        { "id": "a", "text": "Ko'pincha: Eloquent qoladi, lekin mantiq action/service va DTO'larga; murakkabda — repository yoki DDD mapper", "correct": true },
+        { "id": "b", "text": "Hamma biznes mantiq modelning o'zida bo'lishi kerak — Active Record pattern'i aynan shuni majburiy talab qiladi", "hint": "1000 qatorli `User` model — God object." },
         { "id": "c", "text": "Doim repository pattern", "hint": "Eloquent ustida repository ko'pincha ortiqcha qatlam (\"repository anti-pattern in Laravel\" bahsi); faqat haqiqiy almashtirish ehtiyoji bo'lsa." },
         { "id": "d", "text": "Eloquent'dan voz kechib Doctrine", "hint": "Mumkin, lekin Laravel ekotizimidan ajralish; kam loyiha buni qiladi." }
       ],
-      "explanation": "Pragmatik Laravel: model — ma'lumot + relation + scope + cast; action (`CreateOrderAction::execute(CreateOrderData $data)`) — use case; event — yon ta'sir; Resource — API shakl; Form Request — validatsiya. Modul (`app/Modules/Orders/...`) — chegara. Testlar action darajasida — tez va aniq.",
+      "explanation": "Repository Eloquent afzalliklarini yo'qotadi va boilerplate qo'shadi; tanlov murakkablikka bog'liq. Pragmatik Laravel: model — ma'lumot + relation + scope + cast; action (`CreateOrderAction::execute(CreateOrderData $data)`) — use case; event — yon ta'sir; Resource — API shakl; Form Request — validatsiya. Modul (`app/Modules/Orders/...`) — chegara. Testlar action darajasida — tez va aniq.",
       "reviewed": false
     },
     {
@@ -191,12 +191,12 @@
       "kind": "concept",
       "prompt": "Yuqori yuklanishli Laravel ilovasida DB qatlami performansini qanday ta'minlash kerak?",
       "options": [
-        { "id": "a", "text": "N+1 nol (preventLazyLoading, Telescope), kerakli ustunlar (`select`), indekslar (`EXPLAIN`), keyset pagination (`cursorPaginate`), read/write ulanishlar (`read`/`write` config, replica), cache (query result, `remember`), chunk/lazy katta hajmda, `withCount`/subquery PHP agregat o'rniga, connection pool (PgBouncer/ProxySQL — PHP'da pool yo'q), slow query log, Octane'da ulanish qayta ishlatish", "correct": true },
+        { "id": "a", "text": "N+1 yo'q, kerakli ustunlar, indekslar, keyset pagination, replica, kesh, chunk, `withCount`, PgBouncer", "correct": true },
         { "id": "b", "text": "Eloquent'ni o'chirib xom SQL", "hint": "Eloquent to'g'ri ishlatilsa — yetarli; xom SQL — faqat issiq nuqtalarda." },
         { "id": "c", "text": "Hamma so'rovni cache'lash", "hint": "Invalidatsiya murakkabligi; faqat o'lchangan issiq, kam o'zgaradigan ma'lumot." },
-        { "id": "d", "text": "DB server kuchaytirish — yetarli", "hint": "N+1 bilan kuchli server ham yiqiladi; avval kod." }
+        { "id": "d", "text": "DB serverini kuchliroq qilish yetarli — kod va so'rovlarni optimallashtirishga umuman hojat yo'q, apparat hammasini hal qiladi", "hint": "N+1 bilan kuchli server ham yiqiladi; avval kod." }
       ],
-      "explanation": "PHP-FPM har worker — o'z DB ulanishi (pool yo'q): 200 worker × 5 pod = 1000 ulanish — PgBouncer transaction mode shart. `paginate()` — `COUNT(*)` har sahifada (katta jadvalda sekin) → `simplePaginate`/`cursorPaginate`. Laravel Pulse — slow query, Telescope — dev.",
+      "explanation": "`preventLazyLoading`, Telescope, `EXPLAIN`, `cursorPaginate`, slow query log; PHP'da pool yo'q — PgBouncer/ProxySQL. PHP-FPM har worker — o'z DB ulanishi (pool yo'q): 200 worker × 5 pod = 1000 ulanish — PgBouncer transaction mode shart. `paginate()` — `COUNT(*)` har sahifada (katta jadvalda sekin) → `simplePaginate`/`cursorPaginate`. Laravel Pulse — slow query, Telescope — dev.",
       "reviewed": false
     }
   ]

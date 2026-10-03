@@ -8,12 +8,12 @@
       "kind": "concept",
       "prompt": "Laravel queue nima uchun kerak?",
       "options": [
-        { "id": "a", "text": "Sekin ishlarni (email, PDF, tashqi API, rasm ishlov) HTTP so'rovdan ajratib fon worker'da bajarish — foydalanuvchi tez javob oladi, xato bo'lsa qayta urinish; Job klass `dispatch()` qilinadi, `queue:work` worker ishlaydi; driver — database, Redis, SQS", "correct": true },
-        { "id": "b", "text": "So'rovlarni navbatga qo'yib ketma-ket ishlash", "hint": "HTTP so'rovlar parallel; queue — fon vazifalar." },
+        { "id": "a", "text": "Sekin ishlarni (email, PDF, tashqi API) HTTP so'rovdan ajratib, fon worker'da bajarish va qayta urinish", "correct": true },
+        { "id": "b", "text": "Kelgan HTTP so'rovlarni navbatga qo'yib, ularni server yuklamasiga qarab birma-bir ketma-ket ishlash", "hint": "HTTP so'rovlar parallel; queue — fon vazifalar." },
         { "id": "c", "text": "DB so'rovlarini tezlashtirish", "hint": "DB bilan aloqasi yo'q — fon ish." },
         { "id": "d", "text": "Faqat email uchun", "hint": "Email — tipik misol; har qanday sekin ish." }
       ],
-      "explanation": "`php artisan make:job SendWelcomeEmail` → `ShouldQueue` → `SendWelcomeEmail::dispatch($user)`. `sync` driver — darhol (lokal/test). Production: Redis + Horizon (dashboard, autoscale) yoki Supervisor bilan `queue:work`. Mail/Notification `ShouldQueue` — avtomatik navbatda.",
+      "explanation": "Job `dispatch()` qilinadi, `queue:work` worker bajaradi; driver — database, Redis, SQS. `php artisan make:job SendWelcomeEmail` → `ShouldQueue` → `SendWelcomeEmail::dispatch($user)`. `sync` driver — darhol (lokal/test). Production: Redis + Horizon (dashboard, autoscale) yoki Supervisor bilan `queue:work`. Mail/Notification `ShouldQueue` — avtomatik navbatda.",
       "reviewed": false
     },
     {
@@ -23,12 +23,12 @@
       "kind": "concept",
       "prompt": "Laravel cache qanday ishlatiladi?",
       "options": [
-        { "id": "a", "text": "`Cache::remember('key', $ttl, fn() => hisob)` — bor bo'lsa qaytaradi, yo'q bo'lsa hisoblab saqlaydi; `get/put/forget/forever`; driver — Redis (production), file, array (test), database; tag'lar (Redis/Memcached) — guruhlab o'chirish; kalit nomlash konvensiyasi muhim", "correct": true },
-        { "id": "b", "text": "Cache avtomatik — hamma so'rov cache'lanadi", "hint": "Aniq kod kerak — Laravel so'rovlarni o'zi cache'lamaydi." },
+        { "id": "a", "text": "`Cache::remember('key', $ttl, fn() => ...)` — bo'lsa qaytaradi, bo'lmasa hisoblab saqlaydi; Redis — production", "correct": true },
+        { "id": "b", "text": "Cache avtomatik ishlaydi: Laravel barcha so'rov va javoblarni o'zi keshlab, keyingi so'rovlarda qayta ishlatib beradi", "hint": "Aniq kod kerak — Laravel so'rovlarni o'zi cache'lamaydi." },
         { "id": "c", "text": "Faqat sessiya uchun", "hint": "Sessiya — alohida; cache — har qanday ma'lumot." },
         { "id": "d", "text": "Cache = DB jadval", "hint": "`database` driver bor, lekin odatda Redis — xotira." }
       ],
-      "explanation": "`Cache::remember` ichida exception — cache'ga yozilmaydi (yaxshi). `rememberForever` — invalidatsiya qo'lda. Lock: `Cache::lock('key', 10)->get(fn)` — stampede'dan himoya (`Cache::flexible` 11.23+ — stale-while-revalidate). Kalit kolliziya — prefiks (`user:{$id}:profile`).",
+      "explanation": "`get/put/forget/forever`; tag'lar (Redis/Memcached) bilan guruhlab o'chirish; kalit nomlash konvensiyasi muhim. `Cache::remember` ichida exception — cache'ga yozilmaydi (yaxshi). `rememberForever` — invalidatsiya qo'lda. Lock: `Cache::lock('key', 10)->get(fn)` — stampede'dan himoya (`Cache::flexible` 11.23+ — stale-while-revalidate). Kalit kolliziya — prefiks (`user:{$id}:profile`).",
       "reviewed": false
     },
     {
@@ -38,12 +38,12 @@
       "kind": "concept",
       "prompt": "Laravel event va listener qanday ishlaydi?",
       "options": [
-        { "id": "a", "text": "Event — \"nima bo'ldi\" ob'ekti (`OrderShipped`), listener — reaksiya (`SendShipmentNotification`); `event(new OrderShipped($order))` yoki `OrderShipped::dispatch()`; `EventServiceProvider` yoki auto-discovery bog'laydi; listener `ShouldQueue` — asinxron; bir event — ko'p listener (decoupling)", "correct": true },
+        { "id": "a", "text": "Event — \"nima bo'ldi\" ob'ekti, listener — reaksiya; bitta event'ga ko'p listener, `ShouldQueue` bilan asinxron", "correct": true },
         { "id": "b", "text": "JavaScript DOM event'lari", "hint": "Server tomonida — ilova ichidagi hodisalar." },
         { "id": "c", "text": "Listener event'ni yaratadi", "hint": "Teskari — event dispatch qilinadi, listener javob beradi." },
-        { "id": "d", "text": "Event'lar faqat Eloquent model uchun", "hint": "Model event — bir tur; o'z domen event'lar — asosiy." }
+        { "id": "d", "text": "Event'lar faqat Eloquent model hodisalari (created, updated) uchun, o'z domen event'ingizni esa umuman yarata olmaysiz", "hint": "Model event — bir tur; o'z domen event'lar — asosiy." }
       ],
-      "explanation": "Qachon event: bir harakatga bir nechta mustaqil reaksiya (email + analitika + ombor), modul chegaralari orasida. Qachon emas: oqim aniq va bitta bo'lsa — to'g'ridan-to'g'ri chaqiruv (event yashirin oqim). `Event::fake()` testda. Subscriber — bir klassda ko'p listener.",
+      "explanation": "Masalan: `OrderShipped::dispatch()`; `EventServiceProvider` yoki auto-discovery bog'laydi. Qachon event: bir harakatga bir nechta mustaqil reaksiya (email + analitika + ombor), modul chegaralari orasida. Qachon emas: oqim aniq va bitta bo'lsa — to'g'ridan-to'g'ri chaqiruv (event yashirin oqim). `Event::fake()` testda. Subscriber — bir klassda ko'p listener.",
       "reviewed": false
     },
     {
@@ -53,12 +53,12 @@
       "kind": "concept",
       "prompt": "Queue job'da retry, timeout va failure qanday boshqariladi?",
       "options": [
-        { "id": "a", "text": "`$tries` (yoki `retryUntil()`), `$backoff` (sekund yoki massiv — exponential), `$timeout` (worker `--timeout` dan kichik), `$maxExceptions`; `failed(Throwable $e)` metodi — oxirgi urinish yiqilganda (alert, holat); `failed_jobs` jadvali + `queue:retry`; `$uniqueFor`/`ShouldBeUnique` — takror dispatch'dan; `RateLimited` middleware — tashqi API limiti", "correct": true },
-        { "id": "b", "text": "Job yiqilsa yo'qoladi, hech narsa qilib bo'lmaydi", "hint": "`failed_jobs` + retry; `tries` avtomatik qayta urinish." },
+        { "id": "a", "text": "`$tries`, `$backoff`, `$timeout`, `failed()` metodi, `failed_jobs` + `queue:retry`, `ShouldBeUnique`", "correct": true },
+        { "id": "b", "text": "Job yiqilsa u izsiz yo'qoladi va uni qayta ishga tushirish yoki tahlil qilishning hech qanday usuli yo'q", "hint": "`failed_jobs` + retry; `tries` avtomatik qayta urinish." },
         { "id": "c", "text": "Cheksiz retry — eng xavfsiz", "hint": "Doimiy xato (noto'g'ri ma'lumot) — abadiy sikl, navbat band." },
         { "id": "d", "text": "Timeout kerak emas", "hint": "Osilgan job worker'ni band qiladi; `timeout` + `retry_after` (driver) muvozanati." }
       ],
-      "explanation": "Tuzoq: `retry_after` (config) `timeout`dan katta bo'lishi shart — aks holda job ikki marta ishlaydi. Idempotentlik — job qayta ishlasa zarar bermasin (to'lov ikki marta yechilmasin). Job middleware (`WithoutOverlapping`, `ThrottlesExceptions`). Horizon — failed job'larni UI'da ko'rish/retry.",
+      "explanation": "`$timeout` worker `--timeout`dan kichik bo'lsin; `RateLimited` middleware — tashqi API limiti uchun. Tuzoq: `retry_after` (config) `timeout`dan katta bo'lishi shart — aks holda job ikki marta ishlaydi. Idempotentlik — job qayta ishlasa zarar bermasin (to'lov ikki marta yechilmasin). Job middleware (`WithoutOverlapping`, `ThrottlesExceptions`). Horizon — failed job'larni UI'da ko'rish/retry.",
       "reviewed": false
     },
     {
@@ -84,12 +84,12 @@
       "kind": "concept",
       "prompt": "Cache invalidatsiya strategiyalari Laravel'da qanday amalga oshiriladi?",
       "options": [
-        { "id": "a", "text": "TTL (eng oddiy, eskirish oynasi), yozishda o'chirish (model observer `saved`/`deleted` → `Cache::forget`), tag'lar (`Cache::tags(['users'])->flush()` — Redis), versiyalangan kalit (`user:{$id}:v{$version}`), event-driven (domen event → listener o'chiradi); `remember` + qisqa TTL + yozishda forget — amaliy kombinatsiya", "correct": true },
+        { "id": "a", "text": "TTL, yozishda o'chirish (observer → `Cache::forget`), tag'lar, versiyalangan kalit, event bilan o'chirish", "correct": true },
         { "id": "b", "text": "`Cache::flush()` har o'zgarishda", "hint": "Butun cache o'chadi — stampede, barcha foydalanuvchilar sekinlashadi." },
-        { "id": "c", "text": "Invalidatsiya kerak emas — TTL yetarli", "hint": "Foydalanuvchi profilini o'zgartirib, 1 soat eski ko'rsa — shikoyat." },
+        { "id": "c", "text": "Invalidatsiya umuman kerak emas — har bir kalitga qisqa TTL qo'yish hamma holatda muammoni to'liq hal qiladi", "hint": "Foydalanuvchi profilini o'zgartirib, 1 soat eski ko'rsa — shikoyat." },
         { "id": "d", "text": "Laravel avtomatik invalidatsiya qiladi", "hint": "Qilmaydi — dasturchi zimmasida." }
       ],
-      "explanation": "Tag'lar `file`/`database` driver'da ishlamaydi. Ko'p server — cache markazlashgan (Redis), lokal `array`/`file` emas. Octane'da in-memory cache (`octane` driver) — har worker alohida. Model `$with` + cache — relation ham eskiradi. Cache kaliti hajmi/soni — Redis xotira monitoring.",
+      "explanation": "Amaliy kombinatsiya: `remember` + qisqa TTL + yozishda forget. Tag'lar `file`/`database` driver'da ishlamaydi. Ko'p server — cache markazlashgan (Redis), lokal `array`/`file` emas. Octane'da in-memory cache (`octane` driver) — har worker alohida. Model `$with` + cache — relation ham eskiradi. Cache kaliti hajmi/soni — Redis xotira monitoring.",
       "reviewed": false
     },
     {
@@ -99,12 +99,12 @@
       "kind": "concept",
       "prompt": "Laravel'da job chain, batch va unique job'lar qanday ishlatiladi?",
       "options": [
-        { "id": "a", "text": "Chain (`Bus::chain([A, B, C])->dispatch()`) — ketma-ket, biri yiqilsa qolgani to'xtaydi; Batch (`Bus::batch([...])->then()->catch()->finally()`) — parallel, progress (`job_batches` jadvali), `allowFailures`; `ShouldBeUnique` — bir vaqtda bitta (lock cache'da); `WithoutOverlapping` middleware — kalit bo'yicha; `afterCommit` — tranzaksiya commit'idan keyin", "correct": true },
+        { "id": "a", "text": "Chain — ketma-ket, biri yiqilsa to'xtaydi; batch — parallel, progress bilan; `ShouldBeUnique` — bir vaqtda bitta", "correct": true },
         { "id": "b", "text": "Chain va batch bir xil", "hint": "Chain — ketma-ket, batch — parallel + yakuniy callback." },
         { "id": "c", "text": "Batch faqat Horizon bilan", "hint": "Istalgan driver; Horizon — kuzatish." },
-        { "id": "d", "text": "Unique job — DB unique constraint", "hint": "Cache lock — `$uniqueFor` sekund, `uniqueId()`." }
+        { "id": "d", "text": "Unique job — DB jadvalidagi unique constraint: bir xil job'ni bazaga ikkinchi marta yozish SQL xatosiga olib keladi", "hint": "Cache lock — `$uniqueFor` sekund, `uniqueId()`." }
       ],
-      "explanation": "Misol: 10 000 foydalanuvchiga hisobot — batch 100 chunk job, `then` — \"tayyor\" email, `progress()` UI'da. Chain ichida batch, batch ichida chain mumkin. Tranzaksiya ichida dispatch — `afterCommit()` (yoki `after_commit` config) — aks holda worker job'ni commit'dan oldin oladi, ma'lumot yo'q.",
+      "explanation": "`WithoutOverlapping` middleware, `afterCommit` — tranzaksiya commit'idan keyin; batch'da `allowFailures`. Misol: 10 000 foydalanuvchiga hisobot — batch 100 chunk job, `then` — \"tayyor\" email, `progress()` UI'da. Chain ichida batch, batch ichida chain mumkin. Tranzaksiya ichida dispatch — `afterCommit()` (yoki `after_commit` config) — aks holda worker job'ni commit'dan oldin oladi, ma'lumot yo'q.",
       "reviewed": false
     },
     {
@@ -129,12 +129,12 @@
       "kind": "concept",
       "prompt": "Laravel ilovasini gorizontal masshtablash uchun qanday talablar bor?",
       "options": [
-        { "id": "a", "text": "Stateless web node'lar: sessiya — Redis/database (file emas), cache — Redis (markaziy), fayllar — S3 (lokal disk emas), queue — Redis/SQS, scheduler — bitta node (`onOneServer` + cache lock), broadcast — Redis/Pusher, log — markazlashgan (stdout → agregator), `APP_KEY` bir xil, config/route cache har node'da, DB ulanish — PgBouncer/ProxySQL", "correct": true },
-        { "id": "b", "text": "Shunchaki ko'proq server qo'shish", "hint": "File sessiya bilan ikkinchi serverda foydalanuvchi logout bo'ladi." },
+        { "id": "a", "text": "Stateless node'lar: sessiya va cache Redis'da, fayllar S3'da, scheduler bitta node'da, log markazda", "correct": true },
+        { "id": "b", "text": "Shunchaki load balancer ortiga ko'proq server qo'shish kifoya, ilova kodi va sozlamalarida hech narsa o'zgarmaydi", "hint": "File sessiya bilan ikkinchi serverda foydalanuvchi logout bo'ladi." },
         { "id": "c", "text": "Laravel gorizontal masshtablanmaydi", "hint": "To'g'ri sozlansa — stateless, masshtablanadi." },
         { "id": "d", "text": "Sticky session yetarli", "hint": "Node yiqilsa sessiya yo'qoladi; haqiqiy stateless yaxshiroq." }
       ],
-      "explanation": "Scheduler: `schedule:run` har node'da cron bo'lsa — vazifa N marta; `->onOneServer()` (cache lock) yoki bitta node. Rasm yuklash — lokal `storage/` o'rniga S3 + CDN. 12-factor: config env'dan, log stdout'ga. Octane bilan — har node'da worker'lar, xotira sizishi monitoring.",
+      "explanation": "`APP_KEY` hamma node'da bir xil; scheduler `onOneServer`; DB uchun PgBouncer/ProxySQL. Scheduler: `schedule:run` har node'da cron bo'lsa — vazifa N marta; `->onOneServer()` (cache lock) yoki bitta node. Rasm yuklash — lokal `storage/` o'rniga S3 + CDN. 12-factor: config env'dan, log stdout'ga. Octane bilan — har node'da worker'lar, xotira sizishi monitoring.",
       "reviewed": false
     },
     {

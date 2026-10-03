@@ -8,12 +8,12 @@
       "kind": "concept",
       "prompt": "Laravel loyihasining papka tuzilmasi va asosiy qatlamlari qanday?",
       "options": [
-        { "id": "a", "text": "`app/` (Models, Http/Controllers, Http/Requests, Jobs, Events, Listeners, Providers, Services/Actions — o'zingiz), `routes/`, `database/` (migrations, seeders, factories), `resources/views`, `config/`, `tests/` (Feature, Unit), `storage/`, `public/`; MVC + service/action qatlami — konvensiya, Laravel majburlamaydi", "correct": true },
+        { "id": "a", "text": "`app/` (Models, Controllers, Requests, Jobs...), `routes/`, `database/`, `resources/`, `config/`, `tests/`", "correct": true },
         { "id": "b", "text": "Hamma kod `app/Http/Controllers`da", "hint": "Controller — HTTP kirish; mantiq boshqa joyda." },
-        { "id": "c", "text": "Laravel tuzilmani o'zgartirishga ruxsat bermaydi", "hint": "Moslashuvchan — modul tuzilma (`app/Modules`) ko'p loyihada." },
+        { "id": "c", "text": "Laravel papka tuzilmasini o'zgartirishga yoki `app/` ichida yangi papka qo'shishga umuman ruxsat bermaydi", "hint": "Moslashuvchan — modul tuzilma (`app/Modules`) ko'p loyihada." },
         { "id": "d", "text": "`vendor/` ichida ilova kodi", "hint": "`vendor/` — Composer paketlar, tegilmaydi." }
       ],
-      "explanation": "O'sish bilan: `app/Domain/Orders/{Models,Actions,Events,...}` yoki `app/Modules/` — feature bo'yicha. `Services` — stateless yordamchi, `Actions` — bitta use case (`CreateOrder::execute`). `routes/api.php` vs `web.php` — middleware guruhlari farq. `.env` git'da yo'q, `.env.example` — bor.",
+      "explanation": "Service/Action qatlami — konvensiya, Laravel uni majburlamaydi. O'sish bilan: `app/Domain/Orders/{Models,Actions,Events,...}` yoki `app/Modules/` — feature bo'yicha. `Services` — stateless yordamchi, `Actions` — bitta use case (`CreateOrder::execute`). `routes/api.php` vs `web.php` — middleware guruhlari farq. `.env` git'da yo'q, `.env.example` — bor.",
       "reviewed": false
     },
     {
@@ -23,12 +23,12 @@
       "kind": "concept",
       "prompt": "OPcache nima va nima uchun production'da shart?",
       "options": [
-        { "id": "a", "text": "PHP skriptlarni kompilyatsiya qilingan opcode ko'rinishida xotirada saqlaydi — har so'rovda fayl o'qish va parse qilish yo'q (2–3x tezlashish); production'da `opcache.validate_timestamps=0` (fayl o'zgarishini tekshirmaslik, deploy'da reset), `opcache.preload` — framework klasslarini oldindan yuklash", "correct": true },
-        { "id": "b", "text": "Ma'lumot cache (Redis kabi)", "hint": "Kod cache — ma'lumot emas." },
+        { "id": "a", "text": "Skriptlarni kompilyatsiya qilingan opcode ko'rinishida xotirada saqlaydi — har so'rovda parse yo'q", "correct": true },
+        { "id": "b", "text": "Ma'lumotlar keshi (Redis kabi): DB so'rovlari natijasini server xotirasida saqlab, qayta ishlatib beradi", "hint": "Kod cache — ma'lumot emas." },
         { "id": "c", "text": "Ixtiyoriy, kam ta'sir", "hint": "PHP performansining eng muhim bitta sozlamasi." },
         { "id": "d", "text": "Faqat Laravel uchun", "hint": "PHP darajasida — har qanday ilova." }
       ],
-      "explanation": "`validate_timestamps=0` — deploy'da `opcache_reset()` yoki FPM reload shart (aks holda eski kod). `memory_consumption` yetarli (256 MB+), `max_accelerated_files` fayl sonidan katta. JIT (8.0+) — CPU-bound kod uchun, web ilovada kam ta'sir. Docker'da — image'ga sozlash.",
+      "explanation": "2–3x tezlashtiradi; production'da `validate_timestamps=0` va `opcache.preload`. `validate_timestamps=0` — deploy'da `opcache_reset()` yoki FPM reload shart (aks holda eski kod). `memory_consumption` yetarli (256 MB+), `max_accelerated_files` fayl sonidan katta. JIT (8.0+) — CPU-bound kod uchun, web ilovada kam ta'sir. Docker'da — image'ga sozlash.",
       "reviewed": false
     },
     {
@@ -38,12 +38,12 @@
       "kind": "concept",
       "prompt": "Laravel ilovasida performance muammosi — qanday tekshiriladi?",
       "options": [
-        { "id": "a", "text": "Telescope/Debugbar (dev) — so'rovlar, N+1, vaqt; Laravel Pulse (prod) — slow query, slow request, exception; APM (Blackfire, Tideways, New Relic, Sentry Performance) — profil; `EXPLAIN` sekin SQL; OPcache holati; tipik sabablar: N+1, cache yo'q, sinxron og'ir ish (queue'ga), katta Collection PHP'da, config/route cache yo'q, Composer autoload optimizatsiyasiz", "correct": true },
-        { "id": "b", "text": "PHP sekin — til almashtirish", "hint": "To'g'ri sozlangan Laravel ming RPS beradi; muammo odatda DB/kod." },
+        { "id": "a", "text": "Telescope/Debugbar (dev), Pulse va APM (prod), sekin SQL uchun `EXPLAIN`; tipik sabab — N+1 va keshsizlik", "correct": true },
+        { "id": "b", "text": "PHP tilining o'zi sekin — performance muammosini faqat butun ilovani boshqa tilga qayta yozish bilan hal qilish mumkin", "hint": "To'g'ri sozlangan Laravel ming RPS beradi; muammo odatda DB/kod." },
         { "id": "c", "text": "Faqat server kuchaytirish", "hint": "N+1 ni kuchli server hal qilmaydi." },
         { "id": "d", "text": "`dd(microtime())` yetarli", "hint": "Qo'lda o'lchash — tarqoq; profiler to'liq rasm beradi." }
       ],
-      "explanation": "Tartib: o'lchash (qaysi endpoint sekin, qayerda vaqt) → eng katta foyda → qayta o'lchash. Ko'pincha: eager loading + indeks + cache = 10x. Xotira: `memory_get_peak_usage()`, katta `get()` → `chunk`/`lazy`. Blackfire — chaqiruv grafigi, funksiya darajasida.",
+      "explanation": "Yana: sinxron og'ir ish (queue'ga), PHP'dagi katta Collection, config/route cache va optimallashgan autoload yo'qligi. Tartib: o'lchash (qaysi endpoint sekin, qayerda vaqt) → eng katta foyda → qayta o'lchash. Ko'pincha: eager loading + indeks + cache = 10x. Xotira: `memory_get_peak_usage()`, katta `get()` → `chunk`/`lazy`. Blackfire — chaqiruv grafigi, funksiya darajasida.",
       "reviewed": false
     },
     {
@@ -53,12 +53,12 @@
       "kind": "concept",
       "prompt": "Laravel'da autentifikatsiya va avtorizatsiya qanday tashkil qilinadi?",
       "options": [
-        { "id": "a", "text": "AuthN — guard'lar (session, token/Sanctum), Breeze/Jetstream/Fortify starter'lar, `Auth::user()`, `auth` middleware; AuthZ — Gate (`Gate::define`) va Policy (`UserPolicy@update`), `$this->authorize('update', $post)`, `@can` Blade, Form Request `authorize()`; rollar — spatie/permission yoki o'z jadval; policy auto-discovery", "correct": true },
-        { "id": "b", "text": "Har controller'da `if ($user->role == 'admin')`", "hint": "Tarqoq, takror; Policy markazlashtiradi." },
+        { "id": "a", "text": "AuthN — guard'lar (session, Sanctum), starter kit'lar; AuthZ — Gate va Policy, `authorize()`, `@can`", "correct": true },
+        { "id": "b", "text": "Har controller metodida `if ($user->role == 'admin')` kabi qo'lda tekshiruv yozish — Laravel'dagi yagona to'g'ri yo'l", "hint": "Tarqoq, takror; Policy markazlashtiradi." },
         { "id": "c", "text": "Laravel'da auth yo'q — o'zingiz yozasiz", "hint": "To'liq auth tizimi bor — eng kuchli tomonlaridan." },
         { "id": "d", "text": "AuthN va AuthZ bir xil", "hint": "Kim (login) va nima qila oladi (ruxsat) — alohida." }
       ],
-      "explanation": "Policy: `php artisan make:policy PostPolicy --model=Post` → `update(User $user, Post $post): bool`. Route: `->can('update', 'post')`. API uchun Sanctum abilities + Policy. Multi-guard (admin/user) — alohida model va guard. 2FA — Fortify. Rate limit login — `throttle` middleware.",
+      "explanation": "Rollar uchun spatie/permission; Form Request `authorize()`; policy auto-discovery. Policy: `php artisan make:policy PostPolicy --model=Post` → `update(User $user, Post $post): bool`. Route: `->can('update', 'post')`. API uchun Sanctum abilities + Policy. Multi-guard (admin/user) — alohida model va guard. 2FA — Fortify. Rate limit login — `throttle` middleware.",
       "reviewed": false
     },
     {
@@ -68,12 +68,12 @@
       "kind": "concept",
       "prompt": "Katta Laravel loyihasida modul chegaralari qanday belgilanadi?",
       "options": [
-        { "id": "a", "text": "Feature/domen bo'yicha papkalar (`app/Modules/Orders/{Models,Actions,Http,Events,Providers}`), har modul o'z ServiceProvider (route, binding, event), modullar orasida — public contract (interfeys) yoki event, boshqa modul modelini to'g'ridan-to'g'ri ishlatmaslik (yoki faqat o'qish), `nwidart/laravel-modules` yoki oddiy namespace; PHPStan/Deptrac — bog'liqlik qoidalarini tekshirish", "correct": true },
-        { "id": "b", "text": "Standart `app/Models`, `app/Http` — hajm muhim emas", "hint": "200 model bir papkada — navigatsiya va egalik yo'qoladi." },
+        { "id": "a", "text": "Domen bo'yicha modullar, har birida o'z ServiceProvider; modullar orasida faqat contract yoki event", "correct": true },
+        { "id": "b", "text": "Standart `app/Models`, `app/Http` tuzilmasi yetarli — loyiha hajmi bu yerda hech narsani o'zgartirmaydi", "hint": "200 model bir papkada — navigatsiya va egalik yo'qoladi." },
         { "id": "c", "text": "Har modul — alohida Laravel ilova", "hint": "Mikroservis — oxirgi qadam; modulli monolit — oldin." },
         { "id": "d", "text": "Modul chegarasi — faqat papka nomi", "hint": "Papka yetmaydi — import qoidalari (Deptrac) va provider bilan mustahkamlanadi." }
       ],
-      "explanation": "Deptrac: `Orders` moduli `Payments` ichki klasslarini import qila olmaydi — CI'da xato. Umumiy (`Shared`/`Support`) — kichik, barqaror. Modul DB jadvallari — prefiks yoki alohida sxema (keyin ajratish oson). Bu monolitni kelajakda bo'lishga tayyorlaydi — lekin bo'lmaslik ham mumkin.",
+      "explanation": "Boshqa modul modelini to'g'ridan-to'g'ri ishlatmaslik; Deptrac yoki PHPStan bog'liqlik qoidalarini tekshiradi. Deptrac: `Orders` moduli `Payments` ichki klasslarini import qila olmaydi — CI'da xato. Umumiy (`Shared`/`Support`) — kichik, barqaror. Modul DB jadvallari — prefiks yoki alohida sxema (keyin ajratish oson). Bu monolitni kelajakda bo'lishga tayyorlaydi — lekin bo'lmaslik ham mumkin.",
       "reviewed": false
     },
     {
@@ -99,12 +99,12 @@
       "kind": "concept",
       "prompt": "Laravel monolitini bo'lish (mikroservis yoki alohida ilova) qachon va qanday qilinadi?",
       "options": [
-        { "id": "a", "text": "Qachon: jamoalar bir-birini to'sadi, deploy xavfi yuqori, bir qism boshqacha masshtab/texnologiya talab qiladi — avval modulli monolit; qanday: strangler fig (yangi funksiya alohida, eski modullar birma-bir), API gateway/yo'naltirish, ma'lumot egaligi (jadvallarni ajratish, replikatsiya yoki event bilan sinxron), umumiy auth (Passport/JWT, Sanctum token tekshiruvi), kontrakt testlar, observability oldin", "correct": true },
+        { "id": "a", "text": "Avval modulli monolit; bo'lish kerak bo'lsa — strangler fig, ma'lumot egaligini ajratish, umumiy auth, kontrakt testlar", "correct": true },
         { "id": "b", "text": "Darhol mikroservislar — Laravel har servis uchun", "hint": "Operatsion yuk (deploy, monitoring, taqsimlangan tranzaksiya) kichik jamoa uchun og'ir; monolit avval." },
         { "id": "c", "text": "Hech qachon bo'lmaslik", "hint": "Ba'zan zarur — lekin asosli sabab bilan." },
-        { "id": "d", "text": "DB'ni baham ko'rib, faqat kodni bo'lish", "hint": "Distributed monolith — eng yomon variant: tarmoq murakkabligi + bog'lanish." }
+        { "id": "d", "text": "Bitta umumiy DB'ni baham ko'rib, faqat kodni alohida servislarga bo'lish — eng xavfsiz, tez va arzon yo'l, ma'lumotni ajratish shart emas", "hint": "Distributed monolith — eng yomon variant: tarmoq murakkabligi + bog'lanish." }
       ],
-      "explanation": "Laravel'da bo'lish: modul → Composer paket (private) → alohida ilova. Ma'lumot: avval sxema ajratish (prefiks), keyin DB. Sessiya/auth — Sanctum token ikkala ilovada tekshirilsin yoki markaziy auth. Ko'p kompaniya modulli monolitda qoladi — bu ham to'g'ri javob.",
+      "explanation": "Qachon: jamoalar bir-birini to'sganda, deploy xavfi yuqori bo'lganda yoki qism boshqa masshtab talab qilganda; observability oldindan. Laravel'da bo'lish: modul → Composer paket (private) → alohida ilova. Ma'lumot: avval sxema ajratish (prefiks), keyin DB. Sessiya/auth — Sanctum token ikkala ilovada tekshirilsin yoki markaziy auth. Ko'p kompaniya modulli monolitda qoladi — bu ham to'g'ri javob.",
       "reviewed": false
     },
     {

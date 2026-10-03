@@ -188,6 +188,7 @@ class ContentAssetsTest {
         "java.arch", "java.collections", "java.concurrency", "java.data", "java.lang", "java.spring",
         "flutter.arch", "flutter.async", "flutter.dart", "flutter.data", "flutter.state", "flutter.widgets",
         "go.arch", "go.concurrency", "go.data", "go.lang", "go.types", "go.web",
+        "php.arch", "php.async", "php.eloquent", "php.lang", "php.laravel", "php.oop",
     )
 
     /**
