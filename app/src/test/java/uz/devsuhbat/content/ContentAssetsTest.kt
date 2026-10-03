@@ -85,6 +85,8 @@ class ContentAssetsTest {
         "core.mobile" to listOf(6, 8, 6, 4),
         "core.git" to listOf(14, 10, 6, 2),
         "core.http" to listOf(16, 14, 10, 6),
+        "core.sql" to listOf(20, 18, 12, 8),
+        "core.dsa" to listOf(20, 18, 12, 6),
     )
 
     @Test
