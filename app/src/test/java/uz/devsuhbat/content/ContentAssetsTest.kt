@@ -87,6 +87,12 @@ class ContentAssetsTest {
         "core.http" to listOf(16, 14, 10, 6),
         "core.sql" to listOf(20, 18, 12, 8),
         "core.dsa" to listOf(20, 18, 12, 6),
+        "fe.js" to listOf(6, 5, 2, 1),
+        "fe.htmlcss" to listOf(5, 4, 2, 1),
+        "fe.react" to listOf(4, 4, 3, 2),
+        "fe.ts" to listOf(4, 4, 3, 2),
+        "fe.browser" to listOf(3, 3, 2, 2),
+        "fe.arch" to listOf(2, 2, 2, 2),
     )
 
     @Test

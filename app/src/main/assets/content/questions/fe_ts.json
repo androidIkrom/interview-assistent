@@ -1,0 +1,200 @@
+{
+  "topic": "fe.ts",
+  "questions": [
+    {
+      "id": "fe.ts.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "TypeScript'da `interface` va `type` farqi nima?",
+      "options": [
+        { "id": "a", "text": "Ko'p hollarda almashtirsa bo'ladi; `interface` kengaytiriladi va qayta ochiladi (declaration merging), `type` esa union, tuple va hisoblangan tiplarni ifodalay oladi", "correct": true },
+        { "id": "b", "text": "`type` eskirgan", "hint": "Ikkalasi ham faol ishlatiladi." },
+        { "id": "c", "text": "`interface` runtime'da tekshiradi, `type` yo'q", "hint": "Ikkalasi ham runtime'da yo'q." },
+        { "id": "d", "text": "`interface` faqat klasslar uchun", "hint": "Oddiy obyekt shakllari uchun ham ishlatiladi." }
+      ],
+      "explanation": "Obyekt shakli va public API uchun `interface` (xato xabarlari aniqroq, `extends` qulay), union (`'a' | 'b'`), funksiya tiplari va mapped tiplar uchun `type`. Jamoada bitta uslubni tanlab, izchil bo'lish muhimroq.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.ts.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`any` va `unknown` farqi nima?",
+      "options": [
+        { "id": "a", "text": "`any` tip tekshiruvini o'chiradi; `unknown` har qanday qiymatni qabul qiladi, lekin ishlatishdan oldin tipni toraytirishni (narrowing) talab qiladi", "correct": true },
+        { "id": "b", "text": "Farqi yo'q", "hint": "`unknown` qiymatga `.foo` deb murojaat qilib bo'lmaydi, `any` ga mumkin." },
+        { "id": "c", "text": "`unknown` faqat xatolar uchun", "hint": "`catch (e)` da u keng tarqalgan, lekin boshqa joylarda ham ishlatiladi." },
+        { "id": "d", "text": "`any` xavfsizroq", "hint": "Aksincha: `any` xatolarni runtime'gacha yashiradi." }
+      ],
+      "explanation": "`JSON.parse` natijasi, tashqi API javobi — `unknown` bo'lishi va `typeof`, `in` yoki zod kabi sxema bilan tekshirilishi kerak. `any` tiplar tizimidan \"chiqish eshigi\"; uni `noImplicitAny` va lint bilan cheklash odat.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.ts.003",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Bu kodda qaysi qator kompilyatsiya xatosi beradi?",
+      "code": "type Status = 'active' | 'blocked';\n\ninterface User {\n  name: string;\n  age?: number;\n  status: Status;\n}\n\nconst u: User = { name: 'Ali', status: 'active' };   // 1\nconst s: Status = 'deleted';                        // 2\nconst n: number = u.age;                            // 3",
+      "options": [
+        { "id": "a", "text": "2 va 3", "correct": true },
+        { "id": "b", "text": "Faqat 2", "hint": "`age` ixtiyoriy, demak uning tipi `number | undefined`; uni `number` ga tayinlab bo'lmaydi (strict rejimda)." },
+        { "id": "c", "text": "Faqat 1", "hint": "`age` ixtiyoriy, uni tashlab ketish mumkin." },
+        { "id": "d", "text": "Hech qaysi", "hint": "`'deleted'` union'da yo'q." }
+      ],
+      "explanation": "Literal union tip faqat sanab o'tilgan qiymatlarni qabul qiladi. `?` maydon `T | undefined` degani; strict rejimda `undefined` ni `number` ga tayinlash xato, `u.age ?? 0` kabi ishlov kerak.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.ts.004",
+      "level": "junior",
+      "type": "single",
+      "kind": "true_false",
+      "prompt": "Quyidagi fikr to'g'rimi?\n\nTypeScript tiplari kompilyatsiyadan keyin yo'qoladi; runtime'da oddiy JavaScript ishlaydi va tip tekshiruvi bo'lmaydi.",
+      "options": [
+        { "id": "a", "text": "Ha", "correct": true },
+        { "id": "b", "text": "Yo'q", "hint": "TypeScript faqat compile vaqtida tekshiradi. Brauzerga tipsiz JavaScript boradi, shuning uchun tashqi ma'lumot (API javobi) tip e'lon qilinganiga qaramay noto'g'ri bo'lishi mumkin." }
+      ],
+      "explanation": "Shu sabab API javobini `as User` deb e'lon qilish hech narsani kafolatlamaydi. Chegaradagi ma'lumot runtime validatsiyadan (zod, valibot, io-ts) o'tishi kerak; validator tipni ham chiqarib beradi.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.ts.005",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Generic funksiya `function first<T>(items: T[]): T | undefined` oddiy `any` versiyadan nimasi bilan yaxshi?",
+      "options": [
+        { "id": "a", "text": "Kirish va chiqish tiplari bog'lanadi: `first([1, 2])` natijasi `number | undefined`, autokomplit va tekshiruv saqlanadi", "correct": true },
+        { "id": "b", "text": "Tezroq ishlaydi", "hint": "Runtime'da farq yo'q." },
+        { "id": "c", "text": "Faqat sonlar bilan ishlaydi", "hint": "`T` istalgan tip; chaqiruvda aniqlanadi." },
+        { "id": "d", "text": "Farqi yo'q", "hint": "`any` versiyada natija `any` va keyingi xatolar ko'rinmaydi." }
+      ],
+      "explanation": "Generic tipni \"parametr\" qiladi. Cheklov qo'shish mumkin: `<T extends { id: string }>`. Odatiy xato — generic'ni bir marta ishlatish (`<T>(x: T): void`), bunda u hech narsa bermaydi; generic kamida ikki joyni bog'lashi kerak.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.ts.006",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Type narrowing (tipni toraytirish) qanday ishlaydi?",
+      "options": [
+        { "id": "a", "text": "`typeof`, `instanceof`, `in`, tenglik tekshiruvi va type guard funksiyalar orqali kompilyator tarmoq ichida tipni aniqlashtiradi", "correct": true },
+        { "id": "b", "text": "Faqat `as` bilan tipni majburlash orqali", "hint": "`as` tekshirmaydi, kompilyatorni \"ishontiradi\"; narrowing esa haqiqiy tekshiruv." },
+        { "id": "c", "text": "Runtime'da TypeScript tipni tekshiradi", "hint": "Tekshiruv sizning kodingiz; TypeScript faqat uni tushunadi." },
+        { "id": "d", "text": "Narrowing faqat primitiv tiplar uchun", "hint": "Obyektlar (`in`, discriminated union) uchun ham ishlaydi." }
+      ],
+      "explanation": "`function f(x: string | number) { if (typeof x === 'string') { x.toUpperCase() } }` — `if` ichida `x: string`. Maxsus guard: `function isUser(v: unknown): v is User`. Narrowing tiplar tizimining kundalik vositasi.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.ts.007",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`Partial<T>`, `Pick<T, K>`, `Omit<T, K>` kabi utility tiplar nima uchun kerak?",
+      "options": [
+        { "id": "a", "text": "Mavjud tipdan yangisini hosil qilish: hammasi ixtiyoriy, faqat ba'zi maydonlar, ba'zilarisiz; takrorlanish va ikki manba muammosini yo'qotadi", "correct": true },
+        { "id": "b", "text": "Runtime'da obyektni o'zgartirish uchun", "hint": "Ular faqat tip darajasida; obyektga tegmaydi." },
+        { "id": "c", "text": "Faqat kutubxona mualliflari uchun", "hint": "Oddiy ilova kodida ham har kuni ishlatiladi (forma, update DTO)." },
+        { "id": "d", "text": "Ular `interface` ni almashtiradi", "hint": "Ular mavjud tiplar ustida ishlaydi, o'rnini bosmaydi." }
+      ],
+      "explanation": "`updateUser(id, patch: Partial<User>)`, `type UserPreview = Pick<User, 'id' | 'name'>`, `type CreateUser = Omit<User, 'id'>`. Asosiy tip o'zgarsa, hosilalar avtomatik yangilanadi.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.ts.008",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`enum` o'rniga literal union (`type Role = 'admin' | 'user'`) ko'pincha nega afzal ko'riladi?",
+      "options": [
+        { "id": "a", "text": "Union runtime kod hosil qilmaydi, oddiy satrlar bilan ishlaydi, tree shaking'ga xalaqit bermaydi va `as const` obyekt bilan birga ikkala afzallikni beradi", "correct": true },
+        { "id": "b", "text": "`enum` TypeScript'da taqiqlangan", "hint": "Taqiqlanmagan; faqat ba'zi qoidalar (`erasableSyntaxOnly`) uni cheklaydi." },
+        { "id": "c", "text": "Union tezroq kompilyatsiya bo'ladi", "hint": "Farq sezilmas; sabab runtime va ergonomikada." },
+        { "id": "d", "text": "`enum` da autokomplit ishlamaydi", "hint": "Ishlaydi; muammo boshqa joyda." }
+      ],
+      "explanation": "Sonli `enum` teskari xaritalash hosil qiladi va istalgan sonni qabul qilishi mumkin edi (eski versiyalarda). `const ROLES = ['admin', 'user'] as const; type Role = typeof ROLES[number]` — ro'yxat ham, tip ham bitta manbadan.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.ts.009",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Bu `switch` ga yangi holat qo'shilganda kompilyator ogohlantirmaydi. Qanday tuzatiladi?",
+      "code": "type Shape =\n  | { kind: 'circle'; r: number }\n  | { kind: 'square'; side: number };\n\nfunction area(s: Shape): number {\n  switch (s.kind) {\n    case 'circle': return Math.PI * s.r ** 2;\n    case 'square': return s.side ** 2;\n  }\n}",
+      "options": [
+        { "id": "a", "text": "`default` tarmog'ida `const _exhaustive: never = s` qo'yish: yangi variant qo'shilsa, `s` `never` bo'lmaydi va kompilyator xato beradi", "correct": true },
+        { "id": "b", "text": "`default: return 0` qo'shish", "hint": "Bu xatoni yashiradi: yangi shakl jimgina 0 qaytaradi." },
+        { "id": "c", "text": "`switch` ni `if/else` ga almashtirish", "hint": "Muammo konstruksiyada emas, to'liqlik tekshiruvida." },
+        { "id": "d", "text": "Tuzatib bo'lmaydi", "hint": "`never` bilan to'liqlik tekshiruvi aynan shu uchun." }
+      ],
+      "explanation": "Discriminated union (`kind` maydoni) + exhaustive check — TypeScript'ning eng kuchli namunalaridan. Qaytarish tipi `number` bo'lgani uchun ba'zi sozlamalarda allaqachon xato chiqadi, lekin `never` usuli har qanday holatda ishonchli va niyatni aniq ko'rsatadi.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.ts.010",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Mapped va conditional tiplar qanday masalani hal qiladi?",
+      "options": [
+        { "id": "a", "text": "Tiplarni dasturiy hosil qilish: mapped tip har kalitni o'zgartiradi (`{ [K in keyof T]: ... }`), conditional tip shartga qarab tip tanlaydi (`T extends U ? X : Y`)", "correct": true },
+        { "id": "b", "text": "Runtime'da obyektlarni map qilish", "hint": "Faqat tip darajasida." },
+        { "id": "c", "text": "Ular faqat `Partial` kabi tayyor utility'lar ichida bor, o'zingiz yoza olmaysiz", "hint": "Utility tiplar aynan shu mexanizmlar bilan yozilgan; siz ham yoza olasiz." },
+        { "id": "d", "text": "Generics'ni almashtiradi", "hint": "Ular generics ustiga quriladi." }
+      ],
+      "explanation": "Misol: `type ApiResponse<T> = T extends Array<infer U> ? Page<U> : Single<T>` yoki `type Getters<T> = { [K in keyof T as \\`get${Capitalize<K & string>}\\`]: () => T[K] }`. Kuchli, lekin o'qilishi qiyin; murakkab tip utility'larga izoh va test (`expectTypeOf`) kerak.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.ts.011",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`satisfies` operatori `as` va oddiy tip annotatsiyasidan nimasi bilan farq qiladi?",
+      "options": [
+        { "id": "a", "text": "`satisfies` qiymat tipga mosligini tekshiradi, lekin qiymatning aniq (literal) tipini saqlab qoladi; annotatsiya tipni kengaytiradi, `as` esa tekshirmaydi", "correct": true },
+        { "id": "b", "text": "`satisfies` — `as` ning yangi nomi", "hint": "`as` xatoni yashirishi mumkin, `satisfies` esa tekshiradi." },
+        { "id": "c", "text": "`satisfies` runtime'da tekshiradi", "hint": "Compile vaqtida." },
+        { "id": "d", "text": "Farqi yo'q", "hint": "`const c = { a: 1 } satisfies Record<string, number>` da `c.a` tipi `number`, annotatsiyada esa `c.a` ga murojaat qilish uchun kalit noma'lum bo'lardi." }
+      ],
+      "explanation": "Konfiguratsiya obyektlari uchun ideal: `const routes = { home: '/', about: '/about' } satisfies Record<string, string>` — kalitlar autokomplitda qoladi va tipga moslik tekshiriladi.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.ts.012",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "\"Noto'g'ri holatni tip bilan imkonsiz qilish\" prinsipi nimani anglatadi? Misol: `{ loading: boolean; data?: User; error?: Error }`",
+      "options": [
+        { "id": "a", "text": "Bu tip `loading: true` va `data` birga bo'lgan ma'nosiz holatlarga yo'l qo'yadi; discriminated union (`{ status: 'loading' } | { status: 'success'; data } | { status: 'error'; error }`) faqat haqiqiy holatlarni ifodalaydi", "correct": true },
+        { "id": "b", "text": "Barcha maydonlarni majburiy qilish kerak", "hint": "Unda `loading` paytida ham `data` talab qilinadi — yanada yomon." },
+        { "id": "c", "text": "Tiplarni `any` qilib, runtime'da tekshirish", "hint": "Bu prinsipning teskarisi." },
+        { "id": "d", "text": "Bu faqat backend'ga tegishli", "hint": "UI holati aynan shu muammoning klassik namunasi." }
+      ],
+      "explanation": "Union bilan `if (state.status === 'success')` ichida `state.data` aniq mavjud va kompilyator buni biladi; `undefined` tekshiruvlari va \"bo'lishi mumkin emas\" izohlari yo'qoladi. Dizayn qoidasi: tip faqat haqiqatan yuz berishi mumkin bo'lgan holatlarni ifodalasin.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.ts.013",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Katta JavaScript kod bazasini TypeScript'ga o'tkazish strategiyasi qanday bo'lishi kerak?",
+      "options": [
+        { "id": "a", "text": "Bosqichma-bosqich: `allowJs` + `checkJs`, fayllarni chetlardan (utility, model) markazga qarab o'tkazish, `strict` ni asta yoqish, chegaralarda runtime validatsiya; `any` sonini metrika sifatida kuzatish", "correct": true },
+        { "id": "b", "text": "Hammasini bir hafta ichida qayta yozish", "hint": "Katta bazada bu ishlab chiqarishni to'xtatadi va xavfli." },
+        { "id": "c", "text": "Fayllarni `.ts` ga nomini o'zgartirib, hamma joyga `any` qo'yish", "hint": "Kompilyatsiya bo'ladi, lekin hech qanday foyda bermaydi va keyin tozalash qiyin." },
+        { "id": "d", "text": "O'tkazmaslik, yangi kodni ham JS'da yozish", "hint": "Qarz o'saveradi." }
+      ],
+      "explanation": "Muvaffaqiyat shartlari: avtomatik vositalar (ts-migrate), CI'da yangi `any` ni taqiqlash, eng ko'p o'zgaradigan modullarni birinchi o'tkazish, jamoani o'qitish. Strict rejim boshidan yoqilmasa, keyin yoqish alohida katta ish bo'ladi.",
+      "reviewed": false
+    }
+  ]
+}

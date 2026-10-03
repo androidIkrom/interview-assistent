@@ -1,0 +1,186 @@
+{
+  "topic": "fe.htmlcss",
+  "questions": [
+    {
+      "id": "fe.htmlcss.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Semantik HTML (`<header>`, `<nav>`, `<main>`, `<article>`) nima uchun kerak?",
+      "options": [
+        { "id": "a", "text": "Brauzer, qidiruv tizimlari va yordamchi texnologiyalar (screen reader) sahifa tuzilmasini tushunishi uchun", "correct": true },
+        { "id": "b", "text": "Sahifa tezroq yuklanishi uchun", "hint": "Teg nomi yuklanish tezligiga ta'sir qilmaydi." },
+        { "id": "c", "text": "CSS'siz chiroyli ko'rinishi uchun", "hint": "Semantik teglar standart ko'rinishda `div` dan deyarli farq qilmaydi." },
+        { "id": "d", "text": "Faqat eski brauzerlar uchun", "hint": "Aksincha, bu zamonaviy standart." }
+      ],
+      "explanation": "`<div class=\"nav\">` odam uchun tushunarli, mashina uchun emas. `<nav>` esa screen reader'ga \"bu navigatsiya\" deydi, qidiruv tizimiga asosiy kontentni ajratishga yordam beradi. Semantika accessibility va SEO'ning poydevori.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.htmlcss.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "CSS box model'da element kengligi `width: 200px; padding: 10px; border: 2px` bo'lsa, standart holatda (`content-box`) element jami qancha joy egallaydi?",
+      "options": [
+        { "id": "a", "text": "224px: 200 + 2·10 + 2·2", "correct": true },
+        { "id": "b", "text": "200px", "hint": "`content-box` da `width` faqat kontentga tegishli; padding va border ustiga qo'shiladi." },
+        { "id": "c", "text": "212px", "hint": "Padding ham, border ham ikki tomonda." },
+        { "id": "d", "text": "210px", "hint": "Border ham hisobga olinadi." }
+      ],
+      "explanation": "`box-sizing: border-box` da `width` padding va border'ni ham o'z ichiga oladi va element aynan 200px bo'ladi. Shuning uchun ko'p loyihalar `* { box-sizing: border-box }` bilan boshlanadi: o'lchamlarni hisoblash osonlashadi.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.htmlcss.003",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Flexbox va Grid qachon ishlatiladi?",
+      "options": [
+        { "id": "a", "text": "Flexbox bir o'qli joylashuv (qator yoki ustun) uchun; Grid ikki o'qli, satr va ustunlar bilan sahifa maketi uchun", "correct": true },
+        { "id": "b", "text": "Grid eskirgan, hamma joyda Flexbox", "hint": "Grid yangiroq va ikki o'lchamli maket uchun kuchliroq." },
+        { "id": "c", "text": "Flexbox faqat markazlash uchun", "hint": "Markazlash uning bitta qo'llanishi, xolos." },
+        { "id": "d", "text": "Ikkalasini birga ishlatib bo'lmaydi", "hint": "Odatda Grid sahifa maketi, ichidagi komponentlar Flexbox." }
+      ],
+      "explanation": "Navbar elementlari, tugmalar qatori — Flexbox. Sahifa: sidebar + kontent + footer, kartochkalar to'ri — Grid. `gap`, `align-items`, `justify-content` ikkalasida ham ishlaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.htmlcss.004",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Bosiladigan element uchun `<div onclick>` o'rniga `<button>` ishlatish nega muhim?",
+      "options": [
+        { "id": "a", "text": "`<button>` klaviaturadan fokuslanadi, Enter/Space bilan bosiladi va screen reader unga \"tugma\" deydi; `div` buni bermaydi", "correct": true },
+        { "id": "b", "text": "`<button>` tezroq ishlaydi", "hint": "Tezlik farqi yo'q; farq accessibility'da." },
+        { "id": "c", "text": "`div` ga `onclick` qo'yib bo'lmaydi", "hint": "Qo'yish mumkin, lekin faqat sichqoncha uchun ishlaydi." },
+        { "id": "d", "text": "Farqi faqat standart ko'rinishda", "hint": "Ko'rinishni CSS bilan tenglashtirish mumkin; semantika va klaviatura qo'llab-quvvatlashi qoladi." }
+      ],
+      "explanation": "`div` ni tugmaga aylantirish uchun `role=\"button\"`, `tabindex=\"0\"`, klaviatura handler'lari kerak — `<button>` buni bepul beradi. Qoida: mavjud semantik element bo'lsa, uni ishlatish; ARIA faqat zarurat bo'lganda.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.htmlcss.005",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "CSS selektorlar ustuvorligi (specificity) qanday tartibda?",
+      "options": [
+        { "id": "a", "text": "Inline uslub > `#id` > `.class`, atribut, pseudo-class > element tegi", "correct": true },
+        { "id": "b", "text": "Faylda keyinroq yozilgan har doim g'olib", "hint": "Tartib faqat ustuvorlik teng bo'lganda hal qiladi." },
+        { "id": "c", "text": "Element tegi `.class` dan kuchli", "hint": "Aksincha: `.btn` `button` ni yengadi." },
+        { "id": "d", "text": "Hamma selektor teng", "hint": "Unda `!important` va specificity haqida gap bo'lmasdi." }
+      ],
+      "explanation": "Specificity uchlik sifatida hisoblanadi: (id, class, element). `#a .b p` = (1, 1, 1). `!important` hammasini bosib o'tadi, shuning uchun uni ishlatmaslikka harakat qilinadi. Tekis, kam ichma-ich selektorlar (BEM) ustuvorlik urushlarining oldini oladi.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.htmlcss.006",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Matn qaysi rangda bo'ladi?",
+      "code": "<p id=\"intro\" class=\"text\">Salom</p>\n\n<style>\n  .text { color: blue; }\n  p { color: green; }\n  #intro { color: red; }\n  .text { color: purple; }\n</style>",
+      "options": [
+        { "id": "a", "text": "Qizil (red)", "correct": true },
+        { "id": "b", "text": "Binafsha (purple)", "hint": "`.text` oxirida yozilgan, lekin `#id` selektori class'dan ustun." },
+        { "id": "c", "text": "Yashil (green)", "hint": "Element selektori eng past ustuvorlikka ega." },
+        { "id": "d", "text": "Ko'k (blue)", "hint": "Bir xil class ikki marta yozilsa, keyingisi yutadi; lekin bu yerda `#id` ham bor." }
+      ],
+      "explanation": "`#intro` specificity (1, 0, 0) — eng yuqori, shuning uchun qizil. Agar `#intro` bo'lmasa, ikkita `.text` orasida keyingisi (purple) g'olib bo'lardi; `p` esa hammasidan past.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.htmlcss.007",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`position: absolute` element nimaga nisbatan joylashadi?",
+      "options": [
+        { "id": "a", "text": "Eng yaqin `position` i `static` bo'lmagan ajdodga nisbatan; bunday ajdod bo'lmasa, sahifaga (`html`) nisbatan", "correct": true },
+        { "id": "b", "text": "Har doim brauzer oynasiga nisbatan", "hint": "Bu `position: fixed`." },
+        { "id": "c", "text": "O'zining oddiy o'rniga nisbatan", "hint": "Bu `position: relative`." },
+        { "id": "d", "text": "Bevosita ota elementga nisbatan, qanday bo'lmasin", "hint": "Ota `static` bo'lsa, u e'tiborga olinmaydi." }
+      ],
+      "explanation": "Shuning uchun absolyut elementning otasiga `position: relative` qo'yiladi — bu ota'ni \"konteyner\" qiladi. `sticky` esa `relative` va `fixed` aralashmasi: scroll chegaraga yetguncha oddiy, keyin yopishadi.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.htmlcss.008",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "\"Mobile-first\" yondashuvda media query'lar qanday yoziladi?",
+      "options": [
+        { "id": "a", "text": "Asosiy uslublar kichik ekran uchun, `@media (min-width: ...)` bilan kattaroq ekranlar uchun qo'shimchalar", "correct": true },
+        { "id": "b", "text": "Asosiy uslublar desktop uchun, `max-width` bilan mobil uchun qayta yozish", "hint": "Bu desktop-first; mobil qurilma ortiqcha uslublarni yuklab, keyin bekor qiladi." },
+        { "id": "c", "text": "Har qurilma uchun alohida CSS fayl", "hint": "Qurilmalar juda ko'p; breakpoint'lar bilan ishlanadi." },
+        { "id": "d", "text": "Media query kerak emas, Flexbox hammasini hal qiladi", "hint": "Flexbox moslashuvchan, lekin maket o'zgarishi uchun breakpoint kerak." }
+      ],
+      "explanation": "Mobil cheklangan: kichik ekran, sekin tarmoq. Mobile-first soddadan murakkabga boradi va standart holat yengil bo'ladi. Zamonaviy qo'shimcha: container query'lar komponentni o'z konteyneri o'lchamiga moslaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.htmlcss.009",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Shrift o'lchamini `px` emas, `rem` da berish nega tavsiya etiladi?",
+      "options": [
+        { "id": "a", "text": "`rem` ildiz shrift o'lchamiga bog'liq: foydalanuvchi brauzerda shriftni kattalashtirsa, matn ham kattalashadi; `px` buni e'tiborsiz qoldiradi", "correct": true },
+        { "id": "b", "text": "`rem` tezroq render bo'ladi", "hint": "Render tezligiga aloqasi yo'q." },
+        { "id": "c", "text": "`px` eski brauzerlarda ishlamaydi", "hint": "`px` hamma joyda ishlaydi; gap accessibility'da." },
+        { "id": "d", "text": "`rem` har doim 16px", "hint": "Standart 16px, lekin foydalanuvchi sozlamasi uni o'zgartiradi — aynan shu afzallik." }
+      ],
+      "explanation": "`em` ota elementga nisbatan (ichma-ichlikda ko'payib ketadi), `rem` ildizga nisbatan (bashorat qilinadigan). Matn va bo'shliqlar `rem`, border kabi mayda narsalar `px` bo'lishi mumkin.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.htmlcss.010",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Sahifa yuklanayotganda kontent \"sakrab\" ketadi (layout shift). Eng ko'p uchraydigan sabablar va yechim?",
+      "options": [
+        { "id": "a", "text": "O'lchami ko'rsatilmagan rasm va iframe'lar, kech yuklanadigan shriftlar, yuqoriga qo'shiladigan bannerlar; yechim: `width`/`height` yoki `aspect-ratio`, `font-display`, joy zaxiralash", "correct": true },
+        { "id": "b", "text": "JavaScript juda katta", "hint": "Hajm yuklanishni sekinlashtiradi, lekin sakrash joy zaxiralanmaganidan." },
+        { "id": "c", "text": "CSS faylda juda ko'p selektor bor", "hint": "Selektorlar soni layout shift'ga sabab emas." },
+        { "id": "d", "text": "Bu brauzer xatosi, tuzatib bo'lmaydi", "hint": "Bu CLS metrikasi va u to'liq dasturchi nazoratida." }
+      ],
+      "explanation": "Brauzer rasm hajmini yuklamaguncha bilmaydi; `width` va `height` atributlari joyni oldindan ajratadi. Cumulative Layout Shift (CLS) Core Web Vitals'dan biri va qidiruv reytingiga ta'sir qiladi.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.htmlcss.011",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "CSS Modules va runtime CSS-in-JS (styled-components kabi) o'rtasida tanlashda asosiy savdo nima?",
+      "options": [
+        { "id": "a", "text": "CSS Modules build vaqtida oddiy CSS beradi (tez, nol runtime); runtime CSS-in-JS dinamik uslublar va props bo'yicha o'zgarishda qulay, lekin runtime narx va SSR murakkabligi bor", "correct": true },
+        { "id": "b", "text": "CSS-in-JS har doim tezroq", "hint": "Aksincha: runtime'da uslub yaratish qo'shimcha ish." },
+        { "id": "c", "text": "CSS Modules'da class nomlari to'qnashadi", "hint": "Modules aynan nomlarni lokal qiladi (hash qo'shadi)." },
+        { "id": "d", "text": "Farqi faqat sintaksisda", "hint": "Farq qayerda va qachon CSS hosil bo'lishida." }
+      ],
+      "explanation": "Yangi avlod (vanilla-extract, Panda, Tailwind) build vaqtida ishlab, ikkalasining afzalligini birlashtiradi. React Server Components bilan runtime CSS-in-JS yomon mos keladi, shuning uchun tendensiya nol-runtime tomon.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.htmlcss.012",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Katta mahsulotda mavzular (yorug'/qorong'i, brend ranglari) va izchil dizaynni qanday boshqarish to'g'ri?",
+      "options": [
+        { "id": "a", "text": "Design token'lar: rang, bo'shliq, shrift qiymatlari CSS custom property'lar (va dizayn vositasi bilan umumiy manba) sifatida; komponentlar faqat token'larga murojaat qiladi", "correct": true },
+        { "id": "b", "text": "Har komponentda ranglarni to'g'ridan-to'g'ri yozish", "hint": "Mavzu almashtirish yuzlab faylni o'zgartirishni talab qiladi." },
+        { "id": "c", "text": "Qorong'i mavzu uchun alohida CSS fayl nusxasi", "hint": "Ikki nusxa tez ajralib ketadi." },
+        { "id": "d", "text": "JavaScript bilan har elementning rangini almashtirish", "hint": "Sekin va mo'rt; CSS o'zgaruvchilari buni bitta joyda hal qiladi." }
+      ],
+      "explanation": "`--color-primary` kabi token `[data-theme=\"dark\"]` ostida qayta aniqlanadi va butun sahifa bir zumda almashadi. Token'lar semantik (`--color-danger`) bo'lishi, xom (`--red-500`) bo'lmasligi kerak; shunda ma'no saqlanib, qiymat erkin o'zgaradi.",
+      "reviewed": false
+    }
+  ]
+}

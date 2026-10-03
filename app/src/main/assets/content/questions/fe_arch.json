@@ -1,0 +1,125 @@
+{
+  "topic": "fe.arch",
+  "questions": [
+    {
+      "id": "fe.arch.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Komponentni kichik, qayta ishlatiladigan bo'laklarga bo'lishning asosiy foydasi nima?",
+      "options": [
+        { "id": "a", "text": "Har bo'lak bitta vazifaga ega bo'ladi: o'qish, test qilish va boshqa joyda ishlatish osonlashadi", "correct": true },
+        { "id": "b", "text": "Sahifa tezroq yuklanadi", "hint": "Komponentlar soni yuklanishga deyarli ta'sir qilmaydi." },
+        { "id": "c", "text": "Kod qisqaradi", "hint": "Ba'zan aksincha uzayadi; maqsad hajm emas, tushunarlilik." },
+        { "id": "d", "text": "Foydasi yo'q, bitta katta komponent yaxshiroq", "hint": "500 qatorli komponentni o'zgartirish va test qilish qiyin." }
+      ],
+      "explanation": "Qoida: komponent bitta narsani qilsin va props orqali sozlansin. Lekin haddan tashqari bo'lish ham zarar: har tugma uchun 5 ta qatlam. Takrorlanish uch marta ko'ringanda ajratish — amaliy mezon.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.arch.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Rasm uchun `alt` atributi va input uchun `<label>` nima uchun kerak?",
+      "options": [
+        { "id": "a", "text": "Screen reader foydalanuvchilari rasm mazmunini va maydon nimaligini bilishi uchun; `alt` rasm yuklanmaganda ham ko'rinadi", "correct": true },
+        { "id": "b", "text": "Faqat SEO uchun", "hint": "SEO ham foyda ko'radi, lekin asosiy maqsad odamlar." },
+        { "id": "c", "text": "Rasm tezroq yuklanishi uchun", "hint": "Yuklanishga aloqasi yo'q." },
+        { "id": "d", "text": "Shart emas, dizayn uchun", "hint": "Usiz ko'zi ojiz foydalanuvchi formani to'ldira olmaydi." }
+      ],
+      "explanation": "Dekorativ rasm uchun `alt=\"\"` (bo'sh) — screen reader uni o'tkazib yuboradi. `<label for=\"email\">` yoki input'ni label ichiga olish: bosganda fokus ham o'tadi. Accessibility qonuniy talab bo'lgan mamlakatlar ko'paymoqda.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.arch.003",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Ilova bundle'i 3 MB. Birinchi navbatda qaysi yondashuv to'g'ri?",
+      "options": [
+        { "id": "a", "text": "Bundle analyzer bilan nimadan iboratligini ko'rish, marshrutlar bo'yicha code splitting, og'ir kutubxonalarni yengilroqqa almashtirish yoki lazy yuklash", "correct": true },
+        { "id": "b", "text": "Barcha kodni minify qilish kifoya", "hint": "Production build allaqachon minify qiladi; 3 MB shundan keyin." },
+        { "id": "c", "text": "Serverni kuchliroq qilish", "hint": "Hajm foydalanuvchi tarmog'i va qurilmasida yuk; server emas." },
+        { "id": "d", "text": "Hamma narsani bitta faylga yig'ish", "hint": "Bu aksincha: foydalanuvchi kerak bo'lmagan kodni ham yuklaydi." }
+      ],
+      "explanation": "Odatiy topilmalar: butun `moment` (locale'lar bilan), `lodash` to'liq, bir nechta nusxadagi kutubxona, ishlatilmaydigan UI kit. Performance byudjeti (masalan, boshlang'ich JS < 200 KB) va CI'da tekshiruv regressiyani oldini oladi.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.arch.004",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Frontend'da test strategiyasi qanday bo'lishi kerak?",
+      "options": [
+        { "id": "a", "text": "Ko'p tez komponent/integratsiya testlari (Testing Library, foydalanuvchi nuqtai nazaridan), oz E2E (Playwright) muhim oqimlar uchun, sof mantiq uchun unit testlar", "correct": true },
+        { "id": "b", "text": "Faqat E2E, chunki u haqiqiy brauzerda", "hint": "E2E sekin, mo'rt va sababni topish qiyin; hamma narsani u bilan qoplab bo'lmaydi." },
+        { "id": "c", "text": "Faqat snapshot testlar", "hint": "Snapshot har o'zgarishda yangilanadi va xatoni emas, farqni ko'rsatadi." },
+        { "id": "d", "text": "Frontend'ni test qilish shart emas", "hint": "Regressiyalar foydalanuvchiga tushadi." }
+      ],
+      "explanation": "Testing Library prinsipi: implementatsiyani emas, xatti-harakatni test qilish (`getByRole('button', { name: 'Saqlash' })`). Shunda refaktoring testlarni buzmaydi, foydalanuvchiga ta'sir qiladigan o'zgarish esa ushlanadi.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.arch.005",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Foydalanuvchilar \"sahifa sekin\" deyapti. Sababni topish tartibi qanday?",
+      "options": [
+        { "id": "a", "text": "Aniqlashtirish (yuklanish yoki interaktivlik), real ma'lumot (RUM) va Performance panel/Profiler bilan o'lchash, eng katta sababni topish (uzoq task, katta bundle, keraksiz render, sekin API), keyin tuzatish va qayta o'lchash", "correct": true },
+        { "id": "b", "text": "Barcha komponentlarni `memo` ga o'rash", "hint": "O'lchovsiz optimizatsiya; sabab render bo'lmasligi mumkin." },
+        { "id": "c", "text": "Freymvorkni almashtirish", "hint": "Qimmat va sabab odatda freymvorkda emas." },
+        { "id": "d", "text": "Foydalanuvchiga brauzerni yangilashni aytish", "hint": "Muammo odatda ilovada." }
+      ],
+      "explanation": "\"Sekin\" ko'p ma'noli: birinchi yuklanish (LCP), bosishga javob (INP), scroll (kadr tushishi). Har biri boshqa vosita va yechim talab qiladi. Profiler'siz tuzatish ko'pincha noto'g'ri joyni tuzatadi.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.arch.006",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Klient holati uchun Context, Zustand va Redux Toolkit orasida qanday tanlanadi?",
+      "options": [
+        { "id": "a", "text": "Kam o'zgaradigan, keng kerak bo'lgan qiymat — Context; o'rtacha global holat, selektorlar bilan aniq render — Zustand kabi yengil store; murakkab, qoidali, kuzatuv va middleware kerak bo'lgan holat — Redux Toolkit", "correct": true },
+        { "id": "b", "text": "Har doim Redux, chunki u standart", "hint": "Kichik ilovada Redux ortiqcha; tanlov murakkablikka qarab." },
+        { "id": "c", "text": "Context hamma narsaga yetadi", "hint": "Tez o'zgaradigan holat Context'da keng render beradi." },
+        { "id": "d", "text": "Farqi yo'q, hammasi bir xil", "hint": "Render nazorati, DevTools, middleware jiddiy farq qiladi." }
+      ],
+      "explanation": "Avval server holatini (TanStack Query) va URL holatini chiqarib tashlang; qolgan global holat ko'pincha kichik bo'ladi. Kutubxona tanlovi jamoa tajribasi va kuzatuv ehtiyojiga ham bog'liq; o'zgartirish keyin qimmat emas, agar store komponentlardan ajratilgan bo'lsa.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.arch.007",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Micro-frontend arxitekturasi qachon o'zini oqlaydi?",
+      "options": [
+        { "id": "a", "text": "Bir nechta mustaqil jamoa bitta mahsulotda alohida deploy qilishi kerak bo'lganda; narxi: takroriy bog'liqliklar, izchil UX va umumiy holat murakkabligi", "correct": true },
+        { "id": "b", "text": "Har qanday katta ilovada", "hint": "Bitta jamoa uchun bu faqat murakkablik qo'shadi." },
+        { "id": "c", "text": "Performance uchun", "hint": "Odatda aksincha: bir nechta freymvork nusxasi va runtime integratsiya." },
+        { "id": "d", "text": "Hech qachon, bu anti-pattern", "hint": "Tashkiliy muammo (ko'p jamoa, mustaqil reliz) bo'lsa, u ishlaydi." }
+      ],
+      "explanation": "Micro-frontend texnik emas, tashkiliy yechim (Conway qonuni). Muqobil: monorepo + modullar + bitta deploy — ko'p hollarda yetarli. Agar tanlansa: Module Federation yoki build-time integratsiya, umumiy design system va qat'iy shartnomalar kerak.",
+      "reviewed": false
+    },
+    {
+      "id": "fe.arch.008",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Bir nechta mahsulot ishlatadigan design system'ni qanday boshqarish kerak?",
+      "options": [
+        { "id": "a", "text": "Alohida versiyalangan paket, token'lar, hujjat (Storybook), accessibility talablari, o'zgarish jarayoni (RFC, deprecation) va iste'molchilarni avtomatik yangilash vositalari (codemod)", "correct": true },
+        { "id": "b", "text": "Har mahsulot komponentlarni nusxalab olib, o'zi o'zgartiradi", "hint": "Nusxalar tez ajralib, izchillik yo'qoladi." },
+        { "id": "c", "text": "Bitta katta CSS fayl hammaga", "hint": "Komponent mantig'i, accessibility va versiyalash yo'q." },
+        { "id": "d", "text": "Dizaynerlar Figma'da saqlasa yetarli", "hint": "Kod bilan sinxron bo'lmagan dizayn tez eskiradi; token'lar ikkalasini bog'laydi." }
+      ],
+      "explanation": "Design system — mahsulot, uning iste'molchilari boshqa jamoalar. Breaking o'zgarishlar SemVer bilan, migratsiya yo'riqnomasi va codemod bilan chiqariladi. Eng katta xavf: tizim jamoasi bo'lmasa, u qarovsiz qoladi va hamma uni chetlab o'ta boshlaydi.",
+      "reviewed": false
+    }
+  ]
+}
