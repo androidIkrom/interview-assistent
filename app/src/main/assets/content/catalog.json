@@ -138,12 +138,12 @@
     { "id": "net.data", "title": "EF Core", "file": "net_data.json" },
     { "id": "net.arch", "title": "GC, performance, arxitektura", "file": "net_arch.json" },
 
-    { "id": "qa.theory", "title": "Testlash nazariyasi" },
-    { "id": "qa.docs", "title": "Test hujjatlari va bug report" },
-    { "id": "qa.design", "title": "Test dizayn texnikalari" },
-    { "id": "qa.api", "title": "API va DB testlash" },
-    { "id": "qa.auto", "title": "Avtomatlashtirish" },
-    { "id": "qa.process", "title": "Strategiya, CI, jarayon" },
+    { "id": "qa.theory", "title": "Testlash nazariyasi", "file": "qa_theory.json" },
+    { "id": "qa.docs", "title": "Test hujjatlari va bug report", "file": "qa_docs.json" },
+    { "id": "qa.design", "title": "Test dizayn texnikalari", "file": "qa_design.json" },
+    { "id": "qa.api", "title": "API va DB testlash", "file": "qa_api.json" },
+    { "id": "qa.auto", "title": "Avtomatlashtirish", "file": "qa_auto.json" },
+    { "id": "qa.process", "title": "Strategiya, CI, jarayon", "file": "qa_process.json" },
 
     { "id": "ops.linux", "title": "Linux va shell" },
     { "id": "ops.docker", "title": "Docker va konteynerlar" },

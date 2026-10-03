@@ -1,0 +1,126 @@
+{
+  "topic": "qa.process",
+  "questions": [
+    {
+      "id": "qa.process.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "QA (Quality Assurance), QC (Quality Control) va testlash qanday farqlanadi?",
+      "options": [
+        { "id": "a", "text": "QA — jarayonga yo'naltirilgan: sifatli mahsulot chiqishi uchun jarayonlar, standartlar va amaliyotlarni yo'lga qo'yish (xatolarning oldini olish). QC — mahsulotga yo'naltirilgan: tayyor mahsulot talablarga mosligini tekshirish (xatolarni topish). Testlash — QC'ning asosiy faoliyati: dasturni bajarib xatolarni aniqlash", "correct": true },
+        { "id": "b", "text": "Uchalasi bir xil — faqat kompaniyaga qarab nomlanadi", "hint": "Amalda ko'pincha aralash ishlatiladi, lekin tushunchalar turli darajadagi faoliyatni anglatadi." },
+        { "id": "c", "text": "QA — faqat avtomatik testlar, QC — faqat manual", "hint": "Farq bajarish usulida emas, yo'nalishda: jarayon (oldini olish) va mahsulot (aniqlash)." },
+        { "id": "d", "text": "Testlash QA'dan kengroq tushuncha", "hint": "Testlash QC ichida, QC esa kengroq sifat boshqaruvining bir qismi." }
+      ],
+      "explanation": "Misol: kod review va Definition of Done joriy qilish — QA; reliz oldidan regression o'tkazish — QC/testlash. Kuchli QA muhandisi faqat bug topmaydi, balki bug'lar paydo bo'lishiga sabab bo'lgan jarayonlarni ham yaxshilaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "qa.process.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Scrum jamoasida QA muhandisining roli qanday?",
+      "options": [
+        { "id": "a", "text": "QA butun sprint davomida ishtirok etadi: backlog refinement va sprint planning'da user story va acceptance criteria'ni aniqlashtirish, riskler va testlash hajmini baholash; ishlab chiqish bilan parallel test tayyorlash va testlash; Definition of Done'ga sifat mezonlarini kiritish; retrospektivada jarayonni yaxshilash takliflari", "correct": true },
+        { "id": "b", "text": "QA faqat sprint oxirida, dasturchilar tugatgandan keyin testlaydi", "hint": "Bu \"mini-waterfall\": testlash oxirgi kunlarga yig'ilib, sprint maqsadi xavf ostida qoladi." },
+        { "id": "c", "text": "Scrum'da alohida QA kerak emas, shuning uchun sifat haqida hech kim qayg'urmaydi", "hint": "Scrum'da sifat — butun jamoa mas'uliyati; QA esa bu mas'uliyatni boshqaradi va o'rgatadi." },
+        { "id": "d", "text": "QA Scrum Master vazifasini bajaradi", "hint": "Rollar boshqa; QA — Developers (jamoa) a'zosi, test ekspertizasi bilan." }
+      ],
+      "explanation": "\"Three amigos\" (biznes, dasturchi, QA) — story ishga olinishidan oldin misollar va chegaraviy holatlarni muhokama qilish. Sprint davomida kichik qismlarni erta testlash uchun story'larni kichik bo'lish va tez-tez deploy qilish muhim.",
+      "reviewed": false
+    },
+    {
+      "id": "qa.process.003",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Test piramidasi nima?",
+      "options": [
+        { "id": "a", "text": "Avtotestlar taqsimoti modeli: asosda ko'p sonli tez va arzon unit testlar, o'rtada kamroq integration/API testlar, tepada eng oz sonli sekin va mo'rt UI/E2E testlar. Maqsad — xatolarni eng arzon darajada topish va tez fikr-mulohaza olish", "correct": true },
+        { "id": "b", "text": "Testerlar ierarxiyasi: junior, middle, senior", "hint": "Piramida testlar turlari va ularning soni haqida, lavozimlar haqida emas." },
+        { "id": "c", "text": "E2E testlar eng ko'p bo'lishi kerak, chunki ular foydalanuvchiga eng yaqin", "hint": "E2E sekin, qimmat va xato manbaini aniq ko'rsatmaydi — ko'pi \"muzqaymoq konusi\" anti-pattern'i." },
+        { "id": "d", "text": "Piramida manual testlashga tegishli emas va uni bekor qiladi", "hint": "Piramida avtomatlashtirish haqida; exploratory va manual testlash uning ustida qo'shimcha qatlam." }
+      ],
+      "explanation": "Nisbat taxminan 70/20/10 deb aytiladi, lekin bu dogma emas — arxitekturaga bog'liq. Asosiy tamoyil: har tekshiruvni xatoni ishonchli topa oladigan eng past darajada yozish.",
+      "reviewed": false
+    },
+    {
+      "id": "qa.process.004",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Sprint oxiriga 2 kun qoldi, testlash uchun vaqt yetmaydi. QA sifatida to'g'ri harakat qaysi?",
+      "options": [
+        { "id": "a", "text": "Risk asosida prioritetlash: eng muhim biznes oqimlari va o'zgargan joylarni birinchi testlash; nima testlanadi va nima testlanmay qoladi — buni jamoa va Product Owner'ga ochiq aytish; qaror (reliz qilish, qisqartirish yoki ko'chirish) birgalikda qabul qilinadi. Retrospektivada sababni muhokama qilish", "correct": true },
+        { "id": "b", "text": "Hech kimga aytmasdan barcha testlarni yuzaki o'tkazib, \"tayyor\" deb belgilash", "hint": "Yashirin risk — eng xavfli; stakeholder'lar qaror uchun haqiqiy ma'lumotga muhtoj." },
+        { "id": "c", "text": "Relizni o'zi bir tomonlama bloklash", "hint": "QA risk haqida ma'lumot beradi; reliz qarori Product Owner bilan birgalikda." },
+        { "id": "d", "text": "Faqat oson testlarni bajarish, chunki ular tez", "hint": "Tanlov osonlik bo'yicha emas, risk va biznes ta'siri bo'yicha." }
+      ],
+      "explanation": "Takrorlanmasligi uchun: story'larni kichikroq bo'lish, testlashni ishlab chiqish bilan parallel boshlash, Definition of Done'ga testlashni kiritish, avtomatlashtirish. QA'ning kuchi — ziddiyatda ham shaffoflik.",
+      "reviewed": false
+    },
+    {
+      "id": "qa.process.005",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Performance testlash turlari (load, stress, soak, spike) qanday farqlanadi?",
+      "options": [
+        { "id": "a", "text": "Load — kutilgan (normal va pik) yuklamada javob vaqti va xatolar SLO'ga mosligi; stress — chegaradan oshirib tizim qayerda va qanday sinishini va tiklanishini topish; soak (endurance) — uzoq muddatli (soatlab) yuklamada xotira oqishi va degradatsiya; spike — keskin yuklama sakrashi (aksiya boshlanishi) va avtomasshtablash reaksiyasi", "correct": true },
+        { "id": "b", "text": "To'rttasi bir xil — faqat foydalanuvchilar soni farq qiladi", "hint": "Maqsadlari farq qiladi: normal ishlash, sinish nuqtasi, vaqt bo'yicha barqarorlik, keskin o'zgarishga javob." },
+        { "id": "c", "text": "Stress test — faqat ma'lumotlar bazasini testlash", "hint": "Butun tizimni chegaradan oshirib yuklash — DB ham, ilova serverlari ham." },
+        { "id": "d", "text": "Soak test bir necha soniya davom etadi", "hint": "Uzoq muddatli muammolar (oqish, ulanishlar puli tugashi) faqat soatlab yuklamada ko'rinadi." }
+      ],
+      "explanation": "Vositalar: k6, JMeter, Gatling, Locust. Muvaffaqiyat mezonlari oldindan kelishiladi (p95, xato %, throughput). Test natijasini server metrikalari (CPU, xotira, DB) bilan birga tahlil qilish kerak — aks holda bo'g'oz noma'lum qoladi.",
+      "reviewed": false
+    },
+    {
+      "id": "qa.process.006",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "CI/CD pipeline'da sifat bosqichlari (quality gates) qanday tuziladi?",
+      "options": [
+        { "id": "a", "text": "Har bosqich tez to'xtatuvchi: commit/PR — build, linter, statik analiz, unit testlar; merge'dan keyin — integration va API testlar, xavfsizlik skanerlari (zaif bog'liqliklar); staging deploy'dan keyin — smoke va kritik E2E; production — bosqichma-bosqich rollout va monitoring. Gate yiqilsa pipeline to'xtaydi va javobgar jamoa xabardor bo'ladi", "correct": true },
+        { "id": "b", "text": "Barcha testlar faqat production'ga deploy'dan keyin", "hint": "Xatolar foydalanuvchilarga yetib boradi — gate'lar aynan ungacha ushlash uchun." },
+        { "id": "c", "text": "Yiqilgan testlarni e'tiborsiz qoldirib, deploy'ni davom ettirish tezroq", "hint": "Gate'ning ma'nosi yo'qoladi va jamoa qizil build'ga ko'nikib qoladi." },
+        { "id": "d", "text": "Har commit'da 3 soatlik to'liq regression majburiy", "hint": "Fikr-mulohaza juda sekin; og'ir to'plamlar kechki yoki merge'dan keyingi bosqichlarga." }
+      ],
+      "explanation": "Muhim: gate'lar ishonchli (flaky emas) va tez bo'lishi kerak. Qamrov va sifat chegaralari (masalan, yangi kodda coverage pasaymasligi) ehtiyotkorlik bilan — metrikani aldash xavfi bor. Hisobotlar va artefaktlar har bir yiqilish uchun oson topiladigan bo'lsin.",
+      "reviewed": false
+    },
+    {
+      "id": "qa.process.007",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Fintech mahsulot uchun test strategiyasini noldan tuzish so'raldi. Qaysi yondashuv to'g'ri?",
+      "options": [
+        { "id": "a", "text": "Risk asosida: biznes bilan birga riskler xaritasini tuzish (ehtimollik × ta'sir: to'lovlar, balans, xavfsizlik, regulyator talablari) va testlash chuqurligini shunga moslash; har darajadagi testlar va mas'ullar, muhitlar va test ma'lumotlari, avtomatlashtirish va CI, non-functional (performance, xavfsizlik, audit), reliz va monitoring; shift-left (talablar va dizayn review'ida QA ishtiroki). Hujjat qisqa, tirik va jamoa bilan kelishilgan", "correct": true },
+        { "id": "b", "text": "Barcha funksiyalarni bir xil chuqurlikda testlash — adolatli va oddiy", "hint": "Resurslar cheklangan; to'lov oqimi va profil rasmi sozlamasi bir xil riskka ega emas." },
+        { "id": "c", "text": "Boshqa kompaniyaning 100 sahifalik test strategiyasini nusxalash", "hint": "Strategiya kontekstga bog'liq (testlash tamoyili) — o'z riskleringiz va jamoangizga mos bo'lishi kerak." },
+        { "id": "d", "text": "Strategiya kerak emas — avtotestlar yozishni darhol boshlash", "hint": "Nimani, qayerda va nima uchun testlash aniq bo'lmasa, avtomatlashtirish noto'g'ri narsalarga sarflanadi." }
+      ],
+      "explanation": "Shift-left — sifat faoliyatlarini erta bosqichga siljitish (talablar, dizayn, kod review, unit testlar); shift-right — production'da kuzatish va testlash. Strategiya muntazam qayta ko'rib chiqiladi: production incident'lari va escaped defects riskler xaritasini yangilaydi.",
+      "reviewed": false
+    },
+    {
+      "id": "qa.process.008",
+      "level": "senior",
+      "type": "multi",
+      "kind": "concept",
+      "prompt": "Jamoa sifatini kuzatish uchun qaysi metrikalar foydali? (bir nechta javob)",
+      "options": [
+        { "id": "a", "text": "Escaped defects (production'da topilgan bug'lar) soni va og'irligi, ularning qaysi bosqichda ushlanishi mumkin bo'lgani", "correct": true },
+        { "id": "b", "text": "Change failure rate va incident'dan tiklanish vaqti (MTTR)", "correct": true },
+        { "id": "c", "text": "CI pipeline davomiyligi va flaky testlar ulushi", "correct": true },
+        { "id": "d", "text": "Har bir tester topgan bug'lar soni — reyting va bonus uchun", "hint": "Noto'g'ri rag'bat: mayda bug'larni bo'lib-bo'lib ochish, dasturchilar bilan raqobat; sifat yaxshilanmaydi." },
+        { "id": "e", "text": "Yozilgan test case'lar soni — qancha ko'p bo'lsa, sifat shuncha yuqori", "hint": "Soni qiymatni ko'rsatmaydi; dublikat yoki keraksiz test case'lar ham hisobga kiradi." }
+      ],
+      "explanation": "Yaxshi metrika natijaga (foydalanuvchi ko'radigan sifat, yetkazish tezligi) bog'langan va trend sifatida ko'riladi, odamlarni baholash uchun emas. DORA metrikalari (deploy chastotasi, lead time, change failure rate, MTTR) jamoa darajasidagi umumiy ko'rinish beradi.",
+      "reviewed": false
+    }
+  ]
+}

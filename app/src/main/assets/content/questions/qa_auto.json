@@ -1,0 +1,157 @@
+{
+  "topic": "qa.auto",
+  "questions": [
+    {
+      "id": "qa.auto.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Qaysi testlar avtomatlashtirish uchun eng yaxshi nomzod?",
+      "options": [
+        { "id": "a", "text": "Tez-tez takrorlanadigan va barqaror funksiyalarni tekshiradigan testlar: regression, smoke, ko'p ma'lumot kombinatsiyali testlar, API testlari, kritik biznes oqimlari. Bir martalik, tez o'zgaruvchi UI, usability va exploratory tekshiruvlar odatda manual qoladi", "correct": true },
+        { "id": "b", "text": "Barcha testlar — manual testlash kerak emas", "hint": "Usability, vizual taassurot va exploratory testlash inson fikrlashini talab qiladi; ba'zi testlarni avtomatlashtirish qimmatga tushadi." },
+        { "id": "c", "text": "Faqat bir marta bajariladigan testlar", "hint": "Avtomatlashtirish xarajati takroriy bajarishda o'zini oqlaydi." },
+        { "id": "d", "text": "Dizayni har sprintda o'zgaradigan yangi ekranlar", "hint": "Tez o'zgaruvchi UI'da avtotestlarni doimiy qayta yozishga to'g'ri keladi — avval barqarorlashsin." }
+      ],
+      "explanation": "Savol: \"Bu testni necha marta bajaramiz va avtomatik variantni qo'llab-quvvatlash qancha turadi?\" Avtomatlashtirish manual testerni almashtirmaydi — uni takroriy ishdan ozod qilib, murakkab tekshiruvlarga vaqt beradi.",
+      "reviewed": false
+    },
+    {
+      "id": "qa.auto.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Selenium WebDriver va Playwright qanday farqlanadi?",
+      "options": [
+        { "id": "a", "text": "Selenium — eski va keng tarqalgan standart (W3C WebDriver protokoli), ko'p til va brauzer, Grid bilan masshtablash; kutishlarni ko'proq qo'lda boshqarish kerak. Playwright — zamonaviy framework: avtomatik kutish (auto-wait), tarmoqni ushlash (mock), trace viewer, parallel ishga tushirish va Chromium/Firefox/WebKit tayyor holda", "correct": true },
+        { "id": "b", "text": "Playwright faqat mobil ilovalar uchun", "hint": "Playwright — veb brauzerlar uchun; mobil native ilovalar uchun Appium, Espresso, XCUITest." },
+        { "id": "c", "text": "Selenium faqat Java bilan ishlaydi", "hint": "Java, Python, C#, JavaScript va boshqa tillar uchun binding'lar bor." },
+        { "id": "d", "text": "Ikkalasi ham faqat API testlash vositasi", "hint": "Ikkalasi asosan brauzer UI avtomatlashtirish uchun (Playwright'da API so'rovlari ham bor)." }
+      ],
+      "explanation": "Tanlov mezonlari: jamoa tili, mavjud infratuzilma, kerakli brauzerlar, CI tezligi. Cypress — yana bir mashhur variant (JS, brauzer ichida ishlaydi). Muhimi — vositadan ko'ra test dizayni va arxitekturasi.",
+      "reviewed": false
+    },
+    {
+      "id": "qa.auto.003",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "UI avtotestlarda qaysi locator strategiyasi eng barqaror?",
+      "options": [
+        { "id": "a", "text": "Test uchun maxsus atributlar (`data-testid=\"login-submit\"`) yoki foydalanuvchiga ko'rinadigan rol va nom (`getByRole('button', { name: 'Kirish' })`) — dizayn va DOM tuzilmasi o'zgarganda ham ishlaydi", "correct": true },
+        { "id": "b", "text": "To'liq absolyut XPath: `/html/body/div[2]/div/form/div[3]/button`", "hint": "Har qanday tartib o'zgarishida buziladi — eng mo'rt variant." },
+        { "id": "c", "text": "Avtomatik generatsiya qilingan CSS klasslar (`.css-1x2y3z`)", "hint": "Build'dan build'ga o'zgaradi — testlar tasodifan buziladi." },
+        { "id": "d", "text": "Element koordinatalari bo'yicha bosish", "hint": "Ekran o'lchami, shrift yoki layout o'zgarsa, noto'g'ri joy bosiladi." }
+      ],
+      "explanation": "Dasturchilar bilan kelishuv: `data-testid` atributlarini qo'shish arzon va testlarni ancha barqaror qiladi. Rol bo'yicha locator'lar qo'shimcha foyda beradi — accessibility muammolarini ham ko'rsatadi.",
+      "reviewed": false
+    },
+    {
+      "id": "qa.auto.004",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Page Object Model (POM) nima va qanday muammoni hal qiladi?",
+      "options": [
+        { "id": "a", "text": "Har sahifa yoki komponent uchun klass: locator'lar va foydalanuvchi harakatlari (`login(email, password)`) shu klassda, testlar esa faqat bu metodlarni chaqirib, natijani tekshiradi. UI o'zgarsa bitta joy tuzatiladi; testlar biznes tilida o'qiladi va takrorlanish kamayadi", "correct": true },
+        { "id": "b", "text": "Har testda locator'larni to'g'ridan-to'g'ri yozish uslubi", "hint": "Aynan buning oldini oladi — locator'lar bir joyga yig'iladi." },
+        { "id": "c", "text": "Page Object ichida assert'lar va test logikasi bo'lishi kerak", "hint": "Odatda page object — harakatlar va holatni olish; tekshiruvlar testda (mas'uliyatlar ajratilgan)." },
+        { "id": "d", "text": "POM faqat Selenium bilan ishlaydi", "hint": "Pattern — vositadan mustaqil: Playwright, Cypress, Appium bilan ham." }
+      ],
+      "explanation": "Kattaroq loyihalarda: komponent obyektlar (header, modal), fluent metodlar (`loginPage.login(u).openProfile()`), Screenplay pattern. Page object'ni juda katta qilmang — sahifa bo'limlariga bo'ling.",
+      "reviewed": false
+    },
+    {
+      "id": "qa.auto.005",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Code review: bu Selenium testi CI'da vaqti-vaqti bilan yiqiladi va sekin. Muammo nima?",
+      "code": "driver.findElement(By.id(\"search\")).sendKeys(\"telefon\");\ndriver.findElement(By.id(\"search-btn\")).click();\nThread.sleep(5000);\nList<WebElement> items = driver.findElements(By.cssSelector(\".result-item\"));\nassertTrue(items.size() > 0);",
+      "options": [
+        { "id": "a", "text": "Qat'iy `Thread.sleep(5000)`: natija tez kelsa — vaqt behuda, sekin kelsa (CI yuklangan) — test yiqiladi. Explicit wait kerak: `new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(\".result-item\")))` — shart bajarilishi bilan davom etadi", "correct": true },
+        { "id": "b", "text": "`sleep`ni 30 000 ms ga oshirish kerak", "hint": "Testlar yanada sekinlashadi va baribir kafolat yo'q; shartli kutish kerak." },
+        { "id": "c", "text": "`findElements` o'rniga `findElement` ishlatish kerak", "hint": "Ro'yxat olish to'g'ri; muammo vaqtni boshqarishda." },
+        { "id": "d", "text": "Muammo CI serverining o'zida — testga tegmaslik kerak", "hint": "CI tezligi o'zgaruvchan — test bunga chidamli yozilishi kerak." }
+      ],
+      "explanation": "Implicit va explicit wait'ni aralashtirmang — kutish vaqtlari kutilmagan tarzda qo'shilishi mumkin. Playwright'da auto-wait va web-first assertion'lar (`await expect(locator).toHaveCount(...)`) bu muammoni ko'p hollarda hal qiladi.",
+      "reviewed": false
+    },
+    {
+      "id": "qa.auto.006",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Avtotestlar nega bir-biridan mustaqil (izolyatsiyalangan) bo'lishi kerak?",
+      "options": [
+        { "id": "a", "text": "Har test o'z precondition'ini o'zi tayyorlasa (ma'lumot, login holati) — istalgan tartibda va parallel ishlaydi, bitta test yiqilsa boshqalari zanjir bo'lib yiqilmaydi, xato sababi aniq ko'rinadi va testni alohida qayta ishga tushirish mumkin", "correct": true },
+        { "id": "b", "text": "Mustaqillik muhim emas — oldingi test yaratgan ma'lumotdan foydalanish tezroq", "hint": "Bog'liq testlar parallel ishlamaydi va bitta xato o'nlab \"soxta\" yiqilishga olib keladi." },
+        { "id": "c", "text": "Mustaqillik uchun har testda UI orqali ro'yxatdan o'tish shart", "hint": "Tayyorgarlikni tezroq yo'l bilan — API yoki DB orqali qilish mumkin; UI faqat testlanayotgan qism uchun." },
+        { "id": "d", "text": "Testlar har doim alifbo tartibida ishga tushadi, shuning uchun bog'liqlik xavfsiz", "hint": "Tartib framework va parallellik sozlamalariga bog'liq — unga tayanish mo'rt." }
+      ],
+      "explanation": "Tezlashtirish: login holatini bir marta saqlab qayta ishlatish (Playwright `storageState`), ma'lumotni API orqali yaratish. Har test oxirida tozalash yoki izolyatsiyalangan ma'lumot (noyob nomlar) — keyingi testlarga ta'sir qilmaslik uchun.",
+      "reviewed": false
+    },
+    {
+      "id": "qa.auto.007",
+      "level": "strong_middle",
+      "type": "multi",
+      "kind": "concept",
+      "prompt": "Flaky (beqaror) testlar bilan ishlashda qaysi yondashuvlar to'g'ri? (bir nechta javob)",
+      "options": [
+        { "id": "a", "text": "Sababni aniqlash: vaqt va kutish, testlar o'rtasidagi umumiy holat, tashqi servislar, tartibga bog'liqlik, animatsiyalar, test ma'lumotlari", "correct": true },
+        { "id": "b", "text": "Flaky testlarni kuzatish (qayta ishga tushirishlar statistikasi) va tuzatilguncha alohida (quarantine) to'plamga ajratish, egasini belgilash", "correct": true },
+        { "id": "c", "text": "Diagnostika uchun trace, video, skrinshot va log'larni yiqilgan testlardan avtomatik saqlash", "correct": true },
+        { "id": "d", "text": "Hamma testga 5 marta avtomatik retry qo'yib, muammoni unutish", "hint": "Retry beqarorlikni yashiradi; ba'zi flaky testlar haqiqiy race condition bug'ini ko'rsatadi." },
+        { "id": "e", "text": "Flaky testlarni darhol o'chirib tashlash", "hint": "Qamrov yo'qoladi; avval sababini tuzatish yoki vaqtincha quarantine." }
+      ],
+      "explanation": "Flaky testlar ishonchni yemiradi: jamoa qizil build'ga e'tibor bermay qo'yadi va haqiqiy xatolar o'tib ketadi. Cheklangan retry (1 marta) + flaky statistikasi hisoboti — muvozanatli yondashuv. Ba'zan \"flaky\" — mahsulotdagi haqiqiy konkurentlik bug'i.",
+      "reviewed": false
+    },
+    {
+      "id": "qa.auto.008",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "800 ta UI avtotest CI'da 90 daqiqa ishlaydi va dasturchilar natijani kutmay merge qilmoqda. Qanday yaxshilanadi?",
+      "options": [
+        { "id": "a", "text": "Bosqichlash: har PR'da tez to'plam (unit + API + kritik UI smoke, 10 daqiqagacha), to'liq regression — kechasi yoki merge'dan keyin; parallel ishga tushirish va sharding; tekshiruvlarni pastki darajaga (API, komponent) ko'chirish; UI orqali emas, API orqali precondition tayyorlash; natijalar va artefaktlar (trace, video) CI hisobotida", "correct": true },
+        { "id": "b", "text": "Barcha UI testlarni o'chirish", "hint": "Kritik foydalanuvchi oqimlari uchun bir nechta E2E test kerak bo'lib qoladi." },
+        { "id": "c", "text": "Testlarni faqat reliz oldidan, oyiga bir marta ishga tushirish", "hint": "Xatolar kech topiladi va qaysi o'zgarish sabab bo'lganini aniqlash qiyinlashadi." },
+        { "id": "d", "text": "CI'da testlarni ketma-ket, bitta mashinada ishga tushirish barqarorroq", "hint": "Barqarorlik izolyatsiyadan keladi; ketma-ketlik faqat vaqtni oshiradi." }
+      ],
+      "explanation": "Maqsad — tez fikr-mulohaza: PR'dagi tekshiruv 10–15 daqiqadan oshsa, jamoa uni chetlab o'tishni boshlaydi. Testlarga teglar (`@smoke`, `@regression`) va o'zgargan kodga ta'sir qiladigan testlarni tanlash (test impact analysis) ham yordam beradi.",
+      "reviewed": false
+    },
+    {
+      "id": "qa.auto.009",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Rahbariyat \"avtomatlashtirish bizga nima beradi va qancha turadi?\" deb so'radi. ROI'ni qanday asoslaysiz?",
+      "options": [
+        { "id": "a", "text": "Xarajat: yozish + qo'llab-quvvatlash (UI o'zgarishlari, flaky testlar) + infratuzilma; foyda: manual regression soatlari tejalishi × relizlar chastotasi, tezroq fikr-mulohaza (reliz sikli qisqarishi), production'ga o'tgan bug'lar kamayishi. Hozirgi holatni o'lchab, eng ko'p takrorlanadigan va riskli oqimlardan boshlash, natijani metrikalar bilan ko'rsatish", "correct": true },
+        { "id": "b", "text": "Test case'larning 100% ini avtomatlashtirish maqsadi — shunda manual tester kerak bo'lmaydi", "hint": "100% avtomatlashtirish odatda iqtisodiy jihatdan foydasiz va qo'llab-quvvatlash xarajati portlaydi." },
+        { "id": "c", "text": "ROI'ni faqat yozilgan avtotestlar soni bilan o'lchash", "hint": "Testlar soni qiymat emas; tejalgan vaqt, tezlik va sifat ta'siri muhim." },
+        { "id": "d", "text": "Avtomatlashtirish birinchi oydayoq o'zini oqlaydi", "hint": "Dastlabki investitsiya katta; foyda ko'p sonli takroriy bajarishlarda to'planadi." }
+      ],
+      "explanation": "Oddiy hisob: regression 40 soat manual × har 2 haftada reliz = oyiga 80 soat; avtomatlashtirish 300 soat + oyiga 20 soat qo'llab-quvvatlash → ~5 oyda qoplanadi, keyin har oy foyda. Ko'rinmas foyda — tez-tez reliz qilish imkoniyati va dasturchilarning ishonchi.",
+      "reviewed": false
+    },
+    {
+      "id": "qa.auto.010",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Jamoada 1 500 ta UI E2E test, 200 ta API test va deyarli unit test yo'q (\"muzqaymoq konusi\"). Avtomatlashtirish strategiyasini qanday o'zgartirasiz?",
+      "options": [
+        { "id": "a", "text": "Test piramidasiga qarab siljish: dasturchilar bilan unit va komponent testlarni ko'paytirish (Definition of Done'ga kiritish), biznes qoidalarni API darajasida tekshirish, UI E2E'ni faqat kritik foydalanuvchi oqimlariga qisqartirish; dublikat va past qiymatli UI testlarni olib tashlash; o'zgarishni bosqichma-bosqich, metrikalar (CI vaqti, flaky ulushi, escaped defects) bilan kuzatish", "correct": true },
+        { "id": "b", "text": "Yana 1 000 ta UI test qo'shib qamrovni oshirish", "hint": "Konus yanada kattalashadi: sekin, mo'rt va qimmat to'plam." },
+        { "id": "c", "text": "UI testlarni bir kunda to'liq o'chirib, unit testlar yozilishini kutish", "hint": "Oraliq davrda qamrov yo'qoladi; o'tish bosqichma-bosqich bo'lishi kerak." },
+        { "id": "d", "text": "Unit testlar — dasturchilar masalasi, QA strategiyasiga aloqasi yo'q", "hint": "Sifat — butun jamoa mas'uliyati; QA test strategiyasini barcha darajalarda muvofiqlashtiradi." }
+      ],
+      "explanation": "Piramida — qat'iy nisbat emas, balki tamoyil: tekshiruvni xato topa oladigan eng arzon va tez darajada bajarish. Ba'zi arxitekturalarda \"trophy\" (integration testlarga urg'u) ham mos. Senior QA'ning ishi — vositalar emas, jamoa amaliyotini o'zgartirish.",
+      "reviewed": false
+    }
+  ]
+}

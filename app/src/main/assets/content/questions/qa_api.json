@@ -1,0 +1,203 @@
+{
+  "topic": "qa.api",
+  "questions": [
+    {
+      "id": "qa.api.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "REST API'da `POST /users` bilan yangi foydalanuvchi muvaffaqiyatli yaratilganda qaysi javob eng to'g'ri?",
+      "options": [
+        { "id": "a", "text": "`201 Created`, javob tanasida yaratilgan ob'ekt (yoki uning ID'si) va ko'pincha `Location: /users/123` header'i", "correct": true },
+        { "id": "b", "text": "`200 OK` va bo'sh tana — farqi yo'q", "hint": "200 ham uchraydi, lekin yaratish uchun aniqroq status — 201; testda kelishilgan kontrakt tekshiriladi." },
+        { "id": "c", "text": "`204 No Content` va yaratilgan ob'ekt tanada", "hint": "204 — tanasiz javob degani; tana bilan qaytsa kontrakt buziladi." },
+        { "id": "d", "text": "`302 Found`", "hint": "3xx — yo'naltirish; API'da yaratish natijasi uchun ishlatilmaydi." }
+      ],
+      "explanation": "Metodlar: GET — o'qish, POST — yaratish, PUT — to'liq almashtirish, PATCH — qisman yangilash, DELETE — o'chirish. Status guruhlari: 2xx muvaffaqiyat, 3xx yo'naltirish, 4xx klient xatosi, 5xx server xatosi. API testida status, tana va header'lar hujjatlashtirilgan kontraktga (OpenAPI) qarshi tekshiriladi.",
+      "reviewed": false
+    },
+    {
+      "id": "qa.api.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`400`, `401`, `403` va `404` status kodlari qanday holatlarda qaytishi kerak?",
+      "options": [
+        { "id": "a", "text": "`400` — so'rov noto'g'ri (yaroqsiz JSON, majburiy maydon yo'q); `401` — autentifikatsiya yo'q yoki token yaroqsiz; `403` — foydalanuvchi aniqlangan, lekin bu amalga ruxsati yo'q; `404` — resurs topilmadi", "correct": true },
+        { "id": "b", "text": "`401` va `403` bir xil — ikkalasi ham \"kirish taqiqlangan\"", "hint": "401 — \"kimligingizni bilmayman\", 403 — \"bilaman, lekin ruxsat yo'q\"." },
+        { "id": "c", "text": "Validatsiya xatosi uchun `500`", "hint": "5xx — server aybi; noto'g'ri kirish — klient xatosi (4xx)." },
+        { "id": "d", "text": "Topilmagan resurs uchun `200` va bo'sh tana", "hint": "Klient \"bo'sh\" va \"mavjud emas\"ni farqlay olmaydi; to'g'ri status — 404." }
+      ],
+      "explanation": "Testda har holat uchun alohida case: tokensiz so'rov → 401, oddiy foydalanuvchi admin endpoint'iga → 403, mavjud bo'lmagan ID → 404, noto'g'ri tana → 400 va tushunarli xato xabari. Server xatolarida (5xx) ichki tafsilotlar (stack trace) oshkor qilinmasligini ham tekshiring.",
+      "reviewed": false
+    },
+    {
+      "id": "qa.api.003",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Postman'da environment o'zgaruvchilari (`{{baseUrl}}`, `{{token}}`) nima uchun ishlatiladi?",
+      "options": [
+        { "id": "a", "text": "Bir xil so'rovlar to'plamini turli muhitlarda (dev, staging, prod) URL va kalitlarni qo'lda o'zgartirmasdan ishga tushirish; bir so'rov natijasini (masalan, login'dan olingan token yoki yaratilgan ID) keyingi so'rovlarga uzatish — `pm.environment.set(\"token\", ...)`", "correct": true },
+        { "id": "b", "text": "Faqat so'rov nomlarini chiroyli ko'rsatish uchun", "hint": "O'zgaruvchilar so'rov ichidagi qiymatlarga qo'yiladi — URL, header, tana." },
+        { "id": "c", "text": "Parol va tokenlarni jamoaga ochiq kolleksiyada saqlash uchun", "hint": "Sirlar ochiq kolleksiyaga tushmasligi kerak — secret turdagi o'zgaruvchilar, lokal qiymatlar yoki vault." },
+        { "id": "d", "text": "O'zgaruvchilar faqat GET so'rovlarida ishlaydi", "hint": "Istalgan metod va so'rovning istalgan qismida ishlaydi." }
+      ],
+      "explanation": "Postman testlari: `pm.test(\"status 200\", () => pm.response.to.have.status(200))`. Kolleksiyani CI'da Newman yoki Postman CLI bilan ishga tushirish mumkin. Muhitlar tartibda bo'lsa, xato bilan production'ga so'rov yuborish xavfi kamayadi.",
+      "reviewed": false
+    },
+    {
+      "id": "qa.api.004",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "`users` jadvalida 5 ta yozuv bor. So'rov qanday natija qaytaradi?",
+      "code": "-- users\n-- id | name  | status   | city\n--  1 | Ali   | active   | Toshkent\n--  2 | Vali  | blocked  | Toshkent\n--  3 | Gani  | active   | Samarqand\n--  4 | Lola  | active   | Toshkent\n--  5 | Sami  | NULL     | Toshkent\n\nSELECT COUNT(*)\nFROM users\nWHERE city = 'Toshkent' AND status <> 'blocked';",
+      "options": [
+        { "id": "a", "text": "2", "correct": true },
+        { "id": "b", "text": "3", "hint": "`status` NULL bo'lgan qatorda `NULL <> 'blocked'` natijasi TRUE emas, UNKNOWN — qator filtrdan o'tmaydi." },
+        { "id": "c", "text": "4", "hint": "Bloklangan foydalanuvchi shart bilan chiqarib tashlanadi." },
+        { "id": "d", "text": "1", "hint": "Toshkent'dagi faol foydalanuvchilarni qayta sanang." }
+      ],
+      "explanation": "SQL'da NULL bilan har qanday solishtirish UNKNOWN beradi — `WHERE` faqat TRUE qatorlarni oladi. NULL'ni hisobga olish: `status IS DISTINCT FROM 'blocked'` yoki `(status <> 'blocked' OR status IS NULL)`. QA uchun klassik tuzoq: UI'da 3 ko'rinadi, SQL tekshiruvi 2 deydi.",
+      "reviewed": false
+    },
+    {
+      "id": "qa.api.005",
+      "level": "middle",
+      "type": "multi",
+      "kind": "concept",
+      "prompt": "`GET /orders/{id}` endpoint'ini testlashda nimalarni tekshirish kerak? (bir nechta javob)",
+      "options": [
+        { "id": "a", "text": "Status kod va javob tanasi sxemaga mosligi (majburiy maydonlar, tiplar, formatlar)", "correct": true },
+        { "id": "b", "text": "Ma'lumotlar to'g'riligi — qiymatlar DB yoki oldin yaratilgan test ma'lumotiga mos", "correct": true },
+        { "id": "c", "text": "Negativ holatlar: mavjud bo'lmagan ID, noto'g'ri formatdagi ID, tokensiz va boshqa foydalanuvchining buyurtmasi", "correct": true },
+        { "id": "d", "text": "Header'lar (Content-Type, kesh) va javob vaqti kelishilgan chegarada", "correct": true },
+        { "id": "e", "text": "Faqat status 200 ekanini — qolgani frontend'ning ishi", "hint": "200 va noto'g'ri tana (masalan, boshqa foydalanuvchi ma'lumoti) — jiddiy bug; tana albatta tekshiriladi." }
+      ],
+      "explanation": "Yana: pagination va filtrlar (ro'yxat endpoint'larida), lokalizatsiya, maxfiy maydonlar (parol xeshi, ichki ID) javobga tushmasligi. Avtomatlashtirilgan API testlari UI testlariga nisbatan tez va barqaror — piramidaning o'rta qatlami.",
+      "reviewed": false
+    },
+    {
+      "id": "qa.api.006",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Idempotentlik nima va qaysi HTTP metodlar idempotent bo'lishi kerak?",
+      "options": [
+        { "id": "a", "text": "Bir xil so'rovni bir necha marta yuborish tizim holatiga bir marta yuborgandek ta'sir qilishi. GET, PUT, DELETE (va HEAD, OPTIONS) — idempotent; POST — yo'q (har yuborish yangi resurs yaratishi mumkin). Testda: tarmoq uzilib qayta yuborilganda ikki marta to'lov yoki ikki buyurtma yaratilmasligini tekshirish (idempotency key)", "correct": true },
+        { "id": "b", "text": "Idempotent — har safar bir xil javob tanasi qaytishi", "hint": "Gap holatga ta'sir haqida: DELETE ikkinchi marta 404 qaytarishi mumkin, lekin holat o'zgarmaydi." },
+        { "id": "c", "text": "POST har doim idempotent", "hint": "Odatda yo'q — shuning uchun to'lov API'larida `Idempotency-Key` header'i ishlatiladi." },
+        { "id": "d", "text": "Idempotentlik faqat performance bilan bog'liq", "hint": "Asosan ishonchlilik: retry'lar xavfsiz bo'lishi uchun." }
+      ],
+      "explanation": "QA stsenariylari: \"To'lash\" tugmasini tez ikki marta bosish, so'rovni Postman'da takrorlash, timeout'dan keyin mobil ilovaning avtomatik retry'i. Kutilgan: bitta to'lov, ikkinchi so'rov birinchisining natijasini qaytaradi.",
+      "reviewed": false
+    },
+    {
+      "id": "qa.api.007",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Ma'lumotlar yaxlitligini tekshirish uchun so'rov. U nechta qator qaytaradi?",
+      "code": "-- users: id = 1, 2, 3\n-- orders\n-- id | user_id\n-- 10 | 1\n-- 11 | 2\n-- 12 | 7\n-- 13 | NULL\n-- 14 | 9\n\nSELECT o.id\nFROM orders o\nLEFT JOIN users u ON u.id = o.user_id\nWHERE u.id IS NULL;",
+      "options": [
+        { "id": "a", "text": "3 ta (12, 13, 14)", "correct": true },
+        { "id": "b", "text": "2 ta (12, 14)", "hint": "`user_id` NULL bo'lgan qator ham hech bir foydalanuvchiga mos kelmaydi — LEFT JOIN'da `u.id` NULL bo'ladi." },
+        { "id": "c", "text": "0 ta", "hint": "LEFT JOIN barcha buyurtmalarni saqlaydi; mos foydalanuvchisi yo'qlarida `u` ustunlari NULL." },
+        { "id": "d", "text": "5 ta", "hint": "`WHERE u.id IS NULL` faqat mos foydalanuvchisi yo'q qatorlarni qoldiradi." }
+      ],
+      "explanation": "\"Yetim\" yozuvlarni topish — QA'ning DB tekshiruvidagi tipik so'rov (foreign key yo'q yoki o'chirish kaskadi noto'g'ri bo'lsa). INNER JOIN bunday qatorlarni yashirib qo'yadi. Bu so'rov topgan har qator — bug yoki ma'lumot migratsiyasi muammosi.",
+      "reviewed": false
+    },
+    {
+      "id": "qa.api.008",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "API javobini JSON Schema yoki OpenAPI spetsifikatsiyasiga qarshi tekshirish nima beradi?",
+      "options": [
+        { "id": "a", "text": "Kontrakt buzilishini avtomatik ushlaydi: maydon nomi o'zgargan yoki yo'qolgan, tip almashgan (son → satr), majburiy maydon null, ruxsat etilmagan enum qiymati. Har bir maydonni qo'lda assert qilmasdan, barcha javoblarni bir xil qoida bilan tekshirish mumkin", "correct": true },
+        { "id": "b", "text": "Ma'lumot qiymatlari biznes jihatdan to'g'riligini to'liq kafolatlaydi", "hint": "Sxema shakl va tiplarni tekshiradi; summa to'g'ri hisoblanganini alohida assert'lar tekshiradi." },
+        { "id": "c", "text": "Faqat frontend dasturchilar uchun foydali", "hint": "API regressiyalarini ushlash va mobil ilovalarni buzilishdan himoya qilish — QA uchun ham asosiy foyda." },
+        { "id": "d", "text": "Sxema tekshiruvi javob vaqtini o'lchaydi", "hint": "Performance alohida o'lchanadi." }
+      ],
+      "explanation": "Vositalar: Postman (`pm.response.to.have.jsonSchema`), REST Assured `matchesJsonSchema`, Schemathesis (OpenAPI'dan avtomatik test generatsiyasi). Spetsifikatsiya va haqiqiy API o'rtasidagi farq — o'zi bug (hujjat yoki implementatsiya xatosi).",
+      "reviewed": false
+    },
+    {
+      "id": "qa.api.009",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`GET /api/orders/1052` foydalanuvchining buyurtmasini qaytaradi. Qaysi xavfsizlik testi ayniqsa muhim?",
+      "options": [
+        { "id": "a", "text": "IDOR (Broken Object Level Authorization) tekshiruvi: A foydalanuvchi tokeni bilan B foydalanuvchining buyurtma ID'sini so'rash — server 403/404 qaytarishi kerak. Shuningdek, ID'ni o'zgartirib PUT/DELETE, tokensiz va muddati o'tgan token bilan so'rovlar, javobda ortiqcha maxfiy maydonlar yo'qligi", "correct": true },
+        { "id": "b", "text": "Faqat to'g'ri token bilan o'z buyurtmasini olish", "hint": "Pozitiv stsenariy xavfsizlik bo'shlig'ini ko'rsatmaydi; begona ob'ektga kirishni sinash kerak." },
+        { "id": "c", "text": "UI'da buyurtma tugmasi yashirinligini tekshirish yetarli", "hint": "Hujumchi UI'ni chetlab API'ni to'g'ridan-to'g'ri chaqiradi — tekshiruv serverda bo'lishi shart." },
+        { "id": "d", "text": "Ketma-ket ID'lar xavfsiz, chunki ularni hech kim taxmin qilmaydi", "hint": "Ketma-ket ID'larni taxmin qilish juda oson; UUID ham avtorizatsiya tekshiruvini almashtirmaydi." }
+      ],
+      "explanation": "BOLA — OWASP API Security Top 10 ro'yxatida birinchi o'rinda. Testlash uchun ikki va undan ortiq test foydalanuvchisi (turli rollar) kerak. Avtomatlashtirish: har endpoint uchun \"begona resurs\" negativ testi shabloni.",
+      "reviewed": false
+    },
+    {
+      "id": "qa.api.010",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Avtomatik API testlari umumiy staging DB'da tasodifiy yiqilmoqda: ba'zan kerakli foydalanuvchi o'chirilgan, ba'zan ma'lumot boshqa test tomonidan o'zgartirilgan. Test ma'lumotlarini qanday boshqarish kerak?",
+      "options": [
+        { "id": "a", "text": "Har test o'z ma'lumotini o'zi yaratadi (API yoki fixture orqali, noyob nomlar/ID bilan) va oxirida tozalaydi yoki izolyatsiyalangan muhit (har ishga tushirish uchun alohida DB/konteyner) ishlatiladi; testlar bir-biriga va oldindan qo'lda kiritilgan \"oltin\" yozuvlarga bog'liq bo'lmaydi; maxfiy production ma'lumotlari faqat anonimlashtirilgan holda", "correct": true },
+        { "id": "b", "text": "Barcha testlar bitta umumiy test foydalanuvchisini ishlatsin", "hint": "Parallel testlar bir-birining holatini o'zgartiradi — aynan tasodifiy yiqilishlar sababi." },
+        { "id": "c", "text": "Testlarni har doim bir xil tartibda ketma-ket ishga tushirish", "hint": "Tartibga bog'liqlikni yashiradi va parallellikni yo'qotadi; muammo izolyatsiya yo'qligida." },
+        { "id": "d", "text": "Production ma'lumotlar bazasini staging'ga to'liq nusxalash", "hint": "Shaxsiy ma'lumotlar xavfsizligi va qonun talablari buziladi; anonimlashtirish shart." }
+      ],
+      "explanation": "Test data builder/factory pattern'lari ma'lumot yaratishni qisqa va o'qiladigan qiladi. Testcontainers bilan har ishga tushirishda toza DB. Tozalash muvaffaqiyatsiz bo'lsa ham keyingi testlar ishlashi uchun noyob prefiks (masalan, `autotest_<run_id>`).",
+      "reviewed": false
+    },
+    {
+      "id": "qa.api.011",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Buyurtma yaratilgach, to'lov holati asinxron ravishda (navbat orqali, bir necha soniyada) yangilanadi va hamkorga webhook yuboriladi. Buni qanday testlash to'g'ri?",
+      "options": [
+        { "id": "a", "text": "Qat'iy `sleep(5)` o'rniga timeout bilan polling (holat kutilgan qiymatga yetguncha qisqa intervallarda tekshirish); webhook uchun test qabul qiluvchi (mock server, webhook.site kabi) va kelgan payload, imzo, takroriy yuborish (retry) va tartibni tekshirish; xato yo'llari: navbat qayta ishlay olmaganda, webhook 500 qaytarganda", "correct": true },
+        { "id": "b", "text": "Har testda 30 soniya `sleep` qo'yish — ishonchli", "hint": "Sekin (har test 30 s) va baribir kafolat yo'q — tizim sekinlashsa yiqiladi." },
+        { "id": "c", "text": "Faqat buyurtma yaratish javobi 201 ekanini tekshirish", "hint": "Asinxron qism (holat, webhook) — eng ko'p xato bo'ladigan joy va u tekshirilmay qoladi." },
+        { "id": "d", "text": "Asinxron jarayonlarni testlab bo'lmaydi", "hint": "Polling, mock qabul qiluvchilar va log/metrikalar bilan testlanadi." }
+      ],
+      "explanation": "Vositalar: Awaitility (Java), Playwright `expect.poll`, oddiy retry yordamchisi. Webhook xavfsizligi: imzo (HMAC) tekshiruvi, takroriy yetkazishda idempotent qayta ishlash. Kuzatuvchanlik — correlation ID bo'yicha butun zanjirni log'da topish.",
+      "reviewed": false
+    },
+    {
+      "id": "qa.api.012",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "30 ta mikroservisli tizimda bitta servis API'sini o'zgartirish boshqalarini tez-tez buzmoqda, end-to-end testlar esa sekin va mo'rt. Qaysi yondashuv to'g'ri?",
+      "options": [
+        { "id": "a", "text": "Consumer-driven contract testing (masalan, Pact): har iste'molchi o'zi kutgan so'rov/javob kontraktini yozadi, provayder CI'da barcha kontraktlarga qarshi tekshiriladi; buzuvchi o'zgarish deploy'dan oldin aniqlanadi (`can-i-deploy`). E2E testlar faqat bir necha kritik biznes oqimi uchun qoladi", "correct": true },
+        { "id": "b", "text": "E2E testlar sonini ikki baravar ko'paytirish", "hint": "E2E testlar sekin, mo'rt va xato manbaini aniq ko'rsatmaydi — muammo kuchayadi." },
+        { "id": "c", "text": "Har servisni faqat unit testlar bilan testlash", "hint": "Unit testlar servislar o'rtasidagi kelishuv buzilishini ko'rmaydi." },
+        { "id": "d", "text": "Barcha servislarni bir vaqtda, bitta relizda chiqarish", "hint": "Mikroservislarning mustaqil deploy afzalligi yo'qoladi va xatar oshadi." }
+      ],
+      "explanation": "Kontrakt testlari tez (har servis alohida) va xato kimda ekanini aniq ko'rsatadi. Qo'shimcha: API versiyalash va orqaga moslik qoidalari (maydonni o'chirish o'rniga eskirgan deb belgilash), sxema registri (event'lar uchun). Senior QA — test strategiyasini tizim arxitekturasiga moslashtiradi.",
+      "reviewed": false
+    },
+    {
+      "id": "qa.api.013",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "k6 bilan API yuklama testi o'tkazildi: o'rtacha javob vaqti 180 ms, p95 — 2,4 s, xatolar 0,3%. Natijani qanday talqin qilasiz?",
+      "options": [
+        { "id": "a", "text": "O'rtacha qiymat yaxshi ko'rinsa ham, so'rovlarning 5% i 2,4 s dan sekin — ko'p foydalanuvchi uchun sezilarli; SLO bilan solishtirish kerak (masalan, p95 < 500 ms). Keyingi qadamlar: sekin so'rovlar qaysi endpoint/ma'lumot bilan bog'liqligini aniqlash, server metrikalari (CPU, DB, ulanishlar puli) bilan korrelyatsiya, yuklama oshganda p95 qanday o'zgarishini ko'rish", "correct": true },
+        { "id": "b", "text": "O'rtacha 180 ms — demak performance a'lo, qo'shimcha tahlil kerak emas", "hint": "O'rtacha qiymat \"dum\"ni yashiradi; foydalanuvchi tajribasi percentile'lar bilan baholanadi." },
+        { "id": "c", "text": "0,3% xato — e'tiborga arzimaydi", "hint": "Kuniga million so'rovda bu 3000 ta muvaffaqiyatsiz amal; xatolar turini tahlil qilish kerak." },
+        { "id": "d", "text": "p95 muhim emas, faqat maksimal javob vaqti muhim", "hint": "Maksimal qiymat bitta tasodifiy hodisa bo'lishi mumkin; p95/p99 barqarorroq ko'rsatkich." }
+      ],
+      "explanation": "Yuklama testi turlari: load (kutilgan yuklama), stress (chegarani topish), soak (uzoq muddat — xotira oqishi), spike (keskin o'sish). Test muhiti production'ga yaqin bo'lishi va ma'lumot hajmi real bo'lishi kerak, aks holda natijalar chalg'itadi. k6'da `thresholds` bilan CI'da avtomatik pass/fail.",
+      "reviewed": false
+    }
+  ]
+}
