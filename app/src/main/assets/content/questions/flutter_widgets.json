@@ -1,0 +1,187 @@
+{
+  "topic": "flutter.widgets",
+  "questions": [
+    {
+      "id": "flutter.widgets.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`StatelessWidget` va `StatefulWidget` qanday farqlanadi?",
+      "options": [
+        { "id": "a", "text": "Stateless — o'zgaruvchan ichki holati yo'q, faqat konstruktor parametrlaridan chiziladi; Stateful — alohida `State` ob'ekti bor, u widget qayta yaratilganda ham saqlanadi va `setState` bilan qayta chizishni so'raydi", "correct": true },
+        { "id": "b", "text": "Stateless tezroq, shu sabab har doim u", "hint": "Holat kerak bo'lsa Stateless yetmaydi; farq imkoniyatda." },
+        { "id": "c", "text": "Stateful faqat forma uchun", "hint": "Har qanday o'zgaruvchan holat: animatsiya, tanlov, yuklanish." },
+        { "id": "d", "text": "Stateless qayta chizilmaydi", "hint": "Ota rebuild bo'lsa, u ham rebuild bo'ladi — faqat o'z holati yo'q." }
+      ],
+      "explanation": "Widget — immutable konfiguratsiya, har rebuild'da yangisi yaratiladi (arzon). `State` — uzoq yashaydi, Element bilan bog'langan. Qoida: iloji boricha Stateless; holatni iloji boricha pastda (yoki state management'da) saqlash.",
+      "reviewed": false
+    },
+    {
+      "id": "flutter.widgets.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`setState()` nima qiladi?",
+      "options": [
+        { "id": "a", "text": "Framework'ga shu `State`ning holati o'zgarganini bildiradi — widget keyingi frame'da \"dirty\" belgilanib, `build()` qayta chaqiriladi; callback ichida holatni sinxron o'zgartirish kerak", "correct": true },
+        { "id": "b", "text": "Darhol ekranni qayta chizadi", "hint": "Darhol emas — keyingi frame'da, bir nechta `setState` birlashtiriladi." },
+        { "id": "c", "text": "Holatni DB'ga saqlaydi", "hint": "Saqlash bilan aloqasi yo'q." },
+        { "id": "d", "text": "Butun ilovani qayta chizadi", "hint": "Faqat shu widget va uning subtree'si." }
+      ],
+      "explanation": "Xatolar: `setState` ichida `await` (asinxron kod tashqarida, natijani `setState` ichida tayinlash), `dispose`dan keyin chaqirish (\"setState() called after dispose()\" — `if (mounted)` tekshiruvi), `build` ichida chaqirish (cheksiz sikl).",
+      "reviewed": false
+    },
+    {
+      "id": "flutter.widgets.003",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`BuildContext` nima?",
+      "options": [
+        { "id": "a", "text": "Widget'ning daraxtdagi joylashuvi (aslida Element) — u orqali yuqoridagi widget'larga (`Theme.of(context)`, `Navigator.of(context)`, `InheritedWidget`) murojaat qilinadi", "correct": true },
+        { "id": "b", "text": "Ilova global konfiguratsiyasi", "hint": "Global emas — har widget'ning o'z context'i, daraxtdagi o'rni." },
+        { "id": "c", "text": "Widget'ning holati", "hint": "Holat — `State`; context — joylashuv." },
+        { "id": "d", "text": "Ekran o'lchami", "hint": "`MediaQuery.of(context).size` — context orqali olinadi, lekin o'zi emas." }
+      ],
+      "explanation": "Tuzoq: `Scaffold.of(context)` `Scaffold` yaratgan widget ichida chaqirilsa — topilmaydi (context Scaffold'dan yuqorida). Yechim: `Builder` widget yoki alohida widget'ga ajratish. `context` asinxron ishdan keyin ishlatish — widget o'chirilgan bo'lishi mumkin (`mounted`).",
+      "reviewed": false
+    },
+    {
+      "id": "flutter.widgets.004",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Flutter'da forma validatsiyasi qanday tashkil qilinadi?",
+      "options": [
+        { "id": "a", "text": "`Form` + `GlobalKey<FormState>`, ichida `TextFormField`lar `validator` funksiyasi bilan (null — to'g'ri, satr — xato xabari); `formKey.currentState!.validate()` hammasini tekshiradi, `save()` `onSaved`larni chaqiradi", "correct": true },
+        { "id": "b", "text": "Har maydonni qo'lda `if` bilan tekshirish — yagona yo'l", "hint": "Mumkin, lekin `Form` xato ko'rsatish va hammasini birga tekshirishni beradi." },
+        { "id": "c", "text": "Validatsiya faqat serverda bo'lishi kerak", "hint": "Server — majburiy, klient — UX uchun qo'shimcha." },
+        { "id": "d", "text": "`TextField` o'zi validatsiya qiladi", "hint": "`TextField`da `validator` yo'q — `TextFormField` kerak." }
+      ],
+      "explanation": "`autovalidateMode` — qachon tekshirish (yozayotganda yoki submit'da). `TextEditingController` — qiymatni o'qish/o'zgartirish, `dispose` qilish shart. Murakkab formalar uchun `reactive_forms`/`flutter_form_builder`.",
+      "reviewed": false
+    },
+    {
+      "id": "flutter.widgets.005",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Quyidagi kodda nima noto'g'ri?",
+      "code": "class Counter extends StatelessWidget {\n  int count = 0;\n\n  @override\n  Widget build(BuildContext context) {\n    return ElevatedButton(\n      onPressed: () { count++; },\n      child: Text('$count'),\n    );\n  }\n}",
+      "options": [
+        { "id": "a", "text": "`StatelessWidget`da mutable maydon — `count++` UI'ni yangilamaydi (rebuild yo'q), va rebuild bo'lsa widget qayta yaratilib `count` 0 ga qaytadi; `StatefulWidget` + `setState` kerak", "correct": true },
+        { "id": "b", "text": "`Text` o'rniga `Label` kerak", "hint": "Flutter'da `Text` to'g'ri." },
+        { "id": "c", "text": "`onPressed` `async` bo'lishi kerak", "hint": "Asinxronlik bilan aloqasi yo'q." },
+        { "id": "d", "text": "Kod to'g'ri ishlaydi", "hint": "Tugmani bosing — raqam o'zgaradimi?" }
+      ],
+      "explanation": "Linter `must_be_immutable` ogohlantiradi — widget maydonlari `final` bo'lishi kerak. Widget — konfiguratsiya tavsifi, holat emas. Holat `State`da yashaydi va widget qayta yaratilganda saqlanadi.",
+      "reviewed": false
+    },
+    {
+      "id": "flutter.widgets.006",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`StatefulWidget` lifecycle metodlari qanday tartibda chaqiriladi?",
+      "options": [
+        { "id": "a", "text": "`createState` → `initState` (bir marta) → `didChangeDependencies` → `build` → (o'zgarishda `didUpdateWidget`/`setState` → `build`) → `deactivate` → `dispose` (bir marta)", "correct": true },
+        { "id": "b", "text": "`build` → `initState` → `dispose`", "hint": "`initState` `build`dan oldin." },
+        { "id": "c", "text": "`initState` har rebuild'da chaqiriladi", "hint": "Bir marta — `State` yaratilganda." },
+        { "id": "d", "text": "`dispose` chaqirilmaydi, GC o'zi tozalaydi", "hint": "`dispose` — controller, stream subscription, animation'ni yopish joyi; GC buni qilmaydi." }
+      ],
+      "explanation": "`initState`da `context`ga bog'liq (`Theme.of`, `Provider.of`) narsalarni olish — xato (InheritedWidget hali tayyor emas) — `didChangeDependencies` yoki `build`da. `didUpdateWidget` — ota yangi parametr bersa (`oldWidget` bilan solishtirish). `dispose`da hamma `Controller`, `StreamSubscription`, `FocusNode` yopiladi.",
+      "reviewed": false
+    },
+    {
+      "id": "flutter.widgets.007",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Flutter'da `Key` nima uchun kerak va `ValueKey`, `ObjectKey`, `UniqueKey`, `GlobalKey` qanday farqlanadi?",
+      "options": [
+        { "id": "a", "text": "Key framework'ga widget'ni Element/State bilan moslashtirishda yordam beradi (bir xil tur va key — bir xil element). `ValueKey(x)` — qiymat bo'yicha, `ObjectKey(o)` — ob'ekt identity, `UniqueKey` — har safar noyob (state saqlanmaydi), `GlobalKey` — butun ilovada noyob, `currentState`ga kirish beradi", "correct": true },
+        { "id": "b", "text": "Key — widget ID, har widget'da majburiy", "hint": "Majburiy emas — faqat ro'yxatda tartib o'zgarganda yoki aniq moslash kerakda." },
+        { "id": "c", "text": "Key faqat testlar uchun", "hint": "Testda ham ishlatiladi, lekin asosiy maqsad — element moslashtirish." },
+        { "id": "d", "text": "`GlobalKey` — eng yaxshi default", "hint": "Qimmat va global holat; faqat zarurat (Form, Scaffold'ga tashqaridan kirish)." }
+      ],
+      "explanation": "Klassik misol: `ListView`da element o'chirilganda keysiz `State`lar siljib, noto'g'ri elementga biriktiriladi (checkbox holati \"sakrab\" ketadi). `ValueKey(item.id)` — to'g'ri. Key `AnimatedSwitcher`, `Dismissible`, `ReorderableListView`da majburiy.",
+      "reviewed": false
+    },
+    {
+      "id": "flutter.widgets.008",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Flutter'da `const` konstruktor widget'lar uchun nima beradi?",
+      "options": [
+        { "id": "a", "text": "`const` widget kompilyatsiyada bir marta yaratiladi; ota rebuild bo'lganda framework bir xil instansiyani ko'rib subtree'ni rebuild qilmaydi — bepul optimizatsiya", "correct": true },
+        { "id": "b", "text": "Faqat kod uslubi, performance'ga ta'sir yo'q", "hint": "`identical` tekshiruvi rebuild'ni o'tkazib yuboradi — real ta'sir." },
+        { "id": "c", "text": "Widget'ni immutable qiladi", "hint": "Widget'lar allaqachon immutable; `const` — kanonik instansiya." },
+        { "id": "d", "text": "`const` widget'ni hech qachon o'zgartirib bo'lmaydi, shu sabab zararli", "hint": "Parametri o'zgarsa — `const` bo'lolmaydi, lint ogohlantirmaydi; zarari yo'q." }
+      ],
+      "explanation": "Lint: `prefer_const_constructors`, `prefer_const_literals_to_create_immutables`. Shart: barcha parametrlar compile-time const. Katta statik subtree'larni (ikonka, padding, matn) `const` qilish — oddiy va samarali. Lekin asosiy optimizatsiya — rebuild doirasini toraytirish.",
+      "reviewed": false
+    },
+    {
+      "id": "flutter.widgets.009",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Navigator 1.0 va Navigator 2.0 / go_router qanday farqlanadi?",
+      "options": [
+        { "id": "a", "text": "1.0 — imperativ stack (`push`/`pop`), sodda, lekin deep link, web URL va holat tiklash qiyin; 2.0 — deklarativ (`Router`, `RouterDelegate`), URL ↔ holat sinxron, lekin murakkab; `go_router` — 2.0 ustidagi qulay qatlam: yo'llar jadvali, parametrlar, redirect (auth), nested navigation", "correct": true },
+        { "id": "b", "text": "2.0 — 1.0 ning tezroq versiyasi", "hint": "Tezlik emas, model (imperativ vs deklarativ) farq qiladi." },
+        { "id": "c", "text": "1.0 eskirgan, ishlamaydi", "hint": "Ishlaydi va kichik mobil ilovalar uchun yetarli." },
+        { "id": "d", "text": "go_router — Flutter'dan tashqari, rasmiy emas", "hint": "flutter.dev jamoasi tomonidan qo'llab-quvvatlanadi." }
+      ],
+      "explanation": "Tanlov: faqat mobil, chuqur navigatsiya yo'q — 1.0 (named routes) yetadi; web, deep link, auth redirect, bottom nav holati — go_router (`ShellRoute`, `StatefulShellRoute`). `context.go` (stack almashtirish) vs `context.push` (ustiga qo'yish).",
+      "reviewed": false
+    },
+    {
+      "id": "flutter.widgets.010",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Widget, Element va RenderObject daraxtlari qanday bog'liq?",
+      "options": [
+        { "id": "a", "text": "Widget — immutable konfiguratsiya (har rebuild yangi); Element — widget'ning daraxtdagi instansiyasi, uzoq yashaydi, `State`ni ushlaydi va yangi widget bilan eskisini solishtiradi (`canUpdate`: tur + key); RenderObject — layout va paint, faqat RenderObjectWidget'lar uchun", "correct": true },
+        { "id": "b", "text": "Uchalasi bir xil ob'ekt", "hint": "Widget har frame qayta yaratilishi mumkin, RenderObject — qimmat, saqlanadi." },
+        { "id": "c", "text": "Har widget'ning RenderObject'i bor", "hint": "`Container`, `Padding` — RenderObject bor; `StatelessWidget` — faqat Element." },
+        { "id": "d", "text": "Element — widget'ning eski nomi", "hint": "Element — alohida qatlam, `BuildContext` aslida Element." }
+      ],
+      "explanation": "Rebuild arzon, chunki faqat Widget qayta yaratiladi; Element tur va key mos bo'lsa saqlanadi, RenderObject'ga faqat o'zgargan xususiyatlar yangilanadi. Shu sabab `Key` muhim: moslashtirish tur+key bo'yicha. DevTools Widget Inspector bu daraxtlarni ko'rsatadi.",
+      "reviewed": false
+    },
+    {
+      "id": "flutter.widgets.011",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Quyidagi kodda qanday muammo bor?",
+      "code": "class _PageState extends State<Page> {\n  late final StreamSubscription _sub;\n  final _controller = TextEditingController();\n\n  @override\n  void initState() {\n    super.initState();\n    _sub = repo.updates.listen((_) => setState(() {}));\n  }\n\n  @override\n  Widget build(BuildContext context) => TextField(controller: _controller);\n}",
+      "options": [
+        { "id": "a", "text": "`dispose` yo'q — `StreamSubscription` bekor qilinmaydi (widget o'chirilgandan keyin `setState` xatosi va memory leak), `TextEditingController` yopilmaydi", "correct": true },
+        { "id": "b", "text": "`late final` ishlatish xato", "hint": "`initState`da tayinlash uchun `late final` — odatiy uslub." },
+        { "id": "c", "text": "`super.initState()` oxirida bo'lishi kerak", "hint": "`initState`da `super` birinchi, `dispose`da oxirgi — to'g'ri." },
+        { "id": "d", "text": "Muammo yo'q", "hint": "Sahifadan chiqib, stream yangilansa nima bo'ladi?" }
+      ],
+      "explanation": "Qoida: `initState`/maydonda yaratilgan har resurs `dispose`da yopiladi: `_sub.cancel()`, `_controller.dispose()`, `AnimationController.dispose()`, `FocusNode.dispose()`. `flutter_hooks`/Riverpod `ref.onDispose` — avtomatlashtiradi. Leak Tracker (DevTools) — aniqlash.",
+      "reviewed": false
+    },
+    {
+      "id": "flutter.widgets.012",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Katta Flutter ilovasida widget test, golden test va integration test qanday taqsimlanadi?",
+      "options": [
+        { "id": "a", "text": "Unit — biznes mantiq (eng ko'p); widget test — alohida widget/ekran xatti-harakati (`pumpWidget`, `tester.tap`, fake bog'liqliklar), tez; golden — vizual regressiya (pixel solishtirish, platforma/font farqlari uchun CI'da bir xil muhit); integration — real qurilma/emulyatorda bir nechta asosiy oqim, sekin", "correct": true },
+        { "id": "b", "text": "Faqat integration testlar — real holatni ko'rsatadi", "hint": "Sekin va mo'rt; widget testlar ko'p xatoni millisekundlarda ushlaydi." },
+        { "id": "c", "text": "Golden testlar hamma UI uchun", "hint": "Har dizayn o'zgarishida yuzlab golden yangilanadi — shovqin; faqat dizayn-sistema komponentlari." },
+        { "id": "d", "text": "Flutter'da UI test qilib bo'lmaydi", "hint": "`flutter_test` — widget testlar framework'ning kuchli tomoni." }
+      ],
+      "explanation": "Widget test — `WidgetTester`, `find.byKey`, `pumpAndSettle` (animatsiyalar), `ProviderScope`/`BlocProvider` bilan fake. Golden: `matchesGoldenFile`, `alchemist`/`golden_toolkit`, CI'da Linux konteyner bir xil font. Integration: `integration_test` paketi, Firebase Test Lab/Patrol. Strategiya — xavf bo'yicha.",
+      "reviewed": false
+    }
+  ]
+}

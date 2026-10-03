@@ -1,0 +1,203 @@
+{
+  "topic": "flutter.async",
+  "questions": [
+    {
+      "id": "flutter.async.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`FutureBuilder` nima qiladi?",
+      "options": [
+        { "id": "a", "text": "`Future` holatiga (kutish, natija, xato) qarab UI chizadi — `snapshot.connectionState` va `snapshot.hasData`/`hasError` bo'yicha", "correct": true },
+        { "id": "b", "text": "Future'ni yaratadi", "hint": "Yaratmaydi — tayyor Future'ni kuzatadi." },
+        { "id": "c", "text": "Future'ni bekor qiladi", "hint": "Dart Future'ni bekor qilish mexanizmi yo'q (`CancelableOperation` paketi bor)." },
+        { "id": "d", "text": "Natijani cache qiladi", "hint": "Cache qilmaydi — Future qayta yaratilsa, qayta kutadi." }
+      ],
+      "explanation": "Tuzoq: `future: fetchData()` ni `build` ichida yozish — har rebuild'da yangi so'rov. Future'ni `initState`da yoki `late final`da bir marta yaratib, maydonda saqlang. Zamonaviy alternativa — Riverpod `FutureProvider`/`AsyncValue`.",
+      "reviewed": false
+    },
+    {
+      "id": "flutter.async.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Dart'da asinxron xatolar qanday ushlanadi?",
+      "options": [
+        { "id": "a", "text": "`await` atrofida `try/catch` (`on SocketException catch (e)` — tur bo'yicha), yoki `future.catchError(...)`; `finally` — tozalash; ushlanmagan asinxron xato — `Zone`ga/`FlutterError.onError`ga tushadi", "correct": true },
+        { "id": "b", "text": "Asinxron xatolarni ushlab bo'lmaydi", "hint": "`try/catch` `await` bilan ishlaydi." },
+        { "id": "c", "text": "Faqat `catchError` ishlaydi, `try/catch` emas", "hint": "`await` bilan `try/catch` — tavsiya etilgan uslub." },
+        { "id": "d", "text": "Xatolar avtomatik o'tkazib yuboriladi", "hint": "Ushlanmasa — konsolga chiqadi, release'da crash reporting'ga ketadi." }
+      ],
+      "explanation": "`await`siz Future tashlasa, `try/catch` ushlamaydi (xato keyin paydo bo'ladi). `unawaited(future)` — ongli ravishda kutmaslik. Butun ilova uchun: `runZonedGuarded` yoki `PlatformDispatcher.instance.onError` — Crashlytics/Sentry'ga yuborish.",
+      "reviewed": false
+    },
+    {
+      "id": "flutter.async.003",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_output",
+      "prompt": "Quyidagi kod nimani chop etadi?",
+      "code": "Future<void> main() async {\n  print('A');\n  await Future.delayed(Duration(milliseconds: 10));\n  print('B');\n  fetch();\n  print('C');\n}\n\nFuture<void> fetch() async {\n  print('D');\n  await Future.delayed(Duration(milliseconds: 10));\n  print('E');\n}",
+      "options": [
+        { "id": "a", "text": "A B D C E", "correct": true },
+        { "id": "b", "text": "A B C D E", "hint": "`async` funksiya birinchi `await`gacha sinxron bajariladi — `D` darhol." },
+        { "id": "c", "text": "A B D E C", "hint": "`fetch()` kutilmagan (`await` yo'q) — `E` keyin, `C` darhol." },
+        { "id": "d", "text": "A D B C E", "hint": "`fetch()` `B`dan keyin chaqiriladi." }
+      ],
+      "explanation": "`async` funksiya chaqirilganda darhol birinchi `await`gacha ishlaydi, keyin `Future` qaytarib nazoratni beradi. `fetch()` kutilmagani uchun `C` chop etiladi, `E` — 10 ms keyin. `main` tugasa ham, event loop `E`ni bajaradi.",
+      "reviewed": false
+    },
+    {
+      "id": "flutter.async.004",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Bir nechta mustaqil asinxron so'rovni parallel bajarish uchun nima ishlatiladi?",
+      "options": [
+        { "id": "a", "text": "`Future.wait([f1, f2, f3])` — hammasini birga boshlab, barchasi tugashini kutadi; ketma-ket `await` har birini oldingisi tugagach boshlaydi (yig'indi vaqt)", "correct": true },
+        { "id": "b", "text": "Ketma-ket `await` — Dart o'zi parallel qiladi", "hint": "`await` keyingi qatorni to'xtatadi — ketma-ket." },
+        { "id": "c", "text": "Har biri uchun alohida isolate", "hint": "I/O uchun isolate kerak emas — event loop yetarli; isolate CPU ish uchun." },
+        { "id": "d", "text": "`Future.forEach`", "hint": "Bu ketma-ket bajaradi." }
+      ],
+      "explanation": "`Future.wait` — biri xato bersa, butun xato (`eagerError`). Dart 3 record bilan: `final (user, orders) = await (getUser(), getOrders()).wait;` — turlar saqlanadi. Bir xil ma'lumotni ketma-ket emas, parallel so'rash — latency'ni keskin kamaytiradi.",
+      "reviewed": false
+    },
+    {
+      "id": "flutter.async.005",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`Stream` `Future`dan nimasi bilan farq qiladi va `StreamBuilder` qanday ishlaydi?",
+      "options": [
+        { "id": "a", "text": "`Future` — bitta qiymat (yoki xato) bir marta; `Stream` — vaqt bo'yicha ko'p qiymat (0..n), `done` bilan tugaydi. `StreamBuilder` stream'ga obuna bo'lib, har yangi qiymatda rebuild qiladi, `dispose`da obunani bekor qiladi", "correct": true },
+        { "id": "b", "text": "Bir xil, Stream — eski nom", "hint": "Biri bitta, ikkinchisi ketma-ket qiymatlar." },
+        { "id": "c", "text": "Stream faqat tarmoq uchun", "hint": "DB o'zgarishlari, foydalanuvchi hodisalari, timer — har joyda." },
+        { "id": "d", "text": "`StreamBuilder` stream'ni yaratadi", "hint": "Tayyor stream'ni kuzatadi; yaratish — `StreamController` yoki `async*`." }
+      ],
+      "explanation": "Single-subscription (bitta tinglovchi, default) vs broadcast (ko'p tinglovchi, `asBroadcastStream`/`StreamController.broadcast`). Ikkinchi `listen` single stream'da — xato. `async*` + `yield` — generator stream. `StreamBuilder`da ham stream'ni `build`da yaratmaslik.",
+      "reviewed": false
+    },
+    {
+      "id": "flutter.async.006",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Quyidagi kodda qanday muammo bor?",
+      "code": "ElevatedButton(\n  onPressed: () async {\n    final result = await api.save(data);\n    ScaffoldMessenger.of(context).showSnackBar(\n      SnackBar(content: Text(result.message)),\n    );\n  },\n)",
+      "options": [
+        { "id": "a", "text": "`await`dan keyin `context` ishlatish — bu vaqtda widget daraxtdan o'chirilgan bo'lishi mumkin (foydalanuvchi orqaga qaytdi); `if (!context.mounted) return;` tekshiruvi kerak", "correct": true },
+        { "id": "b", "text": "`async` callback `onPressed`da ruxsat etilmaydi", "hint": "Ruxsat etiladi — `VoidCallback` async funksiyani qabul qiladi." },
+        { "id": "c", "text": "`ScaffoldMessenger` eskirgan", "hint": "Aksincha — `Scaffold.of(context).showSnackBar` eskirgan." },
+        { "id": "d", "text": "Muammo yo'q", "hint": "Lint `use_build_context_synchronously` nima deydi?" }
+      ],
+      "explanation": "Lint `use_build_context_synchronously` aynan buni ushlaydi. Flutter 3.7+: `context.mounted` (BuildContext'da). `State` ichida — `mounted`. Yoki `ScaffoldMessenger`ni `await`dan oldin olib qo'yish (`final messenger = ScaffoldMessenger.of(context)`).",
+      "reviewed": false
+    },
+    {
+      "id": "flutter.async.007",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Dart'da isolate nima va u thread'dan nimasi bilan farq qiladi?",
+      "options": [
+        { "id": "a", "text": "Isolate — o'z xotirasi (heap) va event loop'iga ega mustaqil ijro birligi; isolate'lar xotira baham ko'rmaydi, faqat xabar (message passing) orqali gaplashadi — race condition va qulf yo'q, lekin ma'lumot nusxalanadi", "correct": true },
+        { "id": "b", "text": "Thread bilan bir xil", "hint": "Thread'lar xotira baham ko'radi; isolate'lar — yo'q. Bu asosiy farq." },
+        { "id": "c", "text": "Isolate — alohida jarayon (process)", "hint": "Bitta jarayon ichida; OS thread ustida ishlaydi." },
+        { "id": "d", "text": "Isolate'da UI chizish mumkin", "hint": "UI faqat asosiy isolate'da; fon isolate natijani qaytaradi." }
+      ],
+      "explanation": "Nega kerak: asosiy isolate UI'ni chizadi (16 ms/frame); katta JSON parsing, rasm ishlov, shifrlash uni bloklaydi — jank. `Isolate.run(() => parse(json))` (Dart 2.19+) — eng oddiy; `compute` — Flutter o'rami. Isolate yaratish ~ms, kichik ish uchun ortiqcha.",
+      "reviewed": false
+    },
+    {
+      "id": "flutter.async.008",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Nima uchun `await`li asinxron kod UI'ni bloklamaydi, lekin og'ir sinxron sikl bloklaydi?",
+      "options": [
+        { "id": "a", "text": "Dart bir thread'li event loop: `await` nazoratni loop'ga qaytaradi, u frame chizish va boshqa event'larni bajaradi; sinxron sikl esa loop'ni ushlab turadi — hech narsa (shu jumladan rendering) ishlamaydi. `async` parallelizm bermaydi, faqat kutishni samarali qiladi", "correct": true },
+        { "id": "b", "text": "`await` kodni boshqa thread'ga ko'chiradi", "hint": "Ko'chirmaydi — bir thread, navbat almashish." },
+        { "id": "c", "text": "Sinxron sikl ham bloklamaydi", "hint": "`for (var i = 0; i < 1e9; i++)` ni `onPressed`ga qo'ying — UI qotadi." },
+        { "id": "d", "text": "Flutter avtomatik isolate yaratadi", "hint": "Avtomatik emas — dasturchi aniq `Isolate.run`/`compute`." }
+      ],
+      "explanation": "Tarmoq so'rovi — OS darajasida asinxron, Dart faqat natijani kutadi (CPU bo'sh). CPU-bound ish (parsing, hisob) — `await` yordam bermaydi, isolate kerak. Qoida: 16 ms dan uzoq sinxron ish — isolate'ga. DevTools Performance — uzun frame'larni ko'rsatadi.",
+      "reviewed": false
+    },
+    {
+      "id": "flutter.async.009",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Quyidagi kodda nima uchun jank bo'ladi va qanday tuzatiladi?",
+      "code": "Future<List<Product>> load() async {\n  final response = await http.get(url);   // 5 MB JSON\n  final list = jsonDecode(response.body) as List;\n  return list.map((e) => Product.fromJson(e)).toList();\n}",
+      "options": [
+        { "id": "a", "text": "`jsonDecode` va mapping 5 MB uchun yuzlab millisekund sinxron CPU ish — asosiy isolate'da frame'lar o'tkazib yuboriladi; `Isolate.run(() => parseProducts(response.body))` ga ko'chirish (funksiya top-level/static, argument nusxalanadi)", "correct": true },
+        { "id": "b", "text": "`http.get` bloklaydi", "hint": "Tarmoq asinxron — UI bloklanmaydi; muammo keyingi qatorlarda." },
+        { "id": "c", "text": "`toList()` ortiqcha", "hint": "Kichik detal; muammo hajm va sinxron parsing." },
+        { "id": "d", "text": "Jank bo'lmaydi", "hint": "DevTools Performance'da `load` chaqirilganda frame vaqtini ko'ring." }
+      ],
+      "explanation": "Isolate'ga uzatiladigan ma'lumot nusxalanadi (katta satr — qo'shimcha xotira; Dart 2.15+ ba'zi ob'ektlar ko'chiriladi). Closure isolate ichida `BuildContext`/widget'ga kira olmaydi. Alternativa: server pagination — 5 MB bir martada yuklamaslik.",
+      "reviewed": false
+    },
+    {
+      "id": "flutter.async.010",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`compute`/`Isolate.run` va uzoq yashovchi isolate (`Isolate.spawn` + `SendPort`/`ReceivePort`) qachon qaysi biri?",
+      "options": [
+        { "id": "a", "text": "`Isolate.run`/`compute` — bir martalik og'ir ish (yaratish + nusxalash narxi har safar); uzoq yashovchi isolate — ko'p takrorlanadigan ish (har frame rasm ishlov, doimiy parsing), holat saqlash kerak, yaratish narxini bir marta to'lash; `isolate_worker`/`squadron` paketlari pool beradi", "correct": true },
+        { "id": "b", "text": "Doim `compute` — soddaroq", "hint": "Soniyada 60 marta isolate yaratish — o'zi jank manbai." },
+        { "id": "c", "text": "Doim `Isolate.spawn`", "hint": "Bir martalik ish uchun port boshqaruvi — ortiqcha kod." },
+        { "id": "d", "text": "Farqi yo'q", "hint": "Yaratish narxi (~1–2 ms + xotira) va holat saqlash imkoni farq qiladi." }
+      ],
+      "explanation": "Uzoq isolate: `ReceivePort` asosiy tomonda, `SendPort` isolate'ga uzatiladi, ikki tomonlama kanal. Isolate'ni `kill` qilish, xatolarni `addErrorListener` bilan ushlash. Flutter plugin'lar (kamera, ML) ko'pincha native thread'da ishlaydi — isolate shart emas.",
+      "reviewed": false
+    },
+    {
+      "id": "flutter.async.011",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Qidiruv maydonida har harf yozilganda API so'rov ketmasligi uchun stream'lar bilan qanday yechim beriladi?",
+      "options": [
+        { "id": "a", "text": "Debounce (oxirgi yozuvdan 300 ms kutish) + `distinct` (bir xil so'rovni takrorlamaslik) + `switchMap` (yangi so'rov eski natijani bekor qiladi, tartib buzilmaydi) — `rxdart` yoki qo'lda `Timer`; Bloc'da `transformer`, Riverpod'da `ref.onDispose` + timer", "correct": true },
+        { "id": "b", "text": "Har harfda so'rov yuborish normal", "hint": "10 harf = 10 so'rov; javoblar tartibsiz kelsa eski natija ustun chiqadi." },
+        { "id": "c", "text": "Faqat Enter bosilganda qidirish", "hint": "UX yechimi, lekin \"yozayotganda qidirish\" talab qilinsa javob emas." },
+        { "id": "d", "text": "So'rovlarni `Future.wait` bilan birlashtirish", "hint": "Bu parallel kutish — tartib va bekor qilish muammosini hal qilmaydi." }
+      ],
+      "explanation": "Race condition: \"ab\" javobi \"abc\"dan keyin kelsa, UI noto'g'ri natija ko'rsatadi — `switchMap` yoki so'rov ID tekshiruvi hal qiladi. Dart `http` so'rovni bekor qilmaydi; `dio` `CancelToken` beradi. Bu klassik Flutter suhbat savoli.",
+      "reviewed": false
+    },
+    {
+      "id": "flutter.async.012",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Flutter ilovasida asinxron xatolarni markazlashtirilgan boshqarish qanday loyihalanadi?",
+      "options": [
+        { "id": "a", "text": "Domen xatolari — `sealed class Failure` (Network, Auth, Validation...) `Result`/`Either` orqali, UI ularni foydalanuvchi tiliga tarjima qiladi; kutilmagan xatolar — `FlutterError.onError` + `PlatformDispatcher.onError` → Crashlytics/Sentry; repository qatlami exception'larni Failure'ga aylantiradi, UI hech qachon raw exception ko'rmaydi", "correct": true },
+        { "id": "b", "text": "Har widget'da `try/catch` va `print`", "hint": "Tarqoq, izchil emas, production'da ko'rinmaydi." },
+        { "id": "c", "text": "Barcha xatolarni yutish (catch va hech narsa qilmaslik)", "hint": "Xato yashiriladi, foydalanuvchi sababsiz bo'sh ekran ko'radi." },
+        { "id": "d", "text": "Faqat crash reporting yetarli", "hint": "Kutilgan xatolar (internet yo'q) crash emas — UI javobi kerak." }
+      ],
+      "explanation": "`fpdart`/`dartz` `Either<Failure, T>` yoki Dart 3 sealed `Result`. Riverpod `AsyncValue.error` / Bloc `ErrorState` — UI ko'rsatish. Retry siyosati repository'da (exponential backoff). Xato kontekstini (user id, ekran) crash report'ga qo'shish — debug uchun bebaho.",
+      "reviewed": false
+    },
+    {
+      "id": "flutter.async.013",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Real-time ma'lumot (WebSocket) Flutter ilovasida qanday ishonchli qilinadi?",
+      "options": [
+        { "id": "a", "text": "Ulanishni alohida servis/repository boshqaradi: avtomatik reconnect (exponential backoff + jitter), heartbeat/ping, ilova fonga o'tganda uzish/qaytganda ulanish (`AppLifecycleListener`), xabarlarni `Stream` sifatida UI'ga, offline bufer va qayta ulanishda holatni qayta yuklash (REST snapshot + delta), ulanish holati UI'da", "correct": true },
+        { "id": "b", "text": "`WebSocketChannel.connect` va `StreamBuilder` yetarli", "hint": "Tarmoq uzilsa stream tugaydi — UI qotib qoladi, reconnect yo'q." },
+        { "id": "c", "text": "WebSocket o'rniga har soniya polling", "hint": "Batareya va trafik; real-time uchun WebSocket/SSE to'g'ri." },
+        { "id": "d", "text": "Ulanishni har ekranda alohida ochish", "hint": "Ko'p ulanish, holat sinxron emas; bitta markazlashtirilgan ulanish." }
+      ],
+      "explanation": "Mobil tarmoq o'zgaruvchan (Wi-Fi ↔ LTE) — ulanish tez-tez uziladi; `connectivity_plus` signal, lekin haqiqiy tekshiruv — ping. Xabar tartibi/takrorlanishi (sequence id). Firebase Realtime/Firestore, Supabase Realtime — bularni o'zi hal qiladi, agar backend tanlovi erkin bo'lsa.",
+      "reviewed": false
+    }
+  ]
+}

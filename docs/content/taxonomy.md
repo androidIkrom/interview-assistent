@@ -284,6 +284,7 @@ Tugallangan mavzular `ContentAssetsTest.completedTopics` ro'yxatida turadi: test
 | 7. `core.oop` + `core.security` + `core.testing` | yozildi (2026-10-03), inson tekshiruvi kutilmoqda | 606 / 1312 |
 | 8. `core.sysdesign` + `core.aicode` (umumiy blok yakunlandi) | yozildi (2026-10-03), inson tekshiruvi kutilmoqda | 682 / 1312 |
 | 9. Java (6 mavzu) | yozildi (2026-10-03), inson tekshiruvi kutilmoqda | 752 / 1312 |
+| 10. Flutter (6 mavzu) | yozildi (2026-10-03), inson tekshiruvi kutilmoqda | 822 / 1312 |
 
 ## 6. Manbalar
 
