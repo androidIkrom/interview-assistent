@@ -8,12 +8,12 @@
       "kind": "concept",
       "prompt": "Flutter React Native va native'dan rendering jihatidan nimasi bilan farq qiladi?",
       "options": [
-        { "id": "a", "text": "Flutter platforma UI komponentlarini ishlatmaydi — har pikselni o'z grafik dvigateli (Skia/Impeller) bilan chizadi; shu sabab barcha platformada bir xil ko'rinish va widget'lar ustidan to'liq nazorat; React Native — JS ko'prik orqali native komponentlar", "correct": true },
-        { "id": "b", "text": "Flutter native komponentlarni o'raydi", "hint": "O'ramaydi — o'zi chizadi (`Material`/`Cupertino` — chizilgan taqlid)." },
+        { "id": "a", "text": "Flutter har pikselni o'z dvigateli (Skia/Impeller) bilan chizadi; RN — native komponentlar", "correct": true },
+        { "id": "b", "text": "Flutter ham platformaning native UI komponentlarini o'rab, ularni Dart kodidan ko'prik orqali boshqaradi", "hint": "O'ramaydi — o'zi chizadi (`Material`/`Cupertino` — chizilgan taqlid)." },
         { "id": "c", "text": "Flutter web view ichida HTML", "hint": "Hybrid (Ionic) shunday; Flutter — canvas." },
         { "id": "d", "text": "Farqi yo'q", "hint": "Rendering modeli — Flutter'ning asosiy arxitektura qarori." }
       ],
-      "explanation": "Oqibat: OS yangilansa ham UI o'zgarmaydi (yaxshi va yomon tomoni), native komponent (xarita, web view) uchun `PlatformView` — qimmatroq. Impeller (iOS default 3.10+, Android 3.22+) — shader jank'ni yo'q qilish uchun Skia o'rniga.",
+      "explanation": "Shu sabab barcha platformada bir xil ko'rinish; React Native JS ko'prik orqali ishlaydi. Oqibat: OS yangilansa ham UI o'zgarmaydi (yaxshi va yomon tomoni), native komponent (xarita, web view) uchun `PlatformView` — qimmatroq. Impeller (iOS default 3.10+, Android 3.22+) — shader jank'ni yo'q qilish uchun Skia o'rniga.",
       "reviewed": false
     },
     {
@@ -23,12 +23,12 @@
       "kind": "concept",
       "prompt": "Flutter ilovasi papka tuzilmasi va kod tashkil qilishning asosiy printsipi nima?",
       "options": [
-        { "id": "a", "text": "Feature bo'yicha ajratish (`features/auth`, `features/cart`), har feature ichida UI/mantiq/ma'lumot; umumiy narsalar `core`/`shared`da; kichik widget'lar alohida klasslar (metod emas) — o'qish va rebuild optimizatsiyasi uchun", "correct": true },
+        { "id": "a", "text": "Feature bo'yicha ajratish (`features/auth`), ichida UI/mantiq/ma'lumot; umumiy narsalar `core`da", "correct": true },
         { "id": "b", "text": "Hamma kod `main.dart`da", "hint": "Bir necha ekrandan keyin boshqarib bo'lmaydi." },
-        { "id": "c", "text": "Faqat tur bo'yicha (`widgets/`, `models/`, `services/`)", "hint": "Kichik loyihada ishlaydi; o'sganda bir feature 5 papkaga tarqaladi." },
+        { "id": "c", "text": "Faqat tur bo'yicha ajratish: `widgets/`, `models/`, `services/` — katta loyihalar uchun eng yaxshisi", "hint": "Kichik loyihada ishlaydi; o'sganda bir feature 5 papkaga tarqaladi." },
         { "id": "d", "text": "Tuzilma ahamiyatsiz", "hint": "Jamoa va vaqt o'tishi bilan navigatsiya narxi oshadi." }
       ],
-      "explanation": "Widget'ni metod (`_buildHeader()`) emas, klass (`Header`) qilish: `const` imkoni, alohida rebuild, DevTools'da ko'rinadi, test qilinadi. Katta loyiha — Dart paketlar (melos monorepo) — modul chegaralari kompilyator bilan.",
+      "explanation": "Kichik widget'lar alohida klass bo'lsin (metod emas) — o'qish va rebuild uchun. Widget'ni metod (`_buildHeader()`) emas, klass (`Header`) qilish: `const` imkoni, alohida rebuild, DevTools'da ko'rinadi, test qilinadi. Katta loyiha — Dart paketlar (melos monorepo) — modul chegaralari kompilyator bilan.",
       "reviewed": false
     },
     {
@@ -38,12 +38,12 @@
       "kind": "concept",
       "prompt": "Flutter'da jank (frame tushishi) ning tipik sabablari qaysilar?",
       "options": [
-        { "id": "a", "text": "Asosiy isolate'da og'ir sinxron ish (parsing, hisob), ortiqcha rebuild (katta subtree `setState`), qimmat `build` (har frame yangi ob'ektlar, `MediaQuery.of` yuqorida), shader kompilyatsiya (Skia, birinchi animatsiya), katta rasmlar (decode, o'lchamsiz), `Opacity`/`ClipRRect`/`saveLayer` ko'p qatlamda, `ListView` o'rniga `Column` + `SingleChildScrollView` uzun ro'yxatda", "correct": true },
+        { "id": "a", "text": "Asosiy isolate'da og'ir ish, ortiqcha rebuild, qimmat `build`, shader kompilyatsiya, katta rasmlar", "correct": true },
         { "id": "b", "text": "Faqat sekin tarmoq", "hint": "Tarmoq asinxron — o'zi jank bermaydi; javobni ishlov berish — mumkin." },
-        { "id": "c", "text": "Flutter o'zi sekin, hech narsa qilib bo'lmaydi", "hint": "To'g'ri yozilgan Flutter 60/120 fps beradi; jank — kod yoki rasm muammosi." },
+        { "id": "c", "text": "Flutter dvigatelining o'zi sekin — jankni dasturchi hech qanday usul bilan tuzata yoki kamaytira olmaydi", "hint": "To'g'ri yozilgan Flutter 60/120 fps beradi; jank — kod yoki rasm muammosi." },
         { "id": "d", "text": "Faqat eski qurilmalar", "hint": "Eski qurilma kuchaytiradi, lekin sabab kodda." }
       ],
-      "explanation": "Diagnostika: profile mode (debug'da o'lchamang!), DevTools Performance — UI va Raster thread; UI thread uzun — Dart kod, Raster uzun — chizish (shader, saveLayer, katta rasm). `RepaintBoundary` — animatsiyalanadigan qismni ajratish. `cacheWidth`/`cacheHeight` — rasm decode hajmi.",
+      "explanation": "Yana: ko'p `Opacity`/`ClipRRect`/`saveLayer`, uzun ro'yxatda `Column` + scroll. Diagnostika: profile mode (debug'da o'lchamang!), DevTools Performance — UI va Raster thread; UI thread uzun — Dart kod, Raster uzun — chizish (shader, saveLayer, katta rasm). `RepaintBoundary` — animatsiyalanadigan qismni ajratish. `cacheWidth`/`cacheHeight` — rasm decode hajmi.",
       "reviewed": false
     },
     {
@@ -53,12 +53,12 @@
       "kind": "concept",
       "prompt": "Ortiqcha rebuild'ni qanday topish va kamaytirish mumkin?",
       "options": [
-        { "id": "a", "text": "Topish — DevTools \"Track widget rebuilds\" / \"Highlight repaints\", `debugPrintRebuildDirtyWidgets`; kamaytirish — `setState`/`watch` doirasini kichik widget'ga toraytirish, `const` widget'lar, `select`/`buildWhen`, `MediaQuery.sizeOf` kabi aspekt metodlar, `ListView.builder` lazy", "correct": true },
-        { "id": "b", "text": "Rebuild har doim yomon — `setState`dan qochish kerak", "hint": "Rebuild arzon va normal; muammo — qimmat subtree'ni keraksiz rebuild." },
+        { "id": "a", "text": "Topish — DevTools rebuild kuzatuvi; kamaytirish — `setState` doirasini toraytirish, `const`, `select`", "correct": true },
+        { "id": "b", "text": "Rebuild har doim yomon — iloji boricha `setState` dan butunlay qochish va holatni globalda saqlash kerak", "hint": "Rebuild arzon va normal; muammo — qimmat subtree'ni keraksiz rebuild." },
         { "id": "c", "text": "Hamma widget'ni `GlobalKey` bilan belgilash", "hint": "GlobalKey qimmat va rebuild'ni kamaytirmaydi." },
         { "id": "d", "text": "Rebuild'ni o'lchab bo'lmaydi", "hint": "DevTools aynan buni ko'rsatadi." }
       ],
-      "explanation": "Qoida: holatni iste'mol qiladigan widget iloji boricha kichik va daraxtda pastda. `Builder`/`Consumer`/`ValueListenableBuilder` — subtree'ning bir qismini ajratish. `AnimatedBuilder`da `child` parametri — animatsiyada o'zgarmaydigan qismni bir marta qurish.",
+      "explanation": "`debugPrintRebuildDirtyWidgets`, `buildWhen`, `MediaQuery.sizeOf`, `ListView.builder` ham yordam beradi. Qoida: holatni iste'mol qiladigan widget iloji boricha kichik va daraxtda pastda. `Builder`/`Consumer`/`ValueListenableBuilder` — subtree'ning bir qismini ajratish. `AnimatedBuilder`da `child` parametri — animatsiyada o'zgarmaydigan qismni bir marta qurish.",
       "reviewed": false
     },
     {
@@ -68,12 +68,12 @@
       "kind": "concept",
       "prompt": "Flutter rendering pipeline bosqichlari qanday?",
       "options": [
-        { "id": "a", "text": "Vsync signal → animatsiya tick → build (dirty widget'lar) → layout (RenderObject'lar o'lcham/pozitsiya, constraints pastga, size yuqoriga) → compositing bits → paint (Layer daraxti) → semantics → Raster thread'da GPU chizish (Skia/Impeller). UI thread va Raster thread alohida", "correct": true },
-        { "id": "b", "text": "Har widget o'zini darhol chizadi", "hint": "Chizish — frame oxirida, batch, alohida thread'da." },
+        { "id": "a", "text": "Vsync → build → layout (constraints pastga, size yuqoriga) → paint → Raster thread'da GPU chizish", "correct": true },
+        { "id": "b", "text": "Har widget `build` ichida o'zini darhol ekranga chizadi, alohida layout va paint bosqichlari umuman yo'q", "hint": "Chizish — frame oxirida, batch, alohida thread'da." },
         { "id": "c", "text": "Build va paint bir xil narsa", "hint": "Build — widget daraxti; paint — RenderObject chizish buyruqlari." },
         { "id": "d", "text": "Layout GPU'da bo'ladi", "hint": "Layout — Dart, UI thread'da; GPU — faqat rasterizatsiya." }
       ],
-      "explanation": "Layout bir o'tishda O(n): ota constraints beradi, bola size qaytaradi — shu sabab tez (`RenderObject` relayout boundary). \"Constraints go down, sizes go up, parent sets position\" — Flutter layout qoidasi. `RepaintBoundary` — Layer daraxtida alohida layer, boshqa qismlar o'zgarganda qayta chizilmaydi.",
+      "explanation": "Oraliqda animatsiya tick, compositing va semantics bor; UI va Raster thread alohida. Layout bir o'tishda O(n): ota constraints beradi, bola size qaytaradi — shu sabab tez (`RenderObject` relayout boundary). \"Constraints go down, sizes go up, parent sets position\" — Flutter layout qoidasi. `RepaintBoundary` — Layer daraxtida alohida layer, boshqa qismlar o'zgarganda qayta chizilmaydi.",
       "reviewed": false
     },
     {
@@ -99,12 +99,12 @@
       "kind": "concept",
       "prompt": "Flutter ilovasi hajmi va startup vaqtini kamaytirish uchun qanday choralar bor?",
       "options": [
-        { "id": "a", "text": "Hajm: `--split-per-abi`/App Bundle, `--obfuscate --split-debug-info`, tree shaking (ikonka fontlar `--tree-shake-icons`), rasm optimizatsiya (WebP), keraksiz paketlarni olib tashlash, deferred components (Android). Startup: `main`da og'ir ishni kechiktirish, `runApp`gacha minimal, lazy DI, splash'da parallel init, `FlutterEngine` oldindan isitish (add-to-app), Impeller shader muammosi yo'q", "correct": true },
-        { "id": "b", "text": "Flutter ilovasi hajmini kamaytirib bo'lmaydi", "hint": "Engine ~5 MB — qolgani boshqariladi." },
+        { "id": "a", "text": "Hajm: App Bundle, obfuscation, ikonka tree shaking, WebP; startup: `main`dagi og'ir ishni kechiktirish", "correct": true },
+        { "id": "b", "text": "Flutter ilovasi hajmi va startup'ini kamaytirib bo'lmaydi — dvigatel har doim to'liq va bir xil yuklanadi", "hint": "Engine ~5 MB — qolgani boshqariladi." },
         { "id": "c", "text": "Faqat kuchli telefon kerak", "hint": "Hajm — yuklab olish konversiyasi; startup — birinchi taassurot; ikkalasi biznes metrikasi." },
         { "id": "d", "text": "Debug APK hajmi — real hajm", "hint": "Debug 3–5x katta (JIT VM, asset'lar); release bilan o'lchang." }
       ],
-      "explanation": "O'lchash: `flutter build apk --analyze-size`, DevTools App Size. Startup: `flutter run --trace-startup`, `Timeline`. Deferred components — kam ishlatiladigan feature'larni (Play Feature Delivery) keyin yuklash. Shader warm-up Skia uchun kerak edi — Impeller buni yo'q qildi.",
+      "explanation": "Yana: `--split-per-abi`, deferred components, lazy DI, `FlutterEngine` oldindan isitish. O'lchash: `flutter build apk --analyze-size`, DevTools App Size. Startup: `flutter run --trace-startup`, `Timeline`. Deferred components — kam ishlatiladigan feature'larni (Play Feature Delivery) keyin yuklash. Shader warm-up Skia uchun kerak edi — Impeller buni yo'q qildi.",
       "reviewed": false
     },
     {

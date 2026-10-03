@@ -8,12 +8,12 @@
       "kind": "concept",
       "prompt": "Flutter'da HTTP so'rov yuborish uchun qaysi vositalar ishlatiladi?",
       "options": [
-        { "id": "a", "text": "`http` paketi (sodda, rasmiy) yoki `dio` (interceptor, cancel token, timeout, FormData, retry) — ikkalasi `Future` qaytaradi, JSON `jsonDecode` bilan Map/List'ga, keyin model'ga `fromJson`", "correct": true },
-        { "id": "b", "text": "Faqat `dart:io` `HttpClient` to'g'ridan-to'g'ri", "hint": "Mumkin, lekin past darajali va web'da ishlamaydi; paketlar platformadan mustaqil." },
+        { "id": "a", "text": "`http` paketi (sodda, rasmiy) yoki `dio` (interceptor, cancel, timeout, retry)", "correct": true },
+        { "id": "b", "text": "Faqat `dart:io` dagi `HttpClient` to'g'ridan-to'g'ri — boshqa paketlarni ishlatib bo'lmaydi", "hint": "Mumkin, lekin past darajali va web'da ishlamaydi; paketlar platformadan mustaqil." },
         { "id": "c", "text": "Flutter'da tarmoq uchun native kod yozish shart", "hint": "Shart emas — Dart paketlar yetarli." },
         { "id": "d", "text": "`fetch()` funksiyasi", "hint": "Bu JavaScript; Dart'da yo'q." }
       ],
-      "explanation": "Android'da HTTP (cleartext) default taqiqlangan — HTTPS yoki `networkSecurityConfig`. iOS'da ATS. Model: `factory Product.fromJson(Map<String, dynamic> json)` — qo'lda yoki `json_serializable`/`freezed` generatsiya. Katta JSON — isolate'da parse.",
+      "explanation": "Ikkalasi `Future` qaytaradi; JSON `jsonDecode` bilan o'qiladi, keyin `fromJson` bilan model'ga aylanadi. Android'da HTTP (cleartext) default taqiqlangan — HTTPS yoki `networkSecurityConfig`. iOS'da ATS. Model: `factory Product.fromJson(Map<String, dynamic> json)` — qo'lda yoki `json_serializable`/`freezed` generatsiya. Katta JSON — isolate'da parse.",
       "reviewed": false
     },
     {
@@ -23,12 +23,12 @@
       "kind": "concept",
       "prompt": "Flutter'da ma'lumotni lokal saqlash variantlari qaysilar?",
       "options": [
-        { "id": "a", "text": "`shared_preferences` — kichik kalit-qiymat (sozlamalar); `flutter_secure_storage` — token/sir (Keychain/Keystore); SQLite (`sqflite`, `drift`) — strukturali so'rovlar; `hive`/`isar` — tez NoSQL ob'ektlar; fayllar — `path_provider`", "correct": true },
-        { "id": "b", "text": "Faqat `shared_preferences` — hamma narsa uchun", "hint": "Katta ro'yxat/munosabatlar uchun mos emas; sirlar uchun xavfsiz emas." },
+        { "id": "a", "text": "Prefs — sozlamalar; secure storage — tokenlar; SQLite (`drift`) — so'rovlar; `hive`/`isar` — ob'ektlar", "correct": true },
+        { "id": "b", "text": "Faqat `shared_preferences` — u har qanday hajmdagi va turdagi ma'lumotni xavfsiz va tez saqlay oladi", "hint": "Katta ro'yxat/munosabatlar uchun mos emas; sirlar uchun xavfsiz emas." },
         { "id": "c", "text": "Flutter lokal saqlashni qo'llamaydi", "hint": "Ko'p variant bor — paketlar orqali." },
         { "id": "d", "text": "Faqat global o'zgaruvchilar", "hint": "Ilova yopilsa yo'qoladi." }
       ],
-      "explanation": "Tanlov: ma'lumot hajmi, so'rov murakkabligi (join/filter → SQL), reaktivlik (drift/isar stream beradi), xavfsizlik (token → secure storage, hech qachon prefs). `shared_preferences`da JSON satr saqlash — kichik ob'ekt uchun qabul qilinadi, katta uchun yo'q.",
+      "explanation": "Secure storage Keychain/Keystore'dan foydalanadi; fayllar uchun `path_provider`. Tanlov: ma'lumot hajmi, so'rov murakkabligi (join/filter → SQL), reaktivlik (drift/isar stream beradi), xavfsizlik (token → secure storage, hech qachon prefs). `shared_preferences`da JSON satr saqlash — kichik ob'ekt uchun qabul qilinadi, katta uchun yo'q.",
       "reviewed": false
     },
     {
@@ -54,12 +54,12 @@
       "kind": "concept",
       "prompt": "`dio` interceptor'lari qanday vazifalar uchun ishlatiladi?",
       "options": [
-        { "id": "a", "text": "Har so'rovga token qo'shish, 401'da refresh va qayta urinish, logging, xato tarjimasi (`DioException` → domen Failure), cache, retry — markazlashtirilgan, har API chaqiruvida takrorlanmaydi", "correct": true },
+        { "id": "a", "text": "Token qo'shish, 401'da refresh va qayta urinish, logging, xato tarjimasi, retry — markazlashgan", "correct": true },
         { "id": "b", "text": "Faqat logging", "hint": "Logging — bir qo'llanish; auth va retry asosiylari." },
         { "id": "c", "text": "UI chizish", "hint": "Tarmoq qatlami UI'ni bilmaydi." },
-        { "id": "d", "text": "JSON'ni model'ga avtomatik aylantirish", "hint": "Bu `retrofit`/`chopper` generatsiya ishi; interceptor so'rov/javobni o'zgartiradi." }
+        { "id": "d", "text": "Server JSON javobini model klassiga avtomatik, kod generatsiyasiz va reflection bilan aylantirish", "hint": "Bu `retrofit`/`chopper` generatsiya ishi; interceptor so'rov/javobni o'zgartiradi." }
       ],
-      "explanation": "401 refresh tuzog'i: ko'p so'rov bir vaqtda 401 olsa — bir nechta refresh; yechim — `QueuedInterceptor` yoki refresh `Completer`ni baham ko'rish. Refresh ham 401 bersa — logout. Loglarda token/parol chiqmasligi — `LogInterceptor`ni sozlash.",
+      "explanation": "Masalan, `DioException` domen Failure'ga aylantiriladi; mantiq har chaqiruvda takrorlanmaydi. 401 refresh tuzog'i: ko'p so'rov bir vaqtda 401 olsa — bir nechta refresh; yechim — `QueuedInterceptor` yoki refresh `Completer`ni baham ko'rish. Refresh ham 401 bersa — logout. Loglarda token/parol chiqmasligi — `LogInterceptor`ni sozlash.",
       "reviewed": false
     },
     {
@@ -69,12 +69,12 @@
       "kind": "concept",
       "prompt": "JSON serializatsiya uchun `json_serializable`/`freezed` qo'lda `fromJson` yozishdan nimasi bilan yaxshi?",
       "options": [
-        { "id": "a", "text": "Kod generatsiya xatolarni (kalit nomida xato, tur mos kelmasligi) kamaytiradi, nested ob'ekt/ro'yxat/enum/`DateTime` ni avtomatik, `@JsonKey(name:)` mapping, `freezed` qo'shimcha `copyWith`/`==`/union; narx — build_runner va generatsiya fayllari", "correct": true },
-        { "id": "b", "text": "Runtime'da reflection bilan tezroq", "hint": "Dart AOT'da reflection yo'q — aynan shu sabab kod generatsiya." },
+        { "id": "a", "text": "Generatsiya kalit va tur xatolarini kamaytiradi, nested va `DateTime` ni o'zi qiladi; narx — build_runner", "correct": true },
+        { "id": "b", "text": "Runtime'da reflection (`dart:mirrors`) bilan ishlaydi, shuning uchun qo'lda yozilgan `fromJson` koddan ancha tezroq", "hint": "Dart AOT'da reflection yo'q — aynan shu sabab kod generatsiya." },
         { "id": "c", "text": "Qo'lda yozish doim yaxshi", "hint": "50 model × 10 maydon — qo'lda xato ehtimoli yuqori." },
         { "id": "d", "text": "Farqi yo'q", "hint": "Generatsiya — xato kamaytirish va vaqt." }
       ],
-      "explanation": "`dart run build_runner build --delete-conflicting-outputs`, `watch` rejimi. Generatsiya fayllarini git'ga qo'shish yoki qo'shmaslik — jamoa qarori (CI'da generatsiya qilish). Dart macros (kelajak) build_runner'ni almashtirishi kutiladi.",
+      "explanation": "`@JsonKey(name:)` mapping; `freezed` qo'shimcha `copyWith`, `==` va union beradi. `dart run build_runner build --delete-conflicting-outputs`, `watch` rejimi. Generatsiya fayllarini git'ga qo'shish yoki qo'shmaslik — jamoa qarori (CI'da generatsiya qilish). Dart macros (kelajak) build_runner'ni almashtirishi kutiladi.",
       "reviewed": false
     },
     {
@@ -84,12 +84,12 @@
       "kind": "concept",
       "prompt": "Platform channel nima va qachon kerak?",
       "options": [
-        { "id": "a", "text": "Dart ↔ native (Kotlin/Swift) kod orasidagi xabar ko'prigi: `MethodChannel` (metod chaqiruv), `EventChannel` (native → Dart stream); mavjud paket bo'lmagan platforma API'si (maxsus sensor, SDK, Bluetooth protokol) kerak bo'lganda", "correct": true },
+        { "id": "a", "text": "Dart ↔ native (Kotlin/Swift) xabar ko'prigi: `MethodChannel`, `EventChannel`; paket bo'lmagan API uchun", "correct": true },
         { "id": "b", "text": "Flutter'ning HTTP kanali", "hint": "Tarmoq bilan aloqasi yo'q — jarayon ichida native bilan." },
         { "id": "c", "text": "Faqat iOS uchun", "hint": "Har platforma — Android, iOS, desktop, web (JS interop)." },
-        { "id": "d", "text": "Har ilovada majburiy", "hint": "Ko'p ilova paketlar bilan yetadi; channel — paket yo'q bo'lganda." }
+        { "id": "d", "text": "Har bir Flutter ilovasida majburiy: usiz ilova Android va iOS qurilmalarida umuman ishga tushmaydi va yiqiladi", "hint": "Ko'p ilova paketlar bilan yetadi; channel — paket yo'q bo'lganda." }
       ],
-      "explanation": "Xabarlar `StandardMessageCodec` orqali serializatsiya (Map, List, primitivlar). `pigeon` — tur-xavfsiz kod generatsiya (qo'lda satr nomlar o'rniga). Channel asinxron — natija `Future`. Native tomonda asosiy thread'ga e'tibor (UI thread'da og'ir ish — jank).",
+      "explanation": "Masalan, maxsus sensor, SDK yoki Bluetooth protokoli uchun. Xabarlar `StandardMessageCodec` orqali serializatsiya (Map, List, primitivlar). `pigeon` — tur-xavfsiz kod generatsiya (qo'lda satr nomlar o'rniga). Channel asinxron — natija `Future`. Native tomonda asosiy thread'ga e'tibor (UI thread'da og'ir ish — jank).",
       "reviewed": false
     },
     {
@@ -115,12 +115,12 @@
       "kind": "concept",
       "prompt": "Flutter'da lokal DB uchun `drift` (SQLite) va `isar`/`hive` qanday tanlanadi?",
       "options": [
-        { "id": "a", "text": "Drift — tur-xavfsiz SQL, migratsiyalar, join/agregat so'rovlar, reaktiv stream'lar, web qo'llovi — strukturali relyatsion ma'lumot; Isar/Hive — sxemasiz/ob'ekt saqlash, juda tez o'qish, indekslar, lekin murakkab so'rov cheklangan (Hive — faqat kalit bo'yicha); tanlov so'rov murakkabligi va ma'lumot munosabatlariga qarab", "correct": true },
+        { "id": "a", "text": "Drift — tur-xavfsiz SQL, migratsiya va join'lar; Isar/Hive — ob'ekt saqlash, tez o'qish, so'rovlar cheklangan", "correct": true },
         { "id": "b", "text": "Doim Hive — eng tez", "hint": "Filtr/saralash/munosabatlar kerak bo'lsa Hive'da hamma narsani xotiraga yuklab qo'lda qilasiz." },
         { "id": "c", "text": "Doim SQLite xom `sqflite` bilan", "hint": "Ishlaydi, lekin satr SQL, migratsiya qo'lda, tur xavfsizligi yo'q — drift shuni hal qiladi." },
-        { "id": "d", "text": "Lokal DB kerak emas, hamma narsa serverda", "hint": "Offline va tezlik uchun lokal cache ko'p ilovada zarur." }
+        { "id": "d", "text": "Lokal DB umuman kerak emas — barcha ma'lumot har safar serverdan olinadi, offline rejim esa zamonaviy ilovalarda kerak emas", "hint": "Offline va tezlik uchun lokal cache ko'p ilovada zarur." }
       ],
-      "explanation": "Isar muallifi 2024 da loyihani sekinlashtirdi — jamoa paket barqarorligini (maintenance) ham baholaydi. Drift: `@DriftDatabase`, `watch()` stream'lar Riverpod/Bloc bilan tabiiy. Migratsiya strategiyasi (versiya, `onUpgrade`) — production'da ma'lumot yo'qotmaslik.",
+      "explanation": "Tanlov so'rov murakkabligi va ma'lumot munosabatlariga bog'liq; Hive faqat kalit bo'yicha qidiradi. Isar muallifi 2024 da loyihani sekinlashtirdi — jamoa paket barqarorligini (maintenance) ham baholaydi. Drift: `@DriftDatabase`, `watch()` stream'lar Riverpod/Bloc bilan tabiiy. Migratsiya strategiyasi (versiya, `onUpgrade`) — production'da ma'lumot yo'qotmaslik.",
       "reviewed": false
     },
     {
@@ -145,12 +145,12 @@
       "kind": "concept",
       "prompt": "Flutter ilovasida sezgir ma'lumotlar (token, PII) xavfsizligi qanday ta'minlanadi?",
       "options": [
-        { "id": "a", "text": "Token — `flutter_secure_storage` (Keychain/Keystore), hech qachon prefs/log; HTTPS + certificate pinning (xavf modeliga qarab); release'da obfuscation (`--obfuscate --split-debug-info`); API kalitlar klientda emas (backend proxy); root/jailbreak va screenshot cheklovlari — biznes talabiga qarab; `dart-define` sirlar baribir binarda — maxfiy hisoblanmaydi", "correct": true },
-        { "id": "b", "text": "`shared_preferences`da token saqlash xavfsiz — Flutter himoyalaydi", "hint": "Prefs — oddiy XML/plist, root qurilmada o'qiladi." },
+        { "id": "a", "text": "Token — secure storage'da, log'da emas; HTTPS va pinning; obfuscation; API kalitlari backend'da", "correct": true },
+        { "id": "b", "text": "`shared_preferences`da token saqlash xavfsiz, chunki Flutter uni avtomatik shifrlaydi va himoyalaydi", "hint": "Prefs — oddiy XML/plist, root qurilmada o'qiladi." },
         { "id": "c", "text": "API kalitni kodga yozish, obfuscation yetarli", "hint": "Obfuscation satrlarni yashirmaydi — `strings` bilan chiqadi." },
         { "id": "d", "text": "Mobil ilovada xavfsizlik serverning ishi", "hint": "Server — asosiy, lekin klient saqlash va transport ham hujum yuzasi." }
       ],
-      "explanation": "Printsip: klientga ishonmang — har tekshiruv serverda. Secure storage ham mukammal emas (Android Keystore cheklovlari, backup). Biometrik (`local_auth`) — qulaylik, kriptografik himoya emas (platformaga qarab). OWASP MASVS — mobil ilova xavfsizlik checklist.",
+      "explanation": "`dart-define` sirlari baribir binarda qoladi — maxfiy emas; root/jailbreak va screenshot cheklovlari biznes talabiga qarab. Printsip: klientga ishonmang — har tekshiruv serverda. Secure storage ham mukammal emas (Android Keystore cheklovlari, backup). Biometrik (`local_auth`) — qulaylik, kriptografik himoya emas (platformaga qarab). OWASP MASVS — mobil ilova xavfsizlik checklist.",
       "reviewed": false
     }
   ]
