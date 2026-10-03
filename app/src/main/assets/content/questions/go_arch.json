@@ -8,12 +8,12 @@
       "kind": "concept",
       "prompt": "Go loyihasining tipik papka tuzilmasi qanday?",
       "options": [
-        { "id": "a", "text": "`cmd/<app>/main.go` — kirish nuqtalari (yupqa), `internal/` — tashqaridan import qilinmaydigan kod, `pkg/` — qayta ishlatiladigan ochiq kod (ixtiyoriy), paketlar vazifa bo'yicha (`user`, `order`), `util`/`common` nomlaridan qochish; kichik loyiha — tekis tuzilma yetarli", "correct": true },
-        { "id": "b", "text": "Java kabi `src/main/...` chuqur ierarxiya", "hint": "Go'da modul ildizi va paketlar — soddaroq." },
+        { "id": "a", "text": "`cmd/<app>/main.go` — kirish; `internal/` — yopiq kod; paketlar vazifa bo'yicha, `util` nomisiz", "correct": true },
+        { "id": "b", "text": "Java kabi chuqur `src/main/go/...` ierarxiyasi, har bir paket uchun alohida ichma-ich papka bilan", "hint": "Go'da modul ildizi va paketlar — soddaroq." },
         { "id": "c", "text": "Barcha fayllar ildizda, bitta paket", "hint": "Kichik vosita uchun — ha; servis uchun paketlar kerak." },
         { "id": "d", "text": "Rasmiy majburiy tuzilma bor", "hint": "Yo'q — `golang-standards/project-layout` norasmiy; Go jamoasi minimalizmni tavsiya qiladi." }
       ],
-      "explanation": "Paket nomi — nima qiladi, nima ekani emas (`controllers` emas, `http`; `models` emas, domen nomi). Siklik import taqiqlangan — tuzilma bog'liqlik yo'nalishini majburlaydi. `internal/` — kompilyator darajasida chegara.",
+      "explanation": "`pkg/` — ixtiyoriy; kichik loyihaga tekis tuzilma yetarli. Paket nomi — nima qiladi, nima ekani emas (`controllers` emas, `http`; `models` emas, domen nomi). Siklik import taqiqlangan — tuzilma bog'liqlik yo'nalishini majburlaydi. `internal/` — kompilyator darajasida chegara.",
       "reviewed": false
     },
     {
@@ -23,12 +23,12 @@
       "kind": "concept",
       "prompt": "Go'da testlar qanday yoziladi?",
       "options": [
-        { "id": "a", "text": "`*_test.go` fayllar, `func TestXxx(t *testing.T)`, standart `testing` paketi (assert kutubxonasi shart emas, `testify` — ixtiyoriy), table-driven testlar + `t.Run` subtest, `go test ./...`, `-race`, `-cover`; benchmark `BenchmarkXxx(b *testing.B)`; `Example` funksiyalar — hujjat + test", "correct": true },
-        { "id": "b", "text": "Alohida test framework o'rnatish shart", "hint": "`testing` — standart, yetarli." },
+        { "id": "a", "text": "`*_test.go`, `func TestXxx(t *testing.T)`, table-driven + `t.Run`, `go test ./... -race -cover`", "correct": true },
+        { "id": "b", "text": "Go'da test yozish uchun alohida test framework (JUnit kabi) o'rnatish va uni loyihada sozlash shart", "hint": "`testing` — standart, yetarli." },
         { "id": "c", "text": "Testlar alohida repoda", "hint": "Kod yonida — `_test.go`." },
         { "id": "d", "text": "Go'da test yozilmaydi", "hint": "Test — Go madaniyatining markazida." }
       ],
-      "explanation": "Table-driven: `tests := []struct{name string; in, want int}{...}; for _, tc := range tests { t.Run(tc.name, func(t *testing.T) {...}) }`. `t.Parallel()`, `t.Cleanup`, `t.TempDir`. Ichki test (`package foo`) vs tashqi (`package foo_test`) — API orqali test. `go test -run TestName/subtest`.",
+      "explanation": "Standart `testing` yetarli (`testify` ixtiyoriy); benchmark — `BenchmarkXxx`, `Example` funksiyalar — hujjat va test. Table-driven: `tests := []struct{name string; in, want int}{...}; for _, tc := range tests { t.Run(tc.name, func(t *testing.T) {...}) }`. `t.Parallel()`, `t.Cleanup`, `t.TempDir`. Ichki test (`package foo`) vs tashqi (`package foo_test`) — API orqali test. `go test -run TestName/subtest`.",
       "reviewed": false
     },
     {
@@ -38,12 +38,12 @@
       "kind": "concept",
       "prompt": "`pprof` nima va Go servisida qanday ishlatiladi?",
       "options": [
-        { "id": "a", "text": "Runtime profiler: CPU, heap (allokatsiya), goroutine, block, mutex profillari; `import _ \"net/http/pprof\"` — `/debug/pprof/` endpoint (ichki portda!), `go tool pprof -http=:8081 <url>` — flame graph; test uchun `go test -cpuprofile`; production'da arzon, doim yoqilgan", "correct": true },
-        { "id": "b", "text": "Faqat lokal ishlab chiqish vositasi", "hint": "Production'da pprof — Go'ning kuchli tomoni; muammo faqat real yukda ko'rinadi." },
+        { "id": "a", "text": "Runtime profiler (CPU, heap, goroutine, mutex); `net/http/pprof` ichki portda, `go tool pprof` bilan", "correct": true },
+        { "id": "b", "text": "Faqat lokal ishlab chiqish vositasi — production servisda uni yoqish juda qimmat, sekin va xavfli", "hint": "Production'da pprof — Go'ning kuchli tomoni; muammo faqat real yukda ko'rinadi." },
         { "id": "c", "text": "Linter", "hint": "Statik emas — runtime o'lchov." },
         { "id": "d", "text": "Uchinchi tomon paketi", "hint": "Standart kutubxona (`runtime/pprof`, `net/http/pprof`)." }
       ],
-      "explanation": "Tipik oqim: latency oshdi → CPU profil 30 s → flame graph'da JSON marshal 40% → optimizatsiya. Xotira o'sadi → heap profil `inuse_space`, ikki vaqt nuqtasini `-base` bilan solishtirish. Goroutine soni o'sadi → goroutine profil — qayerda bloklangan. Qoida: taxmin emas, profil.",
+      "explanation": "`go tool pprof -http` flame graph beradi; testda `-cpuprofile`; production'da arzon. Tipik oqim: latency oshdi → CPU profil 30 s → flame graph'da JSON marshal 40% → optimizatsiya. Xotira o'sadi → heap profil `inuse_space`, ikki vaqt nuqtasini `-base` bilan solishtirish. Goroutine soni o'sadi → goroutine profil — qayerda bloklangan. Qoida: taxmin emas, profil.",
       "reviewed": false
     },
     {
@@ -53,12 +53,12 @@
       "kind": "concept",
       "prompt": "Go servisida dependency injection qanday qilinadi?",
       "options": [
-        { "id": "a", "text": "Konstruktor funksiyalar (`NewService(repo Repo, log *slog.Logger) *Service`) va `main`da qo'lda yig'ish (composition root) — aniq, kompilyator tekshiradi, framework yo'q; katta grafda `wire` (kompilyatsiya vaqtida generatsiya) yoki `fx`/`dig` (runtime reflection) — jamoa tanlovi", "correct": true },
-        { "id": "b", "text": "Global o'zgaruvchilar va `init()`", "hint": "Yashirin bog'liqlik, test qiyin — Go jamoasi qochadi." },
+        { "id": "a", "text": "Konstruktor funksiyalar va `main`da qo'lda yig'ish; katta grafda `wire` yoki `fx` — jamoa tanlovi", "correct": true },
+        { "id": "b", "text": "Global o'zgaruvchilar va `init()` funksiyalari orqali — Go'da idiomatik, tavsiya etilgan va eng oddiy yo'l", "hint": "Yashirin bog'liqlik, test qiyin — Go jamoasi qochadi." },
         { "id": "c", "text": "DI framework shart", "hint": "Ko'p Go loyihasi qo'lda DI bilan — 50 qator `main`." },
         { "id": "d", "text": "Service locator pattern", "hint": "Bog'liqlik yashirin; Go'da konstruktor orqali aniq uzatish idiomatik." }
       ],
-      "explanation": "Interfeyslar iste'molchi tomonida — konstruktor interfeys qabul qiladi, konkret struct qaytaradi. `main`: config → db → repo → service → handler → server. Test: fake repo konstruktorga. `wire` — `main`ni generatsiya qiladi, xato — kompilyatsiyada (reflection yo'q).",
+      "explanation": "Masalan, `NewService(repo Repo, log *slog.Logger)`; `wire` — kompilyatsiyada, `fx`/`dig` — runtime reflection. Interfeyslar iste'molchi tomonida — konstruktor interfeys qabul qiladi, konkret struct qaytaradi. `main`: config → db → repo → service → handler → server. Test: fake repo konstruktorga. `wire` — `main`ni generatsiya qiladi, xato — kompilyatsiyada (reflection yo'q).",
       "reviewed": false
     },
     {
@@ -68,12 +68,12 @@
       "kind": "concept",
       "prompt": "Go GC qanday ishlaydi va `GOGC`/`GOMEMLIMIT` nima uchun?",
       "options": [
-        { "id": "a", "text": "Konkurent, tri-color mark-sweep, generatsiyasiz, qisqa STW pauzalar (<1 ms); `GOGC` (default 100) — heap 2x o'sganda GC; `GOMEMLIMIT` (1.19+) — xotira limiti, konteynerda OOM'dan qochish (limitga yaqinlashganda GC tezroq); `GOGC=off` + `GOMEMLIMIT` — xotira to'lguncha GC yo'q (throughput)", "correct": true },
+        { "id": "a", "text": "Konkurent mark-sweep, qisqa pauzalar; `GOGC` — heap o'sish chegarasi, `GOMEMLIMIT` — xotira limiti", "correct": true },
         { "id": "b", "text": "Reference counting", "hint": "Tracing GC — mark-sweep." },
         { "id": "c", "text": "GC sozlanmaydi", "hint": "Ikki asosiy tugma — `GOGC`, `GOMEMLIMIT`; ko'p flag ataylab yo'q." },
-        { "id": "d", "text": "Java kabi generatsion GC", "hint": "Go GC generatsiyasiz — escape analysis ko'p qisqa umrli ob'ektni stack'da ushlaydi." }
+        { "id": "d", "text": "Java kabi generatsion GC: yangi ob'ektlar young, uzoq yashaganlar old generatsiyaga ko'chiriladi va alohida tozalanadi", "hint": "Go GC generatsiyasiz — escape analysis ko'p qisqa umrli ob'ektni stack'da ushlaydi." }
       ],
-      "explanation": "GC narxi — CPU (~25% GC ishlayotganda); kam allokatsiya = kam GC. Konteynerda: `GOMEMLIMIT` = limit × 0.9. GC trace: `GODEBUG=gctrace=1`. Allokatsiyani kamaytirish: `sync.Pool`, slice preallocation, `strings.Builder`, pointer'siz struct'lar (GC skanerlamaydi).",
+      "explanation": "`GOGC` default 100 (heap 2x o'sganda GC); `GOMEMLIMIT` konteynerda OOM'dan saqlaydi; Go GC generatsiyasiz. GC narxi — CPU (~25% GC ishlayotganda); kam allokatsiya = kam GC. Konteynerda: `GOMEMLIMIT` = limit × 0.9. GC trace: `GODEBUG=gctrace=1`. Allokatsiyani kamaytirish: `sync.Pool`, slice preallocation, `strings.Builder`, pointer'siz struct'lar (GC skanerlamaydi).",
       "reviewed": false
     },
     {
@@ -99,12 +99,12 @@
       "kind": "concept",
       "prompt": "Production'da Go servisining xotirasi doimiy o'sadi — qanday tekshiriladi?",
       "options": [
-        { "id": "a", "text": "Avval RSS vs Go heap farqi (runtime metrikalar: `HeapInuse`, `HeapIdle`, `Sys`) — GC heap'ni OS'ga qaytarmasligi mumkin (normal); keyin heap profil ikki nuqtada (`-base`), `inuse_space` — kim ushlab turibdi; goroutine profil — goroutine leak (har biri stack + ushlab turgan ob'ektlar); tipik sabablar: cheksiz map/cache, yopilmagan body/rows, goroutine leak, katta slice'dan kichik subslice, `time.After` siklda", "correct": true },
+        { "id": "a", "text": "RSS va Go heap'ni solishtirish, heap profil diff (`-base`) va goroutine profil — kim ushlab turibdi", "correct": true },
         { "id": "b", "text": "`GOGC` oshirish", "hint": "GC tezroq ishlashi erishiladigan ob'ektni o'chirmaydi — sizish qoladi." },
         { "id": "c", "text": "Pod'ni har kecha restart", "hint": "Simptomni yashirish." },
-        { "id": "d", "text": "Go'da sizish bo'lmaydi — GC bor", "hint": "GC erishib bo'lmaydiganni tozalaydi; erishiladigan keraksiz ob'ekt — sizish." }
+        { "id": "d", "text": "Go'da xotira sizishi bo'lmaydi, chunki GC hamma ishlatilmagan ob'ektni albatta va o'z vaqtida tozalaydi", "hint": "GC erishib bo'lmaydiganni tozalaydi; erishiladigan keraksiz ob'ekt — sizish." }
       ],
-      "explanation": "Continuous profiling (Pyroscope/Parca/Datadog) — vaqt bo'yicha solishtirish, insidentda tayyor ma'lumot. `runtime/metrics` → Prometheus. `GOMEMLIMIT` — OOM'dan oldin GC agressiv, lekin sizishda baribir o'ladi — sabab topish shart. `goleak` testlarda.",
+      "explanation": "Tipik sabablar: cheksiz map/kesh, yopilmagan body/rows, goroutine leak, kichik subslice, sikldagi `time.After`. Continuous profiling (Pyroscope/Parca/Datadog) — vaqt bo'yicha solishtirish, insidentda tayyor ma'lumot. `runtime/metrics` → Prometheus. `GOMEMLIMIT` — OOM'dan oldin GC agressiv, lekin sizishda baribir o'ladi — sabab topish shart. `goleak` testlarda.",
       "reviewed": false
     },
     {

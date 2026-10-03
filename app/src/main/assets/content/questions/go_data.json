@@ -8,12 +8,12 @@
       "kind": "concept",
       "prompt": "Go'da `database/sql` paketi nima va drayver bilan qanday ishlaydi?",
       "options": [
-        { "id": "a", "text": "DB bilan ishlash uchun umumiy interfeys (ulanish pool, so'rov, tranzaksiya); konkret DB — alohida drayver paketi (`pgx`, `lib/pq`, `go-sql-driver/mysql`) `_` import bilan ro'yxatdan o'tadi; `sql.Open(\"postgres\", dsn)` — pool yaratadi, ulanishni darhol ochmaydi (`db.Ping` tekshiradi)", "correct": true },
+        { "id": "a", "text": "Umumiy DB interfeysi (pool, so'rov, tranzaksiya); drayver `_` import bilan ulanadi, `sql.Open` faqat pool yaratadi", "correct": true },
         { "id": "b", "text": "ORM", "hint": "ORM emas — past darajali, SQL o'zingiz yozasiz." },
         { "id": "c", "text": "Faqat PostgreSQL uchun", "hint": "Drayver orqali har qanday DB." },
-        { "id": "d", "text": "`sql.Open` har chaqiruvda yangi ulanish ochadi", "hint": "Bir marta chaqiriladi, pool qaytaradi — global/DI bilan baham ko'riladi." }
+        { "id": "d", "text": "`sql.Open` har chaqiruvda bazaga yangi ulanish ochadi, shuning uchun uni har bir so'rovdan oldin alohida chaqirish kerak", "hint": "Bir marta chaqiriladi, pool qaytaradi — global/DI bilan baham ko'riladi." }
       ],
-      "explanation": "`*sql.DB` — thread-safe pool, ilova davomida bitta. `QueryRowContext`, `QueryContext` + `rows.Close()`, `ExecContext`. Parametrlar — `$1` (postgres) / `?` (mysql) — hech qachon satr konkatenatsiya (SQL injection). `pgx` — PostgreSQL uchun o'z API'si tezroq va boyroq.",
+      "explanation": "Drayverlar: `pgx`, `lib/pq`, `go-sql-driver/mysql`; ulanish `db.Ping` bilan tekshiriladi. `*sql.DB` — thread-safe pool, ilova davomida bitta. `QueryRowContext`, `QueryContext` + `rows.Close()`, `ExecContext`. Parametrlar — `$1` (postgres) / `?` (mysql) — hech qachon satr konkatenatsiya (SQL injection). `pgx` — PostgreSQL uchun o'z API'si tezroq va boyroq.",
       "reviewed": false
     },
     {
@@ -39,12 +39,12 @@
       "kind": "concept",
       "prompt": "`sql.ErrNoRows` qachon qaytadi va qanday ishlanadi?",
       "options": [
-        { "id": "a", "text": "`QueryRow(...).Scan(...)` natija bo'lmasa — bu xato, lekin ko'pincha \"topilmadi\" biznes holati; `errors.Is(err, sql.ErrNoRows)` bilan farqlab, domen xatosiga (`ErrUserNotFound`) aylantirish; `Query` (ko'p qator) bo'sh natijada xato bermaydi", "correct": true },
+        { "id": "a", "text": "`QueryRow().Scan` natija bo'lmasa qaytadi; `errors.Is` bilan ajratib, domen xatosiga aylantiriladi", "correct": true },
         { "id": "b", "text": "Har qanday DB xatosi", "hint": "Faqat `QueryRow` + bo'sh natija." },
         { "id": "c", "text": "`Query` bo'sh natijada", "hint": "`Query` bo'sh natijada `rows.Next()` false — xato yo'q." },
-        { "id": "d", "text": "Hech qachon — Go nil qaytaradi", "hint": "`QueryRow.Scan` aniq `sql.ErrNoRows` qaytaradi." }
+        { "id": "d", "text": "Hech qachon qaytmaydi — natija bo'lmasa Go `Scan` orqali o'zgaruvchilarga jimgina `nil` qiymat yozib qo'yadi", "hint": "`QueryRow.Scan` aniq `sql.ErrNoRows` qaytaradi." }
       ],
-      "explanation": "Repository qatlami: `if errors.Is(err, sql.ErrNoRows) { return nil, ErrNotFound }` — handler 404 beradi, `database/sql`ga bog'lanmaydi. `pgx` o'z `pgx.ErrNoRows` — drayverga qarab. Bu Go'da \"xato — qiymat\" falsafasining tipik misoli.",
+      "explanation": "Masalan, `ErrUserNotFound`; `Query` (ko'p qator) bo'sh natijada xato bermaydi. Repository qatlami: `if errors.Is(err, sql.ErrNoRows) { return nil, ErrNotFound }` — handler 404 beradi, `database/sql`ga bog'lanmaydi. `pgx` o'z `pgx.ErrNoRows` — drayverga qarab. Bu Go'da \"xato — qiymat\" falsafasining tipik misoli.",
       "reviewed": false
     },
     {
@@ -54,12 +54,12 @@
       "kind": "concept",
       "prompt": "`database/sql` ulanish pool'i qanday sozlanadi va nima uchun?",
       "options": [
-        { "id": "a", "text": "`SetMaxOpenConns` (DB limiti va boshqa servislar hisobga olinib), `SetMaxIdleConns` (bo'sh ulanishlar — qayta ochish narxidan qochish), `SetConnMaxLifetime` (eski ulanishlarni yangilash — LB/failover uchun), `SetConnMaxIdleTime`; default `MaxOpen` cheksiz — DB'ni ulanishlar bilan bostirish xavfi", "correct": true },
+        { "id": "a", "text": "`SetMaxOpenConns`, `SetMaxIdleConns`, `SetConnMaxLifetime` — default `MaxOpen` cheksiz, DB'ni bostirishi mumkin", "correct": true },
         { "id": "b", "text": "Pool sozlanmaydi — avtomatik optimal", "hint": "Default cheksiz ochiq ulanish — production'da xavfli." },
-        { "id": "c", "text": "`MaxOpenConns` qanchalik katta — shuncha yaxshi", "hint": "PostgreSQL ~100 ulanishdan keyin degradatsiya; ko'p pod × ko'p ulanish = DB yiqiladi." },
+        { "id": "c", "text": "`MaxOpenConns` qanchalik katta bo'lsa, shuncha yaxshi — bazaga parallel ulanishlar hech qachon zarar qilmaydi va tezlik oshadi", "hint": "PostgreSQL ~100 ulanishdan keyin degradatsiya; ko'p pod × ko'p ulanish = DB yiqiladi." },
         { "id": "d", "text": "Har so'rov uchun yangi `sql.Open`", "hint": "Pool foydasi yo'qoladi." }
       ],
-      "explanation": "Hisob: DB max_connections / pod soni − zaxira. Pool to'lsa so'rov kutadi — `ctx` timeout bilan `QueryContext`, aks holda goroutine'lar to'planadi. `db.Stats()` — `WaitCount`, `WaitDuration` metrikaga chiqarish. PgBouncer — ko'p servis uchun tashqi pool.",
+      "explanation": "MaxOpen DB limiti va boshqa servislarga qarab tanlanadi; MaxLifetime LB/failover uchun eski ulanishlarni yangilaydi. Hisob: DB max_connections / pod soni − zaxira. Pool to'lsa so'rov kutadi — `ctx` timeout bilan `QueryContext`, aks holda goroutine'lar to'planadi. `db.Stats()` — `WaitCount`, `WaitDuration` metrikaga chiqarish. PgBouncer — ko'p servis uchun tashqi pool.",
       "reviewed": false
     },
     {
@@ -85,8 +85,8 @@
       "kind": "concept",
       "prompt": "Go'da SQL bilan ishlash uchun `sqlc`, `sqlx`, `GORM`, xom `database/sql` qanday tanlanadi?",
       "options": [
-        { "id": "a", "text": "Xom `database/sql`/`pgx` — to'liq nazorat, ko'p boilerplate; `sqlx` — scan'ni struct'ga soddalashtiradi; `sqlc` — SQL yozasiz, tur-xavfsiz Go kodi generatsiya (Go jamoasida mashhur, kompilyatsiya vaqtida xato); `GORM`/`ent` — ORM, tez CRUD, lekin yashirin so'rovlar va performance tuzoqlari", "correct": true },
-        { "id": "b", "text": "Doim ORM — SQL yozmaslik uchun", "hint": "Go jamoasi SQL'ni ochiq yozishni afzal ko'radi; ORM N+1 va murakkab so'rovlarda qiyin." },
+        { "id": "a", "text": "Xom `database/sql` — nazorat; `sqlx` — struct scan; `sqlc` — SQL'dan tur-xavfsiz kod; GORM — tez CRUD, yashirin so'rovlar", "correct": true },
+        { "id": "b", "text": "Doim ORM (GORM) tanlash kerak — shunda jamoa umuman SQL yozmaydi va so'rovlar ham o'z-o'zidan eng samarali shaklda optimallashadi", "hint": "Go jamoasi SQL'ni ochiq yozishni afzal ko'radi; ORM N+1 va murakkab so'rovlarda qiyin." },
         { "id": "c", "text": "Faqat xom `database/sql`", "hint": "50 jadval uchun qo'lda scan — xato manbai; `sqlc` yoki `sqlx` boilerplate'ni olib tashlaydi." },
         { "id": "d", "text": "Farqi yo'q", "hint": "Tur xavfsizligi, performance ko'rinishi, migratsiya oqimi farq qiladi." }
       ],
@@ -100,12 +100,12 @@
       "kind": "concept",
       "prompt": "Repository qatlamida tranzaksiyani bir nechta repository metodi orasida qanday uzatish kerak?",
       "options": [
-        { "id": "a", "text": "Variantlar: (1) `context` orqali tx uzatish — repository `txFromContext(ctx)` yoki `db` ishlatadi, service `WithTx(ctx, fn)` bilan chegara belgilaydi; (2) repository metodlari `DBTX` interfeysini (`*sql.DB` va `*sql.Tx` ikkalasi qanoatlantiradi) qabul qiladi; (3) Unit of Work. Tranzaksiya chegarasi — use case'da, repository ichida emas", "correct": true },
-        { "id": "b", "text": "Har repository metodi o'z tranzaksiyasini ochadi", "hint": "Ikki metod — ikki tranzaksiya, atomiklik yo'q." },
+        { "id": "a", "text": "Tx'ni `context` yoki `DBTX` interfeysi orqali uzatish; chegara use case'da `WithTx(ctx, fn)` bilan belgilanadi", "correct": true },
+        { "id": "b", "text": "Har bir repository metodi o'z tranzaksiyasini ochib yopadi — shunda ular bitta umumiy tranzaksiyaga avtomatik birlashadi", "hint": "Ikki metod — ikki tranzaksiya, atomiklik yo'q." },
         { "id": "c", "text": "Global `*sql.Tx` o'zgaruvchi", "hint": "Ko'p so'rov parallel — race; test imkonsiz." },
         { "id": "d", "text": "Tranzaksiya faqat bitta jadvalda ishlaydi", "hint": "Tranzaksiya — ulanish darajasida, istalgancha jadval." }
       ],
-      "explanation": "`sqlc` `DBTX` interfeysini generatsiya qiladi — `New(tx)` bilan tranzaksiya ichida ishlash. Context'da tx — qulay, lekin yashirin (tx bo'lmasa jim `db` ishlatish — xato yashiradi). Uzun tranzaksiya (tashqi API chaqiruvi ichida) — qulf va pool bandligi — qisqa saqlang.",
+      "explanation": "`*sql.DB` va `*sql.Tx` ikkalasi `DBTX` ni qanoatlantiradi; Unit of Work ham variant. `sqlc` `DBTX` interfeysini generatsiya qiladi — `New(tx)` bilan tranzaksiya ichida ishlash. Context'da tx — qulay, lekin yashirin (tx bo'lmasa jim `db` ishlatish — xato yashiradi). Uzun tranzaksiya (tashqi API chaqiruvi ichida) — qulf va pool bandligi — qisqa saqlang.",
       "reviewed": false
     },
     {
@@ -115,12 +115,12 @@
       "kind": "concept",
       "prompt": "Go servisida DB so'rovlarini tekshiruvchi testlar qanday yoziladi?",
       "options": [
-        { "id": "a", "text": "Real DB bilan integration test: `testcontainers-go` (Docker'da PostgreSQL) yoki CI service, har test tranzaksiya rollback yoki alohida sxema, migratsiyalar test boshida; `sqlmock` — faqat SQL matnini tekshiradi (mo'rt, DB semantikasini isbotlamaydi); build tag/`-short` bilan ajratish", "correct": true },
-        { "id": "b", "text": "Faqat `sqlmock` — tez va yetarli", "hint": "SQL sintaksis xatosi, constraint, indeks — mock ko'rmaydi." },
+        { "id": "a", "text": "Real DB bilan integration test (`testcontainers-go`), rollback yoki alohida sxema, migratsiyalar boshida", "correct": true },
+        { "id": "b", "text": "Faqat `sqlmock` yetarli: u tez ishlaydi va SQL'ning bazadagi haqiqiy xulqini ham to'liq va aniq tekshiradi", "hint": "SQL sintaksis xatosi, constraint, indeks — mock ko'rmaydi." },
         { "id": "c", "text": "DB kodi test qilinmaydi", "hint": "DB qatlami — xatolar ko'p joy; integration test shart." },
         { "id": "d", "text": "Production DB'da test", "hint": "Hech qachon." }
       ],
-      "explanation": "`testcontainers-go`: `postgres.Run(ctx, \"postgres:16\")` → DSN → migratsiya → testlar; `TestMain`da bir marta konteyner, testlar parallel alohida sxemalarda. `pgx` + `pgxpool` bilan `pgtestdb`. SQLite in-memory — PostgreSQL semantikasi farq qiladi, tavsiya etilmaydi.",
+      "explanation": "`sqlmock` faqat SQL matnini tekshiradi — mo'rt; integration testlar build tag yoki `-short` bilan ajratiladi. `testcontainers-go`: `postgres.Run(ctx, \"postgres:16\")` → DSN → migratsiya → testlar; `TestMain`da bir marta konteyner, testlar parallel alohida sxemalarda. `pgx` + `pgxpool` bilan `pgtestdb`. SQLite in-memory — PostgreSQL semantikasi farq qiladi, tavsiya etilmaydi.",
       "reviewed": false
     },
     {
@@ -145,12 +145,12 @@
       "kind": "concept",
       "prompt": "Go servisida DB migratsiyalari va sxema evolyutsiyasi qanday boshqariladi?",
       "options": [
-        { "id": "a", "text": "Versiyalangan migratsiya fayllari repoda (`golang-migrate`, `goose`, `atlas`), CI'da tekshirish, deploy'da alohida qadam yoki init container (ilova startida emas — ko'p pod race), backward-compatible o'zgarishlar (expand → migrate → contract), katta jadvalda `CREATE INDEX CONCURRENTLY`, qulf tutmaydigan qadamlar, rollback rejasi", "correct": true },
-        { "id": "b", "text": "GORM `AutoMigrate` production'da", "hint": "Nazoratsiz sxema o'zgarishi; ustun o'chirmaydi; ko'p pod birga ishga tushsa — konflikt." },
+        { "id": "a", "text": "Versiyalangan migratsiyalar (`goose`, `atlas`), deploy'da alohida qadam, expand → migrate → contract", "correct": true },
+        { "id": "b", "text": "GORM `AutoMigrate` ni production'da har startda ishlatish — u sxemani har doim to'g'ri va xavfsiz moslaydi", "hint": "Nazoratsiz sxema o'zgarishi; ustun o'chirmaydi; ko'p pod birga ishga tushsa — konflikt." },
         { "id": "c", "text": "Qo'lda SQL production'da", "hint": "Takrorlanmaydi, muhitlar farqlanadi, tarix yo'q." },
         { "id": "d", "text": "Sxema hech qachon o'zgarmaydi", "hint": "Har loyiha o'zgaradi — jarayon kerak." }
       ],
-      "explanation": "Expand-contract: ustun qo'sh (nullable) → kod ikkalasiga yozadi → backfill → kod yangisini o'qiydi → eskisini o'chir. `ALTER TABLE ... ADD COLUMN NOT NULL DEFAULT` — PostgreSQL 11+ tez, eski versiyada butun jadval qayta yoziladi. `atlas` — deklarativ sxema + lint (xavfli migratsiyalarni ogohlantiradi).",
+      "explanation": "Ilova startida emas (ko'p pod race); katta jadvalda `CREATE INDEX CONCURRENTLY`, rollback rejasi kerak. Expand-contract: ustun qo'sh (nullable) → kod ikkalasiga yozadi → backfill → kod yangisini o'qiydi → eskisini o'chir. `ALTER TABLE ... ADD COLUMN NOT NULL DEFAULT` — PostgreSQL 11+ tez, eski versiyada butun jadval qayta yoziladi. `atlas` — deklarativ sxema + lint (xavfli migratsiyalarni ogohlantiradi).",
       "reviewed": false
     }
   ]
