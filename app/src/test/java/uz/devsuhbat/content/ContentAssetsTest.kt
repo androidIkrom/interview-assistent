@@ -152,6 +152,12 @@ class ContentAssetsTest {
         "qa.api" to listOf(4, 4, 3, 2),
         "qa.auto" to listOf(3, 3, 2, 2),
         "qa.process" to listOf(2, 2, 2, 2),
+        "ops.linux" to listOf(6, 5, 2, 1),
+        "ops.docker" to listOf(5, 4, 2, 1),
+        "ops.cicd" to listOf(4, 4, 3, 2),
+        "ops.k8s" to listOf(4, 4, 3, 2),
+        "ops.iac" to listOf(3, 3, 2, 2),
+        "ops.observability" to listOf(2, 2, 2, 2),
     )
 
     @Test

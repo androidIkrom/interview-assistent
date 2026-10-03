@@ -1,0 +1,185 @@
+{
+  "topic": "ops.docker",
+  "questions": [
+    {
+      "id": "ops.docker.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Docker image va container qanday farqlanadi?",
+      "options": [
+        { "id": "a", "text": "Image — o'zgarmas shablon: ilova, bog'liqliklar va fayl tizimi qatlamlari (layer) to'plami, registry'da saqlanadi. Container — image'dan ishga tushirilgan jarayon: image ustiga yoziladigan qatlam qo'shiladi, o'z izolyatsiyalangan muhiti bor. Bitta image'dan ko'p container yaratish mumkin", "correct": true },
+        { "id": "b", "text": "Container — image'ning siqilgan arxivi", "hint": "Arxiv/shablon — bu image; container — ishlayotgan nusxa." },
+        { "id": "c", "text": "Container ichida qilingan o'zgarishlar image'ni avtomatik yangilaydi", "hint": "Image o'zgarmas; o'zgarishlar container qatlamida qoladi va container o'chirilsa yo'qoladi." },
+        { "id": "d", "text": "Har bir container alohida virtual mashina", "hint": "Container host yadrosini bo'lishadi — VM'dan yengil; izolyatsiya namespace va cgroup orqali." }
+      ],
+      "explanation": "Analogiya: image — klass, container — ob'ekt. Image teg bilan versiyalanadi (`myapp:1.4.2`); production'da `latest` tegidan qochish — qaysi versiya ishlayotgani noaniq bo'ladi.",
+      "reviewed": false
+    },
+    {
+      "id": "ops.docker.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Dockerfile'da `RUN` va `CMD` qanday farqlanadi?",
+      "options": [
+        { "id": "a", "text": "`RUN` — image build paytida bajariladi va natijasi yangi qatlam sifatida saqlanadi (paket o'rnatish, kompilyatsiya). `CMD` — container ishga tushganda bajariladigan default buyruq; `docker run image <buyruq>` bilan almashtirilishi mumkin", "correct": true },
+        { "id": "b", "text": "Ikkalasi ham container ishga tushganda bajariladi", "hint": "`RUN` faqat build vaqtida — ishlayotgan container'da qayta bajarilmaydi." },
+        { "id": "c", "text": "Dockerfile'da bir nechta `CMD` bo'lsa, hammasi ketma-ket bajariladi", "hint": "Faqat oxirgi `CMD` kuchda bo'ladi." },
+        { "id": "d", "text": "`CMD` bilan paketlar o'rnatiladi", "hint": "Har ishga tushishda o'rnatish — sekin va ishonchsiz; o'rnatish build vaqtida `RUN` bilan." }
+      ],
+      "explanation": "Asosiy ko'rsatmalar: `FROM` (baza image), `WORKDIR`, `COPY`, `RUN`, `ENV`, `EXPOSE` (hujjat uchun), `USER`, `ENTRYPOINT`/`CMD`. Har `RUN` yangi qatlam — bog'liq buyruqlarni `&&` bilan birlashtirib, keshni bir qatlamda tozalash image hajmini kamaytiradi.",
+      "reviewed": false
+    },
+    {
+      "id": "ops.docker.003",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`docker run -p 8080:80 nginx` buyrug'idagi `-p 8080:80` nimani anglatadi?",
+      "options": [
+        { "id": "a", "text": "Host'ning 8080-portiga kelgan so'rovlar container ichidagi 80-portga yo'naltiriladi: brauzerda `http://localhost:8080` ochilsa, container'dagi nginx javob beradi. Format — `HOST:CONTAINER`", "correct": true },
+        { "id": "b", "text": "Container'ning 8080-porti host'ning 80-portiga ulanadi", "hint": "Tartib: chapda host porti, o'ngda container porti." },
+        { "id": "c", "text": "nginx 8080 dan 80 gacha bo'lgan barcha portlarni tinglaydi", "hint": "Bu diapazon emas — bitta port xaritalash." },
+        { "id": "d", "text": "`EXPOSE 80` Dockerfile'da bo'lsa, `-p` kerak emas — port avtomatik ochiladi", "hint": "`EXPOSE` faqat hujjat/metadata; host'dan kirish uchun `-p` (yoki `-P`) kerak." }
+      ],
+      "explanation": "`-p 127.0.0.1:8080:80` — faqat lokal interfeysda ochish (xavfsizroq). Docker iptables qoidalarini o'zi qo'shadi va ba'zan host firewall (ufw) qoidalarini chetlab o'tadi — production'da buni hisobga oling.",
+      "reviewed": false
+    },
+    {
+      "id": "ops.docker.004",
+      "level": "junior",
+      "type": "single",
+      "kind": "true_false",
+      "prompt": "Quyidagi fikr to'g'rimi?\n\nPostgreSQL container'ini `docker rm` bilan o'chirib, yangisini ishga tushirsangiz, volume ulanmagan bo'lsa ham ma'lumotlar saqlanib qoladi.",
+      "options": [
+        { "id": "a", "text": "Ha", "hint": "Volume'siz ma'lumotlar container'ning yoziladigan qatlamida — container o'chirilishi bilan yo'qoladi." },
+        { "id": "b", "text": "Yo'q", "correct": true }
+      ],
+      "explanation": "Doimiy ma'lumot uchun named volume (`-v pgdata:/var/lib/postgresql/data`) yoki bind mount. Container'lar \"bir martalik\" deb qaraladi — holat tashqarida. Volume zaxira nusxasi alohida rejalashtiriladi.",
+      "reviewed": false
+    },
+    {
+      "id": "ops.docker.005",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Ishlayotgan container ichidagi muammoni tekshirish uchun qaysi buyruqlar ishlatiladi?",
+      "options": [
+        { "id": "a", "text": "`docker ps` (ishlayotgan container'lar, `-a` — to'xtaganlari ham), `docker logs -f <nom>` (stdout/stderr), `docker exec -it <nom> sh` (ichiga kirish), `docker inspect <nom>` (konfiguratsiya, tarmoq, mount'lar, exit code), `docker stats` (CPU/xotira)", "correct": true },
+        { "id": "b", "text": "Faqat container'ni o'chirib qayta yaratish — ichini ko'rib bo'lmaydi", "hint": "`exec`, `logs` va `inspect` bilan ishlayotgan container'ni tekshirish mumkin." },
+        { "id": "c", "text": "`docker build` — ishlayotgan container loglarini ko'rsatadi", "hint": "`build` image yaratadi; loglar — `docker logs`." },
+        { "id": "d", "text": "Container ichidagi log fayllarni ko'rish uchun SSH serverini o'rnatish kerak", "hint": "`docker exec` yetarli; container'ga SSH o'rnatish — anti-pattern." }
+      ],
+      "explanation": "Ilova loglarni faylga emas, stdout/stderr'ga yozsin — shunda `docker logs` va markazlashgan log tizimlari ularni oladi. Minimal image'larda (distroless) shell yo'q — `docker debug` yoki vaqtincha debug container ishlatiladi.",
+      "reviewed": false
+    },
+    {
+      "id": "ops.docker.006",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Code review: har qanday kod o'zgarishida `npm ci` qaytadan bajarilib, build 6 daqiqa davom etmoqda. Sabab?",
+      "code": "FROM node:22-alpine\nWORKDIR /app\nCOPY . .\nRUN npm ci\nRUN npm run build\nCMD [\"node\", \"dist/server.js\"]",
+      "options": [
+        { "id": "a", "text": "Layer cache tartibi: `COPY . .` har kod o'zgarishida keshni bekor qiladi, undan keyingi `npm ci` ham qayta bajariladi. Avval faqat `package.json` va `package-lock.json`ni nusxalab `npm ci`, keyin qolgan kodni `COPY` qilish kerak — bog'liqliklar o'zgarmasa, o'rnatish keshdan olinadi. Shuningdek `.dockerignore` (`node_modules`, `.git`)", "correct": true },
+        { "id": "b", "text": "`node:22-alpine` juda katta image", "hint": "Alpine kichik; sekinlik sababi — keshning har safar bekor bo'lishi." },
+        { "id": "c", "text": "`npm ci` o'rniga `npm install` yozish kerak", "hint": "`npm ci` lock fayl bo'yicha qayta takrorlanadigan o'rnatish — CI uchun to'g'ri; muammo — qatlamlar tartibida." },
+        { "id": "d", "text": "`CMD` qatori keshni buzadi", "hint": "`CMD` metadata, u build vaqtida og'ir ish qilmaydi." }
+      ],
+      "explanation": "Qoida: kam o'zgaradigan qatlamlar yuqorida, tez o'zgaradiganlari pastda. BuildKit cache mount (`RUN --mount=type=cache,target=/root/.npm npm ci`) va CI'da registry keshi (`--cache-from`) qo'shimcha tezlik beradi.",
+      "reviewed": false
+    },
+    {
+      "id": "ops.docker.007",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Multi-stage build nima uchun ishlatiladi?",
+      "options": [
+        { "id": "a", "text": "Bir Dockerfile'da bir nechta `FROM` bosqichi: build bosqichida kompilyator, SDK va dev bog'liqliklar bilan yig'iladi, yakuniy bosqichga esa faqat natija (`COPY --from=build /app/dist ./dist`) ko'chiriladi. Natija — kichik image, kamroq zaiflik va tezroq deploy; build vositalari production'ga tushmaydi", "correct": true },
+        { "id": "b", "text": "Bir nechta container'ni bitta image'da ishga tushirish uchun", "hint": "Bosqichlar faqat build vaqtida; yakunda bitta image va odatda bitta jarayon." },
+        { "id": "c", "text": "Image'ni bir nechta registry'ga yuklash uchun", "hint": "Bu push masalasi; multi-stage — build optimallashtirish." },
+        { "id": "d", "text": "Multi-stage build yakuniy image hajmini oshiradi", "hint": "Aksincha — oraliq bosqichlardagi vositalar yakuniy image'ga kirmaydi." }
+      ],
+      "explanation": "Go/Rust uchun yakuniy bosqich `scratch` yoki `distroless` bo'lishi mumkin (bir necha MB). Java: `maven` bosqichi → `eclipse-temurin:21-jre`. `--target build` bilan oraliq bosqichni alohida yig'ish testlar uchun qulay.",
+      "reviewed": false
+    },
+    {
+      "id": "ops.docker.008",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Docker Compose'da `api` servisi `db` servisidagi PostgreSQL'ga `localhost:5432` orqali ulana olmayapti. Sabab?",
+      "options": [
+        { "id": "a", "text": "Har container o'z tarmoq namespace'iga ega: `api` ichidagi `localhost` — `api` container'ining o'zi. Compose umumiy tarmoq yaratadi va servislar bir-birini servis nomi bo'yicha topadi (ichki DNS): `postgres://db:5432/app`. Bundan tashqari, `depends_on` faqat ishga tushish tartibini beradi — DB tayyorligini kutish uchun healthcheck + `condition: service_healthy` yoki ilovada qayta urinish", "correct": true },
+        { "id": "b", "text": "PostgreSQL container'da ishlamaydi", "hint": "Ishlaydi; muammo — ulanish manzili." },
+        { "id": "c", "text": "`ports: \"5432:5432\"` qo'shilsa, `localhost` container ichidan ham ishlaydi", "hint": "Port xaritalash host'dan kirish uchun; container ichidagi `localhost` baribir o'zi." },
+        { "id": "d", "text": "Container'lar hech qachon bir-biri bilan tarmoq orqali bog'lana olmaydi", "hint": "Bir tarmoqdagi container'lar bemalol bog'lanadi — servis nomi bo'yicha." }
+      ],
+      "explanation": "Tarmoq turlari: bridge (default), host (host tarmog'ini bo'lishish), none, overlay (Swarm). DB portini host'ga ochish faqat lokal debug uchun kerak — production'da ichki tarmoqda qoldiring.",
+      "reviewed": false
+    },
+    {
+      "id": "ops.docker.009",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Container `docker stop`da 10 soniya kutib, keyin majburan o'ldirilmoqda va ilova graceful shutdown qilmayapti. Dockerfile'da `CMD npm start` yozilgan. Sabab?",
+      "options": [
+        { "id": "a", "text": "Shell shakli (`CMD npm start`) buyruqni `/bin/sh -c` ostida ishga tushiradi va PID 1 — shell (yoki npm): SIGTERM ilovaga uzatilmaydi. Exec shaklida to'g'ridan-to'g'ri ishga tushirish kerak: `CMD [\"node\", \"server.js\"]`; ilova SIGTERM'ni ushlab, ulanishlarni yopishi; kerak bo'lsa `--init` (tini) — signallarni uzatish va zombi jarayonlarni yig'ish uchun", "correct": true },
+        { "id": "b", "text": "Docker SIGTERM yubormaydi — darhol SIGKILL", "hint": "`docker stop` avval SIGTERM, kutish muddatidan (default 10 s) keyin SIGKILL yuboradi." },
+        { "id": "c", "text": "Kutish vaqtini 5 daqiqaga oshirish yechim", "hint": "Signal ilovaga yetib bormasa, kutish faqat to'xtashni sekinlashtiradi." },
+        { "id": "d", "text": "`ENTRYPOINT` va `CMD` birga ishlatib bo'lmaydi", "hint": "Ishlatsa bo'ladi: `ENTRYPOINT` — bajariladigan fayl, `CMD` — default argumentlar." }
+      ],
+      "explanation": "Kubernetes'da ham xuddi shu: pod o'chirilganda SIGTERM, `terminationGracePeriodSeconds`dan keyin SIGKILL. Graceful shutdown bo'lmasa — deploy paytida yarim bajarilgan so'rovlar va 502 xatolar.",
+      "reviewed": false
+    },
+    {
+      "id": "ops.docker.010",
+      "level": "strong_middle",
+      "type": "multi",
+      "kind": "concept",
+      "prompt": "Production image'larini xavfsiz qilish uchun qaysi amaliyotlar to'g'ri? (bir nechta javob)",
+      "options": [
+        { "id": "a", "text": "Container ichida root emas, alohida foydalanuvchi (`USER app`)", "correct": true },
+        { "id": "b", "text": "Minimal baza image (distroless, alpine, slim) va multi-stage — hujum yuzasi va zaifliklar kamroq", "correct": true },
+        { "id": "c", "text": "CI'da image'ni zaifliklarga skanerlash (Trivy, Grype) va baza image'ni muntazam yangilash", "correct": true },
+        { "id": "d", "text": "Sirlarni `ENV` yoki `COPY .env` orqali image ichiga joylash", "hint": "Image qatlamlari va `docker history`dan sirlar osongina chiqarib olinadi; sirlar runtime'da secret manager orqali beriladi." },
+        { "id": "e", "text": "Har doim `:latest` tegidan foydalanish — eng yangi tuzatishlar avtomatik keladi", "hint": "Takrorlanmas build va kutilmagan o'zgarishlar; aniq versiya yoki digest bilan pin qilish kerak." }
+      ],
+      "explanation": "Build vaqtidagi sirlar uchun BuildKit `--mount=type=secret`. Runtime'da: faqat o'qiladigan fayl tizimi (`--read-only`), keraksiz capability'larni olib tashlash (`--cap-drop ALL`), `no-new-privileges`. Image imzolash (cosign) — supply chain himoyasi.",
+      "reviewed": false
+    },
+    {
+      "id": "ops.docker.011",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Java servis container'i 1 GB xotira limiti bilan ishlaydi va vaqti-vaqti bilan `OOMKilled` (exit code 137) bo'lmoqda, heap esa `-Xmx1g` qilib qo'yilgan. Muammo nima?",
+      "options": [
+        { "id": "a", "text": "Container limiti butun jarayon xotirasini hisoblaydi: heap + metaspace + thread stack'lari + kod keshi + direct buffer'lar. `-Xmx1g` bilan jami 1 GB dan oshib, cgroup jarayonni o'ldiradi. Heap'ni limitdan kichik qilish kerak (masalan, `-XX:MaxRAMPercentage=75`), qolganini native xotiraga qoldirish va haqiqiy sarfni monitoring qilish", "correct": true },
+        { "id": "b", "text": "Exit code 137 — ilovadagi `NullPointerException`", "hint": "137 = 128 + 9 (SIGKILL) — tashqaridan o'ldirilgan, odatda OOM." },
+        { "id": "c", "text": "JVM container limitini umuman ko'rmaydi, shuning uchun hech narsa qilib bo'lmaydi", "hint": "Zamonaviy JVM'lar (10+) cgroup limitlarini taniydi; muammo — heap'ni limitga teng qilib qo'yishda." },
+        { "id": "d", "text": "Limitni olib tashlash eng yaxshi yechim", "hint": "Limitsiz container host'dagi boshqa servislarni xotirasiz qoldirishi mumkin." }
+      ],
+      "explanation": "Xuddi shu tamoyil Node.js (`--max-old-space-size`), .NET (`GCHeapHardLimit`) va boshqalarga ham tegishli. Kubernetes'da `requests` va `limits` to'g'ri sozlanmasa — tasodifiy OOM va node darajasidagi evict'lar.",
+      "reviewed": false
+    },
+    {
+      "id": "ops.docker.012",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Container izolyatsiyasi qanday ishlaydi va ko'p mijozli (multi-tenant) platformada ishonchsiz kodni ishga tushirishda qanday cheklovlarni hisobga olish kerak?",
+      "options": [
+        { "id": "a", "text": "Container — oddiy Linux jarayoni: namespace'lar (pid, net, mnt, user va h.k.) ko'rinishni ajratadi, cgroup'lar resurslarni cheklaydi, seccomp/AppArmor/capabilities syscall'larni toraytiradi — lekin yadro umumiy, yadro zaifligi barcha container'larga ta'sir qiladi. Ishonchsiz kod uchun kuchliroq chegara: gVisor, Kata Containers yoki Firecracker microVM; rootless rejim va user namespace'lar ham xavfni kamaytiradi", "correct": true },
+        { "id": "b", "text": "Container to'liq virtual mashina darajasida izolyatsiyalangan — qo'shimcha chora kerak emas", "hint": "Container'lar host yadrosini bo'lishadi; VM esa alohida yadroga ega." },
+        { "id": "c", "text": "`--privileged` rejimi xavfsizlikni oshiradi", "hint": "Aksincha — deyarli barcha cheklovlarni olib tashlaydi va host'ga kirish imkonini beradi." },
+        { "id": "d", "text": "Docker socket'ini (`/var/run/docker.sock`) container'ga ulash xavfsiz", "hint": "Socket'ga kirish amalda host'da root huquqi demak." }
+      ],
+      "explanation": "Senior qaror — tahdid modeliga qarab izolyatsiya darajasini tanlash: o'z ichki servislaringiz uchun oddiy container'lar yetarli; mijoz kodi (CI runner'lar, serverless platformalar) uchun sandbox yoki microVM. Kubernetes'da RuntimeClass bilan turli runtime'larni aralashtirish mumkin.",
+      "reviewed": false
+    }
+  ]
+}

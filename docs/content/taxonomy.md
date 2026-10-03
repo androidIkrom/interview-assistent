@@ -290,6 +290,7 @@ Tugallangan mavzular `ContentAssetsTest.completedTopics` ro'yxatida turadi: test
 | 13. .NET (6 mavzu) | yozildi (2026-10-03), inson tekshiruvi kutilmoqda | 1032 / 1312 |
 | 14. iOS (6 mavzu) | yozildi (2026-10-03), inson tekshiruvi kutilmoqda | 1102 / 1312 |
 | 15. QA (6 mavzu) | yozildi (2026-10-03), inson tekshiruvi kutilmoqda | 1172 / 1312 |
+| 16. DevOps (6 mavzu) | yozildi (2026-10-03), inson tekshiruvi kutilmoqda | 1242 / 1312 |
 
 ## 6. Manbalar
 

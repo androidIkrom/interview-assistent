@@ -1,0 +1,156 @@
+{
+  "topic": "ops.iac",
+  "questions": [
+    {
+      "id": "ops.iac.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Infrastructure as Code (IaC) nima uchun kerak?",
+      "options": [
+        { "id": "a", "text": "Infratuzilma (serverlar, tarmoqlar, DB, DNS, ruxsatlar) cloud konsolida qo'lda bosish o'rniga kod sifatida tasvirlanadi: Git'da versiyalanadi va review qilinadi, muhitlarni bir xil va takrorlanadigan qilib yaratish mumkin, o'zgarishlar tarixi va rollback bor, avtomatlashtiriladi (CI). Vositalar: Terraform/OpenTofu, Pulumi, CloudFormation, Ansible (konfiguratsiya)", "correct": true },
+        { "id": "b", "text": "Faqat serverga dastur o'rnatish skriptlari", "hint": "IaC infratuzilma resurslarini yaratish va boshqarishni ham qamraydi, faqat dasturlarni emas." },
+        { "id": "c", "text": "IaC faqat katta kompaniyalar uchun — kichik loyihada konsolda bosish tezroq", "hint": "Bir marta tez, lekin keyin muhitni qayta yaratish, xatoni topish va o'zgarishni kuzatish qiyin." },
+        { "id": "d", "text": "IaC'da konsoldan qo'lda o'zgartirish ham normal amaliyot", "hint": "Qo'lda o'zgarishlar kod bilan haqiqiy holat o'rtasida farq (drift) yaratadi." }
+      ],
+      "explanation": "\"ClickOps\" muammosi: production qanday sozlanganini hech kim aniq bilmaydi va staging undan farq qiladi. IaC bilan yangi muhit (masalan, yangi region yoki mijoz uchun) bir necha buyruq bilan yaratiladi.",
+      "reviewed": false
+    },
+    {
+      "id": "ops.iac.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Terraform'da `plan` va `apply` qanday farqlanadi?",
+      "options": [
+        { "id": "a", "text": "`terraform plan` — kod, state va haqiqiy infratuzilmani solishtirib, nima yaratilishi (+), o'zgartirilishi (~) va o'chirilishi (-) haqida reja ko'rsatadi, hech narsani o'zgartirmaydi. `terraform apply` — rejani bajaradi (tasdiqdan keyin). Muhim amaliyot: rejani diqqat bilan o'qish, ayniqsa `destroy`/`replace` qatorlarini", "correct": true },
+        { "id": "b", "text": "`plan` infratuzilmani yaratadi, `apply` faqat tekshiradi", "hint": "Teskari: `plan` — oldindan ko'rish, `apply` — bajarish." },
+        { "id": "c", "text": "`apply` rejasiz, to'g'ridan-to'g'ri ishlaydi va hech narsa ko'rsatmaydi", "hint": "`apply` ham avval reja ko'rsatib tasdiq so'raydi (`-auto-approve` bo'lmasa)." },
+        { "id": "d", "text": "`plan` natijasi har doim xavfsiz — ko'rib chiqish shart emas", "hint": "Kichik o'zgarish resursni qayta yaratishi (`forces replacement`) va ma'lumotni yo'q qilishi mumkin." }
+      ],
+      "explanation": "CI'da: PR'da `plan` chiqishi izoh sifatida ko'rsatiladi, merge'dan keyin saqlangan reja fayli (`-out=tfplan`) aynan shu holda `apply` qilinadi. Ish oqimi: `init` → `fmt`/`validate` → `plan` → `apply`.",
+      "reviewed": false
+    },
+    {
+      "id": "ops.iac.003",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Deklarativ IaC (Terraform) imperativ skriptdan (`aws ec2 run-instances ...` buyruqlari ketma-ketligi) nimasi bilan farq qiladi?",
+      "options": [
+        { "id": "a", "text": "Deklarativda kerakli yakuniy holat tasvirlanadi (\"3 ta server bo'lsin\"), vosita joriy holatni bilib, farqni o'zi hisoblaydi va faqat keraklisini bajaradi — qayta ishga tushirish xavfsiz (idempotent). Imperativ skript qadamlarni bajaradi: ikki marta ishga tushirilsa 6 ta server yaratishi mumkin, o'chirish va o'zgartirishni qo'lda yozish kerak", "correct": true },
+        { "id": "b", "text": "Farq yo'q — ikkalasi ham buyruqlar ketma-ketligi", "hint": "Deklarativda \"qanday\" emas, \"nima\" tasvirlanadi." },
+        { "id": "c", "text": "Imperativ skriptlar har doim idempotent", "hint": "Tekshiruvlar qo'lda yozilmasa, takroriy ishga tushirish dublikatlar yaratadi." },
+        { "id": "d", "text": "Deklarativ vositalar mavjud resurslarni hech qachon o'zgartirmaydi", "hint": "Kod o'zgarsa, ular resursni yangilaydi yoki qayta yaratadi." }
+      ],
+      "explanation": "Idempotentlik — avtomatlashtirishning asosi: bir xil kodni CI'da qayta-qayta ishga tushirsangiz, o'zgarish bo'lmasa hech narsa qilinmaydi. Ansible ham asosan deklarativ modullar bilan ishlaydi (`state: present`).",
+      "reviewed": false
+    },
+    {
+      "id": "ops.iac.004",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Terraform state fayli nima uchun kerak?",
+      "options": [
+        { "id": "a", "text": "Kod ichidagi resurslarni cloud'dagi haqiqiy ob'ektlar (ID'lar) bilan bog'laydi, atributlarni va bog'liqliklarni saqlaydi — Terraform shu orqali nima o'zgarganini hisoblaydi. State'da maxfiy qiymatlar (DB parollari) ochiq bo'lishi mumkin, shuning uchun u Git'ga emas, shifrlangan va kirishi cheklangan remote backend'da saqlanadi", "correct": true },
+        { "id": "b", "text": "State — faqat log fayli, o'chirsa bo'ladi", "hint": "State yo'qolsa, Terraform mavjud resurslarni \"bilmay\" qoladi va ularni qayta yaratishga harakat qiladi." },
+        { "id": "c", "text": "State'ni Git'da saqlash — eng yaxshi amaliyot", "hint": "Sirlar oqadi, bir vaqtda ishlashda konfliktlar va eskirgan state muammosi bo'ladi." },
+        { "id": "d", "text": "State faylini qo'lda tahrirlash odatiy ish", "hint": "Qo'lda tahrirlash xavfli; buning uchun `terraform state mv/rm`, `import` va `moved` bloklari bor." }
+      ],
+      "explanation": "Mavjud (qo'lda yaratilgan) resursni boshqaruvga olish — `import` bloki yoki `terraform import`. Resursni kod ichida qayta nomlash — `moved` bloki (aks holda o'chirib qayta yaratadi).",
+      "reviewed": false
+    },
+    {
+      "id": "ops.iac.005",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Terraform kodini dev, staging va prod muhitlari uchun qanday tashkil qilish to'g'ri?",
+      "options": [
+        { "id": "a", "text": "Qayta ishlatiladigan modullar (masalan, `modules/service`: VPC, DB, servis) va har muhit uchun alohida ildiz konfiguratsiyasi (`envs/prod`) — o'z state'i, o'z o'zgaruvchilari (instance o'lchami, nusxalar soni) bilan. Muhitlar alohida state va imkon bo'lsa alohida cloud akkauntlarda; modul versiyalari pin qilinadi, o'zgarish avval dev'da sinaladi", "correct": true },
+        { "id": "b", "text": "Barcha muhitlar bitta state'da va bitta faylda", "hint": "Dev'dagi xato `apply` production resurslarini ham o'zgartirishi mumkin — portlash radiusi juda katta." },
+        { "id": "c", "text": "Har muhit uchun kodni to'liq nusxalab, alohida tahrirlash", "hint": "Muhitlar vaqt o'tib bir-biridan farqlanib ketadi (drift), tuzatishlarni hamma joyga qo'lda tarqatish kerak." },
+        { "id": "d", "text": "Muhitlarni faqat Terraform workspace'lari bilan ajratish — har doim eng yaxshi usul", "hint": "Workspace'lar bir xil kod va backend'ni bo'lishadi; prod/dev kabi kuchli ajratish uchun ko'pincha alohida katalog va akkaunt afzal." }
+      ],
+      "explanation": "Terragrunt kabi vositalar backend va o'zgaruvchilarni takrorlamaslikka yordam beradi. Kichik, mustaqil state'lar (tarmoq, DB, ilova alohida) — tezroq `plan` va kichikroq xavf.",
+      "reviewed": false
+    },
+    {
+      "id": "ops.iac.006",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Code review: bu Terraform kodidagi xavfsizlik muammolari nima?",
+      "code": "resource \"aws_db_instance\" \"main\" {\n  identifier          = \"shop-prod\"\n  engine              = \"postgres\"\n  instance_class      = \"db.t3.medium\"\n  username            = \"admin\"\n  password            = \"Sup3rSecret!2025\"\n  publicly_accessible = true\n  skip_final_snapshot = true\n}",
+      "options": [
+        { "id": "a", "text": "Parol kod ichida ochiq (Git tarixida qoladi) — secret manager'dan olish yoki provayderning boshqariladigan parolini (`manage_master_user_password`) ishlatish kerak; DB internetga ochiq (`publicly_accessible = true`) — xususiy subnet va security group; `skip_final_snapshot = true` — tasodifiy o'chirishda zaxirasiz ma'lumot yo'qoladi; `deletion_protection` va shifrlashni yoqish", "correct": true },
+        { "id": "b", "text": "`instance_class` juda kichik — bu xavfsizlik muammosi", "hint": "O'lcham — performance/xarajat masalasi; xavfsizlik muammolari boshqa qatorlarda." },
+        { "id": "c", "text": "Muammo yo'q — Terraform parollarni avtomatik shifrlaydi", "hint": "Kod ichidagi qiymat Git'da ochiq va state'da ham saqlanadi." },
+        { "id": "d", "text": "Faqat `identifier` nomi noto'g'ri", "hint": "Nom ahamiyatsiz; parol, ochiq kirish va zaxira sozlamalari xavfli." }
+      ],
+      "explanation": "Statik tahlil vositalari (tfsec/Trivy, Checkov) bunday xatolarni PR bosqichida ushlaydi — CI'ga qo'shing. Production ma'lumotli resurslarga `lifecycle { prevent_destroy = true }` qo'shish tasodifiy o'chirishdan himoya qiladi.",
+      "reviewed": false
+    },
+    {
+      "id": "ops.iac.007",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Ikki muhandis bir vaqtda `terraform apply` qilishi va kimdir konsolda qo'lda o'zgartirish kiritishi qanday muammolarga olib keladi va qanday oldi olinadi?",
+      "options": [
+        { "id": "a", "text": "Bir vaqtda `apply` — state buzilishi va bir-birining o'zgarishini yo'qotish: remote backend'da state lock (S3 lock fayli yoki DynamoDB, Terraform Cloud, GCS) kerak. Qo'lda o'zgartirish — drift: keyingi `plan` uni bekor qilmoqchi bo'ladi yoki kutilmagan farq ko'rsatadi. Oldini olish: o'zgarishlar faqat CI orqali, konsolda yozish huquqini cheklash, muntazam drift aniqlash (rejalashtirilgan `plan -detailed-exitcode`)", "correct": true },
+        { "id": "b", "text": "Terraform bir vaqtdagi ishlarni avtomatik birlashtiradi", "hint": "Lock bo'lmasa, oxirgi yozgan state'ni ustidan yozadi — o'zgarishlar yo'qoladi." },
+        { "id": "c", "text": "Drift har doim zararsiz — Terraform uni e'tiborsiz qoldiradi", "hint": "Keyingi `apply` qo'lda kiritilgan (ehtimol shoshilinch) tuzatishni jim bekor qilishi mumkin." },
+        { "id": "d", "text": "Lock muammosini hal qilish uchun `-lock=false` doim ishlatiladi", "hint": "Lock'ni o'chirish aynan bir vaqtda yozish xavfini qaytaradi; qotib qolgan lock faqat ehtiyotkorlik bilan `force-unlock` qilinadi." }
+      ],
+      "explanation": "Shoshilinch qo'lda tuzatish qilingan bo'lsa — uni darhol kodga ko'chirish. Atlantis yoki Terraform Cloud — PR asosidagi `plan/apply` jarayonini va lock'larni markazlashtiradi.",
+      "reviewed": false
+    },
+    {
+      "id": "ops.iac.008",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "`terraform apply` yarim yo'lda to'xtadi (tarmoq uzildi, timeout yoki provayder xatosi): ba'zi resurslar yaratildi, ba'zilari yo'q. To'g'ri harakat qaysi?",
+      "options": [
+        { "id": "a", "text": "Vahima qilmaslik: Terraform har yaratilgan resursni darhol state'ga yozadi. Lock qolgan bo'lsa — hech kim ishlamayotganiga ishonch hosil qilib `force-unlock`; keyin `terraform plan` bilan joriy holatni ko'rish va xato sababini (kvota, ruxsat, nom to'qnashuvi) tuzatib qayta `apply`. State'ga yozilmay qolgan \"yetim\" resurslarni `import` qilish yoki qo'lda tozalash", "correct": true },
+        { "id": "b", "text": "State faylni o'chirib, hammasini boshidan `apply` qilish", "hint": "Mavjud resurslar dublikat yoki nom to'qnashuvi bilan yiqiladi; state'ni o'chirish vaziyatni yomonlashtiradi." },
+        { "id": "c", "text": "Konsolda yaratilgan barcha resurslarni qo'lda o'chirib tashlash", "hint": "Ma'lumotli resurslarni yo'qotish xavfi; avval `plan` bilan aniq holatni ko'ring." },
+        { "id": "d", "text": "Darhol `terraform destroy`", "hint": "Production'da mavjud ishlayotgan resurslarni ham o'chiradi." }
+      ],
+      "explanation": "Oldini olish: kichik state'lar (portlash radiusi), state backend versiyalash (S3 versioning — buzilgan state'ni tiklash uchun), provayder timeout'larini sozlash. Holatni tushunish uchun `terraform state list` va `state show`.",
+      "reviewed": false
+    },
+    {
+      "id": "ops.iac.009",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Ilovani ikki regionda yuqori mavjudlik (multi-region) bilan ishga tushirish kerak. Infratuzilma dizaynida nimalarni hal qilish kerak?",
+      "options": [
+        { "id": "a", "text": "Maqsad va narx: RTO/RPO talablariga qarab active-passive (zaxira region, arzonroq) yoki active-active (murakkab, qimmat). Ma'lumot: DB replikatsiyasi (asinxron — ma'lumot yo'qolishi ehtimoli, global DB'lar), yozish konfliktlari; trafik: DNS/global load balancer health check bilan failover; holatsiz servislar; IaC'da region bir xil modul bilan; failover muntazam mashq qilinadi (aks holda ishlamaydi)", "correct": true },
+        { "id": "b", "text": "Ikkinchi regionda bir xil serverlarni yaratish yetarli", "hint": "Ma'lumot replikatsiyasi va trafik failover'isiz ikkinchi region foydasiz." },
+        { "id": "c", "text": "Multi-region har doim kerak — xarajat ahamiyatsiz", "hint": "Murakkablik va xarajat ancha oshadi; ko'p ilovalar uchun multi-AZ yetarli. Biznes talablari asosida qaror." },
+        { "id": "d", "text": "Failover'ni faqat haqiqiy avariya paytida birinchi marta sinash", "hint": "Sinalmagan failover deyarli har doim kutilmagan joyda yiqiladi; muntazam DR mashqlari kerak." }
+      ],
+      "explanation": "RTO — tiklanish uchun ruxsat etilgan vaqt, RPO — yo'qotilishi mumkin bo'lgan ma'lumot oralig'i. Ko'p hollarda avval multi-AZ, zaxira nusxalarni boshqa regionga nusxalash va IaC bilan tez qayta yaratish imkoniyati — arzon va yetarli \"backup & restore\" strategiyasi.",
+      "reviewed": false
+    },
+    {
+      "id": "ops.iac.010",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Kompaniyaning oylik cloud hisobi bir yilda uch baravar oshdi. Xarajatni optimallashtirishni qanday tashkil qilasiz?",
+      "options": [
+        { "id": "a", "text": "Avval ko'rinish: majburiy teglar (jamoa, servis, muhit) — IaC'da tekshiriladi, xarajatni egasiga bog'lash va budjet/anomaliya alertlari. Keyin: ishlatilmayotgan resurslar (eski disklar, snapshot'lar, bo'sh IP'lar, unutilgan muhitlar), right-sizing, autoscaling, barqaror yuklama uchun reserved/savings plans, to'xtatilishi mumkin ishlar uchun spot, saqlash sinflari va lifecycle qoidalari, tarmoq (egress, NAT) xarajatlari. Muntazam FinOps ko'rib chiqishi", "correct": true },
+        { "id": "b", "text": "Barcha resurslarni eng kichik o'lchamga tushirish", "hint": "Performance va ishonchlilik buziladi; o'lcham haqiqiy foydalanish asosida tanlanadi." },
+        { "id": "c", "text": "Hammasiga 3 yillik reserved instance sotib olish", "hint": "O'zgaruvchan yuklama va arxitektura o'zgarishlari uchun ortiqcha majburiyat; avval barqaror bazaviy yuklamani aniqlang." },
+        { "id": "d", "text": "Xarajat faqat moliya bo'limining ishi", "hint": "Xarajatni muhandislik qarorlari belgilaydi — jamoalar o'z xarajatini ko'rishi kerak." }
+      ],
+      "explanation": "Tez-tez unutiladigan xarajatlar: NAT gateway orqali katta trafik, regionlar orasidagi uzatish, log saqlash hajmi, dev muhitlarining 24/7 ishlashi. Infracost — PR'da Terraform o'zgarishining narx ta'sirini ko'rsatadi.",
+      "reviewed": false
+    }
+  ]
+}
