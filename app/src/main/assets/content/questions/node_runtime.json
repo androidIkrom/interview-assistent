@@ -8,10 +8,10 @@
       "kind": "concept",
       "prompt": "Node.js \"single-threaded\" deyiladi. Bu nimani anglatadi?",
       "options": [
-        { "id": "a", "text": "JavaScript kodi bitta asosiy oqimda bajariladi; I/O (fayl, tarmoq) esa libuv va tizim orqali asinxron, natijalar event loop orqali qaytadi", "correct": true },
+        { "id": "a", "text": "JS kodi bitta asosiy oqimda bajariladi; I/O esa libuv orqali asinxron, natija event loop'dan qaytadi", "correct": true },
         { "id": "b", "text": "Node bir vaqtda faqat bitta so'rovga xizmat qila oladi", "hint": "Minglab ulanishga xizmat qiladi, chunki I/O kutish paytida oqim bo'sh." },
         { "id": "c", "text": "Node'da oqimlar umuman yo'q", "hint": "libuv thread pool va `worker_threads` bor." },
-        { "id": "d", "text": "Node faqat bitta CPU yadrosidan foydalanadi, buni o'zgartirib bo'lmaydi", "hint": "`cluster` yoki bir nechta jarayon barcha yadrolarni band qiladi." }
+        { "id": "d", "text": "Node faqat bitta CPU yadrosidan foydalanadi va bu cheklovni hech qanday usul bilan o'zgartirib bo'lmaydi", "hint": "`cluster` yoki bir nechta jarayon barcha yadrolarni band qiladi." }
       ],
       "explanation": "Bu model I/O-og'ir servislar (API, proxy, real-time) uchun samarali: oqim kutmaydi, callback navbatini qayta ishlaydi. CPU-og'ir ish esa asosiy oqimni band qiladi va barcha so'rovlarni to'xtatadi.",
       "reviewed": false
@@ -39,10 +39,10 @@
       "kind": "concept",
       "prompt": "`Buffer` nima?",
       "options": [
-        { "id": "a", "text": "Xom binar ma'lumot (baytlar) uchun Node tuzilmasi: fayllar, tarmoq paketlari, kodlash (`utf8`, `base64`) bilan ishlashda", "correct": true },
+        { "id": "a", "text": "Xom binar ma'lumot (baytlar) uchun tuzilma: fayl, tarmoq va kodlash (`base64`) bilan ishlashda", "correct": true },
         { "id": "b", "text": "Satrlarni tezroq birlashtirish vositasi", "hint": "Bu `StringBuilder` haqida tasavvur; Buffer baytlar haqida." },
         { "id": "c", "text": "Keshlash mexanizmi", "hint": "Nomidagi \"buffer\" kesh degani emas." },
-        { "id": "d", "text": "Brauzerdagi `localStorage` ning Node varianti", "hint": "Saqlash emas, xotiradagi baytlar massivi." }
+        { "id": "d", "text": "Brauzerdagi `localStorage` ning Node varianti: ma'lumotni jarayonlar orasida diskda saqlab turadi", "hint": "Saqlash emas, xotiradagi baytlar massivi." }
       ],
       "explanation": "`Buffer.from('salom', 'utf8')`, `buf.toString('base64')`. Buffer `Uint8Array` ning kengaytmasi. Katta fayllarni to'liq Buffer'ga o'qish o'rniga stream ishlatiladi.",
       "reviewed": false
@@ -54,9 +54,9 @@
       "kind": "concept",
       "prompt": "`fs.readFileSync` va `fs.promises.readFile` farqi nima?",
       "options": [
-        { "id": "a", "text": "`readFileSync` asosiy oqimni fayl o'qilguncha bloklaydi; `readFile` promise qaytaradi va event loop boshqa ishlarni davom ettiradi", "correct": true },
+        { "id": "a", "text": "`readFileSync` asosiy oqimni bloklaydi; `readFile` promise qaytaradi va loop ishlashda davom etadi", "correct": true },
         { "id": "b", "text": "`readFileSync` tezroq o'qiydi", "hint": "Disk tezligi bir xil; farq kutish paytida boshqalar ishlashida." },
-        { "id": "c", "text": "`readFile` faqat matn fayllar uchun", "hint": "Ikkalasi ham binar o'qiydi." },
+        { "id": "c", "text": "`readFile` faqat matn fayllar uchun ishlaydi, rasm va boshqa binar fayllarni esa umuman o'qiy olmaydi", "hint": "Ikkalasi ham binar o'qiydi." },
         { "id": "d", "text": "Farqi yo'q", "hint": "Serverda `Sync` variant barcha so'rovlarni to'xtatadi." }
       ],
       "explanation": "`Sync` variantlar faqat ishga tushishda (konfiguratsiya o'qish) yoki CLI skriptlarda o'rinli. So'rovga xizmat paytida bloklovchi chaqiruv butun serverni to'xtatadi.",
@@ -69,12 +69,12 @@
       "kind": "concept",
       "prompt": "Ushlanmagan xato (`uncaughtException`) Node jarayoniga nima qiladi?",
       "options": [
-        { "id": "a", "text": "Jarayonni to'xtatadi (standart holatda); shuning uchun xatolar ushlanishi, jarayon esa menejer (systemd, PM2, Kubernetes) tomonidan qayta ishga tushirilishi kerak", "correct": true },
-        { "id": "b", "text": "Faqat o'sha so'rovni buzadi, qolganlar ishlaydi", "hint": "Node bir jarayon; ushlanmagan xato hammani to'xtatadi." },
+        { "id": "a", "text": "Standart holatda jarayonni to'xtatadi — uni menejer (systemd, PM2, Kubernetes) qayta ishga tushiradi", "correct": true },
+        { "id": "b", "text": "Faqat o'sha xato bo'lgan so'rovni buzadi, qolgan barcha so'rovlar esa odatdagidek ishlashda davom etadi", "hint": "Node bir jarayon; ushlanmagan xato hammani to'xtatadi." },
         { "id": "c", "text": "Hech narsa, Node uni e'tiborsiz qoldiradi", "hint": "Standart xatti-harakat — crash." },
         { "id": "d", "text": "Jarayon avtomatik qayta ishga tushadi", "hint": "Node o'zi qayta ishga tushmaydi; tashqi menejer kerak." }
       ],
-      "explanation": "`process.on('uncaughtException')` bilan davom etish xavfli: holat buzilgan bo'lishi mumkin. To'g'ri yondashuv: xatoni loglash, graceful shutdown, menejer qayta ishga tushiradi. `unhandledRejection` ham yangi versiyalarda xuddi shunday crash beradi.",
+      "explanation": "Shuning uchun xatolarni ushlash kerak. `process.on('uncaughtException')` bilan davom etish xavfli: holat buzilgan bo'lishi mumkin. To'g'ri yondashuv: xatoni loglash, graceful shutdown, menejer qayta ishga tushiradi. `unhandledRejection` ham yangi versiyalarda xuddi shunday crash beradi.",
       "reviewed": false
     },
     {
@@ -84,12 +84,12 @@
       "kind": "concept",
       "prompt": "Event loop fazalari (timers, poll, check) haqida qaysi fikr to'g'ri?",
       "options": [
-        { "id": "a", "text": "Loop fazalar bo'ylab aylanadi: timers (`setTimeout`), pending callbacks, poll (I/O), check (`setImmediate`), close; har faza orasida `nextTick` va microtask navbatlari bo'shatiladi", "correct": true },
-        { "id": "b", "text": "`setTimeout(fn, 0)` har doim `setImmediate` dan oldin", "hint": "Asosiy moduldan tartib noaniq; I/O callback ichida `setImmediate` har doim oldin." },
+        { "id": "a", "text": "Loop fazalar bo'ylab aylanadi: timers, poll (I/O), check (`setImmediate`); orada microtask'lar bo'shatiladi", "correct": true },
+        { "id": "b", "text": "`setTimeout(fn, 0)` har doim, istalgan kontekstda `setImmediate` dan oldin bajariladi, chunki timers birinchi", "hint": "Asosiy moduldan tartib noaniq; I/O callback ichida `setImmediate` har doim oldin." },
         { "id": "c", "text": "Event loop alohida oqimda ishlaydi", "hint": "U asosiy oqimning o'zi." },
         { "id": "d", "text": "Fazalar faqat brauzerda bor", "hint": "Brauzer event loop'i boshqacha; fazalar Node (libuv) tushunchasi." }
       ],
-      "explanation": "Amaliy xulosa: uzoq sinxron ish qaysi fazada bo'lmasin, hammasini to'xtatadi. `setImmediate` \"I/O'dan keyin\" degani, `setTimeout(0)` \"kamida 1 ms dan keyin\". Microtask'lar (promise) esa fazalar orasida, I/O'dan oldin.",
+      "explanation": "Pending callbacks va close fazalari ham bor; `nextTick` navbati microtask'lardan ham oldin bo'shatiladi. Amaliy xulosa: uzoq sinxron ish qaysi fazada bo'lmasin, hammasini to'xtatadi. `setImmediate` \"I/O'dan keyin\" degani, `setTimeout(0)` \"kamida 1 ms dan keyin\". Microtask'lar (promise) esa fazalar orasida, I/O'dan oldin.",
       "reviewed": false
     },
     {
@@ -100,10 +100,10 @@
       "prompt": "Bu endpoint chaqirilganda butun server bir necha soniya javob bermay qoladi. Nega?",
       "code": "app.get('/hash', (req, res) => {\n  const hash = crypto.pbkdf2Sync(req.query.p, salt, 1_000_000, 64, 'sha512');\n  res.send(hash.toString('hex'));\n});",
       "options": [
-        { "id": "a", "text": "`pbkdf2Sync` CPU-og'ir ishni asosiy oqimda bloklab bajaradi; asinxron `pbkdf2` (libuv thread pool) yoki worker thread kerak", "correct": true },
+        { "id": "a", "text": "`pbkdf2Sync` CPU-og'ir ishni asosiy oqimda bloklaydi — asinxron `pbkdf2` yoki worker kerak", "correct": true },
         { "id": "b", "text": "`res.send` sekin", "hint": "Javob yuborish arzon; vaqt hash hisoblashga ketyapti." },
         { "id": "c", "text": "`req.query` o'qish bloklaydi", "hint": "Query tahlili arzimas." },
-        { "id": "d", "text": "Express bir vaqtda bitta so'rovga xizmat qiladi", "hint": "Express ko'p so'rovni parallel kutadi; faqat sinxron CPU ish uni to'xtatadi." }
+        { "id": "d", "text": "Express bir vaqtda faqat bitta so'rovga xizmat qiladi, qolganlari esa navbatda kutib turadi", "hint": "Express ko'p so'rovni parallel kutadi; faqat sinxron CPU ish uni to'xtatadi." }
       ],
       "explanation": "Kripto, zip, katta JSON, regex — asosiy oqimda uzoq ishlasa, event loop to'xtaydi. `crypto.pbkdf2` asinxron varianti ishni libuv thread pool'ga beradi (standart 4 oqim, `UV_THREADPOOL_SIZE`). Og'irroq ishlar uchun `worker_threads`.",
       "reviewed": false
@@ -115,12 +115,12 @@
       "kind": "concept",
       "prompt": "Node.js 4 yadroli serverda barcha yadrolardan qanday foydalanadi?",
       "options": [
-        { "id": "a", "text": "Bir nechta jarayon: `cluster` moduli yoki PM2/konteyner orkestratori har yadro uchun alohida Node nusxasini ishga tushiradi va portni ulashadi", "correct": true },
+        { "id": "a", "text": "Bir nechta jarayon: `cluster` yoki PM2/orkestrator har yadroga alohida Node nusxasini ishga tushiradi", "correct": true },
         { "id": "b", "text": "Avtomatik, hech narsa qilish shart emas", "hint": "Bitta Node jarayoni JavaScript'ni bitta yadroda bajaradi." },
-        { "id": "c", "text": "`async/await` yadrolarga taqsimlaydi", "hint": "`async` parallellik emas, konkurentlik; bitta oqim." },
+        { "id": "c", "text": "`async/await` va promise'lar kodni avtomatik ravishda barcha mavjud yadrolarga taqsimlab, parallel bajaradi", "hint": "`async` parallellik emas, konkurentlik; bitta oqim." },
         { "id": "d", "text": "Buning iloji yo'q", "hint": "Jarayonlar va worker thread'lar bor." }
       ],
-      "explanation": "Jarayonlar xotirani ulashmaydi: sessiya va kesh tashqi (Redis) bo'lishi kerak. Kubernetes'da odatda bitta pod = bitta Node jarayoni, masshtab replikalar bilan. Bitta so'rov ichidagi parallel hisob uchun `worker_threads`.",
+      "explanation": "Nusxalar bitta portni ulashadi. Jarayonlar xotirani ulashmaydi: sessiya va kesh tashqi (Redis) bo'lishi kerak. Kubernetes'da odatda bitta pod = bitta Node jarayoni, masshtab replikalar bilan. Bitta so'rov ichidagi parallel hisob uchun `worker_threads`.",
       "reviewed": false
     },
     {
@@ -130,12 +130,12 @@
       "kind": "concept",
       "prompt": "Graceful shutdown nima va Node'da qanday qilinadi?",
       "options": [
-        { "id": "a", "text": "`SIGTERM` da yangi ulanishlarni qabul qilishni to'xtatish (`server.close`), joriy so'rovlarni tugatish, baza va navbat ulanishlarini yopish, keyin chiqish; timeout bilan", "correct": true },
-        { "id": "b", "text": "`process.exit(0)` ni darhol chaqirish", "hint": "Joriy so'rovlar uziladi, foydalanuvchi xato oladi." },
+        { "id": "a", "text": "`SIGTERM` da yangi ulanishlarni to'xtatish, joriy so'rovlarni tugatish, ulanishlarni yopish, keyin chiqish", "correct": true },
+        { "id": "b", "text": "`SIGTERM` kelishi bilan `process.exit(0)` ni darhol chaqirish — jarayon qancha tez yopilsa, shuncha yaxshi va xavfsiz", "hint": "Joriy so'rovlar uziladi, foydalanuvchi xato oladi." },
         { "id": "c", "text": "Signalni e'tiborsiz qoldirish", "hint": "Orkestrator keyin `SIGKILL` yuboradi; nazoratsiz o'lim." },
         { "id": "d", "text": "Faqat loglarni yozish", "hint": "Log kerak, lekin asosiysi so'rovlarni to'g'ri tugatish." }
       ],
-      "explanation": "Kubernetes pod'ni o'chirishda `SIGTERM` yuborib, `terminationGracePeriodSeconds` kutadi. Shu oraliqda readiness probe'ni muvaffaqiyatsiz qilish load balancer'dan yangi trafikni to'xtatadi. Keep-alive ulanishlarni ham yopish kerak.",
+      "explanation": "`server.close()` va timeout bilan qilinadi. Kubernetes pod'ni o'chirishda `SIGTERM` yuborib, `terminationGracePeriodSeconds` kutadi. Shu oraliqda readiness probe'ni muvaffaqiyatsiz qilish load balancer'dan yangi trafikni to'xtatadi. Keep-alive ulanishlarni ham yopish kerak.",
       "reviewed": false
     },
     {

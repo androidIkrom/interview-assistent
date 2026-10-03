@@ -8,10 +8,10 @@
       "kind": "concept",
       "prompt": "CommonJS (`require`) va ES modullar (`import`) farqi nima?",
       "options": [
-        { "id": "a", "text": "CommonJS sinxron, dinamik va Node'ning tarixiy tizimi; ES modullar standart, statik tahlil qilinadi (tree shaking) va asinxron yuklanadi", "correct": true },
+        { "id": "a", "text": "CommonJS — sinxron va dinamik; ES modullar — standart, statik tahlil (tree shaking) va asinxron", "correct": true },
         { "id": "b", "text": "`import` faqat brauzerda ishlaydi", "hint": "Node.js ES modullarni to'liq qo'llaydi (`\"type\": \"module\"` yoki `.mjs`)." },
         { "id": "c", "text": "Farqi faqat sintaksisda", "hint": "Yuklanish modeli va statik tahlil imkoniyati farq qiladi." },
-        { "id": "d", "text": "`require` eskirgan va ishlamaydi", "hint": "Hali ko'p paketlar CommonJS; Node ikkalasini qo'llaydi." }
+        { "id": "d", "text": "`require` eskirgan: zamonaviy Node versiyalarida u umuman ishlamaydi va har doim sintaksis xatosini beradi", "hint": "Hali ko'p paketlar CommonJS; Node ikkalasini qo'llaydi." }
       ],
       "explanation": "Aralash loyihada tuzoqlar bor: ESM'dan CommonJS'ni `import` qilish mumkin, aksincha `require(esm)` faqat yangi Node versiyalarida. Yangi loyihalar ESM bilan boshlanadi; TypeScript'da `module` sozlamasi shuni belgilaydi.",
       "reviewed": false
@@ -39,12 +39,12 @@
       "kind": "concept",
       "prompt": "`package.json` dagi `dependencies` va `devDependencies` farqi nima?",
       "options": [
-        { "id": "a", "text": "`dependencies` production'da kerak (express, pg); `devDependencies` faqat ishlab chiqish va build uchun (typescript, jest, eslint)", "correct": true },
-        { "id": "b", "text": "Farqi yo'q, ikkalasi ham o'rnatiladi", "hint": "`npm install --omit=dev` (production) `devDependencies` ni o'tkazib yuboradi." },
+        { "id": "a", "text": "`dependencies` — production uchun (express, pg); `devDependencies` — faqat ishlab chiqish va build", "correct": true },
+        { "id": "b", "text": "Farqi yo'q: `npm install --omit=dev` ham ikkala guruhni har doim bir xil o'rnatadi va production'da qoldiradi", "hint": "`npm install --omit=dev` (production) `devDependencies` ni o'tkazib yuboradi." },
         { "id": "c", "text": "`devDependencies` tezroq o'rnatiladi", "hint": "Tezlikka aloqasi yo'q." },
         { "id": "d", "text": "`dependencies` faqat global paketlar", "hint": "Ikkalasi ham lokal `node_modules` ga o'rnatiladi." }
       ],
-      "explanation": "Production image'da `devDependencies` bo'lmasligi hajm va hujum yuzasini kamaytiradi. `package-lock.json` aniq versiyalarni qotiradi; CI'da `npm ci` lock faylga qat'iy amal qiladi.",
+      "explanation": "Masalan, typescript, jest, eslint — devDependencies. Production image'da `devDependencies` bo'lmasligi hajm va hujum yuzasini kamaytiradi. `package-lock.json` aniq versiyalarni qotiradi; CI'da `npm ci` lock faylga qat'iy amal qiladi.",
       "reviewed": false
     },
     {
@@ -70,12 +70,12 @@
       "kind": "concept",
       "prompt": "`null` va `undefined` farqi nima?",
       "options": [
-        { "id": "a", "text": "`undefined` — qiymat berilmagan (e'lon qilingan, lekin tayinlanmagan, yo'q xususiyat); `null` — ataylab \"bo'sh\" deb qo'yilgan qiymat", "correct": true },
+        { "id": "a", "text": "`undefined` — qiymat berilmagan; `null` — ataylab \"bo'sh\" deb qo'yilgan qiymat", "correct": true },
         { "id": "b", "text": "Bir xil narsa", "hint": "`null === undefined` false; `typeof` lari ham har xil." },
-        { "id": "c", "text": "`null` faqat obyektlar uchun, `undefined` faqat sonlar uchun", "hint": "Ikkalasi ham istalgan joyda uchraydi." },
+        { "id": "c", "text": "`null` faqat obyektlar uchun, `undefined` esa faqat sonlar va satrlar uchun ishlatiladi", "hint": "Ikkalasi ham istalgan joyda uchraydi." },
         { "id": "d", "text": "`undefined` xato degani", "hint": "Xato emas, oddiy qiymat." }
       ],
-      "explanation": "`??` (nullish coalescing) ikkalasini ham ushlaydi: `value ?? 'default'`. `||` dan farqi: `0` va `''` ni almashtirmaydi. API javoblarida `null` \"ma'lumot yo'q\", maydonning yo'qligi esa `undefined`.",
+      "explanation": "`undefined` — e'lon qilingan, lekin tayinlanmagan o'zgaruvchi yoki yo'q xususiyat. `??` (nullish coalescing) ikkalasini ham ushlaydi: `value ?? 'default'`. `||` dan farqi: `0` va `''` ni almashtirmaydi. API javoblarida `null` \"ma'lumot yo'q\", maydonning yo'qligi esa `undefined`.",
       "reviewed": false
     },
     {
@@ -114,12 +114,12 @@
       "kind": "concept",
       "prompt": "Node.js loyihasida TypeScript qanday ishga tushiriladi va production'da nima bo'ladi?",
       "options": [
-        { "id": "a", "text": "Development'da `tsx`/`ts-node` yoki Node'ning o'z type stripping'i; production'da `tsc` (yoki esbuild/swc) bilan JavaScript'ga kompilyatsiya qilinib, tayyor `dist/` ishga tushiriladi", "correct": true },
-        { "id": "b", "text": "Node TypeScript'ni to'liq tekshirib bajaradi", "hint": "Node tiplarni tekshirmaydi; yangi versiyalar faqat tip annotatsiyalarini olib tashlab bajaradi." },
+        { "id": "a", "text": "Dev'da `tsx`/`ts-node` yoki type stripping; production'da `tsc` bilan JS'ga kompilyatsiya qilinadi", "correct": true },
+        { "id": "b", "text": "Node TypeScript kodini ishga tushirishdan oldin tiplarini to'liq tekshirib, xato bo'lsa bajarmaydi", "hint": "Node tiplarni tekshirmaydi; yangi versiyalar faqat tip annotatsiyalarini olib tashlab bajaradi." },
         { "id": "c", "text": "TypeScript Node'da ishlamaydi", "hint": "Zamonaviy backend loyihalarning ko'pi TypeScript'da." },
         { "id": "d", "text": "Production'da ham `ts-node` ishlatiladi", "hint": "Startup sekin va xotira ko'p; production uchun oldindan kompilyatsiya." }
       ],
-      "explanation": "Tip tekshiruvi (`tsc --noEmit`) CI'da alohida qadam; bajarish uchun tez transpiler yetadi. Source map'lar production stack trace'larini TypeScript qatorlariga bog'laydi.",
+      "explanation": "Production'da tayyor `dist/` ishga tushiriladi; esbuild yoki swc ham ishlatiladi. Tip tekshiruvi (`tsc --noEmit`) CI'da alohida qadam; bajarish uchun tez transpiler yetadi. Source map'lar production stack trace'larini TypeScript qatorlariga bog'laydi.",
       "reviewed": false
     },
     {
@@ -129,8 +129,8 @@
       "kind": "concept",
       "prompt": "`Object.freeze`, `const` va `readonly` (TypeScript) o'zgarmaslikni qanday darajada beradi?",
       "options": [
-        { "id": "a", "text": "`const` faqat qayta tayinlashni taqiqlaydi; `readonly` compile vaqtida yozishni taqiqlaydi, runtime'da yo'q; `Object.freeze` runtime'da sayoz (birinchi daraja) muzlatadi", "correct": true },
-        { "id": "b", "text": "`const` obyektni to'liq o'zgarmas qiladi", "hint": "`const o = {}; o.x = 1` ishlaydi." },
+        { "id": "a", "text": "`const` — qayta tayinlash yo'q; `readonly` — faqat compile vaqtida; `Object.freeze` — runtime, sayoz", "correct": true },
+        { "id": "b", "text": "`const` obyektni to'liq o'zgarmas qiladi: uning ichidagi barcha xususiyatlarni ham o'zgartirib bo'lmaydi", "hint": "`const o = {}; o.x = 1` ishlaydi." },
         { "id": "c", "text": "`Object.freeze` chuqur muzlatadi", "hint": "Ichki obyektlar o'zgaruvchan qoladi; chuqur uchun rekursiya kerak." },
         { "id": "d", "text": "`readonly` runtime'da xato tashlaydi", "hint": "TypeScript tiplari runtime'da yo'q." }
       ],
@@ -144,12 +144,12 @@
       "kind": "concept",
       "prompt": "`Map` oddiy obyektdan (`{}`) kalit-qiymat saqlash uchun qachon afzal?",
       "options": [
-        { "id": "a", "text": "Kalitlar satr bo'lmaganda (obyekt, son), tez-tez qo'shish/o'chirish bo'lganda, o'lcham (`size`) va kiritish tartibi kerak bo'lganda; prototip kalitlari (`__proto__`) muammosi ham yo'q", "correct": true },
+        { "id": "a", "text": "Kalitlar satr bo'lmaganda, tez-tez qo'shish/o'chirishda, `size` va kiritish tartibi kerak bo'lganda", "correct": true },
         { "id": "b", "text": "Hech qachon, obyekt har doim tezroq", "hint": "Tez-tez o'zgaradigan lug'at uchun `Map` optimallashtirilgan." },
-        { "id": "c", "text": "`Map` JSON'ga to'g'ridan-to'g'ri aylanadi", "hint": "Aksincha: `JSON.stringify(map)` `{}` beradi; obyektga aylantirish kerak." },
+        { "id": "c", "text": "`Map` JSON'ga `JSON.stringify` orqali to'g'ridan-to'g'ri, hech qanday qo'shimcha kodsiz to'liq aylanadi", "hint": "Aksincha: `JSON.stringify(map)` `{}` beradi; obyektga aylantirish kerak." },
         { "id": "d", "text": "`Map` faqat satr kalitlarni qabul qiladi", "hint": "Istalgan qiymat kalit bo'la oladi." }
       ],
-      "explanation": "Foydalanuvchi kiritgan kalitlar bilan oddiy obyekt prototype pollution'ga olib kelishi mumkin (`__proto__` kaliti). `Map` va `Object.create(null)` bundan himoya qiladi. Zaif havolali kesh uchun `WeakMap`.",
+      "explanation": "`Map` da `__proto__` kabi prototip kalitlari muammosi ham yo'q. Foydalanuvchi kiritgan kalitlar bilan oddiy obyekt prototype pollution'ga olib kelishi mumkin (`__proto__` kaliti). `Map` va `Object.create(null)` bundan himoya qiladi. Zaif havolali kesh uchun `WeakMap`.",
       "reviewed": false
     },
     {

@@ -8,10 +8,10 @@
       "kind": "concept",
       "prompt": "Node loyihasida kodni qanday tashkil qilish tavsiya etiladi?",
       "options": [
-        { "id": "a", "text": "Mas'uliyat bo'yicha qatlamlar (route/controller → service → repository) yoki feature bo'yicha papkalar; biznes mantiq HTTP'dan ajratilgan, sozlamalar bir joyda", "correct": true },
+        { "id": "a", "text": "Mas'uliyat bo'yicha qatlamlar (controller → service → repository) yoki feature papkalari", "correct": true },
         { "id": "b", "text": "Hammasi `index.js` da", "hint": "Kichik skript uchun bo'ladi; o'sgan sari o'qib va test qilib bo'lmaydi." },
         { "id": "c", "text": "Har funksiya alohida npm paketida", "hint": "Ortiqcha; monorepo ichida papkalar yetadi." },
-        { "id": "d", "text": "Freymvork hal qiladi, o'ylash shart emas", "hint": "Express hech narsa majburlamaydi; NestJS taklif qiladi, lekin baribir qaror sizniki." }
+        { "id": "d", "text": "Freymvork hamma narsani o'zi hal qiladi, shuning uchun tuzilma haqida o'ylash shart emas", "hint": "Express hech narsa majburlamaydi; NestJS taklif qiladi, lekin baribir qaror sizniki." }
       ],
       "explanation": "Controller so'rovni o'qib javob yozadi, service biznes qoidalarni bajaradi (HTTP'ni bilmaydi), repository bazaga murojaat qiladi. Shunda service'ni HTTP'siz test qilish va CLI yoki worker'dan qayta ishlatish mumkin.",
       "reviewed": false
@@ -23,12 +23,12 @@
       "kind": "concept",
       "prompt": "Node ilovasida loglash qanday bo'lishi kerak?",
       "options": [
-        { "id": "a", "text": "Strukturali (JSON) logger (pino, winston), darajalar (debug/info/warn/error), so'rov identifikatori, sirlarni logga yozmaslik; `console.log` emas", "correct": true },
+        { "id": "a", "text": "Strukturali (JSON) logger (pino), darajalar, so'rov ID; sirlarsiz va `console.log` siz", "correct": true },
         { "id": "b", "text": "Hamma joyda `console.log`", "hint": "Darajasiz, formatsiz, qidirib bo'lmaydi va sinxron yozuv performance'ni buzadi." },
         { "id": "c", "text": "Faqat xatolarni loglash", "hint": "Xatoni tushunish uchun undan oldingi kontekst kerak." },
-        { "id": "d", "text": "Loglarni faylga, har so'rovda ochib-yopib", "hint": "Sekin; logger stdout'ga yozadi, yig'ishni infratuzilma qiladi." }
+        { "id": "d", "text": "Loglarni faylga yozish: har bir so'rovda faylni ochib, qatorni qo'shib, yana yopib qo'yish", "hint": "Sekin; logger stdout'ga yozadi, yig'ishni infratuzilma qiladi." }
       ],
-      "explanation": "Konteyner dunyosida log stdout'ga JSON sifatida yoziladi, uni Loki/ELK/Datadog yig'adi. `pino` eng tez; `redact` sozlamasi parol va tokenlarni yashiradi. So'rov id (`x-request-id`) barcha qatorlarni bitta so'rovga bog'laydi.",
+      "explanation": "Masalan, winston ham ishlatiladi; darajalar: debug/info/warn/error. Konteyner dunyosida log stdout'ga JSON sifatida yoziladi, uni Loki/ELK/Datadog yig'adi. `pino` eng tez; `redact` sozlamasi parol va tokenlarni yashiradi. So'rov id (`x-request-id`) barcha qatorlarni bitta so'rovga bog'laydi.",
       "reviewed": false
     },
     {
@@ -38,12 +38,12 @@
       "kind": "concept",
       "prompt": "Node servisi uchun `/health` endpoint'ini qanday loyihalash kerak?",
       "options": [
-        { "id": "a", "text": "Ikki xil: liveness (jarayon tirikmi, tez, bog'liqliklarsiz) va readiness (trafik qabul qila oladimi: baza, kesh ulanishi); readiness yiqilsa trafik kelmaydi, liveness yiqilsa qayta ishga tushiriladi", "correct": true },
+        { "id": "a", "text": "Ikki xil: liveness (jarayon tirikmi) va readiness (baza, kesh tayyormi, trafik olsa bo'ladimi)", "correct": true },
         { "id": "b", "text": "Bitta endpoint, har doim 200", "hint": "Baza o'lgan bo'lsa ham \"sog'lom\" deydi; foydasiz." },
-        { "id": "c", "text": "Health'da barcha tashqi API'larni ham tekshirish", "hint": "Tashqi servis yiqilsa, sizniki ham \"nosog'lom\" bo'lib qayta ishga tushaveradi." },
+        { "id": "c", "text": "Health'da barcha tashqi API'larni ham tekshirish — biri ishlamasa, servis ham ishlamayapti deb hisoblanadi", "hint": "Tashqi servis yiqilsa, sizniki ham \"nosog'lom\" bo'lib qayta ishga tushaveradi." },
         { "id": "d", "text": "Health endpoint kerak emas", "hint": "Orkestrator va load balancer unga tayanadi." }
       ],
-      "explanation": "Liveness'ga bazani qo'shish xavfli: baza vaqtincha yiqilsa, Kubernetes barcha pod'larni qayta ishga tushiradi va vaziyat og'irlashadi. Readiness esa aynan shuni bildiradi: \"hozir menga trafik yuborma\".",
+      "explanation": "Readiness yiqilsa trafik kelmaydi, liveness yiqilsa jarayon qayta ishga tushiriladi. Liveness'ga bazani qo'shish xavfli: baza vaqtincha yiqilsa, Kubernetes barcha pod'larni qayta ishga tushiradi va vaziyat og'irlashadi. Readiness esa aynan shuni bildiradi: \"hozir menga trafik yuborma\".",
       "reviewed": false
     },
     {
@@ -53,12 +53,12 @@
       "kind": "concept",
       "prompt": "Node backend'da uzoq vazifa (hisobot, email) qanday bajarilishi kerak?",
       "options": [
-        { "id": "a", "text": "Navbat (BullMQ/Redis, RabbitMQ, SQS) va alohida worker jarayon; API `202 Accepted` va vazifa id qaytaradi; retry, kuzatuv va idempotentlik", "correct": true },
+        { "id": "a", "text": "Navbat (BullMQ, RabbitMQ, SQS) va alohida worker; API `202 Accepted` va vazifa id qaytaradi", "correct": true },
         { "id": "b", "text": "So'rov ichida `await` bilan kutish", "hint": "Foydalanuvchi va ulanish kutadi; timeout va server resursi band." },
         { "id": "c", "text": "`setTimeout` bilan fonda", "hint": "Jarayon qayta ishga tushsa, vazifa yo'qoladi; nazorat yo'q." },
-        { "id": "d", "text": "Har vazifa uchun yangi worker thread", "hint": "Thread CPU uchun; yo'qolmaslik va retry'ni navbat beradi." }
+        { "id": "d", "text": "Har bir vazifa uchun yangi worker thread ochib, uni asosiy API jarayonining ichida parallel bajarish", "hint": "Thread CPU uchun; yo'qolmaslik va retry'ni navbat beradi." }
       ],
-      "explanation": "Worker alohida masshtablanadi va yiqilsa API'ga ta'sir qilmaydi. BullMQ kechiktirilgan va takrorlanuvchi vazifalar, ustuvorlik va rate limit beradi. Vazifa ikki marta kelishi mumkin — bajarilganlikni tekshirish shart.",
+      "explanation": "Retry, kuzatuv va idempotentlik ham kerak. Worker alohida masshtablanadi va yiqilsa API'ga ta'sir qilmaydi. BullMQ kechiktirilgan va takrorlanuvchi vazifalar, ustuvorlik va rate limit beradi. Vazifa ikki marta kelishi mumkin — bajarilganlikni tekshirish shart.",
       "reviewed": false
     },
     {
@@ -68,12 +68,12 @@
       "kind": "concept",
       "prompt": "Node servisini gorizontal masshtablash uchun qanday shartlar bajarilishi kerak?",
       "options": [
-        { "id": "a", "text": "Stateless jarayonlar: sessiya va kesh tashqarida (Redis), fayllar obyekt saqlagichda, in-memory holatga tayanmaslik, WebSocket uchun pub/sub adapter, ishga tushishda migratsiya qilmaslik, graceful shutdown", "correct": true },
+        { "id": "a", "text": "Stateless jarayonlar: sessiya va kesh Redis'da, fayllar obyekt saqlagichda, xotiradagi holatga tayanmaslik", "correct": true },
         { "id": "b", "text": "Faqat serverlar sonini oshirish kifoya", "hint": "In-memory sessiya bo'lsa, foydalanuvchi har so'rovda boshqa serverga tushib, tizimdan chiqib ketadi." },
-        { "id": "c", "text": "Sticky session hamma muammoni hal qiladi", "hint": "Vaqtincha yordam beradi, lekin server o'lsa, holat yo'qoladi va yuk notekis." },
+        { "id": "c", "text": "Load balancer'da sticky session yoqish hamma muammoni hal qiladi, ilova kodida boshqa hech qanday o'zgarish kerak emas", "hint": "Vaqtincha yordam beradi, lekin server o'lsa, holat yo'qoladi va yuk notekis." },
         { "id": "d", "text": "Node'ni masshtablab bo'lmaydi", "hint": "Stateless dizayn bilan bemalol masshtablanadi." }
       ],
-      "explanation": "Socket.IO ko'p nusxada Redis adapter talab qiladi: bir serverdagi xabar boshqa serverdagi klientga yetishi kerak. Rate limiter ham jarayon xotirasida emas, Redis'da bo'lishi kerak, aks holda limit nusxalar soniga ko'paytiriladi.",
+      "explanation": "WebSocket uchun pub/sub adapter, graceful shutdown va startda migratsiya qilmaslik ham kerak. Socket.IO ko'p nusxada Redis adapter talab qiladi: bir serverdagi xabar boshqa serverdagi klientga yetishi kerak. Rate limiter ham jarayon xotirasida emas, Redis'da bo'lishi kerak, aks holda limit nusxalar soniga ko'paytiriladi.",
       "reviewed": false
     },
     {
@@ -83,12 +83,12 @@
       "kind": "concept",
       "prompt": "Node servisining kuzatuvchanligi (observability) uchun nima kerak?",
       "options": [
-        { "id": "a", "text": "Strukturali loglar so'rov id bilan, metrikalar (RED: so'rovlar soni, xatolar, kechikish p95/p99; event loop lag, xotira), tarqatilgan tracing (OpenTelemetry), xato kuzatuvi (Sentry), dashboard va alert", "correct": true },
-        { "id": "b", "text": "`console.log` va server CPU grafigi", "hint": "Sabab va ta'sirni bog'lab bo'lmaydi." },
+        { "id": "a", "text": "Strukturali loglar (request id), RED metrikalar va event loop lag, OpenTelemetry tracing, Sentry", "correct": true },
+        { "id": "b", "text": "`console.log` chiqishlari va server CPU grafigi yetarli — qolgan vositalar kichik va o'rta loyihalar uchun ortiqcha", "hint": "Sabab va ta'sirni bog'lab bo'lmaydi." },
         { "id": "c", "text": "Faqat uptime monitoring", "hint": "Server \"tirik\", lekin sekin yoki xato qaytarayotganini ko'rsatmaydi." },
         { "id": "d", "text": "Foydalanuvchi shikoyatlari", "hint": "Kech va to'liq emas." }
       ],
-      "explanation": "Event loop lag va heap o'sishi Node'ga xos muhim metrikalar. OpenTelemetry avtomatik instrumentatsiya HTTP, pg, redis chaqiruvlarini trace'ga bog'laydi; shunda \"qaysi so'rov qayerda 2 soniya o'tkazdi\" ko'rinadi.",
+      "explanation": "Dashboard va alert'lar ham kerak. Event loop lag va heap o'sishi Node'ga xos muhim metrikalar. OpenTelemetry avtomatik instrumentatsiya HTTP, pg, redis chaqiruvlarini trace'ga bog'laydi; shunda \"qaysi so'rov qayerda 2 soniya o'tkazdi\" ko'rinadi.",
       "reviewed": false
     },
     {

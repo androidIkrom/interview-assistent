@@ -8,12 +8,12 @@
       "kind": "concept",
       "prompt": "Express middleware nima va `next()` nima uchun kerak?",
       "options": [
-        { "id": "a", "text": "So'rov va javob o'tadigan funksiyalar zanjiri; `next()` boshqaruvni keyingi middleware'ga beradi, chaqirilmasa so'rov osilib qoladi", "correct": true },
-        { "id": "b", "text": "Faqat xatolarni qayta ishlash funksiyasi", "hint": "Xato ishlovchi — middleware'ning bitta turi (4 argumentli)." },
+        { "id": "a", "text": "So'rov va javob o'tadigan funksiyalar zanjiri; `next()` boshqaruvni keyingisiga beradi", "correct": true },
+        { "id": "b", "text": "Faqat xatolarni qayta ishlaydigan maxsus funksiya, oddiy so'rovlar esa u orqali umuman o'tmaydi", "hint": "Xato ishlovchi — middleware'ning bitta turi (4 argumentli)." },
         { "id": "c", "text": "Ma'lumotlar bazasi qatlami", "hint": "Baza bilan ORM ishlaydi." },
         { "id": "d", "text": "`next()` javobni yuboradi", "hint": "Javobni `res.send`/`res.json` yuboradi; `next` zanjirni davom ettiradi." }
       ],
-      "explanation": "`app.use(express.json())`, autentifikatsiya, loglash — middleware. Tartib muhim: `app.use` yozilgan ketma-ketlikda ishlaydi. Javob yuborilgach `next()` chaqirish \"headers already sent\" xatosiga olib keladi.",
+      "explanation": "`next()` chaqirilmasa, so'rov osilib qoladi. `app.use(express.json())`, autentifikatsiya, loglash — middleware. Tartib muhim: `app.use` yozilgan ketma-ketlikda ishlaydi. Javob yuborilgach `next()` chaqirish \"headers already sent\" xatosiga olib keladi.",
       "reviewed": false
     },
     {
@@ -40,7 +40,7 @@
       "prompt": "REST API'da status kodlarni to'g'ri qaytarish nega muhim? Express'da qanday?",
       "options": [
         { "id": "a", "text": "Klient, proksi va monitoring natijani koddan biladi; `res.status(201).json(user)`, xatoda `404`/`400`/`500`", "correct": true },
-        { "id": "b", "text": "Muhim emas, hamma javob 200 bo'lsin, tanada `success` maydoni", "hint": "Unda kesh, retry va monitoring xatoni ko'rmaydi." },
+        { "id": "b", "text": "Muhim emas: hamma javob 200 bo'lsin, xato bo'lsa tanadagi `success: false` maydoni klient uchun yetarli bo'ladi", "hint": "Unda kesh, retry va monitoring xatoni ko'rmaydi." },
         { "id": "c", "text": "Express avtomatik to'g'ri kodni tanlaydi", "hint": "`res.json` standart 200 qaytaradi; qolganini siz belgilaysiz." },
         { "id": "d", "text": "Faqat 200 va 500 yetarli", "hint": "404, 400, 401, 403, 409 kabi kodlar klientga aniq ma'lumot beradi." }
       ],
@@ -54,12 +54,12 @@
       "kind": "concept",
       "prompt": "NestJS'da modul, controller va provider nima?",
       "options": [
-        { "id": "a", "text": "Controller HTTP so'rovlarni qabul qiladi; provider (service) biznes mantiq va DI orqali inject qilinadi; modul ularni guruhlab, nima eksport qilinishini belgilaydi", "correct": true },
+        { "id": "a", "text": "Controller so'rovni qabul qiladi, provider biznes mantiqni beradi (DI), modul ularni guruhlaydi", "correct": true },
         { "id": "b", "text": "Hammasi bir xil narsaning turli nomlari", "hint": "Har birining aniq mas'uliyati bor." },
-        { "id": "c", "text": "Provider faqat ma'lumotlar bazasi uchun", "hint": "Har qanday inject qilinadigan klass provider." },
+        { "id": "c", "text": "Provider faqat ma'lumotlar bazasiga ulanish uchun, biznes mantiq esa doim controller ichida yoziladi", "hint": "Har qanday inject qilinadigan klass provider." },
         { "id": "d", "text": "Modul — bu npm paketi", "hint": "NestJS moduli ilova ichidagi tashkiliy birlik." }
       ],
-      "explanation": "NestJS Angular'dan ilhomlangan: dekoratorlar (`@Controller`, `@Injectable`, `@Module`) va DI konteyneri. Bu katta jamoalarda tuzilmani bir xil qiladi; narxi: Express'ga nisbatan ko'proq konsepsiya va boilerplate.",
+      "explanation": "Modul nima eksport qilinishini ham belgilaydi. NestJS Angular'dan ilhomlangan: dekoratorlar (`@Controller`, `@Injectable`, `@Module`) va DI konteyneri. Bu katta jamoalarda tuzilmani bir xil qiladi; narxi: Express'ga nisbatan ko'proq konsepsiya va boilerplate.",
       "reviewed": false
     },
     {
@@ -70,12 +70,12 @@
       "prompt": "Baza xatosi bo'lganda bu so'rov hech qachon javob qaytarmaydi va server xato logini ham yozmaydi. Nega?",
       "code": "app.get('/users/:id', async (req, res) => {\n  const user = await db.findUser(req.params.id);\n  res.json(user);\n});",
       "options": [
-        { "id": "a", "text": "Express 4 async handler'dagi reject'ni ushlamaydi; `try/catch` + `next(err)`, `express-async-errors` yoki Express 5 kerak", "correct": true },
-        { "id": "b", "text": "`await` Express'da ishlamaydi", "hint": "Ishlaydi; muammo rad etilgan promise'ning ushlanmasligida." },
+        { "id": "a", "text": "Express 4 async handler'dagi reject'ni ushlamaydi — `try/catch` + `next(err)` yoki Express 5 kerak", "correct": true },
+        { "id": "b", "text": "`await` Express handler'larida umuman ishlamaydi, shuning uchun baza javobi hech qachon klientga qaytmaydi", "hint": "Ishlaydi; muammo rad etilgan promise'ning ushlanmasligida." },
         { "id": "c", "text": "`res.json` xatoni yutadi", "hint": "`res.json` gacha yetib bormaydi." },
         { "id": "d", "text": "`req.params.id` noto'g'ri", "hint": "Parametr to'g'ri; gap xato ishlovida." }
       ],
-      "explanation": "Express 4 handler'ning qaytargan promise'iga qaramaydi; reject `unhandledRejection` bo'ladi (yangi Node'da crash). Express 5 async handler'larni o'zi ushlab `next(err)` qiladi. NestJS va Fastify buni boshidan to'g'ri qiladi.",
+      "explanation": "`express-async-errors` paketi ham yordam beradi. Express 4 handler'ning qaytargan promise'iga qaramaydi; reject `unhandledRejection` bo'ladi (yangi Node'da crash). Express 5 async handler'larni o'zi ushlab `next(err)` qiladi. NestJS va Fastify buni boshidan to'g'ri qiladi.",
       "reviewed": false
     },
     {
@@ -85,12 +85,12 @@
       "kind": "concept",
       "prompt": "NestJS'da guard, pipe va interceptor qanday farqlanadi?",
       "options": [
-        { "id": "a", "text": "Guard — ruxsat (auth, rol), handler'dan oldin `true/false`; pipe — kiruvchi ma'lumotni o'zgartirish va tekshirish (DTO validatsiya); interceptor — handler atrofida (log, javobni o'zgartirish, kesh, timeout)", "correct": true },
-        { "id": "b", "text": "Hammasi middleware'ning sinonimi", "hint": "Nest'da middleware alohida va eng oldin ishlaydi; bular aniqroq rollar." },
+        { "id": "a", "text": "Guard — ruxsat (handler'dan oldin); pipe — kirishni o'zgartirish va tekshirish; interceptor — handler atrofida", "correct": true },
+        { "id": "b", "text": "Hammasi middleware'ning sinonimi: ular bir xil ishlaydi va faqat nomlari va yozilish joyi bilan farq qiladi, xolos", "hint": "Nest'da middleware alohida va eng oldin ishlaydi; bular aniqroq rollar." },
         { "id": "c", "text": "Pipe faqat fayl yuklash uchun", "hint": "Pipe har qanday parametr uchun: `ParseIntPipe`, `ValidationPipe`." },
         { "id": "d", "text": "Interceptor faqat xatolar uchun", "hint": "Xatolar uchun exception filter bor." }
       ],
-      "explanation": "Bajarilish tartibi: middleware → guard → interceptor (oldin) → pipe → handler → interceptor (keyin) → exception filter. `ValidationPipe` + `class-validator` DTO'lar bilan kiruvchi ma'lumotni avtomatik tekshiradi.",
+      "explanation": "Masalan: guard — auth va rol; pipe — DTO validatsiya; interceptor — log, kesh, timeout. Bajarilish tartibi: middleware → guard → interceptor (oldin) → pipe → handler → interceptor (keyin) → exception filter. `ValidationPipe` + `class-validator` DTO'lar bilan kiruvchi ma'lumotni avtomatik tekshiradi.",
       "reviewed": false
     },
     {
@@ -100,12 +100,12 @@
       "kind": "concept",
       "prompt": "JWT autentifikatsiyasi Node backend'da qanday amalga oshiriladi?",
       "options": [
-        { "id": "a", "text": "Login'da qisqa muddatli access token (imzolangan) va uzoq muddatli refresh token; har so'rovda `Authorization: Bearer` tekshiriladi (middleware/guard); refresh server tomonda bekor qilinadigan bo'lishi kerak", "correct": true },
+        { "id": "a", "text": "Qisqa access token + refresh token; har so'rovda `Authorization: Bearer` middleware'da tekshiriladi", "correct": true },
         { "id": "b", "text": "Token'ga parolni yozib yuborish", "hint": "JWT shifrlanmagan, ichini hamma o'qiydi." },
-        { "id": "c", "text": "Access token muddatsiz bo'lsin, qulay", "hint": "O'g'irlangan token abadiy ishlaydi." },
+        { "id": "c", "text": "Access token muddatsiz bo'lsin — foydalanuvchi qayta login qilmasligi uchun eng qulay va xavfsiz yo'l", "hint": "O'g'irlangan token abadiy ishlaydi." },
         { "id": "d", "text": "Token'ni URL query'da uzatish", "hint": "Loglar va tarixga tushadi." }
       ],
-      "explanation": "Imzo algoritmi aniq belgilanishi (`alg: none` hujumi), secret kuchli va muhitda, `exp` tekshirilishi kerak. Refresh token'ni rotatsiya qilish va bazada saqlash logout va o'g'irlanishni boshqarish imkonini beradi. Passport.js va `@nestjs/jwt` tayyor qismlar.",
+      "explanation": "Refresh token server tomonda bekor qilinadigan bo'lishi kerak. Imzo algoritmi aniq belgilanishi (`alg: none` hujumi), secret kuchli va muhitda, `exp` tekshirilishi kerak. Refresh token'ni rotatsiya qilish va bazada saqlash logout va o'g'irlanishni boshqarish imkonini beradi. Passport.js va `@nestjs/jwt` tayyor qismlar.",
       "reviewed": false
     },
     {
@@ -115,12 +115,12 @@
       "kind": "concept",
       "prompt": "Express'da kiruvchi so'rovni validatsiya qilishning to'g'ri usuli qaysi?",
       "options": [
-        { "id": "a", "text": "Sxema kutubxonasi (zod, Joi) bilan `body`, `params`, `query` ni handler'dan oldin tekshirish va tiplangan obyekt olish; xatoda 400 va tushunarli xabar", "correct": true },
-        { "id": "b", "text": "Har handler ichida `if (!req.body.email)` kabi qo'lda tekshiruvlar", "hint": "Takrorlanadi, chala bo'ladi va tip bermaydi." },
+        { "id": "a", "text": "Sxema kutubxonasi (zod, Joi) bilan `body`, `params`, `query` ni handler'dan oldin tekshirish", "correct": true },
+        { "id": "b", "text": "Har handler ichida `if (!req.body.email)` kabi qo'lda tekshiruvlarni yozib chiqish yetarli va qulay", "hint": "Takrorlanadi, chala bo'ladi va tip bermaydi." },
         { "id": "c", "text": "Validatsiya shart emas, baza tekshiradi", "hint": "Baza xatosi tushunarsiz 500 beradi; xavfsizlik tekshiruvi ham yo'qoladi." },
         { "id": "d", "text": "Faqat frontend'da tekshirish", "hint": "Frontend'ni chetlab o'tish oson; backend tekshiruvi majburiy." }
       ],
-      "explanation": "Zod sxemasi bir vaqtda validator va TypeScript tipi: `const Body = z.object({ email: z.string().email() }); type Body = z.infer<typeof Body>`. Validatsiya middleware sifatida yoziladi; NestJS'da `ValidationPipe` shuni qiladi.",
+      "explanation": "Xatoda 400 va tushunarli xabar qaytariladi; natija tiplangan obyekt bo'ladi. Zod sxemasi bir vaqtda validator va TypeScript tipi: `const Body = z.object({ email: z.string().email() }); type Body = z.infer<typeof Body>`. Validatsiya middleware sifatida yoziladi; NestJS'da `ValidationPipe` shuni qiladi.",
       "reviewed": false
     },
     {
@@ -130,9 +130,9 @@
       "kind": "concept",
       "prompt": "Express, Fastify va NestJS o'rtasida qanday tanlanadi?",
       "options": [
-        { "id": "a", "text": "Express — minimal, ulkan ekotizim, kichik servis va prototip; Fastify — tezroq, sxema asosida validatsiya va serializatsiya, plugin tizimi; NestJS — tuzilma, DI, katta jamoa va monolit (Express yoki Fastify ustida)", "correct": true },
+        { "id": "a", "text": "Express — minimal va keng ekotizim; Fastify — tezroq, sxema bilan; NestJS — tuzilma va DI, katta jamoa uchun", "correct": true },
         { "id": "b", "text": "Express har doim, chunki eng mashhur", "hint": "Mashhurlik o'zi mezon emas; yuk va jamoa hajmi muhim." },
-        { "id": "c", "text": "NestJS har doim, chunki \"enterprise\"", "hint": "Kichik servis uchun ortiqcha abstraksiya." },
+        { "id": "c", "text": "Har doim NestJS, chunki u \"enterprise\" standarti va boshqa freymvorklar katta loyihalarda umuman ishlamaydi", "hint": "Kichik servis uchun ortiqcha abstraksiya." },
         { "id": "d", "text": "Farqi yo'q", "hint": "Performance, tuzilma va o'rganish egri chizig'i farq qiladi." }
       ],
       "explanation": "Fastify JSON serializatsiyani sxema bo'yicha oldindan kompilyatsiya qiladi, shuning uchun 2–3 barobar ko'proq so'rov/soniya. NestJS'ning qiymati kodda emas, jamoa kelishuvida: yangi dasturchi loyihani darhol tushunadi.",
@@ -145,12 +145,12 @@
       "kind": "concept",
       "prompt": "Node API'ni xavfsizlik jihatidan qanday himoyalash kerak?",
       "options": [
-        { "id": "a", "text": "`helmet` sarlavhalari, rate limiting, tana hajmi cheklovi, kiruvchi ma'lumot validatsiyasi, parametrlangan so'rovlar, CORS ro'yxati, sirlar muhitda, bog'liqliklar auditi, xato javobida ichki tafsilotlarsiz", "correct": true },
-        { "id": "b", "text": "HTTPS yetarli", "hint": "HTTPS yo'ldagi ma'lumotni himoya qiladi; injection, DoS, noto'g'ri CORS qoladi." },
+        { "id": "a", "text": "`helmet`, rate limiting, tana hajmi cheklovi, validatsiya, parametrlangan so'rovlar, CORS ro'yxati", "correct": true },
+        { "id": "b", "text": "HTTPS ulanish yetarli: trafik shifrlangan bo'lsa, API boshqa hujumlardan ham avtomatik himoyalanadi", "hint": "HTTPS yo'ldagi ma'lumotni himoya qiladi; injection, DoS, noto'g'ri CORS qoladi." },
         { "id": "c", "text": "Faqat autentifikatsiya", "hint": "Autentifikatsiyadan o'tgan foydalanuvchi ham zararli ma'lumot yuborishi mumkin." },
         { "id": "d", "text": "Express o'zi xavfsiz", "hint": "Express minimal; xavfsizlik qatlamlari qo'shiladi." }
       ],
-      "explanation": "OWASP API Top 10: buzilgan avtorizatsiya (boshqa foydalanuvchi id'si bilan so'rov — IDOR), ortiqcha ma'lumot qaytarish, cheksiz resurs iste'moli. Har endpoint'da \"bu foydalanuvchi aynan shu resursga ruxsatlimi\" tekshiruvi eng ko'p unutiladigan qism.",
+      "explanation": "Sirlar muhitda saqlanadi, bog'liqliklar audit qilinadi, xato javobida ichki tafsilot ko'rsatilmaydi. OWASP API Top 10: buzilgan avtorizatsiya (boshqa foydalanuvchi id'si bilan so'rov — IDOR), ortiqcha ma'lumot qaytarish, cheksiz resurs iste'moli. Har endpoint'da \"bu foydalanuvchi aynan shu resursga ruxsatlimi\" tekshiruvi eng ko'p unutiladigan qism.",
       "reviewed": false
     },
     {
@@ -160,12 +160,12 @@
       "kind": "concept",
       "prompt": "Fayl yuklash (upload) endpoint'ini Node'da qanday to'g'ri qurish kerak?",
       "options": [
-        { "id": "a", "text": "Stream bilan qabul qilish (multer/busboy), hajm va tip cheklovi, faylni xotiraga to'liq o'qimaslik, obyekt saqlagichga (S3) yozish yoki presigned URL bilan to'g'ridan-to'g'ri yuklatish, fayl nomini foydalanuvchidan olmaslik", "correct": true },
+        { "id": "a", "text": "Stream bilan qabul qilish, hajm va tip cheklovi, S3 ga yozish yoki presigned URL, nomni o'zimiz berish", "correct": true },
         { "id": "b", "text": "Faylni base64 JSON tanasida qabul qilish", "hint": "Hajm 33% oshadi va butun tana xotiraga tushadi." },
-        { "id": "c", "text": "Faylni server diskida, foydalanuvchi bergan nom bilan saqlash", "hint": "Path traversal (`../`) va nom to'qnashuvi xavfi; ko'p server bo'lsa, disk ulashilmaydi." },
+        { "id": "c", "text": "Faylni server diskida foydalanuvchi bergan asl nom bilan saqlash — keyin uni topish va ko'rsatish oson bo'ladi", "hint": "Path traversal (`../`) va nom to'qnashuvi xavfi; ko'p server bo'lsa, disk ulashilmaydi." },
         { "id": "d", "text": "Hajm cheklovi shart emas", "hint": "Bitta katta fayl diskni yoki xotirani to'ldiradi." }
       ],
-      "explanation": "Presigned URL yondashuvida brauzer faylni to'g'ridan-to'g'ri S3'ga yuboradi, backend faqat ruxsat beradi — server trafikdan ozod bo'ladi. Yuklangan fayl tipi kengaytma bo'yicha emas, mazmun (magic bytes) bo'yicha tekshiriladi.",
+      "explanation": "Faylni xotiraga to'liq o'qimaslik kerak (multer/busboy). Presigned URL yondashuvida brauzer faylni to'g'ridan-to'g'ri S3'ga yuboradi, backend faqat ruxsat beradi — server trafikdan ozod bo'ladi. Yuklangan fayl tipi kengaytma bo'yicha emas, mazmun (magic bytes) bo'yicha tekshiriladi.",
       "reviewed": false
     },
     {
