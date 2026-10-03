@@ -286,6 +286,7 @@ Tugallangan mavzular `ContentAssetsTest.completedTopics` ro'yxatida turadi: test
 | 9. Java (6 mavzu) | yozildi (2026-10-03), inson tekshiruvi kutilmoqda | 752 / 1312 |
 | 10. Flutter (6 mavzu) | yozildi (2026-10-03), inson tekshiruvi kutilmoqda | 822 / 1312 |
 | 11. Go (6 mavzu) | yozildi (2026-10-03), inson tekshiruvi kutilmoqda | 892 / 1312 |
+| 12. PHP (6 mavzu) | yozildi (2026-10-03), inson tekshiruvi kutilmoqda | 962 / 1312 |
 
 ## 6. Manbalar
 

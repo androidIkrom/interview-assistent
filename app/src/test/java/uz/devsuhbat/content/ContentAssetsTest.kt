@@ -128,6 +128,12 @@ class ContentAssetsTest {
         "go.web" to listOf(4, 4, 3, 2),
         "go.data" to listOf(3, 3, 2, 2),
         "go.arch" to listOf(2, 2, 2, 2),
+        "php.lang" to listOf(6, 5, 2, 1),
+        "php.oop" to listOf(5, 4, 2, 1),
+        "php.laravel" to listOf(4, 4, 3, 2),
+        "php.eloquent" to listOf(4, 4, 3, 2),
+        "php.async" to listOf(3, 3, 2, 2),
+        "php.arch" to listOf(2, 2, 2, 2),
     )
 
     @Test

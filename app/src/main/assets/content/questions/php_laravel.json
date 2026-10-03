@@ -1,0 +1,202 @@
+{
+  "topic": "php.laravel",
+  "questions": [
+    {
+      "id": "php.laravel.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Laravel'da route, controller va Blade qanday bog'langan?",
+      "options": [
+        { "id": "a", "text": "`routes/web.php` da URL → controller metod (`Route::get('/users/{id}', [UserController::class, 'show'])`); controller so'rovni ishlab, ma'lumotni `view('users.show', compact('user'))` bilan Blade shabloniga uzatadi; Blade — `{{ $user->name }}` (avtomatik escape), direktivalar (`@foreach`, `@if`), layout (`@extends`/`@yield` yoki komponentlar)", "correct": true },
+        { "id": "b", "text": "Controller to'g'ridan-to'g'ri HTML `echo` qiladi", "hint": "Mumkin, lekin Blade — shablon qatlami, ajratish uchun." },
+        { "id": "c", "text": "Route faylida barcha mantiq closure'da", "hint": "Kichik loyihada mumkin; controller — tashkil qilish va cache (`route:cache` closure bilan ishlamaydi... 8.x+ ishlaydi, lekin konvensiya controller)." },
+        { "id": "d", "text": "Blade — JavaScript framework", "hint": "Server tomonidagi PHP shablon dvigateli." }
+      ],
+      "explanation": "`{{ }}` — `htmlspecialchars` (XSS himoya), `{!! !!}` — xom (ehtiyot). Resource controller (`Route::resource`) — 7 standart metod. Route model binding: `{user}` → `User $user` avtomatik (404 topilmasa). `php artisan route:list` — barcha marshrutlar.",
+      "reviewed": false
+    },
+    {
+      "id": "php.laravel.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Laravel migratsiyalari nima uchun kerak va qanday ishlaydi?",
+      "options": [
+        { "id": "a", "text": "DB sxemasini kod sifatida versiyalash: `php artisan make:migration`, `up()`/`down()` metodlari Schema builder bilan (`$table->string('name')`), `migrate` — bajarilmaganlarni ketma-ket ishlatadi (`migrations` jadvalida kuzatadi), `migrate:rollback` — orqaga; jamoa va muhitlar bir xil sxema", "correct": true },
+        { "id": "b", "text": "Ma'lumotlarni bir serverdan boshqasiga ko'chirish", "hint": "Sxema o'zgarishi, ma'lumot ko'chirish emas (seeder — test ma'lumot)." },
+        { "id": "c", "text": "Faqat birinchi deploy'da ishlatiladi", "hint": "Har sxema o'zgarishi — yangi migratsiya." },
+        { "id": "d", "text": "Eloquent model avtomatik jadval yaratadi", "hint": "Laravel'da auto-sync yo'q — migratsiya aniq." }
+      ],
+      "explanation": "Qoidalar: production'da bajarilgan migratsiyani o'zgartirmaslik (yangisini yozish), `migrate:fresh` — faqat lokal (hamma jadvalni o'chiradi), `down()` to'g'ri yozish, katta jadvalda indeks qo'shish — DB'ga xos (`concurrently` — xom SQL). Seeder + factory — test ma'lumot.",
+      "reviewed": false
+    },
+    {
+      "id": "php.laravel.003",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Quyidagi controller kodida qanday muammolar bor?",
+      "code": "<?php\nclass UserController extends Controller {\n    public function store(Request $request) {\n        $user = new User();\n        $user->name = $request->name;\n        $user->email = $request->email;\n        $user->password = $request->password;\n        $user->save();\n        return redirect('/users');\n    }\n}",
+      "options": [
+        { "id": "a", "text": "Validatsiya yo'q (`$request->validate()` yoki Form Request); parol hash'lanmagan (`Hash::make` yoki model cast `hashed`); `$request->name` — `input()`/`validated()` orqali aniqroq; mass assignment `User::create($request->validated())` + `$fillable` bilan qisqaroq", "correct": true },
+        { "id": "b", "text": "`new User()` o'rniga `User::make()`", "hint": "Farqi kichik; asosiy muammo validatsiya va hash." },
+        { "id": "c", "text": "`redirect` o'rniga `view` qaytarish kerak", "hint": "POST'dan keyin redirect — to'g'ri (PRG pattern)." },
+        { "id": "d", "text": "Muammo yo'q", "hint": "Bo'sh email yoki ochiq parol bilan nima bo'ladi?" }
+      ],
+      "explanation": "Form Request: `php artisan make:request StoreUserRequest` — `rules()` + `authorize()`, controller `store(StoreUserRequest $request)` — validatsiya avtomatik, xato — redirect back with errors (yoki JSON 422). Laravel 10+: `'password' => 'hashed'` cast. `$guarded`/`$fillable` — mass assignment himoyasi.",
+      "reviewed": false
+    },
+    {
+      "id": "php.laravel.004",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Laravel'da `artisan` nima va eng ko'p ishlatiladigan buyruqlar qaysilar?",
+      "options": [
+        { "id": "a", "text": "CLI vosita: `make:*` (controller, model, migration, request, job), `migrate`, `db:seed`, `route:list`, `tinker` (REPL), `config:cache`/`route:cache`/`view:cache` (production), `queue:work`, `schedule:run`, `test`; o'z buyruqlar — `make:command`", "correct": true },
+        { "id": "b", "text": "Faqat server ishga tushirish (`serve`)", "hint": "`serve` — bitta buyruq; o'nlab generator va boshqaruv buyruqlari." },
+        { "id": "c", "text": "Composer'ning Laravel nomi", "hint": "Composer — paketlar; artisan — ilova buyruqlari (Symfony Console ustida)." },
+        { "id": "d", "text": "GUI vosita", "hint": "CLI." }
+      ],
+      "explanation": "Production deploy: `composer install --no-dev -o`, `php artisan migrate --force`, `config:cache`, `route:cache`, `view:cache`, `event:cache`, `queue:restart`. `optimize` — bir nechta cache birga. `config:cache`dan keyin `env()` faqat config fayllarida ishlaydi — kodda `config()` ishlating.",
+      "reviewed": false
+    },
+    {
+      "id": "php.laravel.005",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Laravel so'rov hayot sikli qanday?",
+      "options": [
+        { "id": "a", "text": "`public/index.php` → autoload → `bootstrap/app.php` (Application) → HTTP Kernel → global middleware → router (marshrut, route middleware) → controller → Response → middleware (teskari) → `send()` → `terminate` middleware; service provider'lar `register` keyin `boot` kernel bootstrap'ida", "correct": true },
+        { "id": "b", "text": "Route → controller → view, boshqa qatlam yo'q", "hint": "Middleware, kernel, provider'lar — orasida." },
+        { "id": "c", "text": "Controller birinchi ishlaydi, keyin route", "hint": "Router controller'ni tanlaydi." },
+        { "id": "d", "text": "Har so'rovda ilova xotirada turadi", "hint": "FPM'da har so'rov noldan bootstrap (Octane'dan tashqari)." }
+      ],
+      "explanation": "Laravel 11: `bootstrap/app.php` — middleware, routing, exception konfiguratsiyasi (Kernel klasslari yo'q). Provider `register` — faqat binding (boshqa servisni ishlatmaslik, hali tayyor emas), `boot` — hamma ro'yxatdan o'tgan. `terminate` — javob yuborilgandan keyin (log, metrika).",
+      "reviewed": false
+    },
+    {
+      "id": "php.laravel.006",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Service container qanday ishlaydi va `bind`/`singleton`/`instance` qanday farqlanadi?",
+      "options": [
+        { "id": "a", "text": "IoC container — klasslarni bog'liqliklari bilan avtomatik yig'adi (reflection, constructor type hint); `bind` — har `make`da yangi instansiya; `singleton` — bir marta (so'rov davomida); `instance` — tayyor ob'ektni ro'yxatdan o'tkazish; interfeys → implementatsiya bog'lash provider'da; contextual binding — turli joyga turli implementatsiya", "correct": true },
+        { "id": "b", "text": "Faqat Facade'lar uchun ro'yxat", "hint": "Facade — container'ga kirish usuli; container — DI yadrosi." },
+        { "id": "c", "text": "Hamma binding qo'lda yozilishi shart", "hint": "Konkret klasslar avtomatik (zero-config); faqat interfeys/parametr uchun binding." },
+        { "id": "d", "text": "`singleton` — butun server uchun bitta", "hint": "FPM'da so'rov davomida; Octane'da — ilova davomida (ehtiyot!)." }
+      ],
+      "explanation": "`app()->bind(PaymentGateway::class, StripeGateway::class)`; controller `__construct(PaymentGateway $gw)` — avtomatik. Primitiv parametr (`string $apiKey`) — `->needs('$apiKey')->give(config(...))` yoki closure. Method injection — controller metodlarida ham. Testda `$this->mock(PaymentGateway::class)`.",
+      "reviewed": false
+    },
+    {
+      "id": "php.laravel.007",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Quyidagi middleware'da qanday xato bor?",
+      "code": "<?php\nclass EnsureAdmin {\n    public function handle(Request $request, Closure $next) {\n        if (!$request->user()->isAdmin()) {\n            abort(403);\n        }\n        $response = $next($request);\n        Log::info('admin action', ['user' => $request->user()->id]);\n    }\n}",
+      "options": [
+        { "id": "a", "text": "`$response` qaytarilmaydi — klient bo'sh javob oladi (`return $response` kerak); `$request->user()` null bo'lishi mumkin (auth middleware'siz) — `?->` yoki `auth` middleware'dan keyin; `abort` o'rniga exception/`redirect` — kontekstga qarab", "correct": true },
+        { "id": "b", "text": "`Closure` o'rniga `callable` kerak", "hint": "`Closure` — Laravel konvensiyasi, to'g'ri." },
+        { "id": "c", "text": "Middleware `Log` ishlatmasligi kerak", "hint": "Log — normal; muammo qaytarishda." },
+        { "id": "d", "text": "Xato yo'q", "hint": "Handler nima qaytaradi? Brauzerda nima ko'rinadi?" }
+      ],
+      "explanation": "Middleware shakli: oldin (`$next`dan oldin), keyin (`$next`dan keyin, `$response` bilan), yoki `terminate()` (javob yuborilgach — log uchun yaxshiroq). Middleware parametrlari: `->middleware('role:admin')` → `handle($request, $next, $role)`. Laravel 11: `bootstrap/app.php`da alias/guruhlar.",
+      "reviewed": false
+    },
+    {
+      "id": "php.laravel.008",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Laravel Sanctum nima va u API autentifikatsiyasini qanday ta'minlaydi?",
+      "options": [
+        { "id": "a", "text": "Yengil auth: (1) API token — `$user->createToken('name', ['abilities'])`, Bearer header, DB'da hash saqlanadi, mobil/uchinchi tomon uchun; (2) SPA cookie auth — Laravel sessiya + CSRF cookie, bir domen/subdomen SPA uchun (token saqlash xavfisiz); `auth:sanctum` middleware ikkalasini qo'llaydi", "correct": true },
+        { "id": "b", "text": "To'liq OAuth2 server", "hint": "Bu Passport; Sanctum — soddaroq, OAuth flow'lar yo'q." },
+        { "id": "c", "text": "Faqat web sessiya", "hint": "API token ham — asosiy maqsad." },
+        { "id": "d", "text": "JWT kutubxonasi", "hint": "Sanctum tokenlari opaque (tasodifiy satr, DB'da), JWT emas." }
+      ],
+      "explanation": "Tanlov: o'z SPA — Sanctum cookie (XSS'ga chidamli, `HttpOnly`); mobil — Sanctum token; uchinchi tomon ilovalar OAuth bilan — Passport; stateless mikroservis — JWT paket. Token abilities — nozik ruxsat (`$user->tokenCan('orders:read')`). Tokenlarni muddat bilan (`expiration` config) va bekor qilish (`tokens()->delete()`).",
+      "reviewed": false
+    },
+    {
+      "id": "php.laravel.009",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Laravel service provider'larda `register` va `boot` farqi va deferred provider nima?",
+      "options": [
+        { "id": "a", "text": "`register` — faqat container binding (boshqa servislarni chaqirmaslik — tartib kafolatlanmagan); `boot` — hamma provider ro'yxatdan o'tgach, servislardan foydalanish (route, event listener, view composer, macro); deferred provider (`DeferrableProvider` + `provides()`) — faqat servis so'ralganda yuklanadi (bootstrap tezlashadi)", "correct": true },
+        { "id": "b", "text": "Bir xil, `boot` eski nom", "hint": "Ikki bosqich — tartib muammosini hal qiladi." },
+        { "id": "c", "text": "`register`da route e'lon qilish kerak", "hint": "Router hali tayyor bo'lmasligi mumkin — `boot`da." },
+        { "id": "d", "text": "Provider'lar faqat paketlar uchun", "hint": "Ilova ham o'z provider'larini yozadi (`AppServiceProvider`, domen provider'lar)." }
+      ],
+      "explanation": "Katta ilovada provider'lar — modul chegaralari (`OrderServiceProvider`: binding + event + route). `boot`da og'ir ish (DB so'rov) — har so'rovda bajariladi, qochish. Laravel 11 `bootstrap/providers.php`. Paket auto-discovery — `composer.json` `extra.laravel.providers`.",
+      "reviewed": false
+    },
+    {
+      "id": "php.laravel.010",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Laravel'da Facade qanday ishlaydi va uning tanqidi nimada?",
+      "options": [
+        { "id": "a", "text": "Statik ko'rinishli proxy: `Cache::get()` → `__callStatic` → container'dan `cache` servisini olib metodni chaqiradi; qulay va testda `Cache::shouldReceive()` bilan mock; tanqid — bog'liqlik yashirin (imzoda ko'rinmaydi), IDE uchun ide-helper kerak, DI'ga nisbatan kamroq aniq; real-time facade (`Facades\\App\\Service`)", "correct": true },
+        { "id": "b", "text": "Oddiy static klass — global holat", "hint": "Static emas — container'ga proxy; almashtirish va mock mumkin." },
+        { "id": "c", "text": "Facade'siz Laravel ishlamaydi", "hint": "Har Facade o'rniga interfeys inject qilish mumkin — tanlov." },
+        { "id": "d", "text": "Facade — GoF Facade pattern", "hint": "Nom o'xshash, mohiyat boshqa (proxy/service locator)." }
+      ],
+      "explanation": "Amaliy kelishuv: controller/service'da konstruktor DI (aniq, testlanadigan), tez prototip/helper'da Facade. `Cache::shouldReceive('get')->once()->andReturn(...)` — Mockery. Larastan Facade turlarini biladi. Octane'da Facade orqali singleton — so'rovlar orasida holat sizishiga e'tibor.",
+      "reviewed": false
+    },
+    {
+      "id": "php.laravel.011",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Laravel'da testlar (PHPUnit/Pest) qanday tashkil qilinadi?",
+      "options": [
+        { "id": "a", "text": "Feature test — HTTP orqali (`$this->postJson('/api/users', [...])->assertStatus(201)->assertJsonPath(...)`), `RefreshDatabase` trait (tranzaksiya/migratsiya), factory'lar (`User::factory()->create()`), `actingAs`, fake'lar (`Queue::fake()`, `Mail::fake()`, `Http::fake()`, `Event::fake()`); Unit test — sof klasslar; Pest — qisqa sintaksis, `expect()`, dataset'lar; SQLite in-memory tez, lekin production DB bilan farq", "correct": true },
+        { "id": "b", "text": "Laravel testlanmaydi — framework og'ir", "hint": "Laravel test infratuzilmasi — eng kuchli tomonlaridan biri." },
+        { "id": "c", "text": "Faqat brauzer testlari (Dusk)", "hint": "Dusk — E2E, kam; feature testlar — asosiy." },
+        { "id": "d", "text": "Har test uchun real tashqi API chaqirish", "hint": "`Http::fake()` — tez, deterministik." }
+      ],
+      "explanation": "`Queue::fake()` + `Queue::assertPushed(SendEmail::class)` — job yuborilganini tekshirish, bajarmasdan. `RefreshDatabase` MySQL/Postgres'da — migratsiya bir marta + tranzaksiya. Parallel test (`--parallel`) — alohida DB'lar. Larastan + Pint CI'da testlar bilan birga.",
+      "reviewed": false
+    },
+    {
+      "id": "php.laravel.012",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Laravel Octane nima, qanday foyda va xavf beradi?",
+      "options": [
+        { "id": "a", "text": "Ilovani xotirada ushlab turadigan server (Swoole/RoadRunner/FrankenPHP) — bootstrap bir marta, so'rovlar ~10x tezroq, konkurent task'lar, tick/interval; xavf — so'rovlar orasida holat sizishi (singleton'da so'rov ma'lumoti, static property, container'ga so'rov-scoped narsa bog'lash), xotira o'sishi (worker restart), ba'zi paketlar mos emas; `--watch` dev, `max-requests` production", "correct": true },
+        { "id": "b", "text": "Faqat cache kutubxonasi", "hint": "Server rejimi — ilova hayot siklini o'zgartiradi." },
+        { "id": "c", "text": "Octane har Laravel ilovasini avtomatik tezlashtiradi, xavfsiz", "hint": "Holat sizishi — real xavf, kod audit kerak." },
+        { "id": "d", "text": "Octane PHP-FPM'ni to'liq almashtirgan standart", "hint": "FPM hali ko'pchilik; Octane — ongli tanlov." }
+      ],
+      "explanation": "Tipik Octane xatosi: `app()->singleton(CurrentTenant::class)` — birinchi so'rov tenant'i hammaga qoladi; yechim — `scoped` binding (so'rov uchun) yoki `Octane::prepareApplicationForNextRequest`. Qachon: yuqori RPS, latency muhim, jamoa tayyor. Oldin: OPcache + preloading + `config:cache` — arzon yutuq.",
+      "reviewed": false
+    },
+    {
+      "id": "php.laravel.013",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Laravel API'ni versiyalash va evolyutsiya qilish strategiyasi qanday?",
+      "options": [
+        { "id": "a", "text": "URL prefiks (`/api/v1`) yoki header versiyalash; route guruhlar + controller namespace (`V1`, `V2`); API Resource'lar (`JsonResource`) — javob shaklini modeldan ajratadi, versiya bo'yicha alohida Resource; qo'shimcha maydon — buzmaydi, o'chirish/nom o'zgarishi — yangi versiya; deprecation header va muddat; OpenAPI (Scribe/L5-Swagger) hujjat; kontrakt testlar", "correct": true },
+        { "id": "b", "text": "Versiya kerak emas — klientlar moslashadi", "hint": "Mobil ilova eski versiyasi oylab ishlatiladi — buzilish." },
+        { "id": "c", "text": "Har o'zgarishda yangi versiya", "hint": "Versiya portlashi; faqat buzuvchi o'zgarishda." },
+        { "id": "d", "text": "Eloquent modelni to'g'ridan-to'g'ri JSON qaytarish", "hint": "DB sxemasi API kontrakti bo'lib qoladi — har ustun o'zgarishi klientni buzadi; Resource qatlami kerak." }
+      ],
+      "explanation": "`JsonResource` — `toArray()` da shakl, `whenLoaded` (eager load bo'lsa), `when` shartli, `additional` meta. Pagination resurs bilan. Versiyalar orasida umumiy mantiq — service qatlami, faqat Resource/Request farq qiladi. Sunset header (RFC 8594) — eski versiya muddati.",
+      "reviewed": false
+    }
+  ]
+}

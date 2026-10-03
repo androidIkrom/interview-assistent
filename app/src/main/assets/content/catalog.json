@@ -124,12 +124,12 @@
     { "id": "go.data", "title": "DB va tranzaksiya", "file": "go_data.json" },
     { "id": "go.arch", "title": "Profiling va arxitektura", "file": "go_arch.json" },
 
-    { "id": "php.lang", "title": "PHP tili" },
-    { "id": "php.oop", "title": "OOP va Composer" },
-    { "id": "php.laravel", "title": "Laravel asoslari" },
-    { "id": "php.eloquent", "title": "Eloquent va DB" },
-    { "id": "php.async", "title": "Queue, cache, events" },
-    { "id": "php.arch", "title": "Arxitektura va performance" },
+    { "id": "php.lang", "title": "PHP tili", "file": "php_lang.json" },
+    { "id": "php.oop", "title": "OOP va Composer", "file": "php_oop.json" },
+    { "id": "php.laravel", "title": "Laravel asoslari", "file": "php_laravel.json" },
+    { "id": "php.eloquent", "title": "Eloquent va DB", "file": "php_eloquent.json" },
+    { "id": "php.async", "title": "Queue, cache, events", "file": "php_async.json" },
+    { "id": "php.arch", "title": "Arxitektura va performance", "file": "php_arch.json" },
 
     { "id": "net.csharp", "title": "C# tili" },
     { "id": "net.types", "title": "Tiplar, LINQ, collections" },

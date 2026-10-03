@@ -1,0 +1,203 @@
+{
+  "topic": "php.eloquent",
+  "questions": [
+    {
+      "id": "php.eloquent.001",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Eloquent nima va Active Record pattern qanday ishlaydi?",
+      "options": [
+        { "id": "a", "text": "Laravel ORM: har model klass — jadval, instansiya — qator; model o'zi saqlaydi/o'chiradi (`$user->save()`, `User::find()`, `User::where()->get()`); konvensiyalar — `users` jadval, `id` PK, `created_at`/`updated_at` avtomatik; relation'lar metod sifatida", "correct": true },
+        { "id": "b", "text": "Faqat SQL yozish vositasi", "hint": "Query Builder — SQL vosita; Eloquent — ob'ekt mapping ustida." },
+        { "id": "c", "text": "Data Mapper (Doctrine kabi) — model DB'ni bilmaydi", "hint": "Eloquent — Active Record: model DB bilan bevosita ishlaydi." },
+        { "id": "d", "text": "NoSQL uchun", "hint": "Relyatsion DB (MySQL, PostgreSQL, SQLite, SQL Server)." }
+      ],
+      "explanation": "Active Record — tez va qulay, lekin model DB'ga bog'liq (domen mantiqi va persistence aralash — trade-off). `$table`, `$primaryKey`, `$timestamps = false` — konvensiyani o'zgartirish. `$fillable`/`$guarded` — mass assignment. `$casts` — tur o'girish (`'is_active' => 'boolean'`, `'meta' => 'array'`, enum).",
+      "reviewed": false
+    },
+    {
+      "id": "php.eloquent.002",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Eloquent'da `find`, `findOrFail`, `first`, `firstOrFail`, `get` qanday farqlanadi?",
+      "options": [
+        { "id": "a", "text": "`find($id)` — PK bo'yicha bitta model yoki `null`; `findOrFail` — topilmasa `ModelNotFoundException` (404 ga aylanadi); `first()` — so'rovning birinchi qatori yoki `null`; `firstOrFail` — exception; `get()` — `Collection` (bo'sh bo'lsa ham, `null` emas)", "correct": true },
+        { "id": "b", "text": "Hammasi bir xil, uslub farqi", "hint": "`null` vs exception vs Collection — xato ishlovi farq qiladi." },
+        { "id": "c", "text": "`get()` bitta model qaytaradi", "hint": "Collection — ko'p model." },
+        { "id": "d", "text": "`find` topilmasa exception", "hint": "`null` — `findOrFail` exception." }
+      ],
+      "explanation": "Controller'da `findOrFail` yoki route model binding — 404 avtomatik. `firstOrCreate`/`updateOrCreate` — race condition'ga e'tibor (unique constraint + retry). `find([1,2,3])` — Collection. `sole()` — aniq bitta, ko'p/yo'q bo'lsa exception. `value('name')` — bitta ustun.",
+      "reviewed": false
+    },
+    {
+      "id": "php.eloquent.003",
+      "level": "junior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Eloquent relation'lar (`hasMany`, `belongsTo`, `belongsToMany`) qanday aniqlanadi?",
+      "options": [
+        { "id": "a", "text": "Model metodi relation ob'ektini qaytaradi: `User::posts()` → `hasMany(Post::class)` (posts.user_id), `Post::user()` → `belongsTo(User::class)`, `User::roles()` → `belongsToMany(Role::class)` (pivot `role_user`); `$user->posts` — yuklangan Collection, `$user->posts()` — query builder", "correct": true },
+        { "id": "b", "text": "Relation'lar migratsiyada e'lon qilinadi", "hint": "Migratsiya — foreign key; relation — modelda." },
+        { "id": "c", "text": "`$user->posts` va `$user->posts()` bir xil", "hint": "Property — natija (cache), metod — so'rov (filtr qo'shish mumkin)." },
+        { "id": "d", "text": "Faqat bir turdagi relation bor", "hint": "hasOne, hasMany, belongsTo, belongsToMany, hasManyThrough, morph*." }
+      ],
+      "explanation": "Konvensiya: `user_id` tashqi kalit, pivot `role_user` (alifbo). O'zgartirish — parametrlar. `withPivot`, `withTimestamps`. Polymorphic (`morphMany`) — bitta jadval ko'p modelga (comments). `hasManyThrough` — oraliq orqali. Relation metodida `->where()` — scoped relation.",
+      "reviewed": false
+    },
+    {
+      "id": "php.eloquent.004",
+      "level": "junior",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Quyidagi kodda qanday muammo bor?",
+      "code": "<?php\n$users = User::all();\nforeach ($users as $user) {\n    echo $user->profile->avatar;\n    echo $user->posts->count();\n}",
+      "options": [
+        { "id": "a", "text": "N+1: har foydalanuvchi uchun 2 ta qo'shimcha so'rov (profile, posts) — 1000 foydalanuvchida 2001 so'rov; `User::with(['profile', 'posts'])->get()` yoki `withCount('posts')`; `profile` null bo'lsa — xato (`?->`)", "correct": true },
+        { "id": "b", "text": "`all()` o'rniga `get()` kerak", "hint": "Ikkalasi hamma qatorni oladi; muammo relation'larda." },
+        { "id": "c", "text": "`echo` xavfsiz emas", "hint": "To'g'ri (XSS) — lekin asosiy performance muammosi bor." },
+        { "id": "d", "text": "Muammo yo'q — Eloquent cache qiladi", "hint": "Har model o'z relation'ini alohida yuklaydi; eager loading kerak." }
+      ],
+      "explanation": "Debug: Laravel Debugbar/Telescope so'rov sonini ko'rsatadi; `Model::preventLazyLoading(!app()->isProduction())` — dev'da lazy load exception. `withCount` — subquery, modellarni yuklamaydi. `load()` — keyinroq eager load. `with('posts:id,user_id,title')` — faqat kerakli ustunlar.",
+      "reviewed": false
+    },
+    {
+      "id": "php.eloquent.005",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Eloquent va Query Builder qanday farqlanadi va qachon qaysi biri?",
+      "options": [
+        { "id": "a", "text": "Eloquent — model ob'ektlari, relation, event, cast, accessor (qulay, lekin har qator uchun ob'ekt — xotira); Query Builder (`DB::table()`) — xom qatorlar (`stdClass`), tezroq, agregat/hisobot/bulk uchun; Eloquent ustida ham builder bor (`User::query()`); hisobot va katta hajm — builder, domen CRUD — Eloquent", "correct": true },
+        { "id": "b", "text": "Query Builder eskirgan", "hint": "Eloquent uning ustida qurilgan — ikkalasi ham faol." },
+        { "id": "c", "text": "Eloquent doim tezroq", "hint": "Ob'ekt hydration — 100 000 qatorda sezilarli sekin." },
+        { "id": "d", "text": "Query Builder SQL injection'dan himoyalamaydi", "hint": "Ikkalasi ham binding ishlatadi; faqat `DB::raw`/`whereRaw`da ehtiyot." }
+      ],
+      "explanation": "Katta eksport: `User::query()->chunk(1000, fn($users) => ...)` yoki `cursor()`/`lazy()` (generator, bir vaqtda bitta model xotirada). `toBase()` — Eloquent so'rovni builder natijaga. `DB::raw('COUNT(*) as total')` — parametr bog'lash bilan (`selectRaw('... ?', [$x])`).",
+      "reviewed": false
+    },
+    {
+      "id": "php.eloquent.006",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Eloquent accessor, mutator va cast qanday ishlaydi?",
+      "options": [
+        { "id": "a", "text": "Accessor/mutator (Laravel 9+ `Attribute::make(get: fn, set: fn)`) — o'qish/yozishda o'girish (`full_name`, parol hash); cast (`$casts`) — DB tur ↔ PHP tur (`datetime`, `array`/`json`, `boolean`, `encrypted`, enum, custom `CastsAttributes`); `$appends` — accessor'ni JSON'ga qo'shish", "correct": true },
+        { "id": "b", "text": "Cast — DB ustun turini o'zgartiradi", "hint": "DB o'zgarmaydi — PHP tomonida o'girish." },
+        { "id": "c", "text": "Accessor DB'ga saqlanadi", "hint": "Hisoblangan — saqlanmaydi (agar `$appends`/serializatsiya bo'lmasa, JSON'da ham ko'rinmaydi)." },
+        { "id": "d", "text": "Bir xil narsa", "hint": "Cast — tur, accessor/mutator — ixtiyoriy mantiq." }
+      ],
+      "explanation": "Value object cast: `'money' => MoneyCast::class` — `get()` DB qiymatdan VO, `set()` VO'dan massiv (bir nechta ustunga ham). `'settings' => AsArrayObject::class`/`AsCollection::class`. Accessor'da relation ishlatish — N+1 xavfi (`$appends` bilan birga). `immutable_datetime` cast.",
+      "reviewed": false
+    },
+    {
+      "id": "php.eloquent.007",
+      "level": "middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Quyidagi kodda qanday muammolar bor?",
+      "code": "<?php\n$orders = Order::where('status', 'pending')->get();\nforeach ($orders as $order) {\n    $order->status = 'processed';\n    $order->save();\n}\n\nUser::where('active', 0)->delete();  // 1 million qator",
+      "options": [
+        { "id": "a", "text": "Birinchi: N ta UPDATE o'rniga `Order::where(...)->update(['status' => 'processed'])` (bitta so'rov — lekin model event/`updated_at` farqi); ikkinchi: `delete()` builder orqali — bitta SQL (yaxshi), lekin million qator — uzoq qulf, `chunkById` bilan bo'laklab yoki soft delete/arxiv strategiyasi; `status` string o'rniga enum", "correct": true },
+        { "id": "b", "text": "`get()` o'rniga `all()`", "hint": "Farqi yo'q bu yerda." },
+        { "id": "c", "text": "`delete()` event'larni chaqirmaydi — bu xato", "hint": "Haqiqat (builder delete — model event yo'q), lekin ataylab bo'lishi mumkin; muammo hajmda." },
+        { "id": "d", "text": "Muammo yo'q", "hint": "10 000 pending order — nechta UPDATE so'rov?" }
+      ],
+      "explanation": "Bulk `update()`/`delete()` — model event'lar (`saving`, `deleting`), observer, `$casts` mutator ishlamaydi — ongli tanlov. Event kerak bo'lsa — `chunkById(500, fn($orders) => $orders->each->update(...))`. `upsert()` — bulk insert/update. Katta o'chirish — tranzaksiya log va replika lag.",
+      "reviewed": false
+    },
+    {
+      "id": "php.eloquent.008",
+      "level": "middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Eloquent query scope'lar nima va qanday ishlatiladi?",
+      "options": [
+        { "id": "a", "text": "Local scope — modelda `scopeActive($query)` metod → `User::active()->get()`, takrorlanuvchi shartlarni nomlash, zanjirlanadi; global scope — har so'rovga avtomatik (`SoftDeletes` shunday: `whereNull('deleted_at')`), `withoutGlobalScope` bilan o'chirish; dinamik scope parametr bilan", "correct": true },
+        { "id": "b", "text": "Scope — DB view", "hint": "PHP darajasida so'rov qismi, DB ob'ekti emas." },
+        { "id": "c", "text": "Faqat `where` uchun", "hint": "`orderBy`, `with`, `join` — har qanday builder metodi." },
+        { "id": "d", "text": "Global scope o'chirilmaydi", "hint": "`withoutGlobalScope(...)`, `withTrashed()` (SoftDeletes)." }
+      ],
+      "explanation": "Laravel 12: `#[Scope]` attribute. Global scope xavfi: tenant scope — admin so'rovlarda unutish yoki aksincha, ko'rinmas filtr debug'ni qiyinlashtiradi. Scope + `when($cond, fn)` — dinamik filtr. Scope ichida relation `whereHas` — subquery performance'ga e'tibor.",
+      "reviewed": false
+    },
+    {
+      "id": "php.eloquent.009",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Laravel'da DB tranzaksiya va qulflar (lock) qanday ishlatiladi?",
+      "options": [
+        { "id": "a", "text": "`DB::transaction(fn() => {...}, attempts: 3)` — exception'da rollback, deadlock'da retry; qo'lda `beginTransaction/commit/rollBack`; pessimistic — `lockForUpdate()` (`SELECT ... FOR UPDATE`, tranzaksiya ichida), `sharedLock()`; optimistic — versiya ustun + `where('version', $v)->update(...)` natijani tekshirish; tranzaksiya qisqa, tashqi API chaqiruvi ichida emas", "correct": true },
+        { "id": "b", "text": "Eloquent `save()` avtomatik tranzaksiyada", "hint": "Bitta so'rov — atomik; ko'p so'rov — aniq tranzaksiya kerak." },
+        { "id": "c", "text": "`lockForUpdate` tranzaksiyasiz ishlaydi", "hint": "Qulf tranzaksiya tugashigacha — tashqarida darhol bo'shaydi (ma'nosiz)." },
+        { "id": "d", "text": "Tranzaksiya faqat MySQL'da", "hint": "Barcha qo'llanadigan DB'lar." }
+      ],
+      "explanation": "Balans yechish: `DB::transaction(function() use ($id, $amt) { $acc = Account::lockForUpdate()->find($id); if ($acc->balance < $amt) throw ...; $acc->decrement('balance', $amt); })`. Tranzaksiya ichida job dispatch — `afterCommit` (aks holda job tranzaksiya commit'idan oldin ishlashi mumkin). Testda `RefreshDatabase` — nested tranzaksiya (savepoint).",
+      "reviewed": false
+    },
+    {
+      "id": "php.eloquent.010",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "code_review",
+      "prompt": "Quyidagi kodda qanday performance muammosi bor?",
+      "code": "<?php\n$posts = Post::with('comments')->get();\n$popular = $posts->filter(fn($p) => $p->comments->count() > 10)\n    ->sortByDesc(fn($p) => $p->comments->count())\n    ->take(20);",
+      "options": [
+        { "id": "a", "text": "Barcha postlar va barcha kommentlar xotiraga yuklanib, filtr/saralash PHP'da — DB'da `withCount('comments')->having('comments_count', '>', 10)->orderByDesc('comments_count')->limit(20)` bo'lishi kerak; kommentlar umuman kerak emas (faqat soni)", "correct": true },
+        { "id": "b", "text": "`with` o'rniga `load`", "hint": "Farqi yo'q — ikkalasi hamma kommentni yuklaydi." },
+        { "id": "c", "text": "`filter` o'rniga `where` Collection'da", "hint": "Collection `where` ham PHP'da — muammo DB'da emasligida." },
+        { "id": "d", "text": "Muammo yo'q — eager loading bor", "hint": "100 000 post × 50 komment xotirada — necha GB?" }
+      ],
+      "explanation": "Qoida: filtrlash, saralash, agregat — DB'da; Collection — kichik natija ustida. `withCount` subquery indeks bilan tez. `whereHas('comments', fn, '>', 10)` — alternativ. `Collection` metodlari qulay — shu sabab oson tuzoq. Debugbar: so'rov soni va xotira.",
+      "reviewed": false
+    },
+    {
+      "id": "php.eloquent.011",
+      "level": "strong_middle",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Eloquent model event'lari va observer'lar qanday ishlaydi, qanday tuzoqlari bor?",
+      "options": [
+        { "id": "a", "text": "`creating/created/updating/updated/saving/saved/deleting/deleted/restored` — model hayot sikli; Observer klass (`User::observe(UserObserver::class)`) yoki `$dispatchesEvents`; `creating`da `false` qaytarish — bekor; tuzoqlar: bulk `update()/delete()` chaqirmaydi, yashirin yon ta'sir (debug qiyin), testda `withoutEvents()`, Octane'da registratsiya", "correct": true },
+        { "id": "b", "text": "Event'lar faqat `save()`da", "hint": "Delete, restore, retrieved ham." },
+        { "id": "c", "text": "Observer — DB trigger", "hint": "PHP darajasida; xom SQL/bulk uni chetlab o'tadi." },
+        { "id": "d", "text": "Observer'da og'ir ish (email) qilish to'g'ri", "hint": "Sinxron — so'rovni sekinlashtiradi; job dispatch (`afterCommit`)." }
+      ],
+      "explanation": "Observer'ga biznes mantiq yig'ish — \"sehr\": `User::create()` chaqirgan dasturchi email ketganini bilmaydi. Alternativa — aniq service/action klass (`CreateUser` action: yaratish + event dispatch). `UUID` generatsiya `creating`da — `HasUuids` trait buni qiladi. `saveQuietly()` — eventsiz.",
+      "reviewed": false
+    },
+    {
+      "id": "php.eloquent.012",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Katta Laravel loyihasida Eloquent modelni domen mantiqidan qanday ajratish kerak?",
+      "options": [
+        { "id": "a", "text": "Variantlar: (1) Eloquent qoladi, lekin \"semiz model\"dan qochish — action/service klasslar, DTO (spatie/laravel-data), Resource; (2) repository interfeys + Eloquent implementatsiya — domen Eloquent'ni bilmaydi (ko'p boilerplate, Eloquent afzalliklari yo'qoladi); (3) DDD — domen entity alohida, Eloquent faqat persistence (mapper). Tanlov murakkablik bo'yicha; ko'pchilik — (1)", "correct": true },
+        { "id": "b", "text": "Hamma mantiq modelda — Active Record shunday", "hint": "1000 qatorli `User` model — God object." },
+        { "id": "c", "text": "Doim repository pattern", "hint": "Eloquent ustida repository ko'pincha ortiqcha qatlam (\"repository anti-pattern in Laravel\" bahsi); faqat haqiqiy almashtirish ehtiyoji bo'lsa." },
+        { "id": "d", "text": "Eloquent'dan voz kechib Doctrine", "hint": "Mumkin, lekin Laravel ekotizimidan ajralish; kam loyiha buni qiladi." }
+      ],
+      "explanation": "Pragmatik Laravel: model — ma'lumot + relation + scope + cast; action (`CreateOrderAction::execute(CreateOrderData $data)`) — use case; event — yon ta'sir; Resource — API shakl; Form Request — validatsiya. Modul (`app/Modules/Orders/...`) — chegara. Testlar action darajasida — tez va aniq.",
+      "reviewed": false
+    },
+    {
+      "id": "php.eloquent.013",
+      "level": "senior",
+      "type": "single",
+      "kind": "concept",
+      "prompt": "Yuqori yuklanishli Laravel ilovasida DB qatlami performansini qanday ta'minlash kerak?",
+      "options": [
+        { "id": "a", "text": "N+1 nol (preventLazyLoading, Telescope), kerakli ustunlar (`select`), indekslar (`EXPLAIN`), keyset pagination (`cursorPaginate`), read/write ulanishlar (`read`/`write` config, replica), cache (query result, `remember`), chunk/lazy katta hajmda, `withCount`/subquery PHP agregat o'rniga, connection pool (PgBouncer/ProxySQL — PHP'da pool yo'q), slow query log, Octane'da ulanish qayta ishlatish", "correct": true },
+        { "id": "b", "text": "Eloquent'ni o'chirib xom SQL", "hint": "Eloquent to'g'ri ishlatilsa — yetarli; xom SQL — faqat issiq nuqtalarda." },
+        { "id": "c", "text": "Hamma so'rovni cache'lash", "hint": "Invalidatsiya murakkabligi; faqat o'lchangan issiq, kam o'zgaradigan ma'lumot." },
+        { "id": "d", "text": "DB server kuchaytirish — yetarli", "hint": "N+1 bilan kuchli server ham yiqiladi; avval kod." }
+      ],
+      "explanation": "PHP-FPM har worker — o'z DB ulanishi (pool yo'q): 200 worker × 5 pod = 1000 ulanish — PgBouncer transaction mode shart. `paginate()` — `COUNT(*)` har sahifada (katta jadvalda sekin) → `simplePaginate`/`cursorPaginate`. Laravel Pulse — slow query, Telescope — dev.",
+      "reviewed": false
+    }
+  ]
+}
