@@ -8,9 +8,9 @@
       "kind": "concept",
       "prompt": "JPA va Hibernate qanday bog'liq?",
       "options": [
-        { "id": "a", "text": "JPA — Java ORM spetsifikatsiyasi (interfeyslar va annotatsiyalar: `@Entity`, `EntityManager`); Hibernate — uning eng keng tarqalgan implementatsiyasi (o'z qo'shimchalari bilan)", "correct": true },
+        { "id": "a", "text": "JPA — ORM spetsifikatsiyasi (`@Entity`, `EntityManager`); Hibernate — uning eng mashhur implementatsiyasi", "correct": true },
         { "id": "b", "text": "Bir xil narsa", "hint": "Biri standart, ikkinchisi implementatsiya; EclipseLink ham JPA implementatsiyasi." },
-        { "id": "c", "text": "JPA — Hibernate'ning yangi versiyasi", "hint": "JPA — spetsifikatsiya, versiyalari Hibernate'dan mustaqil." },
+        { "id": "c", "text": "JPA — Hibernate'ning yangi versiyasi bo'lib, eski Hibernate API'larini to'liq almashtirgan alohida freymvork", "hint": "JPA — spetsifikatsiya, versiyalari Hibernate'dan mustaqil." },
         { "id": "d", "text": "Hibernate — JDBC drayveri", "hint": "Hibernate JDBC ustida ishlaydi, drayver emas." }
       ],
       "explanation": "Spring Data JPA — yana bir qatlam: `JpaRepository` interfeysi, metod nomidan so'rov (`findByEmail`). Qatlamlar: Spring Data JPA → JPA (Jakarta Persistence) → Hibernate → JDBC → drayver → DB. Muammo bo'lsa, qaysi qatlamda ekanini bilish debug'ni tezlashtiradi.",
@@ -23,9 +23,9 @@
       "kind": "concept",
       "prompt": "JPA entity qanday talablarga javob berishi kerak?",
       "options": [
-        { "id": "a", "text": "`@Entity` annotatsiyasi, `@Id` bilan primary key, argumentsiz konstruktor (public yoki protected), `final` bo'lmasligi (proxy uchun), maydonlar yoki getter'lar bilan mapping", "correct": true },
+        { "id": "a", "text": "`@Entity`, `@Id`, argumentsiz konstruktor (public/protected) va `final` bo'lmasligi (proxy uchun)", "correct": true },
         { "id": "b", "text": "`record` bo'lishi kerak", "hint": "Record `final` va argumentsiz konstruktorsiz — entity bo'lolmaydi (DTO/proyeksiya uchun mos)." },
-        { "id": "c", "text": "Faqat `Serializable` implement qilishi", "hint": "Tavsiya, lekin talab emas; `@Id` esa majburiy." },
+        { "id": "c", "text": "Faqat `Serializable` interfeysini implement qilishi kifoya, boshqa hech qanday talab va annotatsiya qo'yilmaydi", "hint": "Tavsiya, lekin talab emas; `@Id` esa majburiy." },
         { "id": "d", "text": "Barcha maydonlar `public` bo'lishi", "hint": "Odatda private + getter/setter." }
       ],
       "explanation": "Hibernate entity'ni reflection bilan yaratadi va lazy loading uchun subclass proxy qiladi — shu sabab argumentsiz konstruktor va non-final. `equals`/`hashCode` entity'da ehtiyotkorlik talab qiladi: ID generatsiyadan oldin null; biznes kalit yoki `instanceof` + ID bilan.",
@@ -38,12 +38,12 @@
       "kind": "concept",
       "prompt": "Spring Data JPA'da `JpaRepository<User, Long>` interfeysi nima beradi?",
       "options": [
-        { "id": "a", "text": "Tayyor CRUD metodlari (`save`, `findById`, `findAll`, `delete`), paging/sorting, va metod nomidan avtomatik so'rov (`findByEmailAndActiveTrue`) — implementatsiya runtime'da generatsiya qilinadi", "correct": true },
-        { "id": "b", "text": "Faqat interfeys — implementatsiyani o'zingiz yozasiz", "hint": "Implementatsiya Spring tomonidan proxy sifatida yaratiladi." },
+        { "id": "a", "text": "Tayyor CRUD (`save`, `findById`), paging/sorting va metod nomidan so'rov (`findByEmail...`)", "correct": true },
+        { "id": "b", "text": "Faqat interfeys: barcha metodlarning implementatsiyasini o'zingiz alohida klassda yozib chiqasiz", "hint": "Implementatsiya Spring tomonidan proxy sifatida yaratiladi." },
         { "id": "c", "text": "DB jadvalini yaratadi", "hint": "Jadval yaratish — `ddl-auto` yoki migratsiya (Flyway/Liquibase)." },
         { "id": "d", "text": "SQL yozishga ruxsat bermaydi", "hint": "`@Query` bilan JPQL yoki native SQL yozish mumkin." }
       ],
-      "explanation": "Murakkab so'rovlar uchun `@Query(\"select u from User u where ...\")`, dinamik uchun Specification/Criteria/QueryDSL. Metod nomi uzun bo'lib ketsa (`findByAAndBOrCOrderByD`) — `@Query` o'qilishi osonroq. Proyeksiya (interfeys yoki record) — faqat kerakli ustunlar.",
+      "explanation": "Implementatsiya runtime'da generatsiya qilinadi. Murakkab so'rovlar uchun `@Query(\"select u from User u where ...\")`, dinamik uchun Specification/Criteria/QueryDSL. Metod nomi uzun bo'lib ketsa (`findByAAndBOrCOrderByD`) — `@Query` o'qilishi osonroq. Proyeksiya (interfeys yoki record) — faqat kerakli ustunlar.",
       "reviewed": false
     },
     {
@@ -69,10 +69,10 @@
       "kind": "concept",
       "prompt": "`LazyInitializationException` qachon va nima uchun yuz beradi?",
       "options": [
-        { "id": "a", "text": "Lazy bog'lanish (`@OneToMany` kolleksiya, LAZY `@ManyToOne`) persistence context (sessiya) yopilgandan keyin birinchi marta o'qilganda — masalan, controller'da yoki JSON serializatsiyada", "correct": true },
+        { "id": "a", "text": "Lazy bog'lanish persistence context yopilgandan keyin o'qilganda — masalan, controller'da yoki JSON'da", "correct": true },
         { "id": "b", "text": "Entity'da `@Id` yo'q bo'lganda", "hint": "Bu boshqa xato (`AnnotationException`)." },
         { "id": "c", "text": "DB ulanmaganda", "hint": "Ulanish xatosi boshqacha ko'rinadi." },
-        { "id": "d", "text": "`findAll` juda ko'p qator qaytarganda", "hint": "Hajm emas, sessiya yopilgani sabab." }
+        { "id": "d", "text": "`findAll` juda ko'p qator qaytarganda va Hibernate ularni bitta sessiya xotirasiga sig'dira olmaganda", "hint": "Hajm emas, sessiya yopilgani sabab." }
       ],
       "explanation": "Yechimlar: kerakli ma'lumotni so'rovda `JOIN FETCH`, DTO'ga tranzaksiya ichida o'girish (entity'ni controller'ga chiqarmaslik — eng yaxshi amaliyot), `@Transactional(readOnly=true)` service darajasida. `spring.jpa.open-in-view=true` (Boot default!) — simptomni yashiradi, lekin DB ulanishini butun so'rov davomida ushlaydi; o'chirish tavsiya etiladi.",
       "reviewed": false
@@ -84,12 +84,12 @@
       "kind": "concept",
       "prompt": "`@Transactional` ichida entity'ni o'zgartirsangiz, `save()` chaqirmasangiz ham DB'ga yoziladimi?",
       "options": [
-        { "id": "a", "text": "Ha — managed entity'dagi o'zgarishlar dirty checking orqali aniqlanadi va tranzaksiya commit'ida (flush) avtomatik UPDATE qilinadi; `save()` faqat yangi (transient) entity uchun zarur", "correct": true },
+        { "id": "a", "text": "Ha — dirty checking o'zgarishni aniqlaydi va commit'da avtomatik UPDATE qiladi", "correct": true },
         { "id": "b", "text": "Yo'q — `save()` har doim shart", "hint": "Managed entity uchun `save()` ortiqcha (lekin zararsiz)." },
         { "id": "c", "text": "Faqat `flush()` chaqirilsa yoziladi", "hint": "Commit avtomatik flush qiladi; qo'lda `flush()` — oraliq nuqta uchun." },
-        { "id": "d", "text": "Entity o'zgartirib bo'lmaydi, yangisini yaratish kerak", "hint": "Entity mutable — shunday ishlatish ko'zda tutilgan." }
+        { "id": "d", "text": "Managed entity'ni o'zgartirib bo'lmaydi — yangisini yaratib, `save()` bilan saqlash kerak", "hint": "Entity mutable — shunday ishlatish ko'zda tutilgan." }
       ],
-      "explanation": "Persistence context — \"unit of work\": entity holatlari (transient, managed, detached, removed). Tranzaksiyasiz o'qilgan entity detached — o'zgarish yozilmaydi. Tuzoq: `@Transactional` metod ichida `setX()` chaqirib \"tasodifan\" DB'ni o'zgartirish — read-only bo'lsa `readOnly=true` qo'ying.",
+      "explanation": "`save()` faqat yangi (transient) entity uchun zarur. Persistence context — \"unit of work\": entity holatlari (transient, managed, detached, removed). Tranzaksiyasiz o'qilgan entity detached — o'zgarish yozilmaydi. Tuzoq: `@Transactional` metod ichida `setX()` chaqirib \"tasodifan\" DB'ni o'zgartirish — read-only bo'lsa `readOnly=true` qo'ying.",
       "reviewed": false
     },
     {
@@ -99,12 +99,12 @@
       "kind": "concept",
       "prompt": "Tranzaksiya propagation `REQUIRED` va `REQUIRES_NEW` qanday farqlanadi va `REQUIRES_NEW` qayerda xavfli?",
       "options": [
-        { "id": "a", "text": "`REQUIRED` — mavjud tranzaksiyaga qo'shiladi (yo'q bo'lsa yangi); `REQUIRES_NEW` — tashqini to'xtatib (suspend) mustaqil yangi tranzaksiya ochadi, u alohida commit/rollback bo'ladi. Xavf: ikkinchi DB ulanish (pool tugashi, deadlock), tashqi rollback ichkini qaytarmaydi (audit log qoladi — ba'zan aynan shu kerak)", "correct": true },
+        { "id": "a", "text": "`REQUIRED` — mavjud tranzaksiyaga qo'shiladi; `REQUIRES_NEW` — tashqini to'xtatib, mustaqil yangisini ochadi", "correct": true },
         { "id": "b", "text": "Bir xil, faqat nomi boshqa", "hint": "Ichki xato tashqiga ta'siri butunlay farq qiladi." },
         { "id": "c", "text": "`REQUIRES_NEW` tezroq", "hint": "Qo'shimcha ulanish va commit — sekinroq." },
-        { "id": "d", "text": "`REQUIRED` har doim yangi tranzaksiya ochadi", "hint": "Mavjud bo'lsa qo'shiladi — bu uning asosiy xususiyati." }
+        { "id": "d", "text": "`REQUIRED` har doim, mavjud tranzaksiya bo'lsa ham, yangi va mutlaqo mustaqil tranzaksiyani alohida ulanishda ochadi", "hint": "Mavjud bo'lsa qo'shiladi — bu uning asosiy xususiyati." }
       ],
-      "explanation": "Boshqalar: `SUPPORTS`, `MANDATORY`, `NOT_SUPPORTED`, `NEVER`, `NESTED` (savepoint, faqat JDBC). `REQUIRED` ichida ichki metod `RuntimeException` tashlab, tashqi ushlab olsa — tranzaksiya baribir rollback-only belgilangan: commit'da `UnexpectedRollbackException`. Bu tez-tez chalg'itadigan tuzoq.",
+      "explanation": "Xavf: ikkinchi DB ulanishi (pool tugashi, deadlock); tashqi rollback ichki tranzaksiyani qaytarmaydi. Boshqalar: `SUPPORTS`, `MANDATORY`, `NOT_SUPPORTED`, `NEVER`, `NESTED` (savepoint, faqat JDBC). `REQUIRED` ichida ichki metod `RuntimeException` tashlab, tashqi ushlab olsa — tranzaksiya baribir rollback-only belgilangan: commit'da `UnexpectedRollbackException`. Bu tez-tez chalg'itadigan tuzoq.",
       "reviewed": false
     },
     {
@@ -114,12 +114,12 @@
       "kind": "concept",
       "prompt": "Hibernate'da birinchi va ikkinchi darajali cache qanday farqlanadi?",
       "options": [
-        { "id": "a", "text": "L1 — persistence context (sessiya/tranzaksiya) ichida, doim yoqilgan, bir xil ID'ni ikki marta yuklamaydi; L2 — `SessionFactory` darajasida, sessiyalar orasida (Ehcache, Infinispan, Caffeine), aniq yoqiladi, entity bo'yicha `@Cacheable`; invalidatsiya va klaster muammolari bor", "correct": true },
+        { "id": "a", "text": "L1 — sessiya ichida, doim yoqiq; L2 — `SessionFactory` darajasida, sessiyalar orasida, aniq yoqiladi", "correct": true },
         { "id": "b", "text": "Bir xil narsa, ikki nom", "hint": "Biri sessiya ichida, ikkinchisi butun ilova." },
         { "id": "c", "text": "L2 default yoqilgan", "hint": "Default o'chirilgan — ongli qaror talab qiladi." },
-        { "id": "d", "text": "L1 cache'ni o'chirish mumkin", "hint": "L1 — JPA mexanizmining qismi, o'chirilmaydi (`clear()` bilan tozalash mumkin)." }
+        { "id": "d", "text": "L1 cache'ni sozlamada o'chirib qo'yish mumkin va katta loyihalarda shunday qilish rasman tavsiya etiladi", "hint": "L1 — JPA mexanizmining qismi, o'chirilmaydi (`clear()` bilan tozalash mumkin)." }
       ],
-      "explanation": "L2 foydali: kam o'zgaradigan reference ma'lumot (mamlakatlar, kategoriyalar). Xavf: boshqa ilova DB'ni to'g'ridan-to'g'ri o'zgartirsa — eskirgan ma'lumot; klasterda cache sinxronizatsiyasi. Query cache — alohida, kamdan-kam foyda beradi. Ko'pincha ilova darajasidagi cache (Spring Cache + Redis) soddaroq.",
+      "explanation": "L2 provayderlari: Ehcache, Infinispan, Caffeine; `@Cacheable` bilan yoqiladi; invalidatsiya va klaster muammolari bor. L2 foydali: kam o'zgaradigan reference ma'lumot (mamlakatlar, kategoriyalar). Xavf: boshqa ilova DB'ni to'g'ridan-to'g'ri o'zgartirsa — eskirgan ma'lumot; klasterda cache sinxronizatsiyasi. Query cache — alohida, kamdan-kam foyda beradi. Ko'pincha ilova darajasidagi cache (Spring Cache + Redis) soddaroq.",
       "reviewed": false
     },
     {

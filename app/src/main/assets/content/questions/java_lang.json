@@ -8,12 +8,12 @@
       "kind": "concept",
       "prompt": "Java'da primitiv va reference tiplar qanday farqlanadi?",
       "options": [
-        { "id": "a", "text": "Primitiv (`int`, `boolean`, `double`...) qiymatni o'zida saqlaydi va null bo'lolmaydi; reference tiplar ob'ektga havola saqlaydi, null bo'lishi mumkin va heap'da yashaydi", "correct": true },
-        { "id": "b", "text": "Primitivlar heap'da, ob'ektlar stack'da saqlanadi", "hint": "Teskari: lokal primitivlar stack'da, ob'ektlar heap'da." },
+        { "id": "a", "text": "Primitiv qiymatni o'zida saqlaydi va null bo'lolmaydi; reference ob'ektga havola saqlaydi", "correct": true },
+        { "id": "b", "text": "Primitivlar heap'da, ob'ektlar esa stack'da saqlanadi va metod tugashi bilan avtomatik o'chib ketadi", "hint": "Teskari: lokal primitivlar stack'da, ob'ektlar heap'da." },
         { "id": "c", "text": "Farqi yo'q, `int` ham ob'ekt", "hint": "`int.toString()` yozib ko'ring — kompilyatsiya bo'lmaydi; ob'ekt — `Integer`." },
         { "id": "d", "text": "Reference tiplar null bo'lolmaydi", "hint": "`String s = null;` — mumkin, va NPE manbai." }
       ],
-      "explanation": "8 primitiv: `byte short int long float double char boolean`. Har biriga wrapper (`Integer`, `Double`...) — kolleksiyalarda kerak (`List<Integer>`). Autoboxing avtomatik o'giradi, lekin `Integer == Integer` havolani solishtiradi — 127 dan katta qiymatlarda tuzoq.",
+      "explanation": "Reference ob'ektlar heap'da yashaydi va null bo'lishi mumkin. 8 primitiv: `byte short int long float double char boolean`. Har biriga wrapper (`Integer`, `Double`...) — kolleksiyalarda kerak (`List<Integer>`). Autoboxing avtomatik o'giradi, lekin `Integer == Integer` havolani solishtiradi — 127 dan katta qiymatlarda tuzoq.",
       "reviewed": false
     },
     {
@@ -23,9 +23,9 @@
       "kind": "concept",
       "prompt": "`equals()` va `==` orasidagi farq nimada?",
       "options": [
-        { "id": "a", "text": "`==` reference tiplar uchun havolalarni (bir xil ob'ektmi) solishtiradi; `equals()` mantiqiy tenglikni tekshiradi (klass qanday aniqlagan bo'lsa)", "correct": true },
+        { "id": "a", "text": "`==` havolalarni (bir ob'ektmi) solishtiradi; `equals()` — klass aniqlagan mantiqiy tenglik", "correct": true },
         { "id": "b", "text": "Ikkalasi bir xil", "hint": "`new String(\"a\") == new String(\"a\")` nima beradi?" },
-        { "id": "c", "text": "`==` faqat primitivlar uchun ishlaydi", "hint": "Ob'ektlar uchun ham ishlaydi, lekin havolani solishtiradi." },
+        { "id": "c", "text": "`==` faqat primitivlar uchun ishlaydi, ob'ektlarga qo'llansa esa har doim kompilyatsiya xatosi beradi", "hint": "Ob'ektlar uchun ham ishlaydi, lekin havolani solishtiradi." },
         { "id": "d", "text": "`equals()` tezroq", "hint": "Tezlik emas, semantika farq qiladi." }
       ],
       "explanation": "`Object.equals()` default `==` bilan bir xil; `String`, `Integer`, record'lar uni override qiladi. Qoida: ob'ektlarni `equals()` bilan solishtiring (yoki `Objects.equals(a, b)` — null-safe). String literal'lar pool'da bo'lgani uchun `\"a\" == \"a\"` tasodifan true — bunga tayanmang.",
@@ -38,12 +38,12 @@
       "kind": "concept",
       "prompt": "`equals()` override qilinsa, nima uchun `hashCode()` ham override qilinishi kerak?",
       "options": [
-        { "id": "a", "text": "Kontrakt: teng ob'ektlar bir xil hashCode'ga ega bo'lishi shart; aks holda `HashMap`/`HashSet` teng ob'ektlarni turli bucket'ga qo'yib, topolmaydi", "correct": true },
+        { "id": "a", "text": "Teng ob'ektlar bir xil hashCode'ga ega bo'lishi shart — aks holda `HashMap` ularni topolmaydi", "correct": true },
         { "id": "b", "text": "Kompilyator talab qiladi", "hint": "Kompilyator ogohlantirmaydi — IDE/linter ogohlantiradi." },
-        { "id": "c", "text": "`toString()` ishlashi uchun", "hint": "`toString` mustaqil." },
+        { "id": "c", "text": "`toString()` va loglash to'g'ri ishlashi uchun, chunki standart `toString()` hashCode qiymatidan foydalanadi", "hint": "`toString` mustaqil." },
         { "id": "d", "text": "Shart emas", "hint": "`HashSet`ga ikkita \"teng\" ob'ekt qo'yib `size()` tekshiring." }
       ],
-      "explanation": "`HashMap` avval `hashCode()` bo'yicha bucket topadi, keyin `equals()` bilan tekshiradi. hashCode farq qilsa, `equals()` hech chaqirilmaydi. Teskarisi shart emas: turli ob'ektlar bir xil hash bo'lishi mumkin (kolliziya). `Objects.hash(...)` yoki record ishlatish — xavfsiz yo'l.",
+      "explanation": "Aks holda teng ob'ektlar turli bucket'ga tushib qoladi. `HashMap` avval `hashCode()` bo'yicha bucket topadi, keyin `equals()` bilan tekshiradi. hashCode farq qilsa, `equals()` hech chaqirilmaydi. Teskarisi shart emas: turli ob'ektlar bir xil hash bo'lishi mumkin (kolliziya). `Objects.hash(...)` yoki record ishlatish — xavfsiz yo'l.",
       "reviewed": false
     },
     {
@@ -69,12 +69,12 @@
       "kind": "concept",
       "prompt": "`final` kalit so'zi o'zgaruvchi, metod va klassga qo'llanganda nimani anglatadi?",
       "options": [
-        { "id": "a", "text": "O'zgaruvchi — bir marta qiymat beriladi (havola o'zgarmaydi, ob'ekt ichi o'zgarishi mumkin); metod — override qilib bo'lmaydi; klass — meros olib bo'lmaydi", "correct": true },
-        { "id": "b", "text": "Ob'ektni to'liq immutable qiladi", "hint": "`final List<String> l` — `l.add()` ishlaydi; faqat `l = ...` taqiqlanadi." },
+        { "id": "a", "text": "O'zgaruvchi — bir marta tayinlanadi; metod — override qilinmaydi; klass — meros olinmaydi", "correct": true },
+        { "id": "b", "text": "Ob'ektni to'liq immutable qiladi: `final` havola orqali uning ichidagi maydonlarni ham o'zgartirib bo'lmaydi", "hint": "`final List<String> l` — `l.add()` ishlaydi; faqat `l = ...` taqiqlanadi." },
         { "id": "c", "text": "Faqat konstantalar uchun", "hint": "`static final` konstanta; `final` o'zi kengroq." },
         { "id": "d", "text": "Garbage collector'dan himoya qiladi", "hint": "GC bilan aloqasi yo'q." }
       ],
-      "explanation": "`final` parametr va lokal o'zgaruvchilar lambda'da ishlatish uchun kerak (effectively final). `final` klass — `String`, `Integer`. Dizayn maslahati: kengaytirish uchun mo'ljallanmagan klassni `final` qiling, maydonlarni default `final`.",
+      "explanation": "`final` o'zgaruvchida havola o'zgarmaydi, ob'ektning ichi esa o'zgarishi mumkin. `final` parametr va lokal o'zgaruvchilar lambda'da ishlatish uchun kerak (effectively final). `final` klass — `String`, `Integer`. Dizayn maslahati: kengaytirish uchun mo'ljallanmagan klassni `final` qiling, maydonlarni default `final`.",
       "reviewed": false
     },
     {
@@ -84,12 +84,12 @@
       "kind": "concept",
       "prompt": "Checked va unchecked exception qanday farqlanadi?",
       "options": [
-        { "id": "a", "text": "Checked (`Exception` avlodi, `RuntimeException`dan tashqari) — kompilyator ushlash yoki `throws` e'lon qilishni talab qiladi; unchecked (`RuntimeException`, `Error`) — talab qilmaydi", "correct": true },
-        { "id": "b", "text": "Checked runtime'da, unchecked kompilyatsiyada paydo bo'ladi", "hint": "Ikkalasi ham runtime'da tashlanadi; farq kompilyator tekshiruvida." },
+        { "id": "a", "text": "Checked — kompilyator ushlash yoki `throws` ni talab qiladi; unchecked (`RuntimeException`) — talab qilmaydi", "correct": true },
+        { "id": "b", "text": "Checked exception faqat runtime'da, unchecked esa faqat kompilyatsiya paytida paydo bo'ladi va dasturni ishga tushirmaydi", "hint": "Ikkalasi ham runtime'da tashlanadi; farq kompilyator tekshiruvida." },
         { "id": "c", "text": "Unchecked exception'ni ushlab bo'lmaydi", "hint": "`catch (NullPointerException e)` — mumkin." },
         { "id": "d", "text": "Farqi yo'q", "hint": "`IOException`ni `throws`siz tashlab ko'ring — kompilyatsiya xatosi." }
       ],
-      "explanation": "Checked: `IOException`, `SQLException` — tiklanishi mumkin bo'lgan tashqi holatlar. Unchecked: `NullPointerException`, `IllegalArgumentException` — dasturchi xatosi. `Error` (`OutOfMemoryError`) — ushlamaslik kerak. Zamonaviy amaliyot checked'dan qochadi (Kotlin'da umuman yo'q).",
+      "explanation": "Checked — `RuntimeException`dan boshqa `Exception` avlodlari; `Error` ham unchecked. Checked: `IOException`, `SQLException` — tiklanishi mumkin bo'lgan tashqi holatlar. Unchecked: `NullPointerException`, `IllegalArgumentException` — dasturchi xatosi. `Error` (`OutOfMemoryError`) — ushlamaslik kerak. Zamonaviy amaliyot checked'dan qochadi (Kotlin'da umuman yo'q).",
       "reviewed": false
     },
     {
@@ -115,12 +115,12 @@
       "kind": "concept",
       "prompt": "Generics'da `List<? extends Number>` va `List<? super Integer>` qanday farqlanadi?",
       "options": [
-        { "id": "a", "text": "`? extends Number` — Number yoki avlodlari ro'yxati; o'qish mumkin (Number sifatida), qo'shish mumkin emas. `? super Integer` — Integer yoki ajdodlari; Integer qo'shish mumkin, o'qishda faqat Object. PECS: Producer Extends, Consumer Super", "correct": true },
+        { "id": "a", "text": "`? extends Number` — o'qish mumkin, qo'shish yo'q; `? super Integer` — Integer qo'shish mumkin (PECS)", "correct": true },
         { "id": "b", "text": "Ikkalasi bir xil", "hint": "`list.add(1)` birida kompilyatsiya bo'ladi, ikkinchisida yo'q." },
-        { "id": "c", "text": "`extends` qo'shishga, `super` o'qishga ruxsat beradi", "hint": "Teskari." },
+        { "id": "c", "text": "`extends` ro'yxatga element qo'shishga, `super` esa faqat o'qishga ruxsat beradi, ya'ni teskari qoida", "hint": "Teskari." },
         { "id": "d", "text": "Wildcard faqat metod qaytarish turida ishlatiladi", "hint": "Asosan parametrlarda ishlatiladi." }
       ],
-      "explanation": "`List<Integer>` `List<Number>`ning avlodi emas (invariance) — shu sabab wildcard kerak. `Collections.copy(List<? super T> dest, List<? extends T> src)` — PECS namunasi. Type erasure: runtime'da `List<String>` va `List<Integer>` bir xil klass.",
+      "explanation": "PECS: Producer Extends, Consumer Super; `? super` dan o'qishda faqat Object olinadi. `List<Integer>` `List<Number>`ning avlodi emas (invariance) — shu sabab wildcard kerak. `Collections.copy(List<? super T> dest, List<? extends T> src)` — PECS namunasi. Type erasure: runtime'da `List<String>` va `List<Integer>` bir xil klass.",
       "reviewed": false
     },
     {
@@ -130,12 +130,12 @@
       "kind": "concept",
       "prompt": "Java record nima va u nimani avtomatik beradi?",
       "options": [
-        { "id": "a", "text": "Immutable ma'lumot tashuvchi klass: `record Point(int x, int y)` — private final maydonlar, konstruktor, accessor'lar (`x()`), `equals`/`hashCode`/`toString` avtomatik; meros ololmaydi, lekin interfeys implement qiladi", "correct": true },
+        { "id": "a", "text": "Immutable ma'lumot klassi: final maydonlar, konstruktor, accessor'lar, `equals`/`hashCode`/`toString`", "correct": true },
         { "id": "b", "text": "DB jadval qatori uchun maxsus tur", "hint": "DB bilan aloqasi yo'q — til xususiyati." },
-        { "id": "c", "text": "Mutable klass, setter'lar bilan", "hint": "Record maydonlari final — setter yo'q." },
+        { "id": "c", "text": "Setter'lari avtomatik generatsiya qilinadigan, maydonlari o'zgaruvchan bo'lgan mutable klass turi, xuddi JavaBean kabi", "hint": "Record maydonlari final — setter yo'q." },
         { "id": "d", "text": "Interface'ning yangi nomi", "hint": "Record — konkret klass." }
       ],
-      "explanation": "Java 16+. Compact konstruktor validatsiya uchun: `record Range(int lo, int hi) { Range { if (lo > hi) throw ...; } }`. Lombok `@Value`ning til darajasidagi o'rnini bosadi. Pattern matching bilan (`if (o instanceof Point(int x, int y))`) deconstruction.",
+      "explanation": "Record meros ololmaydi, lekin interfeys implement qila oladi. Java 16+. Compact konstruktor validatsiya uchun: `record Range(int lo, int hi) { Range { if (lo > hi) throw ...; } }`. Lombok `@Value`ning til darajasidagi o'rnini bosadi. Pattern matching bilan (`if (o instanceof Point(int x, int y))`) deconstruction.",
       "reviewed": false
     },
     {
@@ -145,8 +145,8 @@
       "kind": "concept",
       "prompt": "Sealed class/interface nima uchun kerak?",
       "options": [
-        { "id": "a", "text": "Qaysi klasslar meros olishi mumkinligini cheklaydi (`permits`); `switch` pattern matching bilan kompilyator barcha variantlar qamralganini tekshiradi (exhaustiveness) — algebraik ma'lumot turlari", "correct": true },
-        { "id": "b", "text": "Klassni serializatsiyadan himoya qiladi", "hint": "Serializatsiya bilan aloqasi yo'q." },
+        { "id": "a", "text": "Qaysi klasslar meros olishini cheklaydi (`permits`); `switch` barcha variantlar qamralganini tekshiradi", "correct": true },
+        { "id": "b", "text": "Klassni serializatsiyadan va reflection orqali ichki maydonlarga murojaat qilishdan to'liq himoya qiladi", "hint": "Serializatsiya bilan aloqasi yo'q." },
         { "id": "c", "text": "`final` bilan bir xil", "hint": "`final` — hech kim meros olmaydi; sealed — faqat ro'yxatdagilar." },
         { "id": "d", "text": "Faqat enum uchun ishlaydi", "hint": "Klass va interfeyslar uchun; enum allaqachon \"yopiq\"." }
       ],

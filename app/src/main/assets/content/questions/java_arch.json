@@ -8,10 +8,10 @@
       "kind": "concept",
       "prompt": "JVM, JRE va JDK qanday farqlanadi?",
       "options": [
-        { "id": "a", "text": "JVM — bytecode'ni bajaradigan virtual mashina; JRE — JVM + standart kutubxonalar (ishga tushirish uchun); JDK — JRE + kompilyator (`javac`) va vositalar (ishlab chiqish uchun)", "correct": true },
+        { "id": "a", "text": "JVM — bytecode bajaradi; JRE — JVM + kutubxonalar; JDK — JRE + `javac` va vositalar", "correct": true },
         { "id": "b", "text": "Uchalasi bir xil", "hint": "Biri bajaradi, biri yugurtiradi, biri yozishga yordam beradi." },
         { "id": "c", "text": "JDK faqat Windows uchun", "hint": "Hamma platformada bor." },
-        { "id": "d", "text": "JVM Java kodini to'g'ridan-to'g'ri o'qiydi", "hint": "JVM `.class` bytecode o'qiydi; `javac` manbani bytecode'ga aylantiradi." }
+        { "id": "d", "text": "JVM Java manba kodini to'g'ridan-to'g'ri o'qib bajaradi, oldindan hech qanday kompilyatsiyasiz", "hint": "JVM `.class` bytecode o'qiydi; `javac` manbani bytecode'ga aylantiradi." }
       ],
       "explanation": "\"Write once, run anywhere\": bytecode platformadan mustaqil, JVM har platforma uchun alohida. Kotlin, Scala, Groovy ham JVM bytecode'ga kompilyatsiya bo'ladi. Java 11+ da alohida JRE tarqatilmaydi — `jlink` bilan minimal runtime yig'iladi.",
       "reviewed": false
@@ -23,12 +23,12 @@
       "kind": "concept",
       "prompt": "Garbage collector (GC) nima qiladi?",
       "options": [
-        { "id": "a", "text": "Hech qanday havola qolmagan (erishib bo'lmaydigan) ob'ektlarni avtomatik aniqlab, heap xotirasini bo'shatadi — dasturchi `free` chaqirmaydi", "correct": true },
+        { "id": "a", "text": "Havolasi qolmagan ob'ektlarni topib, heap xotirasini avtomatik bo'shatadi", "correct": true },
         { "id": "b", "text": "Ishlatilmayotgan o'zgaruvchilarni koddan o'chiradi", "hint": "Kodga tegmaydi — runtime xotira." },
         { "id": "c", "text": "Diskdagi vaqtinchalik fayllarni tozalaydi", "hint": "Faqat heap." },
-        { "id": "d", "text": "Ob'ekt scope'dan chiqishi bilan darhol o'chiradi", "hint": "Darhol emas — GC o'z vaqtida, davrlarda ishlaydi." }
+        { "id": "d", "text": "Ob'ekt o'zgaruvchi scope'idan chiqishi bilan uni darhol va deterministik ravishda o'chiradi", "hint": "Darhol emas — GC o'z vaqtida, davrlarda ishlaydi." }
       ],
-      "explanation": "Erishuvchanlik GC root'lardan (stack, static maydonlar) boshlab tekshiriladi. GC bo'lsa ham memory leak mumkin: static `Map`ga qo'shib unutish, listener'ni olib tashlamaslik, `ThreadLocal`. `System.gc()` — tavsiya, kafolat emas; chaqirmaslik kerak.",
+      "explanation": "Dasturchi `free` chaqirmaydi. Erishuvchanlik GC root'lardan (stack, static maydonlar) boshlab tekshiriladi. GC bo'lsa ham memory leak mumkin: static `Map`ga qo'shib unutish, listener'ni olib tashlamaslik, `ThreadLocal`. `System.gc()` — tavsiya, kafolat emas; chaqirmaslik kerak.",
       "reviewed": false
     },
     {
@@ -38,12 +38,12 @@
       "kind": "concept",
       "prompt": "JVM heap'i generatsiyalarga qanday bo'linadi va nima uchun?",
       "options": [
-        { "id": "a", "text": "Young (Eden + Survivor) va Old (Tenured): ko'p ob'ekt qisqa umr ko'radi (\"weak generational hypothesis\") — Young tez va tez-tez tozalanadi (minor GC), uzoq yashaganlar Old'ga ko'chadi, u kamroq tozalanadi (major/full GC)", "correct": true },
+        { "id": "a", "text": "Young (Eden + Survivor) va Old: ko'p ob'ekt qisqa yashaydi, Young tez-tez va arzon tozalanadi", "correct": true },
         { "id": "b", "text": "Stack va heap", "hint": "Bu umumiy bo'linish; savol heap ichidagi tuzilma haqida." },
-        { "id": "c", "text": "Har thread uchun alohida heap", "hint": "Heap umumiy; TLAB — faqat allokatsiya buferi." },
+        { "id": "c", "text": "Har bir thread uchun alohida heap ajratiladi, shunda thread'lar bir-birining ob'ektlarini ko'rmaydi", "hint": "Heap umumiy; TLAB — faqat allokatsiya buferi." },
         { "id": "d", "text": "Bo'linmaydi, bitta blok", "hint": "Zamonaviy GC'lar (G1, ZGC) ham generatsion g'oyani ishlatadi (ZGC 21+ da generational)." }
       ],
-      "explanation": "Minor GC — millisekundlar, Full GC — \"stop the world\" sekundlargacha (katta heap'da). Metaspace — klass metadata (Java 8+, PermGen o'rniga). `-Xmx` — max heap; konteynerda JVM konteyner limitini ko'radi (`MaxRAMPercentage`).",
+      "explanation": "Uzoq yashaganlar Old'ga ko'chadi va kamroq tozalanadi (major/full GC). Minor GC — millisekundlar, Full GC — \"stop the world\" sekundlargacha (katta heap'da). Metaspace — klass metadata (Java 8+, PermGen o'rniga). `-Xmx` — max heap; konteynerda JVM konteyner limitini ko'radi (`MaxRAMPercentage`).",
       "reviewed": false
     },
     {
@@ -53,12 +53,12 @@
       "kind": "concept",
       "prompt": "JIT kompilyator nima va u ilova performansiga qanday ta'sir qiladi?",
       "options": [
-        { "id": "a", "text": "JVM bytecode'ni avval interpretatsiya qiladi, \"issiq\" (ko'p chaqirilgan) kodni runtime'da mashina kodiga kompilyatsiya qiladi va real profil asosida optimallaydi (inlining, escape analysis) — shu sabab warm-up'dan keyin tezlashadi", "correct": true },
-        { "id": "b", "text": "Manba kodni bytecode'ga aylantiradi", "hint": "Bu `javac` (AOT) — JIT runtime'da ishlaydi." },
+        { "id": "a", "text": "Issiq kodni runtime'da mashina kodiga kompilyatsiya qilib, real profil bo'yicha optimallaydi", "correct": true },
+        { "id": "b", "text": "Java manba kodini ilova ishga tushishidan oldin bytecode'ga aylantiradigan asosiy kompilyator (javac)", "hint": "Bu `javac` (AOT) — JIT runtime'da ishlaydi." },
         { "id": "c", "text": "Ilovani sekinlashtiradi", "hint": "Dastlab biroz yuk, keyin sezilarli tezlashish." },
         { "id": "d", "text": "Faqat GUI ilovalarda ishlaydi", "hint": "Har qanday JVM ilovasida." }
       ],
-      "explanation": "C1 (tez, yengil) va C2 (sekin, agressiv) tiered compilation. Oqibat: benchmark'da warm-up kerak (JMH), serverless'da cold start muammosi (CDS, CRaC, native image yechimlari). Native image JIT'dan voz kechadi — tez start, lekin peak performance pastroq.",
+      "explanation": "Shu sababli ilova warm-up'dan keyin tezlashadi (inlining, escape analysis). C1 (tez, yengil) va C2 (sekin, agressiv) tiered compilation. Oqibat: benchmark'da warm-up kerak (JMH), serverless'da cold start muammosi (CDS, CRaC, native image yechimlari). Native image JIT'dan voz kechadi — tez start, lekin peak performance pastroq.",
       "reviewed": false
     },
     {
@@ -68,12 +68,12 @@
       "kind": "concept",
       "prompt": "Production'da `OutOfMemoryError: Java heap space` — qanday tekshiriladi?",
       "options": [
-        { "id": "a", "text": "`-XX:+HeapDumpOnOutOfMemoryError` bilan heap dump olish, Eclipse MAT/VisualVM'da dominator tree — qaysi ob'ektlar ko'p joy oladi va kim ularni ushlab turibdi (GC root yo'li); ko'pincha sizish: static kolleksiya, cache'siz TTL, yopilmagan resurslar, `ThreadLocal`", "correct": true },
-        { "id": "b", "text": "`-Xmx`ni oshirish — yetarli", "hint": "Sizish bo'lsa, faqat kechiktiradi; sabab topilmagan." },
+        { "id": "a", "text": "Heap dump olib (`-XX:+HeapDumpOnOutOfMemoryError`), MAT'da kim joy olib, kim ushlab turganini topish", "correct": true },
+        { "id": "b", "text": "`-Xmx` ni ikki baravar oshirish yetarli — xotira ko'paysa, bu xato boshqa hech qachon takrorlanmaydi", "hint": "Sizish bo'lsa, faqat kechiktiradi; sabab topilmagan." },
         { "id": "c", "text": "Qayta ishga tushirish va kuzatish", "hint": "Qaytadi; dump — yagona dalil." },
         { "id": "d", "text": "GC'ni o'zgartirish", "hint": "GC turi sizishni to'xtatmaydi — erishiladigan ob'ektni GC o'chirolmaydi." }
       ],
-      "explanation": "Sizishdan farqli: haqiqiy ehtiyoj katta (katta so'rov natijasi xotiraga to'liq yuklandi — paging/streaming kerak). Doimiy kuzatuv: heap after GC grafigi o'sib boraversa — sizish. JFR allokatsiya profili — qayerda ko'p ob'ekt yaratiladi. Konteynerda OOMKilled — JVM'dan tashqari xotira (native, thread stack) ham hisobga olinadi.",
+      "explanation": "Ko'pincha sabab sizish: static kolleksiya, TTL'siz kesh, yopilmagan resurslar, `ThreadLocal`. Sizishdan farqli: haqiqiy ehtiyoj katta (katta so'rov natijasi xotiraga to'liq yuklandi — paging/streaming kerak). Doimiy kuzatuv: heap after GC grafigi o'sib boraversa — sizish. JFR allokatsiya profili — qayerda ko'p ob'ekt yaratiladi. Konteynerda OOMKilled — JVM'dan tashqari xotira (native, thread stack) ham hisobga olinadi.",
       "reviewed": false
     },
     {
@@ -98,12 +98,12 @@
       "kind": "concept",
       "prompt": "Java 21 ilovasi uchun GC tanlovi (G1, ZGC, Parallel) qanday qilinadi?",
       "options": [
-        { "id": "a", "text": "G1 (default) — muvozanat, ko'p servis uchun yetarli; ZGC (generational, 21+) — katta heap va past pauza (< 1 ms) talab qilinganda, biroz ko'proq CPU/xotira; Parallel — throughput muhim, pauza muhim emas (batch). Tanlov SLO (p99 latency) va o'lchov asosida, taxmin emas", "correct": true },
+        { "id": "a", "text": "G1 — default va muvozanatli; ZGC — katta heap va <1 ms pauza; Parallel — throughput (batch)", "correct": true },
         { "id": "b", "text": "Doim ZGC — eng yangi", "hint": "Kichik heap va CPU cheklangan konteynerda G1 samaraliroq bo'lishi mumkin." },
-        { "id": "c", "text": "GC tanlovi ahamiyatsiz", "hint": "p99 latency 10x farq qilishi mumkin." },
+        { "id": "c", "text": "GC tanlovi ahamiyatsiz: zamonaviy JVM yuklamaga qarab GC'ni o'zi avtomatik almashtirib turadi", "hint": "p99 latency 10x farq qilishi mumkin." },
         { "id": "d", "text": "Serial GC — production default", "hint": "Serial — kichik heap/bir yadro uchun; serverda default G1." }
       ],
-      "explanation": "Sozlash tartibi: avval o'lchov (GC loglari `-Xlog:gc*`, JFR), keyin heap hajmi (`-Xmx`, konteynerda `MaxRAMPercentage=75`), keyin GC tanlovi, eng oxirida nozik flag'lar (ko'pincha kerak emas). Allokatsiya tezligini kamaytirish (kod darajasi) — har GC'ga yordam beradi.",
+      "explanation": "Tanlov SLO (p99 latency) va o'lchov asosida qilinadi, taxmin bilan emas. Sozlash tartibi: avval o'lchov (GC loglari `-Xlog:gc*`, JFR), keyin heap hajmi (`-Xmx`, konteynerda `MaxRAMPercentage=75`), keyin GC tanlovi, eng oxirida nozik flag'lar (ko'pincha kerak emas). Allokatsiya tezligini kamaytirish (kod darajasi) — har GC'ga yordam beradi.",
       "reviewed": false
     },
     {
