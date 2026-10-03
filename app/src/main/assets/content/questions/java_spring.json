@@ -8,12 +8,12 @@
       "kind": "concept",
       "prompt": "Spring'da bean nima?",
       "options": [
-        { "id": "a", "text": "Spring IoC konteyneri yaratadigan, sozlaydigan va hayot siklini boshqaradigan ob'ekt; boshqa bean'larga bog'liqlik sifatida uzatiladi", "correct": true },
-        { "id": "b", "text": "Getter/setter'li oddiy Java klassi (POJO)", "hint": "Bu JavaBean konvensiyasi; Spring bean — konteyner boshqaradigan ob'ekt." },
+        { "id": "a", "text": "Spring IoC konteyneri yaratadigan, sozlaydigan va hayot siklini boshqaradigan ob'ekt", "correct": true },
+        { "id": "b", "text": "Getter va setter'lari bo'lgan har qanday oddiy Java klassi (POJO), konteynerdan qat'i nazar", "hint": "Bu JavaBean konvensiyasi; Spring bean — konteyner boshqaradigan ob'ekt." },
         { "id": "c", "text": "DB jadvali", "hint": "DB bilan aloqasi yo'q." },
         { "id": "d", "text": "Konfiguratsiya fayli", "hint": "Konfiguratsiya bean'larni e'lon qiladi, o'zi bean emas." }
       ],
-      "explanation": "Siz `new UserService(repo)` yozmaysiz — konteyner klassni topadi (`@Component` skan yoki `@Bean` metod), bog'liqliklarini topib yaratadi va kerak joyga inject qiladi. Bu Inversion of Control: ob'ekt yaratish nazorati sizdan konteynerga o'tadi.",
+      "explanation": "Bean boshqa bean'larga bog'liqlik sifatida uzatiladi. Siz `new UserService(repo)` yozmaysiz — konteyner klassni topadi (`@Component` skan yoki `@Bean` metod), bog'liqliklarini topib yaratadi va kerak joyga inject qiladi. Bu Inversion of Control: ob'ekt yaratish nazorati sizdan konteynerga o'tadi.",
       "reviewed": false
     },
     {
@@ -23,12 +23,12 @@
       "kind": "concept",
       "prompt": "`@Component`, `@Service`, `@Repository`, `@Controller` annotatsiyalari qanday farqlanadi?",
       "options": [
-        { "id": "a", "text": "Hammasi klassni bean sifatida ro'yxatdan o'tkazadi; `@Service`/`@Repository`/`@Controller` — `@Component`ning semantik ixtisoslashuvi: qatlamni bildiradi, `@Repository` exception tarjimasini qo'shadi, `@Controller` MVC uchun", "correct": true },
-        { "id": "b", "text": "Faqat `@Component` bean yaratadi, qolganlari — izoh", "hint": "To'rttasi ham bean yaratadi." },
+        { "id": "a", "text": "Hammasi bean ro'yxatdan o'tkazadi; qolganlari `@Component`ning qatlamni bildiruvchi ixtisoslashuvi", "correct": true },
+        { "id": "b", "text": "Faqat `@Component` bean yaratadi, qolgan uchtasi esa hech qanday ta'siri yo'q oddiy hujjat izohi, xolos", "hint": "To'rttasi ham bean yaratadi." },
         { "id": "c", "text": "`@Service` singleton, `@Component` prototype", "hint": "Scope annotatsiya turiga bog'liq emas — default hamma singleton." },
         { "id": "d", "text": "Ularni aralashtirish kompilyatsiya xatosi beradi", "hint": "Texnik jihatdan istalgan klassga istalgani qo'yiladi — faqat ma'no buziladi." }
       ],
-      "explanation": "`@Repository` — `DataAccessException` ierarxiyasiga tarjima (JDBC/JPA xatolari bir xil ko'rinishda). `@RestController` = `@Controller` + `@ResponseBody`. Stereotype annotatsiyalar AOP pointcut'larda ham qulay (\"barcha @Service metodlarini log qil\").",
+      "explanation": "`@Repository` exception tarjimasini qo'shadi, `@Controller` — MVC uchun. `@Repository` — `DataAccessException` ierarxiyasiga tarjima (JDBC/JPA xatolari bir xil ko'rinishda). `@RestController` = `@Controller` + `@ResponseBody`. Stereotype annotatsiyalar AOP pointcut'larda ham qulay (\"barcha @Service metodlarini log qil\").",
       "reviewed": false
     },
     {
@@ -38,9 +38,9 @@
       "kind": "concept",
       "prompt": "`@Autowired` nima qiladi?",
       "options": [
-        { "id": "a", "text": "Konteynerga bog'liqlikni avtomatik topib inject qilishni aytadi — tur bo'yicha (bir nechta nomzod bo'lsa `@Qualifier` yoki `@Primary` kerak)", "correct": true },
+        { "id": "a", "text": "Bog'liqlikni tur bo'yicha topib inject qilishni aytadi; ko'p nomzodda `@Qualifier`/`@Primary`", "correct": true },
         { "id": "b", "text": "Yangi bean yaratadi", "hint": "Yaratmaydi — mavjud bean'ni topib beradi." },
-        { "id": "c", "text": "Bean'ni singleton qiladi", "hint": "Scope bilan aloqasi yo'q." },
+        { "id": "c", "text": "Bean'ni majburan singleton qiladi va uni boshqa scope'ga o'tkazishni butunlay taqiqlab qo'yadi", "hint": "Scope bilan aloqasi yo'q." },
         { "id": "d", "text": "DB ulanishini ochadi", "hint": "DB bilan aloqasi yo'q." }
       ],
       "explanation": "Bitta konstruktorli klassda `@Autowired` yozish shart emas (Spring 4.3+). Nomzod topilmasa — `NoSuchBeanDefinitionException`, ko'p bo'lsa — `NoUniqueBeanDefinitionException`. `List<PaymentHandler>` inject qilsangiz — barcha implementatsiyalar ro'yxat sifatida keladi (plugin pattern).",
@@ -53,12 +53,12 @@
       "kind": "concept",
       "prompt": "Spring Boot oddiy Spring'dan nimasi bilan farq qiladi?",
       "options": [
-        { "id": "a", "text": "Boot — Spring ustidagi qatlam: auto-configuration (classpath'ga qarab bean'larni o'zi sozlaydi), starter bog'liqliklar, embedded server (Tomcat), `application.properties` bilan sozlash, actuator — \"konvensiya konfiguratsiyadan ustun\"", "correct": true },
+        { "id": "a", "text": "Boot — Spring ustidagi qatlam: auto-configuration, starter'lar, embedded server va actuator", "correct": true },
         { "id": "b", "text": "Boot — butunlay boshqa framework", "hint": "Ichida o'sha Spring Core/MVC/Data." },
         { "id": "c", "text": "Boot faqat mikroservislar uchun", "hint": "Har qanday Spring ilovasi uchun qulay." },
-        { "id": "d", "text": "Boot XML konfiguratsiyasini talab qiladi", "hint": "Aksincha — XML'siz, annotatsiya va properties bilan." }
+        { "id": "d", "text": "Boot hamma sozlamani XML konfiguratsiya fayllarida yozishni talab qiladi, annotatsiyalarsiz", "hint": "Aksincha — XML'siz, annotatsiya va properties bilan." }
       ],
-      "explanation": "`spring-boot-starter-web` qo'shdingiz — Tomcat, Jackson, MVC, validatsiya o'zi sozlanadi. `spring.datasource.url` yozdingiz — `DataSource` bean tayyor. Boot 3 — Java 17+, Jakarta EE 9+, native image qo'llovi, Micrometer observability.",
+      "explanation": "Classpath'ga qarab bean'larni o'zi sozlaydi — \"konvensiya konfiguratsiyadan ustun\". `spring-boot-starter-web` qo'shdingiz — Tomcat, Jackson, MVC, validatsiya o'zi sozlanadi. `spring.datasource.url` yozdingiz — `DataSource` bean tayyor. Boot 3 — Java 17+, Jakarta EE 9+, native image qo'llovi, Micrometer observability.",
       "reviewed": false
     },
     {
@@ -68,12 +68,12 @@
       "kind": "concept",
       "prompt": "Bean scope'lari qaysilar va default qaysi?",
       "options": [
-        { "id": "a", "text": "`singleton` (default — konteynerda bitta instansiya), `prototype` (har so'rovda yangi), web uchun `request`, `session`, `application`, `websocket`", "correct": true },
+        { "id": "a", "text": "`singleton` (default — konteynerda bitta), `prototype` (har so'rovda yangi), web scope'lari", "correct": true },
         { "id": "b", "text": "Default `prototype`", "hint": "Default — bitta instansiya; `prototype` aniq ko'rsatiladi." },
         { "id": "c", "text": "Faqat `singleton` bor", "hint": "Boshqalari ham bor, lekin kam ishlatiladi." },
-        { "id": "d", "text": "`singleton` — JVM'da bitta instansiya", "hint": "Konteynerda bitta; ikki konteyner — ikki instansiya. GoF singleton emas." }
+        { "id": "d", "text": "`singleton` — butun JVM jarayonida bitta instansiya, hatto bir nechta Spring konteyneri bo'lsa ham", "hint": "Konteynerda bitta; ikki konteyner — ikki instansiya. GoF singleton emas." }
       ],
-      "explanation": "Singleton bean'da mutable holat saqlash — ko'p oqimli xato manbai (barcha so'rovlar bir ob'ektni ko'radi). Singleton ichiga prototype inject qilinsa, u bir marta yaratiladi — `ObjectProvider<T>` yoki `@Lookup` bilan har safar yangisini oling.",
+      "explanation": "Web scope'lari: `request`, `session`, `application`, `websocket`. Singleton bean'da mutable holat saqlash — ko'p oqimli xato manbai (barcha so'rovlar bir ob'ektni ko'radi). Singleton ichiga prototype inject qilinsa, u bir marta yaratiladi — `ObjectProvider<T>` yoki `@Lookup` bilan har safar yangisini oling.",
       "reviewed": false
     },
     {
@@ -84,10 +84,10 @@
       "prompt": "Quyidagi ikki injection usulidan qaysi afzal va nima uchun?",
       "code": "// A\n@Service\npublic class OrderService {\n    @Autowired\n    private OrderRepository repo;\n}\n\n// B\n@Service\npublic class OrderService {\n    private final OrderRepository repo;\n    public OrderService(OrderRepository repo) { this.repo = repo; }\n}",
       "options": [
-        { "id": "a", "text": "B (constructor injection): bog'liqlik `final` va majburiy, ob'ekt yaratilganda to'liq, testda `new OrderService(mockRepo)` oson, bog'liqliklar imzoda ko'rinadi, circular dependency darhol aniqlanadi", "correct": true },
+        { "id": "a", "text": "B (constructor): bog'liqlik `final` va majburiy, testda `new` bilan oson, sikl darhol ko'rinadi", "correct": true },
         { "id": "b", "text": "A — kamroq kod", "hint": "Qisqa, lekin testda reflection kerak, maydon `final` bo'lolmaydi, bog'liqlik yashirin." },
         { "id": "c", "text": "Farqi yo'q", "hint": "Testlanish va immutability jiddiy farq qiladi." },
-        { "id": "d", "text": "A — Spring rasmiy tavsiyasi", "hint": "Spring hujjati aksincha constructor injection'ni tavsiya qiladi." }
+        { "id": "d", "text": "A (field injection), chunki u Spring'ning rasmiy tavsiyasi va hujjatlardagi asosiy va eng zamonaviy usul", "hint": "Spring hujjati aksincha constructor injection'ni tavsiya qiladi." }
       ],
       "explanation": "Field injection'ning yana bir yomon tomoni: 10 ta bog'liqlik qo'shish oson — SRP buzilishi sezilmaydi. Konstruktorda 10 parametr — darhol ko'zga tashlanadi. Lombok `@RequiredArgsConstructor` — konstruktorni avtomatik yozadi.",
       "reviewed": false
@@ -99,12 +99,12 @@
       "kind": "concept",
       "prompt": "`@Transactional` qanday ishlaydi?",
       "options": [
-        { "id": "a", "text": "Spring bean atrofida proxy yaratadi; metod chaqirilganda proxy tranzaksiya boshlaydi, metod tugasa commit, `RuntimeException`da rollback (checked exception'da default rollback yo'q)", "correct": true },
-        { "id": "b", "text": "Metod ichidagi barcha SQL'ni bitta so'rovga birlashtiradi", "hint": "So'rovlar alohida ketadi, lekin bitta tranzaksiya ichida." },
+        { "id": "a", "text": "Proxy tranzaksiya ochadi, metod tugasa commit, `RuntimeException`da rollback qiladi", "correct": true },
+        { "id": "b", "text": "Metod ichidagi barcha SQL so'rovlarini bazaga yuborishdan oldin bitta so'rovga birlashtiradi", "hint": "So'rovlar alohida ketadi, lekin bitta tranzaksiya ichida." },
         { "id": "c", "text": "Metodni thread-safe qiladi", "hint": "Sinxronizatsiya bilan aloqasi yo'q." },
         { "id": "d", "text": "Har qanday exception'da rollback qiladi", "hint": "Checked exception — default commit! `rollbackFor = Exception.class` kerak." }
       ],
-      "explanation": "Proxy — kalit tushuncha: annotatsiya faqat tashqaridan proxy orqali chaqirilganda ishlaydi. Default propagation `REQUIRED` (mavjud tranzaksiyaga qo'shiladi). `readOnly = true` — Hibernate flush'ni o'chiradi, replica'ga yo'naltirish imkoni.",
+      "explanation": "Checked exception'da default rollback yo'q; tranzaksiya bean proxy'si orqali boshlanadi. Proxy — kalit tushuncha: annotatsiya faqat tashqaridan proxy orqali chaqirilganda ishlaydi. Default propagation `REQUIRED` (mavjud tranzaksiyaga qo'shiladi). `readOnly = true` — Hibernate flush'ni o'chiradi, replica'ga yo'naltirish imkoni.",
       "reviewed": false
     },
     {
@@ -114,12 +114,12 @@
       "kind": "concept",
       "prompt": "Spring'da circular dependency (A → B → A) nima uchun muammo va qanday hal qilinadi?",
       "options": [
-        { "id": "a", "text": "Constructor injection'da konteyner birini yaratish uchun ikkinchisi kerak — `BeanCurrentlyInCreationException`; yechim — dizaynni qayta ko'rish (umumiy qismni uchinchi bean'ga chiqarish), oxirgi chora `@Lazy`", "correct": true },
+        { "id": "a", "text": "Constructor injection'da biri ikkinchisisiz yaratilmaydi; yechim — dizaynni qayta ko'rish, oxirgi chora `@Lazy`", "correct": true },
         { "id": "b", "text": "Muammo emas, Spring o'zi hal qiladi", "hint": "Boot 2.6+ da default taqiqlangan — ilova ishga tushmaydi." },
         { "id": "c", "text": "Faqat `prototype` bean'larda bo'ladi", "hint": "Singleton'larda ham bo'ladi." },
-        { "id": "d", "text": "Field injection'ga o'tish — to'g'ri yechim", "hint": "Field injection yashiradi, lekin dizayn muammosi qoladi." }
+        { "id": "d", "text": "Field injection'ga o'tish — bu to'g'ri va toza yechim, chunki u har qanday bog'liqlik siklini jimgina va xavfsiz hal qiladi", "hint": "Field injection yashiradi, lekin dizayn muammosi qoladi." }
       ],
-      "explanation": "Circular dependency — ikki klass bir-biriga juda bog'liq, ehtimol bitta mas'uliyat ikkiga bo'lingan yoki noto'g'ri bo'lingan degan signal. `spring.main.allow-circular-references=true` — simptomni yashirish. Event (`ApplicationEventPublisher`) ham ajratish usuli.",
+      "explanation": "Xato: `BeanCurrentlyInCreationException`; umumiy qismni uchinchi bean'ga chiqarish mumkin. Circular dependency — ikki klass bir-biriga juda bog'liq, ehtimol bitta mas'uliyat ikkiga bo'lingan yoki noto'g'ri bo'lingan degan signal. `spring.main.allow-circular-references=true` — simptomni yashirish. Event (`ApplicationEventPublisher`) ham ajratish usuli.",
       "reviewed": false
     },
     {
@@ -145,12 +145,12 @@
       "kind": "concept",
       "prompt": "Spring Boot auto-configuration qanday ishlaydi va o'z auto-config'ni qanday yozish mumkin?",
       "options": [
-        { "id": "a", "text": "`META-INF/spring/...AutoConfiguration.imports` faylidagi `@AutoConfiguration` klasslar yuklanadi; `@ConditionalOnClass`, `@ConditionalOnMissingBean`, `@ConditionalOnProperty` shartlari bilan faqat kerak bo'lganda bean yaratiladi; foydalanuvchi bean'i ustun turadi", "correct": true },
+        { "id": "a", "text": "`AutoConfiguration.imports` dagi klasslar `@ConditionalOn...` shartlari bilan faqat kerak bo'lganda bean yaratadi", "correct": true },
         { "id": "b", "text": "Boot barcha mavjud klasslarni bean qiladi", "hint": "Faqat shartli — aks holda konflikt va sekin ishga tushish." },
         { "id": "c", "text": "Auto-config'ni o'zgartirib bo'lmaydi", "hint": "`@ConditionalOnMissingBean` tufayli o'z bean'ingiz uni almashtiradi; `exclude` ham bor." },
-        { "id": "d", "text": "Reflection bilan barcha jar'larni skanerlaydi", "hint": "Skan emas — aniq ro'yxat fayli (Boot 2.7+ imports)." }
+        { "id": "d", "text": "Ishga tushishda reflection bilan barcha jar'larni skanerlab, topilgan har bir public klassni avtomatik ravishda bean qiladi", "hint": "Skan emas — aniq ro'yxat fayli (Boot 2.7+ imports)." }
       ],
-      "explanation": "Debug: `--debug` flag yoki actuator `/conditions` — qaysi auto-config nega ishladi/ishlamadi. O'z starter: `my-starter-autoconfigure` + `@ConfigurationProperties` + shartlar. Tartib: `@AutoConfigureAfter/Before`. Bu Boot'ning \"sehri\" — tushunsangiz, sehr yo'qoladi.",
+      "explanation": "Foydalanuvchining o'z bean'i ustun turadi (`@ConditionalOnMissingBean`). Debug: `--debug` flag yoki actuator `/conditions` — qaysi auto-config nega ishladi/ishlamadi. O'z starter: `my-starter-autoconfigure` + `@ConfigurationProperties` + shartlar. Tartib: `@AutoConfigureAfter/Before`. Bu Boot'ning \"sehri\" — tushunsangiz, sehr yo'qoladi.",
       "reviewed": false
     },
     {
@@ -175,12 +175,12 @@
       "kind": "concept",
       "prompt": "Spring MVC va WebFlux o'rtasida tanlovni nima hal qiladi?",
       "options": [
-        { "id": "a", "text": "WebFlux — non-blocking, kam thread bilan ko'p ulanish (I/O-bound, streaming, backpressure), lekin reaktiv kod murakkab, blocking kutubxona (JDBC) bilan mos emas; MVC — sodda, keng ekotizim, Java 21 virtual threads bilan ko'p WebFlux afzalligi yo'qoladi. Default — MVC", "correct": true },
+        { "id": "a", "text": "WebFlux — non-blocking, I/O va streaming uchun, lekin murakkab; MVC — sodda, virtual threads bilan yetarli", "correct": true },
         { "id": "b", "text": "WebFlux doim tezroq", "hint": "CPU-bound ishda farq yo'q; latency ham oshishi mumkin. Afzallik — kam thread'da ko'p ulanish." },
-        { "id": "c", "text": "MVC eskirgan, WebFlux'ga o'tish shart", "hint": "MVC — asosiy stack, Spring jamoasi ham buni aytadi." },
+        { "id": "c", "text": "MVC eskirgan va qo'llab-quvvatlanmaydi, shuning uchun barcha yangi va eski loyihalar WebFlux'ga o'tishi shart", "hint": "MVC — asosiy stack, Spring jamoasi ham buni aytadi." },
         { "id": "d", "text": "Faqat frontend turi hal qiladi", "hint": "Frontend bilan aloqasi yo'q — server I/O modeli." }
       ],
-      "explanation": "WebFlux o'rinli: gateway/proxy, SSE/WebSocket streaming, o'n minglab bir vaqtdagi ulanish, to'liq reaktiv stack (R2DBC, reaktiv Kafka). Aralash (MVC ichida `Mono`) — foyda yo'q. Virtual threads (Boot 3.2+, `spring.threads.virtual.enabled=true`) MVC'ga \"bepul\" masshtab beradi — reaktiv murakkabliksiz.",
+      "explanation": "WebFlux blocking JDBC bilan mos emas; default tanlov — MVC. WebFlux o'rinli: gateway/proxy, SSE/WebSocket streaming, o'n minglab bir vaqtdagi ulanish, to'liq reaktiv stack (R2DBC, reaktiv Kafka). Aralash (MVC ichida `Mono`) — foyda yo'q. Virtual threads (Boot 3.2+, `spring.threads.virtual.enabled=true`) MVC'ga \"bepul\" masshtab beradi — reaktiv murakkabliksiz.",
       "reviewed": false
     },
     {

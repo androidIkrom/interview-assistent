@@ -8,26 +8,10 @@
       "kind": "concept",
       "prompt": "`List`, `Set` va `Map` interfeyslari qanday farqlanadi?",
       "options": [
-        {
-          "id": "a",
-          "text": "`List` — tartibli, takrorlanishga ruxsat, indeks bo'yicha kirish; `Set` — takrorlanmaydigan elementlar; `Map` — kalit-qiymat juftliklari, kalitlar noyob",
-          "correct": true
-        },
-        {
-          "id": "b",
-          "text": "Uchalasi bir xil, faqat nomi boshqa",
-          "hint": "`Set`ga bir elementni ikki marta qo'shib `size()` tekshiring."
-        },
-        {
-          "id": "c",
-          "text": "`Map` — `Collection` interfeysining avlodi",
-          "hint": "`Map` alohida ierarxiya; `Collection`dan meros olmaydi."
-        },
-        {
-          "id": "d",
-          "text": "`Set` indeks bo'yicha kirishga ruxsat beradi",
-          "hint": "`set.get(0)` mavjud emas."
-        }
+        { "id": "a", "text": "`List` — tartibli, takror bor, indeks bilan; `Set` — takrorsiz; `Map` — noyob kalit-qiymat", "correct": true },
+        { "id": "b", "text": "Uchalasi bir xil, faqat nomi boshqa", "hint": "`Set`ga bir elementni ikki marta qo'shib `size()` tekshiring." },
+        { "id": "c", "text": "`Map` — `Collection` interfeysining avlodi", "hint": "`Map` alohida ierarxiya; `Collection`dan meros olmaydi." },
+        { "id": "d", "text": "`Set` ham `List` kabi indeks bo'yicha kirishga ruxsat beradi, faqat takrorlarni olib tashlaydi", "hint": "`set.get(0)` mavjud emas." }
       ],
       "explanation": "Implementatsiyalar: `ArrayList`/`LinkedList`; `HashSet`/`LinkedHashSet`/`TreeSet`; `HashMap`/`LinkedHashMap`/`TreeMap`. Tanlov: tartib kerakmi (Linked*), saralash kerakmi (Tree*), tezlik (Hash*). O'zgaruvchini interfeys turida e'lon qiling: `List<String> l = new ArrayList<>()`.",
       "reviewed": false
@@ -39,28 +23,12 @@
       "kind": "concept",
       "prompt": "`ArrayList` va `LinkedList` qachon qaysi biri afzal?",
       "options": [
-        {
-          "id": "a",
-          "text": "`ArrayList` — indeks bo'yicha kirish O(1), oxiriga qo'shish amortizatsiya O(1), xotira zich; `LinkedList` — boshi/oxiriga qo'shish O(1), lekin indeks kirish O(n) va har element uchun qo'shimcha xotira. Amalda deyarli doim `ArrayList`",
-          "correct": true
-        },
-        {
-          "id": "b",
-          "text": "`LinkedList` doim tezroq",
-          "hint": "Cache locality yo'qligi uni ko'p holatda sekinroq qiladi."
-        },
-        {
-          "id": "c",
-          "text": "`ArrayList` o'lchami o'zgarmaydi",
-          "hint": "Avtomatik kengayadi (massivni 1.5x nusxalab)."
-        },
-        {
-          "id": "d",
-          "text": "Farqi yo'q",
-          "hint": "`get(i)` murakkabligi farq qiladi: O(1) va O(n)."
-        }
+        { "id": "a", "text": "`ArrayList` — indeks bilan O(1) va zich xotira; `LinkedList` — chetga qo'shish O(1), indeks O(n)", "correct": true },
+        { "id": "b", "text": "`LinkedList` doim tezroq", "hint": "Cache locality yo'qligi uni ko'p holatda sekinroq qiladi." },
+        { "id": "c", "text": "`ArrayList` o'lchami yaratilganda qotiriladi, shuning uchun elementlar soni noma'lum bo'lsa `LinkedList` kerak", "hint": "Avtomatik kengayadi (massivni 1.5x nusxalab)." },
+        { "id": "d", "text": "Farqi yo'q", "hint": "`get(i)` murakkabligi farq qiladi: O(1) va O(n)." }
       ],
-      "explanation": "`LinkedList` o'rtaga qo'shish O(1) deyiladi, lekin o'sha joyga yetib borish O(n). Navbat kerak bo'lsa `ArrayDeque` — `LinkedList`dan tezroq. `LinkedList` muallifi ham uni ishlatmasligini aytgan.",
+      "explanation": "Amalda deyarli doim `ArrayList` afzal: `LinkedList` har element uchun qo'shimcha xotira oladi. `LinkedList` o'rtaga qo'shish O(1) deyiladi, lekin o'sha joyga yetib borish O(n). Navbat kerak bo'lsa `ArrayDeque` — `LinkedList`dan tezroq. `LinkedList` muallifi ham uni ishlatmasligini aytgan.",
       "reviewed": false
     },
     {
@@ -71,26 +39,10 @@
       "prompt": "Quyidagi kod nimani chop etadi?",
       "code": "Set<String> set = new HashSet<>();\nset.add(\"b\");\nset.add(\"a\");\nset.add(\"b\");\nset.add(\"c\");\nSystem.out.println(set.size());",
       "options": [
-        {
-          "id": "a",
-          "text": "3",
-          "correct": true
-        },
-        {
-          "id": "b",
-          "text": "4",
-          "hint": "`Set` takrorlanishga ruxsat bermaydi — ikkinchi \"b\" nima bo'ladi?"
-        },
-        {
-          "id": "c",
-          "text": "2",
-          "hint": "Noyob elementlarni sanang: a, b, c."
-        },
-        {
-          "id": "d",
-          "text": "Exception",
-          "hint": "Takror qo'shish exception bermaydi, `add` false qaytaradi."
-        }
+        { "id": "a", "text": "3", "correct": true },
+        { "id": "b", "text": "4", "hint": "`Set` takrorlanishga ruxsat bermaydi — ikkinchi \"b\" nima bo'ladi?" },
+        { "id": "c", "text": "2", "hint": "Noyob elementlarni sanang: a, b, c." },
+        { "id": "d", "text": "Exception", "hint": "Takror qo'shish exception bermaydi, `add` false qaytaradi." }
       ],
       "explanation": "`add` takror element uchun `false` qaytaradi va to'plamni o'zgartirmaydi. `HashSet` tartibni saqlamaydi — iteratsiya tartibi `a, b, c` bo'lishi shart emas. Tartib kerak bo'lsa `LinkedHashSet` (qo'shish tartibi) yoki `TreeSet` (saralangan).",
       "reviewed": false
@@ -102,28 +54,12 @@
       "kind": "concept",
       "prompt": "`HashMap`da kalit sifatida qanday ob'ektlar ishlatilishi kerak?",
       "options": [
-        {
-          "id": "a",
-          "text": "Immutable va `equals`/`hashCode` to'g'ri aniqlangan ob'ektlar (`String`, `Integer`, record) — kalit map'ga qo'shilgandan keyin o'zgarsa, uni topib bo'lmaydi",
-          "correct": true
-        },
-        {
-          "id": "b",
-          "text": "Faqat `String`",
-          "hint": "Har qanday to'g'ri `hashCode`li ob'ekt bo'ladi."
-        },
-        {
-          "id": "c",
-          "text": "Faqat primitivlar",
-          "hint": "Primitivlar generics'da ishlamaydi — wrapper kerak."
-        },
-        {
-          "id": "d",
-          "text": "Har qanday ob'ekt, muhim emas",
-          "hint": "`hashCode` override qilinmagan mutable ob'ekt — tuzoq."
-        }
+        { "id": "a", "text": "Immutable va `equals`/`hashCode` to'g'ri bo'lgan ob'ektlar (`String`, `Integer`, record)", "correct": true },
+        { "id": "b", "text": "Faqat `String`", "hint": "Har qanday to'g'ri `hashCode`li ob'ekt bo'ladi." },
+        { "id": "c", "text": "Faqat primitivlar", "hint": "Primitivlar generics'da ishlamaydi — wrapper kerak." },
+        { "id": "d", "text": "Har qanday ob'ekt bo'laveradi: `HashMap` kalitni ichida nusxalab oladi, shuning uchun farqi yo'q", "hint": "`hashCode` override qilinmagan mutable ob'ekt — tuzoq." }
       ],
-      "explanation": "Mutable kalit: `list` kalit qilib qo'ydingiz, keyin `list.add(x)` — hashCode o'zgardi, lekin bucket eski — `get(list)` null qaytaradi, element \"yo'qoladi\". `null` kalit `HashMap`da bitta bo'lishi mumkin, `TreeMap`da — yo'q.",
+      "explanation": "Kalit map'ga qo'shilgandan keyin o'zgarsa, uni topib bo'lmaydi. Mutable kalit: `list` kalit qilib qo'ydingiz, keyin `list.add(x)` — hashCode o'zgardi, lekin bucket eski — `get(list)` null qaytaradi, element \"yo'qoladi\". `null` kalit `HashMap`da bitta bo'lishi mumkin, `TreeMap`da — yo'q.",
       "reviewed": false
     },
     {
@@ -134,26 +70,10 @@
       "prompt": "Quyidagi kodda qanday xato bor?",
       "code": "List<String> names = List.of(\"Ali\", \"Vali\");\nnames.add(\"Soli\");",
       "options": [
-        {
-          "id": "a",
-          "text": "`List.of()` immutable ro'yxat qaytaradi — `add` `UnsupportedOperationException` tashlaydi; `new ArrayList<>(List.of(...))` kerak",
-          "correct": true
-        },
-        {
-          "id": "b",
-          "text": "`List.of` uchta argument talab qiladi",
-          "hint": "Istalgan sonda argument qabul qiladi."
-        },
-        {
-          "id": "c",
-          "text": "Xato yo'q",
-          "hint": "Ishga tushirib ko'ring — runtime exception."
-        },
-        {
-          "id": "d",
-          "text": "Generics ko'rsatilmagan",
-          "hint": "Tur inference bilan aniqlanadi."
-        }
+        { "id": "a", "text": "`List.of()` immutable ro'yxat qaytaradi — `add` `UnsupportedOperationException` tashlaydi; `new ArrayList<>(List.of(...))` kerak", "correct": true },
+        { "id": "b", "text": "`List.of` uchta argument talab qiladi", "hint": "Istalgan sonda argument qabul qiladi." },
+        { "id": "c", "text": "Xato yo'q", "hint": "Ishga tushirib ko'ring — runtime exception." },
+        { "id": "d", "text": "Generics ko'rsatilmagan", "hint": "Tur inference bilan aniqlanadi." }
       ],
       "explanation": "`List.of`, `Set.of`, `Map.of` (Java 9+) va `Collections.unmodifiableList` — o'zgartirib bo'lmaydi, `null` ham qabul qilmaydi. `Arrays.asList` — o'lchami o'zgarmas, lekin `set` ishlaydi. Interfeys turi (`List`) immutable yoki mutable ekanini aytmaydi — hujjatga qarang.",
       "reviewed": false
@@ -165,28 +85,12 @@
       "kind": "concept",
       "prompt": "`HashMap` ichki tuzilishi qanday ishlaydi?",
       "options": [
-        {
-          "id": "a",
-          "text": "Bucket massivi; `hashCode()` → indeks; kolliziyada bucket ichida bog'langan ro'yxat, 8 dan oshsa qizil-qora daraxt (Java 8+); yuklanish 0.75 dan oshsa massiv 2x kengayadi va elementlar qayta taqsimlanadi (rehash)",
-          "correct": true
-        },
-        {
-          "id": "b",
-          "text": "Saralangan massiv, binary search",
-          "hint": "Bu `TreeMap`ga yaqinroq; `HashMap` hash bo'yicha."
-        },
-        {
-          "id": "c",
-          "text": "Bitta bog'langan ro'yxat",
-          "hint": "Bitta ro'yxat — O(n); hash jadval O(1) beradi."
-        },
-        {
-          "id": "d",
-          "text": "Kalitlar qo'shish tartibida massivda",
-          "hint": "Bu `LinkedHashMap`ning qo'shimcha xususiyati."
-        }
+        { "id": "a", "text": "Bucket massivi: `hashCode()` → indeks; kolliziyada ro'yxat yoki daraxt; 0.75 dan oshsa 2x kengayadi", "correct": true },
+        { "id": "b", "text": "Saralangan massiv, binary search", "hint": "Bu `TreeMap`ga yaqinroq; `HashMap` hash bo'yicha." },
+        { "id": "c", "text": "Bitta bog'langan ro'yxat", "hint": "Bitta ro'yxat — O(n); hash jadval O(1) beradi." },
+        { "id": "d", "text": "Kalitlar qo'shilish tartibida oddiy massivda saqlanadi va qidirishda boshidan oxirigacha ko'rib chiqiladi", "hint": "Bu `LinkedHashMap`ning qo'shimcha xususiyati." }
       ],
-      "explanation": "Yomon `hashCode` (hamma bir xil qaytarsa) — hamma bir bucket'da, O(n) yoki O(log n) daraxt bilan. Boshlang'ich sig'im 16; katta map uchun `new HashMap<>(expectedSize)` rehash'dan qochadi. Iteratsiya tartibi kafolatlanmaydi va rehash'da o'zgaradi.",
+      "explanation": "Bucket'da 8 dan ortiq element bo'lsa, ro'yxat qizil-qora daraxtga aylanadi (Java 8+); kengayishda rehash bo'ladi. Yomon `hashCode` (hamma bir xil qaytarsa) — hamma bir bucket'da, O(n) yoki O(log n) daraxt bilan. Boshlang'ich sig'im 16; katta map uchun `new HashMap<>(expectedSize)` rehash'dan qochadi. Iteratsiya tartibi kafolatlanmaydi va rehash'da o'zgaradi.",
       "reviewed": false
     },
     {
@@ -197,26 +101,10 @@
       "prompt": "Quyidagi kod nimani chop etadi?",
       "code": "List<Integer> nums = List.of(5, 3, 8, 1, 9, 2);\nList<Integer> result = nums.stream()\n    .filter(n -> n > 2)\n    .map(n -> n * 2)\n    .sorted()\n    .limit(3)\n    .toList();\nSystem.out.println(result);",
       "options": [
-        {
-          "id": "a",
-          "text": "[6, 10, 16]",
-          "correct": true
-        },
-        {
-          "id": "b",
-          "text": "[10, 6, 16]",
-          "hint": "`sorted()` natijani saralaydi."
-        },
-        {
-          "id": "c",
-          "text": "[3, 5, 8]",
-          "hint": "`map(n -> n * 2)` har elementni ikki baravar qiladi."
-        },
-        {
-          "id": "d",
-          "text": "[6, 10, 16, 18]",
-          "hint": "`limit(3)` — faqat uchta."
-        }
+        { "id": "a", "text": "[6, 10, 16]", "correct": true },
+        { "id": "b", "text": "[10, 6, 16]", "hint": "`sorted()` natijani saralaydi." },
+        { "id": "c", "text": "[3, 5, 8]", "hint": "`map(n -> n * 2)` har elementni ikki baravar qiladi." },
+        { "id": "d", "text": "[6, 10, 16, 18]", "hint": "`limit(3)` — faqat uchta." }
       ],
       "explanation": "Filtr: 5, 3, 8, 9 → map: 10, 6, 16, 18 → sorted: 6, 10, 16, 18 → limit 3: 6, 10, 16. Stream lazy: `filter`/`map` oraliq, `toList()` terminal — faqat terminal chaqirilganda ishlaydi. `toList()` (Java 16+) immutable ro'yxat qaytaradi.",
       "reviewed": false
@@ -228,28 +116,12 @@
       "kind": "concept",
       "prompt": "`Optional` nima uchun kiritilgan va uni qanday ishlatmaslik kerak?",
       "options": [
-        {
-          "id": "a",
-          "text": "\"Qiymat bo'lmasligi mumkin\"ni tur darajasida ifodalash (null o'rniga qaytarish turi sifatida); ishlatmaslik — maydon/parametr turi sifatida, kolleksiya ichida, `isPresent()`+`get()` zanjiri (bu null tekshiruvdan farq qilmaydi)",
-          "correct": true
-        },
-        {
-          "id": "b",
-          "text": "Har qanday null'ni almashtirish uchun hamma joyda",
-          "hint": "Maydon va parametrlarda `Optional` — ortiqcha ob'ekt va noqulay API."
-        },
-        {
-          "id": "c",
-          "text": "Performance uchun",
-          "hint": "Qo'shimcha ob'ekt — performance'ga biroz zarar."
-        },
-        {
-          "id": "d",
-          "text": "Exception'larni almashtirish uchun",
-          "hint": "Xato va \"yo'q\" — turli tushunchalar."
-        }
+        { "id": "a", "text": "Qiymat yo'qligini qaytarish turida ifodalash; maydon, parametr va kolleksiya ichida ishlatmaslik", "correct": true },
+        { "id": "b", "text": "Kod bazasidagi har qanday null'ni almashtirish uchun hamma joyda ishlatish — maydon, parametr va kolleksiyalarda ham", "hint": "Maydon va parametrlarda `Optional` — ortiqcha ob'ekt va noqulay API." },
+        { "id": "c", "text": "Performance uchun", "hint": "Qo'shimcha ob'ekt — performance'ga biroz zarar." },
+        { "id": "d", "text": "Exception'larni almashtirish uchun", "hint": "Xato va \"yo'q\" — turli tushunchalar." }
       ],
-      "explanation": "To'g'ri uslub: `repo.findById(id).map(User::getName).orElse(\"Unknown\")` yoki `.orElseThrow(() -> new NotFoundException(id))`. `Optional.get()` tekshiruvsiz — `NoSuchElementException`, NPE'dan yaxshi emas. Stream API bilan tabiiy birlashadi.",
+      "explanation": "`isPresent()` + `get()` zanjiri oddiy null tekshiruvidan farq qilmaydi. To'g'ri uslub: `repo.findById(id).map(User::getName).orElse(\"Unknown\")` yoki `.orElseThrow(() -> new NotFoundException(id))`. `Optional.get()` tekshiruvsiz — `NoSuchElementException`, NPE'dan yaxshi emas. Stream API bilan tabiiy birlashadi.",
       "reviewed": false
     },
     {
@@ -260,26 +132,10 @@
       "prompt": "Quyidagi kod nega `ConcurrentModificationException` tashlaydi?",
       "code": "List<String> items = new ArrayList<>(List.of(\"a\", \"b\", \"c\"));\nfor (String s : items) {\n    if (s.equals(\"b\")) {\n        items.remove(s);\n    }\n}",
       "options": [
-        {
-          "id": "a",
-          "text": "Iteratsiya davomida kolleksiya to'g'ridan-to'g'ri o'zgartirilmoqda — iterator bu holatni aniqlaydi (fail-fast); `Iterator.remove()` yoki `items.removeIf(s -> s.equals(\"b\"))` kerak",
-          "correct": true
-        },
-        {
-          "id": "b",
-          "text": "`List.of` immutable",
-          "hint": "`new ArrayList<>(...)` — mutable nusxa; muammo boshqa."
-        },
-        {
-          "id": "c",
-          "text": "`equals` o'rniga `==` kerak",
-          "hint": "`equals` to'g'ri."
-        },
-        {
-          "id": "d",
-          "text": "Exception tashlamaydi",
-          "hint": "Ishga tushirib ko'ring (yoki \"c\"ni o'chirib — ba'zan tasodifan o'tadi, bu yanada xavfli)."
-        }
+        { "id": "a", "text": "Iteratsiya davomida kolleksiya to'g'ridan-to'g'ri o'zgartirilmoqda — iterator bu holatni aniqlaydi (fail-fast); `Iterator.remove()` yoki `items.removeIf(s -> s.equals(\"b\"))` kerak", "correct": true },
+        { "id": "b", "text": "`List.of` immutable", "hint": "`new ArrayList<>(...)` — mutable nusxa; muammo boshqa." },
+        { "id": "c", "text": "`equals` o'rniga `==` kerak", "hint": "`equals` to'g'ri." },
+        { "id": "d", "text": "Exception tashlamaydi", "hint": "Ishga tushirib ko'ring (yoki \"c\"ni o'chirib — ba'zan tasodifan o'tadi, bu yanada xavfli)." }
       ],
       "explanation": "`modCount` tekshiruvi: iterator yaratilganda hisoblagich eslanadi, `next()` da solishtiriladi. Oxirgidan oldingi elementni o'chirganda `hasNext()` false bo'lib, exception bo'lmaydi — yashirin xato. Ko'p oqimda ham shu exception — `ConcurrentHashMap`/`CopyOnWriteArrayList` kerak.",
       "reviewed": false
@@ -292,26 +148,10 @@
       "prompt": "Quyidagi koddagi muammo nimada?",
       "code": "List<Integer> result = new ArrayList<>();\nIntStream.range(0, 1_000_000)\n    .parallel()\n    .filter(i -> i % 2 == 0)\n    .forEach(result::add);\nSystem.out.println(result.size());",
       "options": [
-        {
-          "id": "a",
-          "text": "Parallel stream'dan thread-safe bo'lmagan `ArrayList`ga `forEach` bilan yozish — race condition: noto'g'ri size yoki `ArrayIndexOutOfBoundsException`; `.boxed().collect(toList())` kerak",
-          "correct": true
-        },
-        {
-          "id": "b",
-          "text": "`IntStream.range` oxirgi elementni qamramaydi — bu xato",
-          "hint": "`range` oxirini qamramasligi hujjatlashtirilgan, `rangeClosed` bor; muammo boshqa."
-        },
-        {
-          "id": "c",
-          "text": "`parallel()` kompilyatsiya xatosi beradi",
-          "hint": "Kompilyatsiya o'tadi."
-        },
-        {
-          "id": "d",
-          "text": "Muammo yo'q, 500000 chiqadi",
-          "hint": "Bir necha marta ishga tushiring — natija har safar boshqacha."
-        }
+        { "id": "a", "text": "Parallel stream'dan thread-safe bo'lmagan `ArrayList`ga `forEach` bilan yozish — race condition: noto'g'ri size yoki `ArrayIndexOutOfBoundsException`; `.boxed().collect(toList())` kerak", "correct": true },
+        { "id": "b", "text": "`IntStream.range` oxirgi elementni qamramaydi — bu xato", "hint": "`range` oxirini qamramasligi hujjatlashtirilgan, `rangeClosed` bor; muammo boshqa." },
+        { "id": "c", "text": "`parallel()` kompilyatsiya xatosi beradi", "hint": "Kompilyatsiya o'tadi." },
+        { "id": "d", "text": "Muammo yo'q, 500000 chiqadi", "hint": "Bir necha marta ishga tushiring — natija har safar boshqacha." }
       ],
       "explanation": "Yon ta'sirli `forEach` parallel stream'da — klassik xato. `collect` thread-safe tarzda qismlarni yig'adi. Parallel stream faqat katta, CPU-bound, mustaqil ishlarda foyda beradi; umumiy `ForkJoinPool`ni band qiladi — web ilovada ehtiyot bo'ling.",
       "reviewed": false
@@ -323,28 +163,12 @@
       "kind": "concept",
       "prompt": "`ConcurrentHashMap` `Collections.synchronizedMap(new HashMap<>())`dan nimasi bilan yaxshi?",
       "options": [
-        {
-          "id": "a",
-          "text": "Qulf butun map'ga emas, bucket/segment darajasida — ko'p oqim parallel yoza oladi; o'qish qulfsiz; atomik `compute`, `merge`, `putIfAbsent`; iterator `ConcurrentModificationException` tashlamaydi (weakly consistent)",
-          "correct": true
-        },
-        {
-          "id": "b",
-          "text": "Farqi yo'q",
-          "hint": "Yuk ostida throughput bir necha marta farq qiladi."
-        },
-        {
-          "id": "c",
-          "text": "`synchronizedMap` tezroq",
-          "hint": "Har operatsiya butun map'ni qulflaydi — bottleneck."
-        },
-        {
-          "id": "d",
-          "text": "`ConcurrentHashMap` `null` kalitga ruxsat beradi",
-          "hint": "Aksincha — `null` kalit ham, qiymat ham taqiqlangan."
-        }
+        { "id": "a", "text": "Qulf bucket darajasida, o'qish qulfsiz; atomik `compute`/`merge`; iterator CME tashlamaydi", "correct": true },
+        { "id": "b", "text": "Farqi yo'q", "hint": "Yuk ostida throughput bir necha marta farq qiladi." },
+        { "id": "c", "text": "`synchronizedMap` tezroq", "hint": "Har operatsiya butun map'ni qulflaydi — bottleneck." },
+        { "id": "d", "text": "`ConcurrentHashMap` `null` kalit va `null` qiymatga ham bemalol ruxsat beradi, xuddi `HashMap` kabi", "hint": "Aksincha — `null` kalit ham, qiymat ham taqiqlangan." }
       ],
-      "explanation": "`synchronizedMap`da `if (!map.containsKey(k)) map.put(k, v)` — ikki operatsiya orasida boshqa oqim kirishi mumkin (check-then-act). `ConcurrentHashMap.computeIfAbsent(k, f)` atomik — cache uchun ideal (lekin `f` ichida o'sha map'ga yozmaslik — deadlock/exception).",
+      "explanation": "Ko'p oqim parallel yoza oladi; iterator weakly consistent. `synchronizedMap`da `if (!map.containsKey(k)) map.put(k, v)` — ikki operatsiya orasida boshqa oqim kirishi mumkin (check-then-act). `ConcurrentHashMap.computeIfAbsent(k, f)` atomik — cache uchun ideal (lekin `f` ichida o'sha map'ga yozmaslik — deadlock/exception).",
       "reviewed": false
     },
     {
@@ -354,28 +178,12 @@
       "kind": "concept",
       "prompt": "Yuqori yuklanishli servisda kolleksiya va stream'lar bilan bog'liq performance muammolari qayerda yashirinadi?",
       "options": [
-        {
-          "id": "a",
-          "text": "Autoboxing (`List<Integer>` vs `int[]`/`IntStream`), `ArrayList` sig'imini ko'rsatmaslik (ko'p nusxalash), `contains` ro'yxatda O(n) (Set kerak), stream'lar qisqa issiq yo'lda allokatsiya yuki, `LinkedList`, `String` konkatenatsiya sikl ichida, mutable kalitlar",
-          "correct": true
-        },
-        {
-          "id": "b",
-          "text": "Hech qayerda — JIT hammasini optimallaydi",
-          "hint": "JIT algoritmik murakkablikni (O(n) contains) o'zgartira olmaydi."
-        },
-        {
-          "id": "c",
-          "text": "Faqat `HashMap` sekin",
-          "hint": "`HashMap` — eng tez tuzilmalardan biri; muammo noto'g'ri ishlatishda."
-        },
-        {
-          "id": "d",
-          "text": "Stream'lar doim sikldan tezroq",
-          "hint": "Kichik ro'yxatda stream overhead sikldan sekinroq; profiler bilan o'lchang."
-        }
+        { "id": "a", "text": "Autoboxing, sig'imsiz `ArrayList`, ro'yxatda `contains` O(n), issiq yo'ldagi stream allokatsiyasi", "correct": true },
+        { "id": "b", "text": "Hech qayerda: JIT kompilyatori kolleksiya va stream'lardagi barcha ortiqcha xarajatni o'zi yo'qotadi", "hint": "JIT algoritmik murakkablikni (O(n) contains) o'zgartira olmaydi." },
+        { "id": "c", "text": "Faqat `HashMap` sekin", "hint": "`HashMap` — eng tez tuzilmalardan biri; muammo noto'g'ri ishlatishda." },
+        { "id": "d", "text": "Stream'lar doim sikldan tezroq", "hint": "Kichik ro'yxatda stream overhead sikldan sekinroq; profiler bilan o'lchang." }
       ],
-      "explanation": "Qoida: avval profiler (JFR, async-profiler), keyin optimizatsiya. Ko'pincha allokatsiya (GC bosimi) asosiy sabab. Primitiv kolleksiyalar (Eclipse Collections, fastutil) millionlab elementda xotirani 3–5x kamaytiradi. Lekin o'qiluvchanlikni faqat o'lchangan bottleneck uchun qurbon qiling.",
+      "explanation": "Yana: `LinkedList`, sikl ichida `String` konkatenatsiyasi va mutable kalitlar. Qoida: avval profiler (JFR, async-profiler), keyin optimizatsiya. Ko'pincha allokatsiya (GC bosimi) asosiy sabab. Primitiv kolleksiyalar (Eclipse Collections, fastutil) millionlab elementda xotirani 3–5x kamaytiradi. Lekin o'qiluvchanlikni faqat o'lchangan bottleneck uchun qurbon qiling.",
       "reviewed": false
     }
   ]
