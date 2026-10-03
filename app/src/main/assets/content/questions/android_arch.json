@@ -23,10 +23,10 @@
       "kind": "concept",
       "prompt": "Dependency Injection nima uchun kerak?",
       "options": [
-        { "id": "a", "text": "Klass o'z bog'liqliklarini o'zi yaratmaydi, ularni tashqaridan oladi; shu sabab ularni almashtirish va test qilish oson bo'ladi", "correct": true },
+        { "id": "a", "text": "Klass bog'liqliklarini o'zi yaratmay, tashqaridan oladi — almashtirish va test oson", "correct": true },
         { "id": "b", "text": "Ilovani tezroq ishga tushirish uchun", "hint": "DI ishga tushishni tezlashtirmaydi; ba'zi freymvorklar uni hatto biroz sekinlashtiradi." },
         { "id": "c", "text": "Kod hajmini kamaytirish uchun", "hint": "DI ko'pincha qo'shimcha kod (modullar, konstruktor parametrlari) talab qiladi. Maqsad boshqa." },
-        { "id": "d", "text": "Klass maydonlarini `private` qilish uchun", "hint": "Ko'rinish modifikatorlari DI'ga bog'liq emas." }
+        { "id": "d", "text": "Klass maydonlarini `private` qilish va ularni boshqa klasslardan to'liq yashirish uchun", "hint": "Ko'rinish modifikatorlari DI'ga bog'liq emas." }
       ],
       "explanation": "DI'da bog'liqliklar klassga tashqaridan (odatda konstruktor orqali) beriladi. Natijada klass aniq implementatsiyaga bog'lanmaydi: testda haqiqiy API o'rniga soxta nusxa berish, production'da esa implementatsiyani almashtirish mumkin.",
       "reviewed": false
@@ -39,8 +39,8 @@
       "prompt": "Bu klassni unit test qilish nega qiyin?",
       "code": "class UserRepository {\n    private val api = Retrofit.Builder()\n        .baseUrl(\"https://example.com/\")\n        .build()\n        .create(UserApi::class.java)\n\n    suspend fun user(id: String) = api.user(id)\n}",
       "options": [
-        { "id": "a", "text": "`UserApi` klass ichida yaratilgan, shuning uchun testda uni soxta (fake) nusxa bilan almashtirib bo'lmaydi", "correct": true },
-        { "id": "b", "text": "`suspend` funksiyalarni test qilib bo'lmaydi", "hint": "`runTest` yordamida `suspend` funksiyalar bemalol test qilinadi." },
+        { "id": "a", "text": "`UserApi` klass ichida yaratilgan — testda uni fake bilan almashtirib bo'lmaydi", "correct": true },
+        { "id": "b", "text": "`suspend` funksiyalarni oddiy JUnit testida umuman chaqirib va test qilib bo'lmaydi", "hint": "`runTest` yordamida `suspend` funksiyalar bemalol test qilinadi." },
         { "id": "c", "text": "Repository klassi `open` emas", "hint": "Repository'ning o'zidan meros olish shart emas. Muammo uning ichidagi bog'liqlikda." },
         { "id": "d", "text": "`baseUrl` konstantaga chiqarilmagan", "hint": "Bu uslub masalasi; testlashga to'sqinlik qilmaydi." }
       ],
@@ -84,10 +84,10 @@
       "kind": "concept",
       "prompt": "50 dan ortiq dasturchi ishlaydigan Android loyihada build vaqti va jamoalar orasidagi konfliktlar o'smoqda. Modullashtirishda qaysi qoida eng muhim?",
       "options": [
-        { "id": "a", "text": "Feature modullar bir-biriga to'g'ridan-to'g'ri bog'lanmaydi; ular umumiy API yoki navigatsiya modullari orqali aloqa qiladi", "correct": true },
+        { "id": "a", "text": "Feature modullar bir-biriga emas, umumiy API yoki navigatsiya modullari orqali bog'lanadi", "correct": true },
         { "id": "b", "text": "Har bir klassni alohida modulga chiqarish", "hint": "Juda mayda modullar konfiguratsiya vaqtini va boshqaruv yukini oshiradi; granularlik me'yorida bo'lishi kerak." },
         { "id": "c", "text": "Barcha umumiy kodni bitta katta `common` modulga yig'ish", "hint": "Bunday modulga hamma bog'liq bo'lib qoladi: undagi har bir o'zgarish butun loyihani qayta build qiladi." },
-        { "id": "d", "text": "Loyihani faqat qatlam bo'yicha uchta modulga bo'lish: `ui`, `domain`, `data`", "hint": "Faqat qatlam bo'yicha bo'lish jamoalarni ajratmaydi: har bir feature o'zgarishi uchala modulga tegadi va parallel build'dan foyda kam." }
+        { "id": "d", "text": "Loyihani faqat qatlam bo'yicha uchta katta modulga bo'lish: `ui`, `domain` va `data`, featurelarsiz", "hint": "Faqat qatlam bo'yicha bo'lish jamoalarni ajratmaydi: har bir feature o'zgarishi uchala modulga tegadi va parallel build'dan foyda kam." }
       ],
       "explanation": "Feature modullar o'zaro mustaqil bo'lsa, ular parallel build qilinadi, bir moduldagi o'zgarish boshqalarni qayta kompilyatsiya qildirmaydi va jamoalar bir-birining kodiga tegmaydi. Aloqa kichik `api` modullari yoki navigatsiya shartnomalari orqali quriladi, implementatsiya esa `internal` qoladi.",
       "reviewed": false
@@ -114,12 +114,12 @@
       "kind": "concept",
       "prompt": "Ilovaning sovuq ishga tushishi (cold start) 3 soniya. Birinchi navbatda nimani tekshirasiz?",
       "options": [
-        { "id": "a", "text": "`Application.onCreate` va birinchi ekrandagi sinxron ishlarni (SDK'larni ishga tushirish, disk va tarmoq chaqiruvlari): ularni kechiktirish yoki fonga o'tkazish kerak", "correct": true },
+        { "id": "a", "text": "`Application.onCreate` va birinchi ekrandagi sinxron ishlar: SDK init, disk va tarmoq chaqiruvlari", "correct": true },
         { "id": "b", "text": "APK hajmini kamaytirish", "hint": "Hajm yuklab olishga ta'sir qiladi; ishga tushish vaqti asosan startda bajariladigan kodga bog'liq." },
-        { "id": "c", "text": "Barcha rasmlarni WebP formatiga o'tkazish", "hint": "Bu hajmni kamaytiradi, lekin startdagi asosiy kechikish odatda kod bajarilishida." },
+        { "id": "c", "text": "Barcha rasmlarni WebP formatiga o'tkazish va APK ichidagi resurslarni siqib, hajmini kichraytirish", "hint": "Bu hajmni kamaytiradi, lekin startdagi asosiy kechikish odatda kod bajarilishida." },
         { "id": "d", "text": "`minSdk` ni oshirish", "hint": "SDK versiyasi ishga tushish vaqtini sezilarli o'zgartirmaydi." }
       ],
-      "explanation": "Sovuq startda jarayon yaratiladi, `Application.onCreate`, keyin birinchi Activity va birinchi kadr bajariladi. Shu yo'lda main thread'da turgan har bir ish (analitika, DI grafi, baza ochish) vaqtni uzaytiradi. Macrobenchmark bilan o'lchab, keraksiz ishlarni App Startup yoki lazy initsializatsiya bilan kechiktirish va baseline profile qo'shish eng katta foyda beradi.",
+      "explanation": "Bunday ishlarni kechiktirish yoki fonga o'tkazish kerak. Sovuq startda jarayon yaratiladi, `Application.onCreate`, keyin birinchi Activity va birinchi kadr bajariladi. Shu yo'lda main thread'da turgan har bir ish (analitika, DI grafi, baza ochish) vaqtni uzaytiradi. Macrobenchmark bilan o'lchab, keraksiz ishlarni App Startup yoki lazy initsializatsiya bilan kechiktirish va baseline profile qo'shish eng katta foyda beradi.",
       "reviewed": false
     }
   ]

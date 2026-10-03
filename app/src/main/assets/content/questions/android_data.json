@@ -9,7 +9,7 @@
       "prompt": "Qaysi holatda Room o'rniga DataStore (yoki SharedPreferences) yetarli bo'ladi?",
       "options": [
         { "id": "a", "text": "Bir nechta oddiy sozlamani (masalan, tanlangan mavzu yoki til) saqlash uchun", "correct": true },
-        { "id": "b", "text": "Minglab yozuvlarni filtrlash va saralash kerak bo'lganda", "hint": "So'rovlar, indekslar va saralash uchun relyatsion baza kerak; kalit-qiymat saqlagichi buni bilmaydi." },
+        { "id": "b", "text": "Minglab yozuvlarni tez-tez filtrlash, saralash va sahifalab ko'rsatish kerak bo'lganda", "hint": "So'rovlar, indekslar va saralash uchun relyatsion baza kerak; kalit-qiymat saqlagichi buni bilmaydi." },
         { "id": "c", "text": "Jadvallar orasida bog'lanish (relation) bo'lganda", "hint": "Bog'lanishlar va JOIN — SQL bazaning ishi." },
         { "id": "d", "text": "Katta rasm fayllarini saqlash uchun", "hint": "Katta binar ma'lumot fayl tizimida saqlanadi; kalit-qiymat saqlagichi ham, baza ham bunga mos emas." }
       ],
@@ -81,12 +81,12 @@
       "kind": "concept",
       "prompt": "Offline-first ilovada foydalanuvchi bitta yozuvni ikki qurilmada oflayn tahrirladi. Sinxronizatsiyada konfliktni hal qilish strategiyasini tanlashda eng muhim omil nima?",
       "options": [
-        { "id": "a", "text": "Ma'lumotning biznes ma'nosi: qaysi yo'qotish qabul qilinishi mumkinligiga qarab last-write-wins, maydon bo'yicha birlashtirish yoki foydalanuvchidan so'rash tanlanadi", "correct": true },
+        { "id": "a", "text": "Biznes ma'nosiga qarab: last-write-wins, maydon bo'yicha birlashtirish yoki foydalanuvchidan so'rash", "correct": true },
         { "id": "b", "text": "Har doim server versiyasi g'olib bo'lishi kerak", "hint": "Unda oflayn kiritilgan o'zgarishlar jimgina yo'qoladi. Ba'zi ma'lumotlar uchun bu qabul qilib bo'lmaydi." },
         { "id": "c", "text": "Har doim eng oxirgi yozilgan versiya g'olib bo'lishi kerak", "hint": "Qurilma soatlari bir-biridan farq qiladi va bu strategiya bir tomonning o'zgarishini butunlay o'chiradi. Hamma ma'lumot uchun mos emas." },
-        { "id": "d", "text": "Konflikt bo'lmasligi uchun oflayn tahrirlashni taqiqlash kerak", "hint": "Bu offline-first g'oyasining o'ziga zid: ilova tarmoqsiz ham to'liq ishlashi kerak." }
+        { "id": "d", "text": "Konflikt umuman bo'lmasligi uchun oflayn tahrirlashni butunlay taqiqlash va faqat onlayn ishlash kerak", "hint": "Bu offline-first g'oyasining o'ziga zid: ilova tarmoqsiz ham to'liq ishlashi kerak." }
       ],
-      "explanation": "Yagona to'g'ri strategiya yo'q. \"O'qilgan\" belgisi uchun last-write-wins yetarli; hujjat matni uchun maydon bo'yicha birlashtirish yoki CRDT kerak; to'lov yoki buyurtma uchun konfliktni foydalanuvchiga ko'rsatish to'g'riroq. Qaror ma'lumotni yo'qotish narxidan kelib chiqadi, texnik qulaylikdan emas.",
+      "explanation": "Qaysi ma'lumot yo'qotilishi qabul qilinishi mumkinligini biznes hal qiladi. Yagona to'g'ri strategiya yo'q. \"O'qilgan\" belgisi uchun last-write-wins yetarli; hujjat matni uchun maydon bo'yicha birlashtirish yoki CRDT kerak; to'lov yoki buyurtma uchun konfliktni foydalanuvchiga ko'rsatish to'g'riroq. Qaror ma'lumotni yo'qotish narxidan kelib chiqadi, texnik qulaylikdan emas.",
       "reviewed": false
     },
     {
@@ -96,8 +96,8 @@
       "kind": "concept",
       "prompt": "Retrofit qanday vazifani bajaradi?",
       "options": [
-        { "id": "a", "text": "HTTP API'ni Kotlin interfeysi sifatida tasvirlash va so'rovlarni shu interfeys orqali yuborish imkonini beradi", "correct": true },
-        { "id": "b", "text": "Ma'lumotlarni qurilmadagi SQLite bazada saqlaydi", "hint": "Lokal baza bilan Room ishlaydi." },
+        { "id": "a", "text": "HTTP API'ni Kotlin interfeysi sifatida tasvirlab, so'rovlarni shu orqali yuboradi", "correct": true },
+        { "id": "b", "text": "Tarmoqdan kelgan ma'lumotlarni qurilmadagi SQLite bazada avtomatik saqlab, keshlab boradi", "hint": "Lokal baza bilan Room ishlaydi." },
         { "id": "c", "text": "Rasmlarni yuklab, keshlaydi", "hint": "Bu Coil yoki Glide kabi kutubxonalarning ishi." },
         { "id": "d", "text": "Fon vazifalarini rejalashtiradi", "hint": "Kechiktirilgan fon ishlar uchun WorkManager bor." }
       ],
@@ -128,7 +128,7 @@
       "options": [
         { "id": "a", "text": "Faqat lokal bazadan; tarmoq javobi bazaga yoziladi va UI baza oqimi orqali yangilanadi", "correct": true },
         { "id": "b", "text": "Tarmoq mavjud bo'lsa tarmoqdan, bo'lmasa bazadan", "hint": "Ikki manbadan o'qish ikki xil holat va nomuvofiqlikka olib keladi; yondashuv nomi aynan bittasini talab qiladi." },
-        { "id": "c", "text": "Faqat tarmoqdan; baza zaxira nusxa sifatida turadi", "hint": "Unda oflayn rejim ishlamaydi va har ekran ochilishida kutish bo'ladi." },
+        { "id": "c", "text": "Faqat tarmoqdan; lokal baza esa faqat internet yo'q paytdagi zaxira nusxa sifatida turadi", "hint": "Unda oflayn rejim ishlamaydi va har ekran ochilishida kutish bo'ladi." },
         { "id": "d", "text": "ViewModel'dagi xotira keshidan", "hint": "Xotira keshi jarayon bilan birga yo'qoladi; haqiqat manbai doimiy bo'lishi kerak." }
       ],
       "explanation": "Bitta haqiqat manbai bo'lganda ma'lumot faqat bir yo'nalishda oqadi: tarmoq → baza → UI. UI har doim bazani ko'rsatadi, yangilanish esa bazaga yozish orqali keladi. Natijada oflayn rejim, keshlash va izchillik bitta mexanizm bilan hal bo'ladi.",
@@ -141,12 +141,12 @@
       "kind": "concept",
       "prompt": "Cheksiz lenta (feed) uchun sahifalashda offset o'rniga cursor (keyset) ishlatishning asosiy sababi nima?",
       "options": [
-        { "id": "a", "text": "Yangi yozuvlar qo'shilganda offset siljiydi va elementlar takrorlanadi yoki tushib qoladi; cursor esa oxirgi ko'rilgan elementdan davom etadi", "correct": true },
-        { "id": "b", "text": "Cursor so'rovlari har doim kamroq ma'lumot qaytaradi", "hint": "Sahifa hajmi ikkala usulda ham bir xil bo'lishi mumkin." },
+        { "id": "a", "text": "Yangi yozuv qo'shilsa offset siljib, elementlar takrorlanadi; cursor oxirgi elementdan davom etadi", "correct": true },
+        { "id": "b", "text": "Cursor so'rovlari har doim kamroq ma'lumot qaytaradi va shuning uchun tarmoq trafigi sezilarli kamayadi", "hint": "Sahifa hajmi ikkala usulda ham bir xil bo'lishi mumkin." },
         { "id": "c", "text": "Offset'ni Retrofit qo'llab-quvvatlamaydi", "hint": "Bu oddiy query parametr; har qanday HTTP klient uni yubora oladi." },
         { "id": "d", "text": "Cursor bilan sahifalarni keshlash shart emas", "hint": "Keshlash ehtiyoji sahifalash usuliga bog'liq emas." }
       ],
-      "explanation": "Offset \"boshidan N ta o'tkazib yubor\" degani: foydalanuvchi o'qiyotganda lenta boshiga yangi yozuv tushsa, keyingi sahifa bir pozitsiyaga siljiydi va element takrorlanadi. Cursor \"shu elementdan keyingilarni ber\" degani va o'zgarishlarga chidamli. Katta jadvallarda u indeks bo'yicha tezroq ham ishlaydi.",
+      "explanation": "Offset bilan elementlar takrorlanishi yoki tushib qolishi mumkin. Offset \"boshidan N ta o'tkazib yubor\" degani: foydalanuvchi o'qiyotganda lenta boshiga yangi yozuv tushsa, keyingi sahifa bir pozitsiyaga siljiydi va element takrorlanadi. Cursor \"shu elementdan keyingilarni ber\" degani va o'zgarishlarga chidamli. Katta jadvallarda u indeks bo'yicha tezroq ham ishlaydi.",
       "reviewed": false
     }
   ]

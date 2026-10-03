@@ -36,12 +36,12 @@
       "kind": "concept",
       "prompt": "Nega `ViewModel` ekran aylantirilganda saqlanib qoladi?",
       "options": [
-        { "id": "a", "text": "U `ViewModelStore` da turadi, bu store esa konfiguratsiya o'zgarishida yangi Activity nusxasiga uzatiladi", "correct": true },
-        { "id": "b", "text": "U `onSaveInstanceState` orqali `Bundle` ga serializatsiya qilinadi", "hint": "`Bundle` ga faqat kichik, serializatsiya qilinadigan ma'lumot yoziladi. ViewModel obyektining o'zi xotirada tirik qoladi." },
+        { "id": "a", "text": "U `ViewModelStore` da turadi va bu store konfiguratsiya o'zgarishidan omon qoladi", "correct": true },
+        { "id": "b", "text": "U `onSaveInstanceState` orqali `Bundle` ga serializatsiya qilinadi va keyin tiklanadi", "hint": "`Bundle` ga faqat kichik, serializatsiya qilinadigan ma'lumot yoziladi. ViewModel obyektining o'zi xotirada tirik qoladi." },
         { "id": "c", "text": "U Application darajasidagi singleton", "hint": "Unda ViewModel ekran yopilganda ham tozalanmas edi. Aslida Activity butunlay tugaganda `onCleared()` chaqiriladi." },
         { "id": "d", "text": "Tizim uni diskka yozib, keyin qayta o'qiydi", "hint": "Diskka hech narsa yozilmaydi. Shuning uchun jarayon o'ldirilganda (process death) ViewModel yo'qoladi." }
       ],
-      "explanation": "Har bir `ViewModelStoreOwner` (Activity, Fragment, navigatsiya yozuvi) o'z `ViewModelStore` iga ega. Konfiguratsiya o'zgarishida tizim bu store'ni eski Activity'dan yangisiga o'tkazadi, shuning uchun ViewModel o'sha obyekt bo'lib qoladi. Activity haqiqatan tugaganda store tozalanadi.",
+      "explanation": "`ViewModelStore` konfiguratsiya o'zgarishida yangi Activity nusxasiga uzatiladi. Har bir `ViewModelStoreOwner` (Activity, Fragment, navigatsiya yozuvi) o'z `ViewModelStore` iga ega. Konfiguratsiya o'zgarishida tizim bu store'ni eski Activity'dan yangisiga o'tkazadi, shuning uchun ViewModel o'sha obyekt bo'lib qoladi. Activity haqiqatan tugaganda store tozalanadi.",
       "reviewed": false
     },
     {
@@ -112,12 +112,12 @@
       "kind": "concept",
       "prompt": "Explicit va implicit Intent o'rtasidagi farq nima?",
       "options": [
-        { "id": "a", "text": "Explicit Intent aniq komponentni (klassni) ko'rsatadi; implicit Intent bajarilishi kerak bo'lgan amalni tasvirlaydi va mos ilovani tizim topadi", "correct": true },
-        { "id": "b", "text": "Explicit Intent faqat boshqa ilovalarni ochadi, implicit esa faqat o'z ilovangiz ichida ishlaydi", "hint": "Ko'pincha aksincha: o'z ekranlaringizni klass nomi bilan ochasiz, begona ilovalarni esa amal orqali." },
+        { "id": "a", "text": "Explicit — aniq klassni ko'rsatadi; implicit — amalni tasvirlaydi, mos ilovani tizim tanlaydi", "correct": true },
+        { "id": "b", "text": "Explicit Intent faqat boshqa ilovalarni ochadi, implicit esa faqat o'z ilovangiz ichidagi Activity'lar uchun ishlaydi", "hint": "Ko'pincha aksincha: o'z ekranlaringizni klass nomi bilan ochasiz, begona ilovalarni esa amal orqali." },
         { "id": "c", "text": "Implicit Intent ma'lumot (extras) olib yura olmaydi", "hint": "Har ikki tur ham extras, data va flag'larni olib yuradi." },
         { "id": "d", "text": "Explicit Intent manifestda e'lon qilinmagan Activity'ni ham ocha oladi", "hint": "Manifestda yo'q Activity'ni hech qanday Intent ocha olmaydi: `ActivityNotFoundException` chiqadi." }
       ],
-      "explanation": "`Intent(this, DetailActivity::class.java)` — explicit: qaysi klass ochilishi aniq. `Intent(Intent.ACTION_VIEW, uri)` — implicit: tizim shu amalni bajara oladigan ilovalarni `intent-filter` bo'yicha qidiradi va bir nechta bo'lsa, tanlash oynasini ko'rsatadi.",
+      "explanation": "Explicit Intent aniq komponentni (klassni) ko'rsatadi; implicit Intent bajariladigan amalni tasvirlaydi va mos ilovani tizim topadi. `Intent(this, DetailActivity::class.java)` — explicit: qaysi klass ochilishi aniq. `Intent(Intent.ACTION_VIEW, uri)` — implicit: tizim shu amalni bajara oladigan ilovalarni `intent-filter` bo'yicha qidiradi va bir nechta bo'lsa, tanlash oynasini ko'rsatadi.",
       "reviewed": false
     },
     {
@@ -158,10 +158,10 @@
       "prompt": "Bu kodda nima yetishmaydi?",
       "code": "class CompassActivity : AppCompatActivity(), SensorEventListener {\n\n    override fun onResume() {\n        super.onResume()\n        sensorManager.registerListener(\n            this, sensor, SensorManager.SENSOR_DELAY_UI\n        )\n    }\n}",
       "options": [
-        { "id": "a", "text": "`onPause()` da `unregisterListener` chaqirilmagan: sensor ekran yopilgandan keyin ham ishlab, batareyani sarflaydi", "correct": true },
+        { "id": "a", "text": "`onPause()` da `unregisterListener` yo'q — sensor ekran yopilgach ham ishlab, batareyani yeydi", "correct": true },
         { "id": "b", "text": "Listener `onCreate()` da ro'yxatdan o'tishi shart", "hint": "`onResume`/`onPause` juftligi sensor uchun to'g'ri joy; muhimi juftlikning ikkinchi yarmi." },
         { "id": "c", "text": "Sensor manifestda `intent-filter` bilan e'lon qilinishi kerak", "hint": "Sensor listener'lari manifestda e'lon qilinmaydi; ular kodda ro'yxatdan o'tadi." },
-        { "id": "d", "text": "`SENSOR_DELAY_UI` o'rniga `SENSOR_DELAY_FASTEST` ishlatish kerak", "hint": "Tezroq chastota batareyani ko'proq sarflaydi; muammo chastotada emas." }
+        { "id": "d", "text": "`SENSOR_DELAY_UI` o'rniga `SENSOR_DELAY_FASTEST` ishlatish kerak, aks holda ma'lumot kechikib keladi", "hint": "Tezroq chastota batareyani ko'proq sarflaydi; muammo chastotada emas." }
       ],
       "explanation": "Lifecycle callback'larida olingan har bir resurs juft callback'da qaytarilishi kerak: `onResume` da ro'yxatdan o'tgan listener `onPause` da olib tashlanadi. Aks holda sensor fonda ham ishlayveradi, Activity esa listener orqali ushlab turiladi.",
       "reviewed": false
@@ -173,8 +173,8 @@
       "kind": "concept",
       "prompt": "Fragment'da `Flow` ni kuzatishda nega `viewLifecycleOwner` ishlatiladi, Fragment'ning o'zi (`this`) emas?",
       "options": [
-        { "id": "a", "text": "Fragment view'si Fragment'dan oldin yo'q qilinishi mumkin; Fragment lifecycle'i bilan kuzatilsa, eski view'ga murojaat va takroriy obuna paydo bo'ladi", "correct": true },
-        { "id": "b", "text": "Fragment `LifecycleOwner` emas, shuning uchun `this` ni berib bo'lmaydi", "hint": "Fragment ham `LifecycleOwner`; kod kompilyatsiya bo'ladi, muammo runtime'dagi xatti-harakatda." },
+        { "id": "a", "text": "Fragment view'si Fragment'dan oldin yo'q qilinadi; aks holda eski view'ga murojaat va takroriy obuna bo'ladi", "correct": true },
+        { "id": "b", "text": "Fragment `LifecycleOwner` interfeysini amalga oshirmaydi, shuning uchun `this` ni `repeatOnLifecycle` ga berib bo'lmaydi", "hint": "Fragment ham `LifecycleOwner`; kod kompilyatsiya bo'ladi, muammo runtime'dagi xatti-harakatda." },
         { "id": "c", "text": "`viewLifecycleOwner` bilan kuzatish tezroq ishlaydi", "hint": "Gap tezlikda emas, ikki lifecycle'ning qachon tugashida." },
         { "id": "d", "text": "`this` ishlatilsa, kuzatish fon oqimida bajariladi", "hint": "Lifecycle egasi oqimni belgilamaydi; uni dispatcher belgilaydi." }
       ],

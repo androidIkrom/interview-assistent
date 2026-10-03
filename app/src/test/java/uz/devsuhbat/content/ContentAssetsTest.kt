@@ -4,6 +4,7 @@ import java.io.File
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
+import org.junit.Assume.assumeTrue
 import org.junit.Test
 import uz.devsuhbat.engine.QuestionPicker
 
@@ -174,5 +175,51 @@ class ContentAssetsTest {
         }
 
         assertEquals(completedTopics, actual)
+    }
+
+    // --- answers must not be guessable by option length (stage 5g) ---
+
+    /** Topics whose option lengths are already balanced; grows batch by batch until it holds all 88. */
+    private val lengthFixedTopics = setOf(
+        "android.kotlin", "android.components", "android.compose", "android.async", "android.data", "android.arch",
+    )
+
+    /**
+     * A single question (not true/false) leaks when its correct option is longer than every wrong one; a multi
+     * question leaks when every correct option is longer than every wrong one. tools/option_length_report.py
+     * uses the same rule.
+     */
+    private fun leaksByLength(question: Question): Boolean {
+        val correct = question.options.filter { it.correct }.map { it.text.length }
+        val wrong = question.options.filterNot { it.correct }.map { it.text.length }
+        return correct.min() > wrong.max()
+    }
+
+    private fun leakShare(questions: List<Question>): Double {
+        val considered = questions.filter { it.kind != QuestionKind.TRUE_FALSE }
+        return if (considered.isEmpty()) 0.0 else considered.count(::leaksByLength).toDouble() / considered.size
+    }
+
+    @Test
+    fun fixedTopicsDoNotRevealAnswersByLength() {
+        val tooLong = lengthFixedTopics.associateWith { leakShare(store.questions(it)) }
+            .filterValues { it > MAX_LONGEST_SHARE_TOPIC }
+
+        assertTrue("answer is the longest option too often: $tooLong", tooLong.isEmpty())
+    }
+
+    @Test
+    fun bankDoesNotRevealAnswersByLength() {
+        val catalog = catalog()
+        assumeTrue(lengthFixedTopics.size == catalog.topics.size)
+
+        val share = leakShare(catalog.topics.flatMap { store.questions(it.id) })
+
+        assertTrue("answer is the longest option in ${"%.0f".format(share * 100)}% of the bank", share <= MAX_LONGEST_SHARE_BANK)
+    }
+
+    private companion object {
+        const val MAX_LONGEST_SHARE_TOPIC = 0.5
+        const val MAX_LONGEST_SHARE_BANK = 0.35
     }
 }
