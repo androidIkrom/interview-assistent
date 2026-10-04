@@ -24,12 +24,12 @@
       "kind": "concept",
       "prompt": "Precision va recall qanday farqlanadi?",
       "options": [
-        { "id": "a", "text": "Precision — model \"musbat\" degan holatlarning qanchasi haqiqatan musbat: TP / (TP + FP) (signallar qanchalik ishonchli). Recall — haqiqiy musbatlarning qanchasini model topdi: TP / (TP + FN) (qanchasini o'tkazib yubormadik). Odatda biri oshsa, ikkinchisi kamayadi — chegara orqali muvozanatlanadi", "correct": true },
+        { "id": "a", "text": "Precision — \"musbat\" deganlarning qanchasi to'g'ri; recall — haqiqiy musbatlarning qanchasi topildi", "correct": true },
         { "id": "b", "text": "Ikkalasi ham to'g'ri bashoratlar ulushi — faqat nomlari boshqa", "hint": "Maxrajlari farq qiladi: precision — model bashoratlari bo'yicha, recall — haqiqiy musbatlar bo'yicha." },
-        { "id": "c", "text": "Recall — model \"musbat\" degan holatlarning to'g'ri qismi", "hint": "Bu precision ta'rifi; recall haqiqiy musbatlar ichidan topilganlar ulushi." },
+        { "id": "c", "text": "Recall — model \"musbat\" degan holatlarning haqiqatan to'g'ri bo'lgan qismi, ya'ni signallar ishonchliligi", "hint": "Bu precision ta'rifi; recall haqiqiy musbatlar ichidan topilganlar ulushi." },
         { "id": "d", "text": "Precision va recall faqat regressiya uchun ishlatiladi", "hint": "Ular klassifikatsiya metrikalari." }
       ],
-      "explanation": "Xotiraga: precision — \"aytganlarimiz to'g'rimi?\", recall — \"hammasini topdikmi?\". Ko'p sinfli vazifada har sinf uchun alohida hisoblanib, macro yoki weighted o'rtacha olinadi.",
+      "explanation": "Precision = TP / (TP + FP), recall = TP / (TP + FN). Odatda biri oshsa, ikkinchisi kamayadi — chegara orqali muvozanatlanadi. Xotiraga: precision — \"aytganlarimiz to'g'rimi?\", recall — \"hammasini topdikmi?\". Ko'p sinfli vazifada har sinf uchun alohida hisoblanib, macro yoki weighted o'rtacha olinadi.",
       "reviewed": false
     },
     {
@@ -55,12 +55,12 @@
       "kind": "concept",
       "prompt": "Regressiyada MAE va RMSE qanday farqlanadi?",
       "options": [
-        { "id": "a", "text": "MAE — xatolar modullarining o'rtachasi: talqini oson (\"o'rtacha 120 000 so'mga adashadi\"), katta xatolarga chidamli. RMSE — xatolar kvadratlari o'rtachasining ildizi: katta xatolarni kuchliroq jazolaydi. Katta adashish ayniqsa qimmat bo'lsa — RMSE, chetdagi qiymatlar ko'p bo'lsa — MAE", "correct": true },
+        { "id": "a", "text": "MAE — xato modullari o'rtachasi, talqini oson; RMSE — kvadratlar asosida, katta xatolarni kuchliroq jazolaydi", "correct": true },
         { "id": "b", "text": "Ikkalasi har doim bir xil qiymat beradi", "hint": "RMSE ≥ MAE; farq katta xatolar qanchalik ko'pligini ko'rsatadi." },
-        { "id": "c", "text": "RMSE chetdagi qiymatlarga MAE'dan kam sezgir", "hint": "Kvadratga oshirish katta xatolarni kuchaytiradi — RMSE sezgirroq." },
+        { "id": "c", "text": "RMSE chetdagi qiymatlarga MAE'dan kam sezgir, chunki kvadrat ildiz katta xatolarning ta'sirini sezilarli yumshatib yuboradi", "hint": "Kvadratga oshirish katta xatolarni kuchaytiradi — RMSE sezgirroq." },
         { "id": "d", "text": "R² har doim 0 dan 1 gacha", "hint": "Yomon model uchun R² manfiy bo'lishi mumkin (o'rtachani bashorat qilishdan ham yomon)." }
       ],
-      "explanation": "Nisbiy xato kerak bo'lsa — MAPE (lekin nolga yaqin haqiqiy qiymatlarda portlaydi). Metrika biznes yo'qotishiga mos tanlanadi: zaxirani kam bashorat qilish ortiqchasidan qimmat bo'lsa — asimmetrik (quantile) loss.",
+      "explanation": "Masalan, MAE: \"o'rtacha 120 000 so'mga adashadi\". Katta adashish ayniqsa qimmat bo'lsa — RMSE, chetdagi qiymatlar ko'p bo'lsa — MAE. Nisbiy xato kerak bo'lsa — MAPE (lekin nolga yaqin haqiqiy qiymatlarda portlaydi). Metrika biznes yo'qotishiga mos tanlanadi: zaxirani kam bashorat qilish ortiqchasidan qimmat bo'lsa — asimmetrik (quantile) loss.",
       "reviewed": false
     },
     {
@@ -70,12 +70,12 @@
       "kind": "concept",
       "prompt": "Saraton skriningi va spam filtri uchun qaysi metrikaga ko'proq urg'u beriladi?",
       "options": [
-        { "id": "a", "text": "Saraton skriningi — recall: kasalni o'tkazib yuborish (FN) juda qimmat, qo'shimcha tekshiruv (FP) esa qabul qilinadi. Spam filtri — precision: muhim xatni spamga tashlab yuborish (FP) qimmat, ba'zi spam inbox'ga tushishi (FN) kechiriladi. Qaror xato turlarining narxiga bog'liq", "correct": true },
+        { "id": "a", "text": "Saraton skriningi — recall (kasalni o'tkazib yuborish qimmat); spam filtri — precision (muhim xat yo'qolmasin)", "correct": true },
         { "id": "b", "text": "Ikkalasida ham accuracy yetarli", "hint": "Accuracy xato turlarini farqlamaydi, ularning narxi esa juda turlicha." },
-        { "id": "c", "text": "Saraton skriningi — precision, spam — recall", "hint": "Qaysi xato qimmatroq ekanini o'ylang: kasalni o'tkazib yuborishmi yoki ortiqcha tekshiruvmi?" },
+        { "id": "c", "text": "Saraton skriningi — precision, spam — recall, chunki tibbiyotda har bir ijobiy tashxis aniq bo'lishi hamma narsadan muhimroq", "hint": "Qaysi xato qimmatroq ekanini o'ylang: kasalni o'tkazib yuborishmi yoki ortiqcha tekshiruvmi?" },
         { "id": "d", "text": "Har doim F1 — boshqa metrika kerak emas", "hint": "F1 precision va recall'ga teng og'irlik beradi; xatolar narxi teng bo'lmasa, F-beta yoki to'g'ridan-to'g'ri xarajat funksiyasi yaxshiroq." }
       ],
-      "explanation": "F-beta: beta > 1 recall'ga, beta < 1 precision'ga ko'proq og'irlik beradi. Eng yaxshi yondashuv — biznes bilan har xato turining narxini kelishib, kutilgan xarajatni minimallashtiradigan chegarani tanlash.",
+      "explanation": "Skriningda qo'shimcha tekshiruv (FP) qabul qilinadi; spamda ba'zi spam inbox'ga tushishi (FN) kechiriladi. Qaror xato turlarining narxiga bog'liq. F-beta: beta > 1 recall'ga, beta < 1 precision'ga ko'proq og'irlik beradi. Eng yaxshi yondashuv — biznes bilan har xato turining narxini kelishib, kutilgan xarajatni minimallashtiradigan chegarani tanlash.",
       "reviewed": false
     },
     {
@@ -85,12 +85,12 @@
       "kind": "concept",
       "prompt": "ROC-AUC va PR-AUC qachon qaysi biri ko'proq ma'lumot beradi?",
       "options": [
-        { "id": "a", "text": "ROC-AUC — TPR va FPR bo'yicha, tasodifiy musbat misol tasodifiy manfiydan yuqori baholanish ehtimoli; sinflar nisbatiga deyarli sezgir emas. Kuchli nomutanosiblikda (musbatlar 0,1%) ko'p manfiylar tufayli FPR kichik ko'rinadi va ROC-AUC optimistik — PR-AUC (precision–recall) nodir sinfdagi haqiqiy sifatni yaxshiroq ko'rsatadi", "correct": true },
+        { "id": "a", "text": "ROC-AUC sinflar nisbatiga deyarli sezgir emas; kuchli nomutanosiblikda PR-AUC nodir sinf sifatini yaxshiroq ko'rsatadi", "correct": true },
         { "id": "b", "text": "ROC-AUC = 0,5 — mukammal model", "hint": "0,5 — tasodifiy taxmin darajasi; 1,0 — mukammal ajratish." },
         { "id": "c", "text": "PR-AUC'ning tasodifiy baseline'i har doim 0,5", "hint": "PR-AUC baseline'i musbatlar ulushiga teng (masalan, 0,001)." },
-        { "id": "d", "text": "AUC metrikalari aniq chegara tanlashni talab qiladi", "hint": "AUC barcha chegaralar bo'yicha umumiy baho; amaliy qaror uchun chegara alohida tanlanadi." }
+        { "id": "d", "text": "AUC metrikalari aniq qaror chegarasini tanlashni talab qiladi va faqat o'sha bitta tanlangan chegaradagi sifatni ko'rsatadi", "hint": "AUC barcha chegaralar bo'yicha umumiy baho; amaliy qaror uchun chegara alohida tanlanadi." }
       ],
-      "explanation": "AUC — modellarni reyting qobiliyati bo'yicha solishtirish uchun, lekin production'da muhimi — tanlangan chegaradagi precision/recall va biznes ta'siri. Ehtimollar kalibrlanmagan bo'lsa ham AUC yuqori bo'lishi mumkin.",
+      "explanation": "ROC-AUC — tasodifiy musbat misol tasodifiy manfiydan yuqori baholanish ehtimoli; musbatlar 0,1% bo'lsa ko'p manfiylar tufayli FPR kichik ko'rinadi va ROC-AUC optimistik. AUC — modellarni reyting qobiliyati bo'yicha solishtirish uchun, lekin production'da muhimi — tanlangan chegaradagi precision/recall va biznes ta'siri. Ehtimollar kalibrlanmagan bo'lsa ham AUC yuqori bo'lishi mumkin.",
       "reviewed": false
     },
     {
@@ -100,12 +100,12 @@
       "kind": "concept",
       "prompt": "k-fold cross-validation qanday ishlaydi va qachon kerak?",
       "options": [
-        { "id": "a", "text": "Ma'lumot k qismga bo'linadi; har safar bitta qism validation, qolganlari train — k marta o'qitib, natijalar o'rtachasi va tarqoqligi olinadi. Kichik ma'lumotda bitta tasodifiy bo'lishga qaraganda ishonchliroq baho beradi va modellarni solishtirishda barqarorlikni ko'rsatadi. Klassifikatsiyada stratified, guruhli ma'lumotda GroupKFold", "correct": true },
+        { "id": "a", "text": "Ma'lumot k qismga bo'linadi, har biri navbat bilan validation; k natijaning o'rtachasi va tarqoqligi olinadi", "correct": true },
         { "id": "b", "text": "Bitta modelni k ta turli test to'plamida bir marta o'qitib baholash", "hint": "Har fold'da model qayta o'qitiladi — har safar boshqa train qismida." },
-        { "id": "c", "text": "Cross-validation test to'plamini butunlay almashtiradi — alohida test kerak emas", "hint": "CV model tanlash uchun; yakuniy halol baho uchun alohida test (yoki nested CV) kerak." },
+        { "id": "c", "text": "Cross-validation test to'plamini butunlay almashtiradi — yakuniy baholash uchun alohida test to'plami umuman kerak emas", "hint": "CV model tanlash uchun; yakuniy halol baho uchun alohida test (yoki nested CV) kerak." },
         { "id": "d", "text": "Vaqt qatorlari uchun oddiy tasodifiy k-fold to'g'ri", "hint": "Kelajak ma'lumotida o'qitib o'tmishni bashorat qilish — leakage; vaqt bo'yicha bo'lish kerak." }
       ],
-      "explanation": "Preprocessing'ni (scaler, imputer, encoder) har fold ichida qilish uchun sklearn `Pipeline` + `cross_val_score`. Fold'lar orasidagi katta tarqoqlik — model yoki ma'lumot beqarorligi belgisi.",
+      "explanation": "Kichik ma'lumotda bitta tasodifiy bo'lishdan ishonchliroq va modellarni solishtirishda barqarorlikni ko'rsatadi. Klassifikatsiyada stratified, guruhli ma'lumotda GroupKFold. Preprocessing'ni (scaler, imputer, encoder) har fold ichida qilish uchun sklearn `Pipeline` + `cross_val_score`. Fold'lar orasidagi katta tarqoqlik — model yoki ma'lumot beqarorligi belgisi.",
       "reviewed": false
     },
     {
@@ -131,12 +131,12 @@
       "kind": "concept",
       "prompt": "Kunlik sotuvni bashorat qiluvchi model qanday validatsiya qilinishi kerak?",
       "options": [
-        { "id": "a", "text": "Vaqt bo'yicha: model faqat o'tmishda o'qitilib, keyingi davrda baholanadi — walk-forward (rolling/expanding window, `TimeSeriesSplit`), bashorat gorizontiga mos bo'shliq (gap) bilan; xususiyatlar (lag, rolling) faqat bashorat paytida ma'lum bo'lgan ma'lumotdan; natija oddiy baseline'lar (o'tgan hafta shu kun, mavsumiy naive) bilan solishtiriladi", "correct": true },
-        { "id": "b", "text": "Kunlarni tasodifiy aralashtirib 5-fold CV", "hint": "Model kelajak kunlaridan o'rganib o'tmishni \"bashorat qiladi\" — real ishlashdan ancha yaxshi natija." },
+        { "id": "a", "text": "Walk-forward (`TimeSeriesSplit`): o'tmishda o'qitib, keyingi davrda baholash, baseline bilan solishtirish", "correct": true },
+        { "id": "b", "text": "Kunlarni tasodifiy aralashtirib oddiy 5-fold CV — shunda har bir fold'da barcha mavsum va hafta kunlari teng qatnashadi", "hint": "Model kelajak kunlaridan o'rganib o'tmishni \"bashorat qiladi\" — real ishlashdan ancha yaxshi natija." },
         { "id": "c", "text": "Faqat oxirgi bitta kunda baholash", "hint": "Bitta nuqta juda shovqinli; bir nechta davr bo'yicha baholash kerak." },
         { "id": "d", "text": "Baseline bilan solishtirish shart emas", "hint": "Murakkab model \"o'tgan haftadagi qiymat\"dan yaxshi bo'lmasligi mumkin — buni bilish kerak." }
       ],
-      "explanation": "Bayramlar, aksiyalar va tashqi omillar (ob-havo) xususiyat sifatida va validatsiya davrlarini tanlashda hisobga olinadi. Bashorat oralig'i (prediction interval) ham baholanadi — biznes uchun noaniqlik muhim.",
+      "explanation": "Bashorat gorizontiga mos bo'shliq (gap) qo'yiladi; lag/rolling xususiyatlar faqat bashorat paytida ma'lum ma'lumotdan. Baseline — o'tgan hafta shu kun, mavsumiy naive. Bayramlar, aksiyalar va tashqi omillar (ob-havo) xususiyat sifatida va validatsiya davrlarini tanlashda hisobga olinadi. Bashorat oralig'i (prediction interval) ham baholanadi — biznes uchun noaniqlik muhim.",
       "reviewed": false
     },
     {
@@ -146,12 +146,12 @@
       "kind": "concept",
       "prompt": "Model ehtimol qaytaradi va biznes uni \"bu mijoz 30% ehtimol bilan ketadi\" deb talqin qilmoqchi. Nimani tekshirish kerak?",
       "options": [
-        { "id": "a", "text": "Kalibrovka: 0,3 ehtimol berilgan mijozlarning haqiqatan ~30% i ketadimi — reliability diagram va Brier score bilan tekshiriladi. Ko'p modellar (boosting, SVM, resampling bilan o'qitilganlar) kalibrlanmagan ehtimol beradi — Platt scaling yoki isotonic regression bilan alohida validation to'plamida kalibrlanadi. Qaror chegarasi esa xato narxlariga qarab tanlanadi", "correct": true },
-        { "id": "b", "text": "Har qanday model chiqishi to'g'ridan-to'g'ri ehtimol sifatida talqin qilinadi", "hint": "Yuqori AUC'li model ham ehtimollarni muntazam oshirib yoki kamaytirib berishi mumkin." },
+        { "id": "a", "text": "Kalibrovka: 0,3 berilgan mijozlarning ~30% i haqiqatan ketadimi — reliability diagram va Brier score", "correct": true },
+        { "id": "b", "text": "Har qanday model chiqishi to'g'ridan-to'g'ri haqiqiy ehtimol sifatida talqin qilinadi — tekshirish kerak emas", "hint": "Yuqori AUC'li model ham ehtimollarni muntazam oshirib yoki kamaytirib berishi mumkin." },
         { "id": "c", "text": "Kalibrovkani test to'plamida qilib, o'sha to'plamda baholash", "hint": "Baho optimistik bo'ladi; kalibrovka uchun alohida qism kerak." },
         { "id": "d", "text": "Kalibrovka AUC'ni sezilarli oshiradi", "hint": "Monoton kalibrovka reytingni o'zgartirmaydi — AUC deyarli o'zgarmaydi; ehtimollar aniqligi yaxshilanadi." }
       ],
-      "explanation": "Kalibrlangan ehtimollar kutilgan qiymat hisoblari uchun zarur (kutilgan yo'qotish = ehtimol × summa). sklearn: `CalibratedClassifierCV`. Ma'lumot taqsimoti o'zgarsa (drift), kalibrovka ham buziladi — monitoring kerak.",
+      "explanation": "Boosting, SVM va resampling bilan o'qitilgan modellar ko'pincha kalibrlanmagan — alohida validation to'plamida Platt scaling yoki isotonic regression. Qaror chegarasi xato narxlariga qarab tanlanadi. Kalibrlangan ehtimollar kutilgan qiymat hisoblari uchun zarur (kutilgan yo'qotish = ehtimol × summa). sklearn: `CalibratedClassifierCV`. Ma'lumot taqsimoti o'zgarsa (drift), kalibrovka ham buziladi — monitoring kerak.",
       "reviewed": false
     },
     {

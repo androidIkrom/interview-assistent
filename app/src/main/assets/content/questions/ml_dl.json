@@ -8,12 +8,12 @@
       "kind": "concept",
       "prompt": "Neyron tarmoqda aktivatsiya funksiyasi (ReLU, sigmoid) nima uchun kerak?",
       "options": [
-        { "id": "a", "text": "Chiziqsizlik qo'shish uchun: aktivatsiyasiz bir nechta chiziqli qatlam ketma-ketligi baribir bitta chiziqli funksiyaga teng — tarmoq murakkab bog'liqliklarni (tasvir, matn) o'rgana olmaydi. Yashirin qatlamlarda odatda ReLU/GELU, chiqishda vazifaga mos funksiya (sinf ehtimollari uchun softmax)", "correct": true },
-        { "id": "b", "text": "O'qitishni tezlashtirish uchun — boshqa vazifasi yo'q", "hint": "Asosiy vazifa — tarmoqning ifoda qobiliyati (chiziqsizlik)." },
+        { "id": "a", "text": "Chiziqsizlik qo'shish: aktivatsiyasiz qatlamlar zanjiri bitta chiziqli funksiyaga teng bo'lib qoladi", "correct": true },
+        { "id": "b", "text": "O'qitishni tezlashtirish uchun — aktivatsiya gradientlarni kattalashtiradi, boshqa hech qanday vazifasi yo'q", "hint": "Asosiy vazifa — tarmoqning ifoda qobiliyati (chiziqsizlik)." },
         { "id": "c", "text": "Qatlamlar sonini kamaytirish uchun", "hint": "Qatlamlar soni arxitektura tanlovi; aktivatsiya har neyron chiqishini o'zgartiradi." },
         { "id": "d", "text": "Aktivatsiya faqat chiqish qatlamida ishlatiladi", "hint": "Yashirin qatlamlarda ham albatta — aks holda tarmoq chiziqli model bo'lib qoladi." }
       ],
-      "explanation": "Neyron — kirishlarning og'irlikli yig'indisi + bias, so'ng aktivatsiya. Sigmoid/tanh chuqur tarmoqlarda gradientlarning so'nishiga olib keladi — shu sabab yashirin qatlamlarda ReLU oilasi keng tarqalgan.",
+      "explanation": "Unda tarmoq tasvir yoki matn kabi murakkab bog'liqliklarni o'rgana olmaydi. Yashirin qatlamlarda odatda ReLU/GELU, chiqishda vazifaga mos funksiya (softmax). Neyron — kirishlarning og'irlikli yig'indisi + bias, so'ng aktivatsiya. Sigmoid/tanh chuqur tarmoqlarda gradientlarning so'nishiga olib keladi — shu sabab yashirin qatlamlarda ReLU oilasi keng tarqalgan.",
       "reviewed": false
     },
     {
@@ -23,12 +23,12 @@
       "kind": "concept",
       "prompt": "Epoch, batch size va learning rate nimani anglatadi?",
       "options": [
-        { "id": "a", "text": "Epoch — butun train ma'lumotidan bir marta to'liq o'tish; batch size — bitta og'irlik yangilanishi uchun ishlatiladigan misollar soni; learning rate — har yangilanishda og'irliklar gradient yo'nalishida qanchalik siljishi. Juda katta learning rate — o'qitish beqaror yoki yoyiladi, juda kichik — juda sekin", "correct": true },
+        { "id": "a", "text": "Epoch — train'dan bir to'liq o'tish; batch size — bitta yangilanishdagi misollar; learning rate — qadam kattaligi", "correct": true },
         { "id": "b", "text": "Epoch — bitta misol bo'yicha bitta yangilanish", "hint": "Bu bitta qadam (iteration); epoch — butun to'plam bo'yicha." },
-        { "id": "c", "text": "Learning rate qanchalik katta bo'lsa, model shunchalik aniq", "hint": "Katta qadamlar minimumdan sakrab o'tib ketadi va loss portlashi mumkin." },
+        { "id": "c", "text": "Learning rate qanchalik katta bo'lsa, model shunchalik tez va aniq o'rganadi — uni doim maksimal qiymatga qo'yish kerak", "hint": "Katta qadamlar minimumdan sakrab o'tib ketadi va loss portlashi mumkin." },
         { "id": "d", "text": "Batch size natijaga ta'sir qilmaydi — faqat xotiraga", "hint": "U gradient shovqini, umumlashtirish va mos learning rate'ga ham ta'sir qiladi." }
       ],
-      "explanation": "Odatiy amaliyot: learning rate scheduler (warmup + cosine decay), validation loss'ni kuzatish, GPU xotirasi imkon bergan batch size. Bitta epoch'dagi qadamlar soni = ma'lumot hajmi / batch size.",
+      "explanation": "Juda katta learning rate — o'qitish beqaror yoki yoyiladi, juda kichik — juda sekin. Odatiy amaliyot: learning rate scheduler (warmup + cosine decay), validation loss'ni kuzatish, GPU xotirasi imkon bergan batch size. Bitta epoch'dagi qadamlar soni = ma'lumot hajmi / batch size.",
       "reviewed": false
     },
     {
@@ -54,12 +54,12 @@
       "kind": "concept",
       "prompt": "Backpropagation va gradient descent qanday birga ishlaydi? Adam optimizatori SGD'dan nimasi bilan farq qiladi?",
       "options": [
-        { "id": "a", "text": "Backpropagation zanjir qoidasi bilan loss'ning har og'irlikka nisbatan gradientini chiqishdan kirishga qarab hisoblaydi; gradient descent og'irliklarni gradientga teskari yo'nalishda siljitadi. SGD (momentum bilan) — barcha parametrlar uchun bitta learning rate; Adam — har parametr uchun gradientlarning o'rtachasi va dispersiyasi asosida moslashuvchan qadam: tez yaqinlashadi va sozlash oson, lekin ba'zi vazifalarda SGD yaxshiroq umumlashtiradi", "correct": true },
-        { "id": "b", "text": "Backpropagation — ma'lumotni tarmoq orqali oldinga o'tkazish", "hint": "Oldinga o'tish — forward pass; backprop gradientlarni orqaga hisoblaydi." },
+        { "id": "a", "text": "Backprop zanjir qoidasi bilan gradientlarni hisoblaydi, descent og'irliklarni siljitadi; Adam — moslashuvchan qadam", "correct": true },
+        { "id": "b", "text": "Backpropagation — ma'lumotni tarmoq orqali oldinga o'tkazish, Adam esa shu o'tishni bir necha marta tezlashtiradi va natijani aniqroq qiladi", "hint": "Oldinga o'tish — forward pass; backprop gradientlarni orqaga hisoblaydi." },
         { "id": "c", "text": "Adam learning rate tanlashni butunlay keraksiz qiladi", "hint": "Adam ham learning rate'ga sezgir; faqat parametrlar bo'yicha moslashadi." },
         { "id": "d", "text": "Gradient descent har doim global minimumni topadi", "hint": "Chuqur tarmoqlarning loss yuzasi qavariq emas — lokal minimum va egar nuqtalar bor (amalda ko'pincha yetarli yaxshi yechim topiladi)." }
       ],
-      "explanation": "Zamonaviy framework'lar (PyTorch, JAX) gradientlarni avtomatik hisoblaydi (autograd). AdamW — weight decay to'g'ri ajratilgan variant, transformer'larda standart. Gradient clipping — gradient portlashining oldini oladi.",
+      "explanation": "SGD (momentum bilan) barcha parametrlar uchun bitta learning rate ishlatadi; Adam har parametr uchun gradient o'rtachasi va dispersiyasidan qadam tanlaydi — tez yaqinlashadi, lekin ba'zan SGD yaxshiroq umumlashtiradi. Zamonaviy framework'lar (PyTorch, JAX) gradientlarni avtomatik hisoblaydi (autograd). AdamW — weight decay to'g'ri ajratilgan variant, transformer'larda standart. Gradient clipping — gradient portlashining oldini oladi.",
       "reviewed": false
     },
     {
@@ -69,12 +69,12 @@
       "kind": "concept",
       "prompt": "Embedding nima va u qanday ishlatiladi?",
       "options": [
-        { "id": "a", "text": "Ob'ektni (so'z, matn, mahsulot, foydalanuvchi, rasm) zich sonli vektorga aylantirish: ma'nosi yaqin ob'ektlar vektorlar fazosida yaqin joylashadi. Ishlatilishi: semantik qidiruv va RAG (kosinus o'xshashlik), tavsiya tizimlari, klasterlash, kategorik xususiyatlarni modelga berish", "correct": true },
+        { "id": "a", "text": "Ob'ektni zich vektorga aylantirish: ma'nosi yaqinlar fazoda yaqin; qidiruv, RAG, tavsiyalar uchun", "correct": true },
         { "id": "b", "text": "Embedding — one-hot kodlashning boshqa nomi", "hint": "One-hot — siyrak, o'lchami katta va ma'no yaqinligini bildirmaydi; embedding — zich va o'rganilgan." },
-        { "id": "c", "text": "Turli modellardan olingan embedding'larni bir-biri bilan bemalol solishtirish mumkin", "hint": "Har model o'z vektor fazosini yaratadi — bitta indeksda bitta model embedding'lari bo'lishi kerak." },
+        { "id": "c", "text": "Turli modellardan olingan embedding'larni bir-biri bilan bemalol solishtirish mumkin — fazo hamma joyda bir xil", "hint": "Har model o'z vektor fazosini yaratadi — bitta indeksda bitta model embedding'lari bo'lishi kerak." },
         { "id": "d", "text": "Embedding faqat matn uchun", "hint": "Rasm, audio, grafik, foydalanuvchi va mahsulotlar uchun ham keng ishlatiladi." }
       ],
-      "explanation": "Embedding modeli o'zgartirilsa, butun indeksni qayta hisoblash kerak — versiyalashni rejalashtiring. Vektor qidiruv uchun ANN indekslar (HNSW) va vektor bazalar (pgvector, Qdrant, Milvus).",
+      "explanation": "Ob'ekt — so'z, matn, mahsulot, foydalanuvchi, rasm. O'xshashlik odatda kosinus bilan; klasterlash va kategorik xususiyatlarni modelga berishda ham ishlatiladi. Embedding modeli o'zgartirilsa, butun indeksni qayta hisoblash kerak — versiyalashni rejalashtiring. Vektor qidiruv uchun ANN indekslar (HNSW) va vektor bazalar (pgvector, Qdrant, Milvus).",
       "reviewed": false
     },
     {
@@ -84,12 +84,12 @@
       "kind": "concept",
       "prompt": "Transformer'dagi attention mexanizmining asosiy g'oyasi nima?",
       "options": [
-        { "id": "a", "text": "Har token boshqa barcha tokenlarga qarab, qaysilari unga muhimroq ekanini o'rganadi: query, key va value vektorlari orqali o'xshashlik og'irliklari hisoblanib, value'larning og'irlikli yig'indisi olinadi. Ketma-ketlik parallel ishlanadi (RNN'dan farqli) va uzoq bog'liqliklar to'g'ridan-to'g'ri ushlanadi; xarajat esa kontekst uzunligi kvadratiga proporsional o'sadi", "correct": true },
-        { "id": "b", "text": "Attention — modelning e'tiborini faqat birinchi so'zga qaratish", "hint": "Har token barcha (yoki ruxsat etilgan) tokenlarga turli og'irlik bilan qaraydi." },
+        { "id": "a", "text": "Har token query/key/value orqali qolgan tokenlarning muhimligini o'lchab, value'larning og'irlikli yig'indisini oladi", "correct": true },
+        { "id": "b", "text": "Attention — modelning e'tiborini faqat birinchi so'zga qaratish, qolgan so'zlar esa kontekstdan butunlay chiqarib tashlanadi", "hint": "Har token barcha (yoki ruxsat etilgan) tokenlarga turli og'irlik bilan qaraydi." },
         { "id": "c", "text": "Transformer matnni so'zma-so'z ketma-ket, RNN kabi ishlaydi", "hint": "O'qitishda butun ketma-ketlik parallel ishlanadi — GPU'dan samarali foydalanish shundan." },
         { "id": "d", "text": "Attention xarajati kontekst uzunligiga bog'liq emas", "hint": "Standart self-attention n×n matritsa hisoblaydi — uzun kontekst qimmat." }
       ],
-      "explanation": "Multi-head attention — bir nechta turdagi munosabatlarni parallel o'rganadi. Pozitsiya ma'lumoti alohida beriladi (positional encoding, RoPE). Decoder modellar (GPT turidagi) causal mask bilan faqat oldingi tokenlarga qaraydi.",
+      "explanation": "Ketma-ketlik parallel ishlanadi (RNN'dan farqli), uzoq bog'liqliklar to'g'ridan-to'g'ri ushlanadi; xarajat kontekst uzunligi kvadratiga proporsional. Multi-head attention — bir nechta turdagi munosabatlarni parallel o'rganadi. Pozitsiya ma'lumoti alohida beriladi (positional encoding, RoPE). Decoder modellar (GPT turidagi) causal mask bilan faqat oldingi tokenlarga qaraydi.",
       "reviewed": false
     },
     {
@@ -99,12 +99,12 @@
       "kind": "concept",
       "prompt": "RAG (Retrieval-Augmented Generation) nima va qachon ishlatiladi?",
       "options": [
-        { "id": "a", "text": "Savolga javob berishdan oldin tashqi bilim bazasidan (hujjatlar, wiki, mahsulot katalogi) tegishli parchalar qidirib topiladi va LLM'ga kontekst sifatida beriladi; model javobni shu manbalarga asoslaydi. Qachon: ma'lumot tez-tez yangilanadi, maxsus/ichki bilim kerak, manbaga havola va kirish huquqlari muhim — modelni qayta o'qitmasdan", "correct": true },
-        { "id": "b", "text": "RAG — LLM'ni yangi ma'lumotlarda qayta o'qitish (fine-tuning)", "hint": "RAG model og'irliklarini o'zgartirmaydi; bilim so'rov paytida kontekstga qo'shiladi." },
+        { "id": "a", "text": "Javobdan oldin bilim bazasidan tegishli parchalar topilib, LLM'ga kontekst sifatida beriladi", "correct": true },
+        { "id": "b", "text": "RAG — LLM'ni yangi ma'lumotlarda qayta o'qitish (fine-tuning), faqat bu safar bilim bazasidan foydalanib", "hint": "RAG model og'irliklarini o'zgartirmaydi; bilim so'rov paytida kontekstga qo'shiladi." },
         { "id": "c", "text": "RAG gallyutsinatsiyani butunlay yo'q qiladi", "hint": "Kamaytiradi, lekin noto'g'ri parcha topilsa yoki model kontekstga amal qilmasa, xato javob bo'lishi mumkin." },
         { "id": "d", "text": "RAG'da qidiruv sifati javob sifatiga ta'sir qilmaydi", "hint": "Kerakli parcha topilmasa, eng yaxshi model ham to'g'ri javob bera olmaydi — retrieval ko'pincha asosiy bo'g'oz." }
       ],
-      "explanation": "Asosiy qismlar: hujjatlarni bo'laklash (chunking), embedding va indeks, qidiruv (vektor + kalit so'z, ya'ni hybrid), reranking, prompt'da manbalar bilan generatsiya. Sifat ko'pincha bo'laklash va qidiruvni yaxshilash bilan oshadi, kattaroq model bilan emas.",
+      "explanation": "Model javobni shu manbalarga asoslaydi. Qachon: ma'lumot tez yangilanadi, ichki bilim kerak, manbaga havola va kirish huquqlari muhim — modelni qayta o'qitmasdan. Asosiy qismlar: hujjatlarni bo'laklash (chunking), embedding va indeks, qidiruv (vektor + kalit so'z, ya'ni hybrid), reranking, prompt'da manbalar bilan generatsiya. Sifat ko'pincha bo'laklash va qidiruvni yaxshilash bilan oshadi, kattaroq model bilan emas.",
       "reviewed": false
     },
     {

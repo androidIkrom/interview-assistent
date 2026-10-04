@@ -72,12 +72,12 @@
       "kind": "concept",
       "prompt": "pandas'da yetishmayotgan qiymatlar (NaN) bilan qanday ishlanadi?",
       "options": [
-        { "id": "a", "text": "Aniqlash: `df.isna().sum()` (ustun bo'yicha soni); keyin vaziyatga qarab: `dropna()` — qatorlarni tashlash (kam bo'lsa), `fillna()` — to'ldirish (mediana, moda, oldingi qiymat, maxsus belgi), yoki modelga \"yetishmaydi\" belgisini alohida xususiyat sifatida berish. Sababini tushunish muhim — ma'lumot tasodifan yoki tizimli ravishda yo'qmi", "correct": true },
+        { "id": "a", "text": "`df.isna().sum()` bilan aniqlash, so'ng vaziyatga qarab `dropna()`, `fillna()` yoki \"yetishmaydi\" belgisi", "correct": true },
         { "id": "b", "text": "NaN'larni har doim 0 bilan to'ldirish to'g'ri", "hint": "0 ko'pincha ma'noli qiymat (masalan, daromad 0) — taqsimotni buzadi va noto'g'ri signal beradi." },
         { "id": "c", "text": "`df == None` bilan NaN'larni topish mumkin", "hint": "NaN o'zi bilan ham teng emas; `isna()`/`notna()` ishlatiladi." },
-        { "id": "d", "text": "NaN'li qatorlarni doim o'chirib tashlash — eng xavfsiz", "hint": "Ma'lumotning katta qismi yo'qolishi va tanlanma siljishi (bias) mumkin." }
+        { "id": "d", "text": "NaN'li qatorlarni doim o'chirib tashlash — eng xavfsiz, chunki to'ldirilgan qiymatlar har doim modelni buzadi", "hint": "Ma'lumotning katta qismi yo'qolishi va tanlanma siljishi (bias) mumkin." }
       ],
-      "explanation": "To'ldirish statistikasini (masalan, mediana) faqat train qismidan hisoblang — aks holda data leakage. sklearn'da `SimpleImputer(strategy=\"median\", add_indicator=True)` Pipeline ichida buni to'g'ri qiladi.",
+      "explanation": "`dropna()` — kam bo'lsa qatorlarni tashlash; `fillna()` — mediana, moda, oldingi qiymat yoki maxsus belgi. Sababini tushunish muhim — ma'lumot tasodifan yoki tizimli ravishda yo'qmi. To'ldirish statistikasini (masalan, mediana) faqat train qismidan hisoblang — aks holda data leakage. sklearn'da `SimpleImputer(strategy=\"median\", add_indicator=True)` Pipeline ichida buni to'g'ri qiladi.",
       "reviewed": false
     },
     {
@@ -148,12 +148,12 @@
       "kind": "concept",
       "prompt": "8 GB'lik CSV pandas'ga yuklanganda 30 GB xotira egallamoqda. Xotirani qanday kamaytirish mumkin?",
       "options": [
-        { "id": "a", "text": "Tiplarni optimallashtirish: takrorlanuvchi satrlar uchun `category`, sonlarni kichikroq tipga (`int32`, `float32`) tushirish, `usecols` bilan faqat kerakli ustunlarni o'qish, `dtype`ni o'qishda berish; Arrow asosidagi tiplar (`dtype_backend=\"pyarrow\"`); kerak bo'lsa `chunksize` bilan qismlab ishlash va natijani Parquet'da saqlash", "correct": true },
+        { "id": "a", "text": "Tiplarni kichraytirish (`category`, `int32`, `float32`), `usecols` va `dtype`ni o'qishda berish, kerak bo'lsa `chunksize`", "correct": true },
         { "id": "b", "text": "Barcha ustunlarni `object` tipiga o'tkazish", "hint": "`object` — har qiymat alohida Python ob'ekti, eng ko'p xotira egallaydigan tip." },
         { "id": "c", "text": "CSV'ni Excel formatida saqlab o'qish", "hint": "Excel sekinroq va qator chegarasiga ega; ustunli format (Parquet) samaraliroq." },
-        { "id": "d", "text": "Hech narsa qilib bo'lmaydi — pandas doim shuncha xotira oladi", "hint": "Tiplar va o'qish sozlamalari xotirani bir necha baravar kamaytiradi." }
+        { "id": "d", "text": "Hech narsa qilib bo'lmaydi — pandas har doim CSV hajmidan to'rt baravar ko'p xotira oladi, yagona yo'l — serverga ko'proq RAM qo'shish", "hint": "Tiplar va o'qish sozlamalari xotirani bir necha baravar kamaytiradi." }
       ],
-      "explanation": "Tekshirish: `df.memory_usage(deep=True)`. `category` faqat noyob qiymatlar soni kam bo'lsa foydali. Parquet ustunli va siqilgan — keyingi o'qishlar tezroq va faqat kerakli ustunlar yuklanadi.",
+      "explanation": "Arrow asosidagi tiplar (`dtype_backend=\"pyarrow\"`) ham yordam beradi; natijani Parquet'da saqlash qayta o'qishni tezlashtiradi. Tekshirish: `df.memory_usage(deep=True)`. `category` faqat noyob qiymatlar soni kam bo'lsa foydali. Parquet ustunli va siqilgan — keyingi o'qishlar tezroq va faqat kerakli ustunlar yuklanadi.",
       "reviewed": false
     },
     {
@@ -163,12 +163,12 @@
       "kind": "concept",
       "prompt": "Sekundlik sensor ma'lumotlaridan har soat uchun o'rtacha qiymat va 24 soatlik sirpanuvchi o'rtacha olish kerak. Qaysi yondashuv to'g'ri?",
       "options": [
-        { "id": "a", "text": "Vaqt ustunini `pd.to_datetime` bilan datetime'ga o'girib (vaqt zonasini aniqlab) index qilish; `df.resample(\"1h\").mean()` — soatlik agregatsiya; keyin `.rolling(24).mean()` (yoki vaqt oynasi `rolling(\"24h\")`) — sirpanuvchi o'rtacha. Bo'sh soatlar NaN bo'lishi va qanday to'ldirilishini hisobga olish", "correct": true },
-        { "id": "b", "text": "Vaqtni satr sifatida qoldirib, `groupby(df.time.str[:13])` qilish", "hint": "Mo'rt va sekin; vaqt zonasi, format va bo'sh soatlarni to'g'ri ishlamaydi." },
+        { "id": "a", "text": "Vaqtni `pd.to_datetime` bilan index qilish, `resample(\"1h\").mean()`, so'ng `rolling(24).mean()`", "correct": true },
+        { "id": "b", "text": "Vaqtni satr sifatida qoldirib, `groupby(df.time.str[:13])` qilish — bu eng tez, sodda va ishonchli usul", "hint": "Mo'rt va sekin; vaqt zonasi, format va bo'sh soatlarni to'g'ri ishlamaydi." },
         { "id": "c", "text": "`rolling(24)` sekundlik ma'lumotda ham 24 soatni beradi", "hint": "Butun son oyna — qatorlar soni: sekundlik ma'lumotda 24 sekund." },
         { "id": "d", "text": "Python siklida har soatni qo'lda hisoblash", "hint": "pandas vaqt qatorlari vositalari buni vektorlashgan holda qiladi." }
       ],
-      "explanation": "Xususiyat (feature) yaratishda `rolling` faqat o'tmish qiymatlaridan foydalanishi kerak — `center=True` yoki kelajak qiymatlari data leakage beradi. `shift(1)` bilan \"oldingi soat\" xususiyatlari.",
+      "explanation": "Vaqt zonasini aniqlang; vaqt oynasi bilan `rolling(\"24h\")` ham mumkin. Bo'sh soatlar NaN bo'lishi va qanday to'ldirilishini hisobga olish. Xususiyat (feature) yaratishda `rolling` faqat o'tmish qiymatlaridan foydalanishi kerak — `center=True` yoki kelajak qiymatlari data leakage beradi. `shift(1)` bilan \"oldingi soat\" xususiyatlari.",
       "reviewed": false
     },
     {

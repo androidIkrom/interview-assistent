@@ -24,12 +24,12 @@
       "kind": "concept",
       "prompt": "Dispersiya va standart og'ish nimani o'lchaydi?",
       "options": [
-        { "id": "a", "text": "Qiymatlarning o'rtacha atrofida qanchalik tarqoqligini: dispersiya — o'rtachadan farqlar kvadratlarining o'rtachasi, standart og'ish — dispersiyaning kvadrat ildizi (asl birlikda, talqini osonroq). Ikki guruhning o'rtachasi bir xil, tarqoqligi esa juda farq qilishi mumkin", "correct": true },
-        { "id": "b", "text": "Eng katta va eng kichik qiymat orasidagi farqni", "hint": "Bu — range (diapazon); u faqat ikki chetki qiymatga bog'liq." },
+        { "id": "a", "text": "O'rtacha atrofidagi tarqoqlik: dispersiya — farqlar kvadratlarining o'rtachasi, standart og'ish — uning ildizi", "correct": true },
+        { "id": "b", "text": "Eng katta va eng kichik qiymat orasidagi farqni — ikkalasi ham aslida diapazonning boshqacha yozilishi va nomi xolos", "hint": "Bu — range (diapazon); u faqat ikki chetki qiymatga bog'liq." },
         { "id": "c", "text": "Ma'lumotlardagi eng ko'p uchraydigan qiymatni", "hint": "Bu — moda; tarqoqlik o'lchovi emas." },
         { "id": "d", "text": "Standart og'ish manfiy bo'lishi mumkin", "hint": "Kvadratlar yig'indisining ildizi — doim ≥ 0." }
       ],
-      "explanation": "Tanlanma dispersiyasida n−1 ga bo'linadi (Bessel tuzatishi): numpy default'da `ddof=0`, pandas `ddof=1` — natijalar farq qilishi shundan. Chetdagi qiymatlarga chidamli alternativ — IQR (Q3 − Q1).",
+      "explanation": "Standart og'ish asl birlikda — talqini osonroq. Ikki guruhning o'rtachasi bir xil, tarqoqligi esa juda farq qilishi mumkin. Tanlanma dispersiyasida n−1 ga bo'linadi (Bessel tuzatishi): numpy default'da `ddof=0`, pandas `ddof=1` — natijalar farq qilishi shundan. Chetdagi qiymatlarga chidamli alternativ — IQR (Q3 − Q1).",
       "reviewed": false
     },
     {
@@ -39,12 +39,12 @@
       "kind": "concept",
       "prompt": "Ma'lumotlarda muzqaymoq sotuvi va cho'kish holatlari kuchli korrelyatsiyaga ega. Qanday xulosa to'g'ri?",
       "options": [
-        { "id": "a", "text": "Korrelyatsiya sababiyatni isbotlamaydi: ehtimol uchinchi omil (yozgi issiq havo) ikkalasini ham oshiradi. Sababiy xulosa uchun tajriba (A/B test) yoki sababiy tahlil usullari kerak", "correct": true },
+        { "id": "a", "text": "Korrelyatsiya sababiyat emas: ehtimol uchinchi omil (issiq havo) ikkalasini ham oshiradi", "correct": true },
         { "id": "b", "text": "Muzqaymoq cho'kishga sabab bo'ladi", "hint": "Ikki o'zgaruvchi birga o'zgarishi bir-biriga sabab bo'lishini ko'rsatmaydi." },
         { "id": "c", "text": "Korrelyatsiya 0,9 bo'lsa, sababiyat isbotlangan", "hint": "Korrelyatsiya kuchi sababiy bog'liqlik haqida hech narsa demaydi." },
-        { "id": "d", "text": "Korrelyatsiya koeffitsienti 0 bo'lsa, o'zgaruvchilar umuman bog'liq emas", "hint": "Pirson korrelyatsiyasi faqat chiziqli bog'liqlikni o'lchaydi; chiziqsiz bog'liqlik (masalan, U shakl) 0 berishi mumkin." }
+        { "id": "d", "text": "Korrelyatsiya koeffitsienti 0 bo'lsa, o'zgaruvchilar umuman bog'liq emas — hatto chiziqsiz bog'liqlik ham yo'q", "hint": "Pirson korrelyatsiyasi faqat chiziqli bog'liqlikni o'lchaydi; chiziqsiz bog'liqlik (masalan, U shakl) 0 berishi mumkin." }
       ],
-      "explanation": "Bunday uchinchi omil — confounder. ML'da ham muhim: model korrelyatsiyani o'rganadi, sababiyatni emas — \"bu xususiyatni o'zgartirsak natija o'zgaradi\" degan xulosa har doim ham to'g'ri emas.",
+      "explanation": "Sababiy xulosa uchun tajriba (A/B test) yoki sababiy tahlil usullari kerak. Bunday uchinchi omil — confounder. ML'da ham muhim: model korrelyatsiyani o'rganadi, sababiyatni emas — \"bu xususiyatni o'zgartirsak natija o'zgaradi\" degan xulosa har doim ham to'g'ri emas.",
       "reviewed": false
     },
     {
@@ -69,12 +69,12 @@
       "kind": "concept",
       "prompt": "Normal taqsimotda \"68–95–99,7\" qoidasi nimani anglatadi?",
       "options": [
-        { "id": "a", "text": "Qiymatlarning taxminan 68% i o'rtachadan ±1 standart og'ish, 95% i ±2 va 99,7% i ±3 standart og'ish oralig'ida joylashadi — ±3σ dan tashqaridagi qiymatlar juda kam uchraydi (chetdagi qiymat nomzodi)", "correct": true },
-        { "id": "b", "text": "Har qanday taqsimot uchun qiymatlarning 68% i o'rtachaga teng", "hint": "Qoida faqat normal (Gauss) taqsimotga tegishli va oraliqlar haqida." },
+        { "id": "a", "text": "Qiymatlarning ~68% i ±1σ, ~95% i ±2σ, ~99,7% i ±3σ oralig'ida joylashadi", "correct": true },
+        { "id": "b", "text": "Har qanday taqsimot uchun qiymatlarning 68% i o'rtachaga teng, qolgani esa tarqoq", "hint": "Qoida faqat normal (Gauss) taqsimotga tegishli va oraliqlar haqida." },
         { "id": "c", "text": "68% qiymatlar o'rtachadan katta", "hint": "Normal taqsimot simmetrik — yarmi o'rtachadan katta, yarmi kichik." },
         { "id": "d", "text": "Barcha real ma'lumotlar normal taqsimlangan", "hint": "Daromad, javob vaqti, narxlar ko'pincha o'ngga qiyshiq; qoidani ko'r-ko'rona qo'llab bo'lmaydi." }
       ],
-      "explanation": "Z-ball: z = (x − μ) / σ — qiymat o'rtachadan necha standart og'ish uzoqda. Qiyshiq ma'lumotda log-transformatsiya taqsimotni normalga yaqinlashtirishi mumkin. Markaziy limit teoremasi tanlanma o'rtachalari normal taqsimotga yaqinlashishini aytadi.",
+      "explanation": "σ — standart og'ish. ±3σ dan tashqaridagi qiymatlar juda kam uchraydi — chetdagi qiymat nomzodi. Z-ball: z = (x − μ) / σ — qiymat o'rtachadan necha standart og'ish uzoqda. Qiyshiq ma'lumotda log-transformatsiya taqsimotni normalga yaqinlashtirishi mumkin. Markaziy limit teoremasi tanlanma o'rtachalari normal taqsimotga yaqinlashishini aytadi.",
       "reviewed": false
     },
     {
@@ -84,12 +84,12 @@
       "kind": "concept",
       "prompt": "A/B testda p-value = 0,03 chiqdi (alpha = 0,05). Qaysi talqin to'g'ri?",
       "options": [
-        { "id": "a", "text": "Agar haqiqatda farq bo'lmaganida (nol gipoteza to'g'ri bo'lsa), kuzatilgan yoki undan ham katta farqni olish ehtimoli 3% bo'lardi — shuning uchun nol gipotezani rad etamiz. Bu farq kattaligi yoki uning biznes uchun muhimligi haqida hech narsa demaydi", "correct": true },
+        { "id": "a", "text": "Nol gipoteza to'g'ri bo'lsa, shunday yoki kattaroq farqni olish ehtimoli 3% — H0 rad etiladi", "correct": true },
         { "id": "b", "text": "Yangi variant yaxshiroq bo'lishi ehtimoli 97%", "hint": "p-value gipotezaning to'g'riligi ehtimoli emas; u nol gipoteza ostida ma'lumot ehtimoli." },
         { "id": "c", "text": "Farq juda katta va muhim", "hint": "Katta tanlanmada juda kichik, amaliy ahamiyatsiz farq ham kichik p-value beradi; effekt hajmi va ishonch oralig'ini ko'ring." },
-        { "id": "d", "text": "Natija 3% ehtimol bilan tasodifiy, 97% bilan haqiqiy", "hint": "Klassik noto'g'ri talqin; p-value bunday ehtimolni bermaydi." }
+        { "id": "d", "text": "Natija 3% ehtimol bilan tasodifiy, 97% ehtimol bilan esa haqiqiy farq — ya'ni yangi variant deyarli aniq yaxshi", "hint": "Klassik noto'g'ri talqin; p-value bunday ehtimolni bermaydi." }
       ],
-      "explanation": "Hisobotda p-value bilan birga effekt hajmi (konversiya +0,4 p.p.) va 95% ishonch oralig'i ko'rsatiladi. alpha tajriba oldidan belgilanadi; natijani ko'rib, keyin moslashtirish — p-hacking.",
+      "explanation": "Bu farq kattaligi yoki uning biznes uchun muhimligi haqida hech narsa demaydi. Hisobotda p-value bilan birga effekt hajmi (konversiya +0,4 p.p.) va 95% ishonch oralig'i ko'rsatiladi. alpha tajriba oldidan belgilanadi; natijani ko'rib, keyin moslashtirish — p-hacking.",
       "reviewed": false
     },
     {
@@ -99,12 +99,12 @@
       "kind": "concept",
       "prompt": "I tur va II tur xatolar qanday farqlanadi?",
       "options": [
-        { "id": "a", "text": "I tur (false positive) — aslida farq yo'q, lekin nol gipotezani rad etamiz (ehtimoli alpha); II tur (false negative) — aslida farq bor, lekin uni topa olmaymiz (ehtimoli beta). Testning quvvati (power) = 1 − beta; uni tanlanma hajmini oshirish orqali ko'tarish mumkin", "correct": true },
-        { "id": "b", "text": "I tur — hisoblash xatosi, II tur — ma'lumot xatosi", "hint": "Ikkalasi ham statistik qaror xatosi; hisoblash bilan bog'liq emas." },
+        { "id": "a", "text": "I tur — farq yo'q, lekin H0 rad etiladi (alpha); II tur — farq bor, lekin topilmaydi (beta)", "correct": true },
+        { "id": "b", "text": "I tur — hisoblash yoki formuladagi xato, II tur esa ma'lumot yig'ishdagi xato yoki noto'g'ri yozuv", "hint": "Ikkalasi ham statistik qaror xatosi; hisoblash bilan bog'liq emas." },
         { "id": "c", "text": "alpha'ni kamaytirsak, ikkala xato ham kamayadi", "hint": "Bir xil tanlanma hajmida alpha kamaysa, beta odatda oshadi — muvozanat bor." },
         { "id": "d", "text": "II tur xato hech qachon muhim emas", "hint": "Foydali o'zgarishni \"ishlamadi\" deb tashlab yuborish ham qimmat." }
       ],
-      "explanation": "Tibbiy skriningda yoki firibgarlik aniqlashda qaysi xato qimmatroq ekaniga qarab chegara tanlanadi. A/B testlarda odatda alpha = 0,05 va power = 0,8 — tanlanma hajmi shu asosda oldindan hisoblanadi.",
+      "explanation": "I tur — false positive, II tur — false negative. Testning quvvati (power) = 1 − beta; uni tanlanma hajmini oshirib ko'tarish mumkin. Tibbiy skriningda yoki firibgarlik aniqlashda qaysi xato qimmatroq ekaniga qarab chegara tanlanadi. A/B testlarda odatda alpha = 0,05 va power = 0,8 — tanlanma hajmi shu asosda oldindan hisoblanadi.",
       "reviewed": false
     },
     {
@@ -114,12 +114,12 @@
       "kind": "concept",
       "prompt": "O'rtacha chek uchun 95% ishonch oralig'i [118 000; 126 000] so'm chiqdi. To'g'ri talqin qaysi?",
       "options": [
-        { "id": "a", "text": "Shu usul bilan ko'plab tanlanmalardan oraliq qursak, ularning taxminan 95% i haqiqiy o'rtachani o'z ichiga oladi; amalda — haqiqiy o'rtacha uchun ishonarli qiymatlar diapazoni. Oraliq kengligi aniqlikni ko'rsatadi: kattaroq tanlanma — torroq oraliq", "correct": true },
-        { "id": "b", "text": "Mijozlarning 95% i 118 000 dan 126 000 so'mgacha xarid qiladi", "hint": "Ishonch oralig'i o'rtacha haqida, alohida mijozlar qiymatlari haqida emas (bu — taqsimot oralig'i)." },
+        { "id": "a", "text": "Shu usulda qurilgan oraliqlarning ~95% i haqiqiy o'rtachani qamraydi; kattaroq tanlanma — torroq oraliq", "correct": true },
+        { "id": "b", "text": "Mijozlarning 95% i 118 000 dan 126 000 so'mgacha xarid qiladi, qolgan 5% esa bu oraliqdan tashqarida xarid qiladi", "hint": "Ishonch oralig'i o'rtacha haqida, alohida mijozlar qiymatlari haqida emas (bu — taqsimot oralig'i)." },
         { "id": "c", "text": "O'rtacha aniq 122 000 so'm", "hint": "Nuqtaviy baho noaniqlikka ega; oraliq aynan shu noaniqlikni ko'rsatadi." },
         { "id": "d", "text": "Oraliq tanlanma hajmiga bog'liq emas", "hint": "Standart xato ≈ σ / √n — n oshsa oraliq torayadi." }
       ],
-      "explanation": "Ikki guruh o'rtachalari oraliqlari kesishishi farq yo'qligini aniq isbotlamaydi — farq uchun to'g'ridan-to'g'ri oraliq hisoblanadi. Murakkab metrikalar (mediana, nisbat) uchun bootstrap usuli qulay.",
+      "explanation": "Amalda — haqiqiy o'rtacha uchun ishonarli qiymatlar diapazoni; kengligi aniqlikni ko'rsatadi. Ikki guruh o'rtachalari oraliqlari kesishishi farq yo'qligini aniq isbotlamaydi — farq uchun to'g'ridan-to'g'ri oraliq hisoblanadi. Murakkab metrikalar (mediana, nisbat) uchun bootstrap usuli qulay.",
       "reviewed": false
     },
     {
@@ -159,12 +159,12 @@
       "kind": "concept",
       "prompt": "Ikki shifoxonaning umumiy muvaffaqiyat foizi solishtirilganda A yaxshiroq, lekin og'ir va yengil bemorlar alohida solishtirilganda ikkala guruhda ham B yaxshiroq. Bu qanday hodisa?",
       "options": [
-        { "id": "a", "text": "Simpson paradoksi: guruhlar tarkibi farq qiladi (B ko'proq og'ir bemorlarni qabul qiladi), agregatsiya yashirin omil (bemor og'irligi) ta'sirini aralashtirib, umumiy natijani teskari ko'rsatadi. Xulosa uchun segmentlar bo'yicha tahlil va sababiy tuzilmani tushunish kerak", "correct": true },
-        { "id": "b", "text": "Hisoblash xatosi — bunday holat matematik jihatdan mumkin emas", "hint": "Bu haqiqiy va mashhur hodisa: guruh ulushlari farq qilganda yuz beradi." },
+        { "id": "a", "text": "Simpson paradoksi: tarkib farqli, agregatsiya yashirin omilni (og'irlik) aralashtirib natijani teskari qiladi", "correct": true },
+        { "id": "b", "text": "Hisoblash xatosi — bunday holat matematik jihatdan mumkin emas, foizlarni qaytadan diqqat bilan hisoblash kerak", "hint": "Bu haqiqiy va mashhur hodisa: guruh ulushlari farq qilganda yuz beradi." },
         { "id": "c", "text": "Umumiy natija har doim to'g'ri, segmentlar e'tiborga olinmaydi", "hint": "Aralashtiruvchi omil bo'lsa, aynan umumiy natija chalg'itadi." },
         { "id": "d", "text": "Bu faqat kichik tanlanmalarda bo'ladigan tasodif", "hint": "Katta tanlanmalarda ham bo'ladi — sabab tarkib farqida, tasodifda emas." }
       ],
-      "explanation": "ML va analitikada: model umumiy metrikada yaxshilanib, har muhim segmentda yomonlashishi mumkin (trafik tarkibi o'zgarganda). Shu sabab natijalar asosiy segmentlar bo'yicha ham ko'riladi.",
+      "explanation": "B ko'proq og'ir bemorlarni qabul qiladi. Xulosa uchun segmentlar bo'yicha tahlil va sababiy tuzilmani tushunish kerak. ML va analitikada: model umumiy metrikada yaxshilanib, har muhim segmentda yomonlashishi mumkin (trafik tarkibi o'zgarganda). Shu sabab natijalar asosiy segmentlar bo'yicha ham ko'riladi.",
       "reviewed": false
     },
     {
@@ -174,12 +174,12 @@
       "kind": "concept",
       "prompt": "Yangi sodiqlik dasturi faqat Toshkent'da ishga tushirildi (A/B test imkonsiz edi). Uning sotuvga ta'sirini qanday baholaysiz?",
       "options": [
-        { "id": "a", "text": "Kvazi-eksperimental usullar: difference-in-differences — Toshkent va o'xshash nazorat shaharlarining dasturdan oldin va keyingi o'zgarishini solishtirish (parallel trendlar farazini tekshirib); synthetic control — boshqa shaharlardan \"sun'iy Toshkent\" yasash; dasturdan oldingi trend asosida bashorat (counterfactual) bilan solishtirish. Farazlar va sezgirlik tahlili hisobotda ochiq ko'rsatiladi", "correct": true },
-        { "id": "b", "text": "Toshkent sotuvini dasturdan oldin va keyin oddiy solishtirish yetarli", "hint": "Mavsumiylik, inflyatsiya va umumiy bozor trendi ta'sirini dastur ta'siridan ajratib bo'lmaydi." },
+        { "id": "a", "text": "Kvazi-eksperiment: difference-in-differences yoki synthetic control, farazlar va sezgirlik tahlili bilan", "correct": true },
+        { "id": "b", "text": "Toshkent sotuvini dasturdan oldin va keyin oddiy solishtirish yetarli — butun farq to'liq dastur ta'siri hisoblanadi", "hint": "Mavsumiylik, inflyatsiya va umumiy bozor trendi ta'sirini dastur ta'siridan ajratib bo'lmaydi." },
         { "id": "c", "text": "Dasturga a'zo bo'lganlar va bo'lmaganlarning xaridini solishtirish", "hint": "O'z-o'zini tanlash (selection bias): faol xaridorlar a'zo bo'lishga moyilroq — farq dasturdan emas." },
         { "id": "d", "text": "Tajribasiz sababiy ta'sirni umuman baholab bo'lmaydi", "hint": "Farazlar ostida baholovchi usullar bor; ular A/B testdan zaifroq, lekin foydali." }
       ],
-      "explanation": "Senior tahlilchi har usulning farazlarini va zaif tomonlarini aytib beradi, bir nechta usul natijalarini solishtiradi. Kelajakda shunday qarorlar uchun bosqichma-bosqich (randomizatsiyalangan) ishga tushirishni rejalashtirish taklif qilinadi.",
+      "explanation": "DiD — Toshkent va o'xshash nazorat shaharlari o'zgarishini dasturdan oldin va keyin solishtirish (parallel trendlar farazi); synthetic control — boshqa shaharlardan \"sun'iy Toshkent\"; yoki oldingi trend asosidagi counterfactual bashorat. Senior tahlilchi har usulning farazlarini va zaif tomonlarini aytib beradi, bir nechta usul natijalarini solishtiradi. Kelajakda shunday qarorlar uchun bosqichma-bosqich (randomizatsiyalangan) ishga tushirishni rejalashtirish taklif qilinadi.",
       "reviewed": false
     }
   ]
