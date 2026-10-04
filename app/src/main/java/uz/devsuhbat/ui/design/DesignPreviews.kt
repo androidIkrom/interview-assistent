@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowForward
@@ -64,6 +65,12 @@ private fun ProgressLight() = PreviewFrame(dark = false) { ProgressComponents() 
 @Preview(name = "Progress · dark", widthDp = 390)
 @Composable
 private fun ProgressDark() = PreviewFrame(dark = true) { ProgressComponents() }
+
+@Preview(name = "Confetti", widthDp = 390, heightDp = 400)
+@Composable
+private fun ConfettiPreview() = DevSuhbatTheme(dark = false) {
+    Confetti(play = true, modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background))
+}
 
 @Preview(name = "Basic · light", widthDp = 390)
 @Composable
