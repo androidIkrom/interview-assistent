@@ -10,6 +10,7 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.consumeWindowInsets
@@ -27,6 +28,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavController
 import androidx.navigation.NavType
@@ -98,6 +100,16 @@ private fun AnimatedContentTransitionScope<NavBackStackEntry>.exit(forward: Bool
             fadeOut(DsMotion.effectsDefault())
     }
 
+/**
+ * Keeps room for the bottom bar under a tab. The inner screen has its own Scaffold, so the space is also marked as
+ * consumed, or the screen would pad the navigation bar inset a second time.
+ */
+@Composable
+private fun BarRoom(route: String, barHeight: Dp, content: @Composable () -> Unit) {
+    val bottom = PaddingValues(bottom = contentBottomPadding(route, barHeight))
+    Box(Modifier.padding(bottom).consumeWindowInsets(bottom)) { content() }
+}
+
 @Composable
 fun DevSuhbatNavHost(container: AppContainer, startDestination: String) {
     val nav = rememberNavController()
@@ -125,12 +137,10 @@ fun DevSuhbatNavHost(container: AppContainer, startDestination: String) {
             }
         },
     ) { padding ->
-        // Inner screens have their own Scaffold; the bar's height is already taken, so they must not pad it again.
-        val bottom = PaddingValues(bottom = padding.calculateBottomPadding())
+        val barHeight = padding.calculateBottomPadding()
         NavHost(
             navController = nav,
             startDestination = startDestination,
-            modifier = Modifier.padding(bottom).consumeWindowInsets(bottom),
             enterTransition = { enter(forward = true) },
             exitTransition = { exit(forward = true) },
             popEnterTransition = { enter(forward = false) },
@@ -151,21 +161,25 @@ fun DevSuhbatNavHost(container: AppContainer, startDestination: String) {
                 )
             }
             composable(Routes.HOME) {
-                HomeScreen(
-                    container = container,
-                    onPractice = { nav.navigate(Routes.session(Routes.MIXED)) },
-                    onMistakes = { nav.navigate(Routes.session(Routes.MISTAKES)) },
-                    onMock = { nav.navigate(Routes.MOCK) },
-                    onTopic = { topicId -> nav.navigate(Routes.session(topicId)) },
-                    onAllTopics = { nav.openTab(Routes.TOPICS) },
-                    onSettings = { nav.navigate(Routes.SETTINGS) },
-                )
+                BarRoom(Routes.HOME, barHeight) {
+                    HomeScreen(
+                        container = container,
+                        onPractice = { nav.navigate(Routes.session(Routes.MIXED)) },
+                        onMistakes = { nav.navigate(Routes.session(Routes.MISTAKES)) },
+                        onMock = { nav.navigate(Routes.MOCK) },
+                        onTopic = { topicId -> nav.navigate(Routes.session(topicId)) },
+                        onAllTopics = { nav.openTab(Routes.TOPICS) },
+                        onSettings = { nav.navigate(Routes.SETTINGS) },
+                    )
+                }
             }
             composable(Routes.TOPICS) {
-                TopicsScreen(
-                    container = container,
-                    onOpen = { topicId -> nav.navigate(Routes.session(topicId)) },
-                )
+                BarRoom(Routes.TOPICS, barHeight) {
+                    TopicsScreen(
+                        container = container,
+                        onOpen = { topicId -> nav.navigate(Routes.session(topicId)) },
+                    )
+                }
             }
             composable(Routes.MOCK) {
                 MockScreen(

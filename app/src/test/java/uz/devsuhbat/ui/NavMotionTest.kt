@@ -1,5 +1,6 @@
 package uz.devsuhbat.ui
 
+import androidx.compose.ui.unit.dp
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -24,5 +25,12 @@ class NavMotionTest {
         assertTrue(isTopLevel(Routes.TOPICS))
         assertFalse(isTopLevel(Routes.SESSION))
         assertFalse(isTopLevel(null))
+    }
+
+    @Test
+    fun onlyTabsReserveRoomForTheBar() {
+        // A screen above the tabs takes the full height at once, so it does not jump while the bar slides away.
+        assertEquals(80.dp, contentBottomPadding(Routes.HOME, barHeight = 80.dp))
+        assertEquals(0.dp, contentBottomPadding(Routes.SESSION, barHeight = 80.dp))
     }
 }

@@ -11,6 +11,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.ColumnScope
@@ -52,6 +53,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -214,18 +216,34 @@ private fun HeroCard(state: HomeUiState, onPractice: () -> Unit) {
     }
 }
 
+/** Seven week dots with six [gap]s in [available] width, at most 16 dp each. */
+internal fun weekDotSize(available: Dp, gap: Dp): Dp = minOf(16.dp, (available - gap * 6) / 7)
+
+/** Side by side, each tile needs about 150 dp of text room per unit of font scale; below that they stack. */
+internal fun shouldStackTiles(available: Dp, fontScale: Float): Boolean =
+    fontScale > 1.5f || (available - 12.dp) / 2 < 150.dp * fontScale
+
+/** Width inside one tile: [available] minus the 12 dp gap when side by side, minus 18 dp padding on each side. */
+internal fun tileContentWidth(available: Dp, stacked: Boolean): Dp =
+    (if (stacked) available else (available - 12.dp) / 2) - 36.dp
+
+/**
+ * Widths are decided here, outside the tiles: the side-by-side row measures its children's intrinsic height,
+ * which a BoxWithConstraints inside a tile cannot answer.
+ */
 @Composable
-private fun Tiles(state: HomeUiState, onMistakes: () -> Unit) {
-    // At very large text the two tiles would squeeze their content, so they stack.
-    if (LocalDensity.current.fontScale > 1.5f) {
+private fun Tiles(state: HomeUiState, onMistakes: () -> Unit) = BoxWithConstraints {
+    val stacked = shouldStackTiles(maxWidth, LocalDensity.current.fontScale)
+    val dot = weekDotSize(tileContentWidth(maxWidth, stacked), 5.dp)
+    if (stacked) {
         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
             MistakesTile(state.dueCount, state.nextReview, onMistakes, Modifier.fillMaxWidth())
-            StreakTile(state.streak, Modifier.fillMaxWidth())
+            StreakTile(state.streak, dot, Modifier.fillMaxWidth())
         }
     } else {
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Min)) {
             MistakesTile(state.dueCount, state.nextReview, onMistakes, Modifier.weight(1f).fillMaxHeight())
-            StreakTile(state.streak, Modifier.weight(1f).fillMaxHeight())
+            StreakTile(state.streak, dot, Modifier.weight(1f).fillMaxHeight())
         }
     }
 }
@@ -272,7 +290,7 @@ private fun MistakesTile(dueCount: Int, nextReview: NextReview?, onMistakes: () 
 }
 
 @Composable
-private fun StreakTile(streak: StreakInfo, modifier: Modifier) {
+private fun StreakTile(streak: StreakInfo, dotSize: Dp, modifier: Modifier) {
     val extra = LocalExtraColors.current
     val a11y = stringResource(R.string.home_streak_a11y, streak.current)
     Tile(extra.streakContainer, extra.onStreakContainer, modifier.semantics(mergeDescendants = true) { contentDescription = a11y }) {
@@ -284,15 +302,15 @@ private fun StreakTile(streak: StreakInfo, modifier: Modifier) {
         }
         Box(Modifier.weight(1f, fill = false))
         Row(horizontalArrangement = Arrangement.spacedBy(5.dp), verticalAlignment = Alignment.CenterVertically) {
-            streak.week.forEach { mark -> DayDot(mark) }
+            streak.week.forEach { mark -> DayDot(mark, dotSize) }
         }
     }
 }
 
 @Composable
-private fun DayDot(mark: DayMark) {
+private fun DayDot(mark: DayMark, size: Dp) {
     val extra = LocalExtraColors.current
-    val dot = Modifier.size(16.dp).clip(CircleShape)
+    val dot = Modifier.size(size).clip(CircleShape)
     when (mark) {
         DayMark.DONE -> Box(dot.background(extra.streak))
         DayMark.MISSED -> Box(dot.background(extra.onStreakContainer.copy(alpha = 0.12f)))
