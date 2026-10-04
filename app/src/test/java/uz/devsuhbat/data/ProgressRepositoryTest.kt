@@ -171,4 +171,18 @@ class ProgressRepositoryTest {
 
         assertEquals(Instant.parse("2026-10-02T12:00:00Z"), repository.lastFinishedAt())
     }
+    @Test
+    fun sessionDaysStartEmpty() = runTest {
+        assertEquals(emptyList<Long>(), repository.sessionDays().first())
+    }
+
+    @Test
+    fun sessionDaysUseTheLocalCalendar() = runTest {
+        // Tashkent is UTC+5: 18:50Z is 23:50 local, 19:10Z is 00:10 of the next local day.
+        val result = SessionResult(total = 1, firstTryCorrect = 1, reworked = 0)
+        repository.logSession(SessionMode.PRACTICE, "android", Level.JUNIOR, Instant.parse("2026-10-02T18:50:00Z"), result)
+        repository.logSession(SessionMode.MISTAKES, "android", Level.JUNIOR, Instant.parse("2026-10-02T19:10:00Z"), result)
+
+        assertEquals(listOf(today, today + 1), repository.sessionDays().first())
+    }
 }
