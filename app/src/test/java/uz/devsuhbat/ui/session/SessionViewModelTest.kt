@@ -3,8 +3,11 @@ package uz.devsuhbat.ui.session
 import kotlin.random.Random
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -18,6 +21,7 @@ import uz.devsuhbat.content.Level
 import uz.devsuhbat.content.Option
 import uz.devsuhbat.content.Question
 import uz.devsuhbat.content.QuestionType
+import uz.devsuhbat.engine.Progress
 import uz.devsuhbat.engine.QuestionOutcome
 import uz.devsuhbat.engine.SessionResult
 
@@ -332,5 +336,42 @@ class SessionViewModelTest {
         recordingViewModel(emptyList())
 
         assertEquals(emptyList<SessionResult>(), finished)
+    }
+
+    @Test
+    fun readsReadinessBeforeTheFirstQuestion() {
+        val viewModel = SessionViewModel({ singles }, Random(1), readiness = { Progress(5, 10) })
+
+        assertEquals(Progress(5, 10), viewModel.state.value.readinessBefore)
+    }
+
+    @Test
+    fun readinessAfterWaitsForSlowWrites() {
+        val main = UnconfinedTestDispatcher()
+        Dispatchers.setMain(main)
+        runTest(main) {
+            val recorded = mutableListOf<QuestionOutcome>()
+            val viewModel = SessionViewModel(
+                { singles }, Random(1),
+                onOutcome = { delay(500); recorded += it },
+                onFinished = { delay(10) },
+                readiness = { Progress(recorded.size, 10) },
+            )
+
+            repeat(3) { viewModel.answerCorrectly() }
+            advanceUntilIdle()
+
+            assertEquals(Progress(0, 10), viewModel.state.value.readinessBefore)
+            assertEquals(Progress(3, 10), viewModel.state.value.readinessAfter)
+        }
+    }
+
+    @Test
+    fun noReadinessWhenThereIsNoField() {
+        val viewModel = viewModel()
+        repeat(3) { viewModel.answerCorrectly() }
+
+        assertNull(viewModel.state.value.readinessBefore)
+        assertNull(viewModel.state.value.readinessAfter)
     }
 }

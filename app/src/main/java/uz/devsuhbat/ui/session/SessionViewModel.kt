@@ -3,7 +3,9 @@ package uz.devsuhbat.ui.session
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlin.random.Random
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -12,6 +14,7 @@ import kotlinx.coroutines.withContext
 import uz.devsuhbat.content.Question
 import uz.devsuhbat.content.QuestionType
 import uz.devsuhbat.engine.PracticeSession
+import uz.devsuhbat.engine.Progress
 import uz.devsuhbat.engine.QuestionOutcome
 import uz.devsuhbat.engine.SessionResult
 import uz.devsuhbat.engine.Verdict
@@ -41,6 +44,10 @@ data class SessionUiState(
     val canCheck: Boolean = false,
     /** Non-null once the session is finished. */
     val result: SessionResult? = null,
+    /** Readiness of the field and level when the session started; null without a chosen field. */
+    val readinessBefore: Progress? = null,
+    /** Readiness once every answer and the session itself are saved; null until then. */
+    val readinessAfter: Progress? = null,
 )
 
 /**
@@ -52,6 +59,7 @@ class SessionViewModel(
     private val random: Random,
     private val onOutcome: suspend (QuestionOutcome) -> Unit = {},
     private val onFinished: suspend (SessionResult) -> Unit = {},
+    private val readiness: suspend () -> Progress? = { null },
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(SessionUiState())
@@ -59,9 +67,15 @@ class SessionViewModel(
 
     private var session: PracticeSession? = null
     private var reportedOutcomes = 0
+    private var readinessBefore: Progress? = null
+    private var readinessAfter: Progress? = null
+
+    /** Answer writes still running; the readiness after the session must wait for all of them. */
+    private val writes = mutableListOf<Job>()
 
     init {
         viewModelScope.launch {
+            readinessBefore = readiness()
             session = PracticeSession(loadQuestions(), random)
             publish(selected = emptySet(), feedback = null)
         }
@@ -112,7 +126,15 @@ class SessionViewModel(
         publish(selected = emptySet(), feedback = null)
         if (session.finished && session.total > 0) {
             val result = session.result()
-            persist { onFinished(result) }
+            val pending = writes.toList()
+            viewModelScope.launch {
+                withContext(NonCancellable) {
+                    pending.joinAll()
+                    onFinished(result)
+                }
+                readinessAfter = readiness()
+                publish(selected = emptySet(), feedback = null)
+            }
         }
     }
 
@@ -124,7 +146,7 @@ class SessionViewModel(
 
     /** Leaving the screen right after answering must not cancel a write that has started. */
     private fun persist(block: suspend () -> Unit) {
-        viewModelScope.launch { withContext(NonCancellable) { block() } }
+        writes += viewModelScope.launch { withContext(NonCancellable) { block() } }
     }
 
     private fun publish(selected: Set<String>, feedback: Feedback?) {
@@ -136,6 +158,8 @@ class SessionViewModel(
                 position = session.position,
                 queueSize = session.queueSize,
                 result = session.result(),
+                readinessBefore = readinessBefore,
+                readinessAfter = readinessAfter,
             )
         } else {
             SessionUiState(
@@ -149,6 +173,7 @@ class SessionViewModel(
                 feedback = feedback,
                 solved = attempt.solved,
                 canCheck = attempt.canSubmit(selected),
+                readinessBefore = readinessBefore,
             )
         }
     }
