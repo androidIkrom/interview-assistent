@@ -8,12 +8,12 @@
       "kind": "concept",
       "prompt": "Massiv (`int[]`) va `List<int>` qanday farqlanadi?",
       "options": [
-        { "id": "a", "text": "Massiv uzunligi yaratilganda qotiriladi; `List<T>` ichida massiv saqlaydi va to'lganda kattaroq massivga ko'chirib avtomatik o'sadi (`Add`, `Remove`, `Insert`). Indeks bo'yicha kirish ikkalasida O(1); oxiriga qo'shish List'da amortizatsiyalangan O(1)", "correct": true },
+        { "id": "a", "text": "Massiv uzunligi qotirilgan; `List<T>` ichki massivni to'lganda kattarog'iga ko'chirib o'sadi", "correct": true },
         { "id": "b", "text": "`List<T>` bog'langan ro'yxat (linked list)", "hint": "`List<T>` — dinamik massiv; linked list — `LinkedList<T>`." },
-        { "id": "c", "text": "Massivga element qo'shib, uzunligini oshirish mumkin", "hint": "`Array.Resize` ham aslida yangi massiv yaratib ko'chiradi — massiv o'lchami o'zgarmas." },
+        { "id": "c", "text": "Massivga ham `Add` bilan element qo'shib, uning uzunligini runtime'da istalgancha oshirish mumkin", "hint": "`Array.Resize` ham aslida yangi massiv yaratib ko'chiradi — massiv o'lchami o'zgarmas." },
         { "id": "d", "text": "`List<T>` faqat reference type'lar uchun", "hint": "Generic — `List<int>` boxing'siz value type saqlaydi." }
       ],
-      "explanation": "Elementlar soni oldindan ma'lum bo'lsa `new List<T>(capacity)` qayta allokatsiyalarni kamaytiradi. `Count` — haqiqiy elementlar, `Capacity` — ichki massiv hajmi. O'rtadan o'chirish/qo'shish O(n) — elementlar suriladi. API'dan qaytarishda `IReadOnlyList<T>` — chaqiruvchi o'zgartira olmaydi.",
+      "explanation": "Indeks bo'yicha kirish ikkalasida O(1); oxiriga qo'shish List'da amortizatsiyalangan O(1). Elementlar soni oldindan ma'lum bo'lsa `new List<T>(capacity)` qayta allokatsiyalarni kamaytiradi. `Count` — haqiqiy elementlar, `Capacity` — ichki massiv hajmi. O'rtadan o'chirish/qo'shish O(n) — elementlar suriladi. API'dan qaytarishda `IReadOnlyList<T>` — chaqiruvchi o'zgartira olmaydi.",
       "reviewed": false
     },
     {
@@ -55,12 +55,12 @@
       "kind": "concept",
       "prompt": "`First`, `FirstOrDefault` va `Single` qanday farqlanadi?",
       "options": [
-        { "id": "a", "text": "`First` — birinchi mos elementni qaytaradi, mos element bo'lmasa `InvalidOperationException`; `FirstOrDefault` — topilmasa `default` (`null`, `0`); `Single` — aynan bitta mos element bo'lishini talab qiladi: nol yoki birdan ko'p bo'lsa exception", "correct": true },
+        { "id": "a", "text": "`First` — topilmasa exception; `FirstOrDefault` — topilmasa `default`; `Single` — aynan bitta bo'lishi shart", "correct": true },
         { "id": "b", "text": "Uchalasi bir xil, faqat nomlari boshqa", "hint": "Element topilmaganda yoki bir nechta topilganda xulqlari farq qiladi." },
-        { "id": "c", "text": "`Single` birinchi topilgan elementda to'xtaydi — `First`dan tezroq", "hint": "`Single` ikkinchi mos element yo'qligini tekshirish uchun davom etadi (yoki ikkinchisini topguncha)." },
+        { "id": "c", "text": "`Single` birinchi topilgan elementda darhol to'xtaydi, shuning uchun u `First`dan har doim sezilarli tezroq ishlaydi", "hint": "`Single` ikkinchi mos element yo'qligini tekshirish uchun davom etadi (yoki ikkinchisini topguncha)." },
         { "id": "d", "text": "`FirstOrDefault` bo'sh ketma-ketlikda exception tashlaydi", "hint": "`OrDefault` qo'shimchasi aynan exception o'rniga default qiymat demak." }
       ],
-      "explanation": "Tanlov ma'noni bildiradi: ID bo'yicha qidiruv (`Single`/`SingleOrDefault`) — ikki natija ma'lumot xatosi ekanini ko'rsatadi. `FirstOrDefault`dan keyin null tekshiruvini unutmang. Value type'larda `default` — `0`, uni \"topilmadi\"dan farqlab bo'lmaydi: .NET 6+ da `FirstOrDefault(predicate, defaultValue)` overload'i bor.",
+      "explanation": "`First` — `InvalidOperationException`; `Single` nol yoki birdan ko'p bo'lsa exception tashlaydi. Tanlov ma'noni bildiradi: ID bo'yicha qidiruv (`Single`/`SingleOrDefault`) — ikki natija ma'lumot xatosi ekanini ko'rsatadi. `FirstOrDefault`dan keyin null tekshiruvini unutmang. Value type'larda `default` — `0`, uni \"topilmadi\"dan farqlab bo'lmaydi: .NET 6+ da `FirstOrDefault(predicate, defaultValue)` overload'i bor.",
       "reviewed": false
     },
     {
@@ -70,12 +70,12 @@
       "kind": "concept",
       "prompt": "`HashSet<T>` qachon `List<T>`dan yaxshiroq?",
       "options": [
-        { "id": "a", "text": "Takrorlanmas elementlar to'plami va tez \"bormi?\" tekshiruvi kerak bo'lganda: `Contains` o'rtacha O(1) (hash bo'yicha), `List.Contains` esa O(n). `Add` takrorni qo'shmaydi va `false` qaytaradi; `UnionWith`, `IntersectWith` kabi to'plam amallari bor. Tartib va indeks yo'q", "correct": true },
+        { "id": "a", "text": "Takrorsiz to'plam va tez \"bormi?\" tekshiruvi kerak bo'lganda: `Contains` O(1), ro'yxatda esa O(n)", "correct": true },
         { "id": "b", "text": "Har doim — `HashSet` `List`ning tezroq versiyasi", "hint": "`HashSet`da indeks bo'yicha kirish va tartib yo'q, takror saqlamaydi." },
-        { "id": "c", "text": "Elementlarni saralangan tartibda saqlash kerak bo'lganda", "hint": "Saralangan to'plam — `SortedSet<T>`; `HashSet` tartibni kafolatlamaydi." },
+        { "id": "c", "text": "Elementlarni saralangan tartibda saqlash va ularni tartib bo'yicha tez aylanib chiqish kerak bo'lganda", "hint": "Saralangan to'plam — `SortedSet<T>`; `HashSet` tartibni kafolatlamaydi." },
         { "id": "d", "text": "Elementlar tez-tez indeks bo'yicha o'qilganda", "hint": "Indeks bo'yicha kirish — `List<T>` yoki massivning kuchli tomoni." }
       ],
-      "explanation": "O'z tipingiz element bo'lsa — `Equals` va `GetHashCode` to'g'ri implementatsiya qilinishi kerak (yoki `record`). Siklda `list.Contains` ishlatilgan O(n²) kodni `HashSet`ga o'tkazish — klassik optimallashtirish. Katta solishtirish uchun `IEqualityComparer<T>` (masalan, `StringComparer.OrdinalIgnoreCase`).",
+      "explanation": "`Add` takrorni qo'shmaydi; `UnionWith`, `IntersectWith` amallari bor; tartib va indeks yo'q. O'z tipingiz element bo'lsa — `Equals` va `GetHashCode` to'g'ri implementatsiya qilinishi kerak (yoki `record`). Siklda `list.Contains` ishlatilgan O(n²) kodni `HashSet`ga o'tkazish — klassik optimallashtirish. Katta solishtirish uchun `IEqualityComparer<T>` (masalan, `StringComparer.OrdinalIgnoreCase`).",
       "reviewed": false
     },
     {
@@ -101,12 +101,12 @@
       "kind": "concept",
       "prompt": "`IEnumerable<T>` va `IQueryable<T>` farqi nima (masalan, EF Core bilan)?",
       "options": [
-        { "id": "a", "text": "`IEnumerable<T>` — xotiradagi ketma-ketlik: LINQ operatorlari delegate (`Func<T,bool>`) sifatida C# kodida ishlaydi. `IQueryable<T>` — expression tree (`Expression<Func<T,bool>>`) yig'adi, provider uni SQL kabi tilga tarjima qiladi va DB'da bajaradi. `IQueryable`ni erta `IEnumerable`ga aylantirsangiz, keyingi filtrlar butun jadval yuklangandan keyin xotirada ishlaydi", "correct": true },
+        { "id": "a", "text": "`IEnumerable` — delegate'lar bilan xotirada ishlaydi; `IQueryable` — expression tree'ni provider SQL'ga aylantiradi", "correct": true },
         { "id": "b", "text": "`IQueryable` — `IEnumerable`ning tezroq nomi, farq yo'q", "hint": "`IQueryable` filtrni provider'ga (DB'ga) uzatadi; `IEnumerable` uni xotirada bajaradi." },
         { "id": "c", "text": "`IEnumerable` so'rovlari har doim darhol bajariladi", "hint": "Ikkalasi ham deferred — farq qayerda bajarilishida." },
-        { "id": "d", "text": "`IQueryable`da istalgan C# metodini `Where` ichida ishlatish mumkin", "hint": "Provider tarjima qila olmaydigan metod EF Core 3+ da exception beradi." }
+        { "id": "d", "text": "`IQueryable`da istalgan C# metodini `Where` ichida bemalol ishlatish mumkin — EF har qanday metodni o'zi SQL'ga aylantiradi", "hint": "Provider tarjima qila olmaydigan metod EF Core 3+ da exception beradi." }
       ],
-      "explanation": "Repository'dan `IEnumerable<User>` qaytarib, chaqiruvchi `.Where(...)` qilsa — butun jadval yuklanadi. `AsEnumerable()` — ataylab xotiraga o'tish nuqtasi. Yaxshi amaliyot: so'rovni `IQueryable` darajasida to'liq qurib, oxirida bir marta `ToListAsync()`.",
+      "explanation": "`IQueryable`ni erta `IEnumerable`ga aylantirsangiz, keyingi filtrlar butun jadval yuklangach xotirada ishlaydi. Repository'dan `IEnumerable<User>` qaytarib, chaqiruvchi `.Where(...)` qilsa — butun jadval yuklanadi. `AsEnumerable()` — ataylab xotiraga o'tish nuqtasi. Yaxshi amaliyot: so'rovni `IQueryable` darajasida to'liq qurib, oxirida bir marta `ToListAsync()`.",
       "reviewed": false
     },
     {
@@ -149,12 +149,12 @@
       "prompt": "Code review: nega `Contains` keyinchalik `false` qaytaradi?",
       "code": "class Point\n{\n    public int X { get; set; }\n    public int Y { get; set; }\n    public override bool Equals(object? o) => o is Point p && p.X == X && p.Y == Y;\n    public override int GetHashCode() => HashCode.Combine(X, Y);\n}\n\nvar set = new HashSet<Point>();\nvar p = new Point { X = 1, Y = 2 };\nset.Add(p);\np.X = 10;\nConsole.WriteLine(set.Contains(p)); // False",
       "options": [
-        { "id": "a", "text": "Kalit ob'ekt hash'ni hisoblovchi maydon o'zgardi: element eski hash \"savati\"da yotibdi, `Contains` yangi hash bo'yicha boshqa savatdan qidiradi. Hash-kolleksiyadagi kalitlar immutable bo'lishi kerak — `init`/`readonly` xususiyatlar yoki `record`", "correct": true },
+        { "id": "a", "text": "Hash hisoblanadigan maydon o'zgardi: element eski \"savat\"da qoldi, qidiruv esa yangi hash bo'yicha", "correct": true },
         { "id": "b", "text": "`Equals` noto'g'ri yozilgan — havolalarni solishtiradi", "hint": "`Equals` X va Y qiymatlarini solishtiradi; ob'ekt o'zi bilan teng." },
-        { "id": "c", "text": "`HashSet` `Equals`ni chaqirmaydi — faqat `ReferenceEquals`", "hint": "`HashSet` default'da `EqualityComparer<T>.Default` — sizning `Equals`/`GetHashCode` override'laringizdan foydalanadi." },
+        { "id": "c", "text": "`HashSet` `Equals` va `GetHashCode` ni chaqirmaydi — u faqat `ReferenceEquals` bilan solishtiradi", "hint": "`HashSet` default'da `EqualityComparer<T>.Default` — sizning `Equals`/`GetHashCode` override'laringizdan foydalanadi." },
         { "id": "d", "text": "`HashCode.Combine` tasodifiy natija beradi", "hint": "Bir jarayon ichida bir xil kirishga bir xil natija; jarayonlar o'rtasida farq qilishi mumkin (saqlamang)." }
       ],
-      "explanation": "Kontrakt: teng ob'ektlar teng hash beradi; hash ob'ekt kolleksiyada turgan paytda o'zgarmasligi kerak. Xuddi shu xato `Dictionary` kalitlarida: kalit \"yo'qoladi\", lekin xotirada qoladi. `Equals` override qilinsa `GetHashCode` ham albatta (va aksincha); `IEquatable<T>` value type'larda boxing'ni oldini oladi.",
+      "explanation": "Hash-kolleksiyadagi kalitlar immutable bo'lishi kerak — `init`/`readonly` xususiyatlar yoki `record`. Kontrakt: teng ob'ektlar teng hash beradi; hash ob'ekt kolleksiyada turgan paytda o'zgarmasligi kerak. Xuddi shu xato `Dictionary` kalitlarida: kalit \"yo'qoladi\", lekin xotirada qoladi. `Equals` override qilinsa `GetHashCode` ham albatta (va aksincha); `IEquatable<T>` value type'larda boxing'ni oldini oladi.",
       "reviewed": false
     },
     {

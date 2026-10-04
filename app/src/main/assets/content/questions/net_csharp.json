@@ -8,12 +8,12 @@
       "kind": "concept",
       "prompt": "C#'da value type va reference type qanday farqlanadi?",
       "options": [
-        { "id": "a", "text": "Value type (`int`, `bool`, `struct`, `enum`) o'zgaruvchida qiymatning o'zini saqlaydi — o'zlashtirishda nusxa olinadi; reference type (`class`, `string`, massiv, `interface`, `delegate`) o'zgaruvchida heap'dagi ob'ektga havola saqlaydi — o'zlashtirishda havola nusxalanadi, ikki o'zgaruvchi bitta ob'ektni ko'radi", "correct": true },
-        { "id": "b", "text": "Value type har doim stack'da, reference type har doim heap'da — farq faqat shunda", "hint": "Joylashuv — implementatsiya tafsiloti: class maydoni bo'lgan `int` heap'da yashaydi. Asosiy farq — nusxa olish semantikasi." },
+        { "id": "a", "text": "Value type o'zida qiymatni saqlaydi va nusxalanadi; reference type heap'dagi ob'ektga havola saqlaydi", "correct": true },
+        { "id": "b", "text": "Value type har doim stack'da, reference type har doim heap'da saqlanadi — farq faqat va faqat shu joylashuvda", "hint": "Joylashuv — implementatsiya tafsiloti: class maydoni bo'lgan `int` heap'da yashaydi. Asosiy farq — nusxa olish semantikasi." },
         { "id": "c", "text": "Reference type'lar o'zgarmas, value type'lar o'zgaruvchan", "hint": "O'zgarmaslik tipga emas, dizaynga bog'liq: `string` — o'zgarmas reference type, `List<T>` — o'zgaruvchan." },
         { "id": "d", "text": "Farq yo'q — CLR ikkalasini bir xil ishlaydi", "hint": "Metodga uzatishda farq aniq ko'rinadi: struct nusxasi o'zgaradi, class ob'ekti esa asl holida o'zgaradi." }
       ],
-      "explanation": "Value type metodga qiymat bo'yicha uzatiladi (nusxa); `ref`/`out`/`in` bilan havola sifatida uzatish mumkin. Reference type ham aslida qiymat bo'yicha uzatiladi — lekin qiymat havola: metod ichida ob'ekt maydonini o'zgartirish tashqarida ko'rinadi, o'zgaruvchini yangi ob'ektga qayta bog'lash esa ko'rinmaydi. `null` — faqat reference type (yoki `Nullable<T>`, `int?`).",
+      "explanation": "O'zlashtirishda value type nusxasi olinadi, reference type'da esa havola — ikki o'zgaruvchi bitta ob'ektni ko'radi. Value: `int`, `struct`, `enum`; reference: `class`, `string`, massiv, `interface`, `delegate`. Value type metodga qiymat bo'yicha uzatiladi (nusxa); `ref`/`out`/`in` bilan havola sifatida uzatish mumkin. Reference type ham aslida qiymat bo'yicha uzatiladi — lekin qiymat havola: metod ichida ob'ekt maydonini o'zgartirish tashqarida ko'rinadi, o'zgaruvchini yangi ob'ektga qayta bog'lash esa ko'rinmaydi. `null` — faqat reference type (yoki `Nullable<T>`, `int?`).",
       "reviewed": false
     },
     {
@@ -68,12 +68,12 @@
       "kind": "concept",
       "prompt": "`interface` va `abstract class` qachon ishlatiladi?",
       "options": [
-        { "id": "a", "text": "`interface` — kontrakt (nima qila oladi); class bir nechta interfeysni implementatsiya qila oladi, holat (maydon) saqlamaydi. `abstract class` — umumiy ildiz: maydonlar, konstruktor, qisman implementatsiya beradi, lekin faqat bitta class'dan meros olish mumkin. DI va testda almashtirish uchun odatda interface", "correct": true },
+        { "id": "a", "text": "`interface` — kontrakt, bir nechta implement qilinadi; `abstract class` — maydon va qisman implementatsiyali umumiy ildiz", "correct": true },
         { "id": "b", "text": "Ikkalasi bir xil — faqat sintaksis farqi", "hint": "Class faqat bitta class'dan meros oladi, interfeyslar esa ko'p bo'lishi mumkin; abstract class maydon va konstruktorga ega bo'la oladi." },
         { "id": "c", "text": "Interface'da hech qachon metod tanasi bo'lmaydi", "hint": "C# 8'dan beri default interface methods bor — lekin holat (instance maydon) baribir yo'q." },
-        { "id": "d", "text": "Abstract class'dan `new` bilan ob'ekt yaratish mumkin", "hint": "Abstract class'dan to'g'ridan-to'g'ri instansiya yaratib bo'lmaydi — faqat meros olgan konkret class'dan." }
+        { "id": "d", "text": "Abstract class'dan ham oddiy class kabi `new` bilan to'g'ridan-to'g'ri ob'ekt yaratish mumkin, faqat ogohlantirish chiqadi", "hint": "Abstract class'dan to'g'ridan-to'g'ri instansiya yaratib bo'lmaydi — faqat meros olgan konkret class'dan." }
       ],
-      "explanation": "Qoidaga yaqin: \"is-a\" ierarxiya va umumiy kod — abstract class (masalan, `Stream`); \"can-do\" qobiliyat — interface (`IDisposable`, `IComparable<T>`). Ko'p hollarda interface + kompozitsiya meros ierarxiyasidan moslashuvchanroq.",
+      "explanation": "Faqat bitta class'dan meros olinadi; DI va testda almashtirish uchun odatda interface ishlatiladi. Qoidaga yaqin: \"is-a\" ierarxiya va umumiy kod — abstract class (masalan, `Stream`); \"can-do\" qobiliyat — interface (`IDisposable`, `IComparable<T>`). Ko'p hollarda interface + kompozitsiya meros ierarxiyasidan moslashuvchanroq.",
       "reviewed": false
     },
     {
@@ -99,12 +99,12 @@
       "kind": "concept",
       "prompt": "Boxing va unboxing nima va nega u performance'ga ta'sir qiladi?",
       "options": [
-        { "id": "a", "text": "Boxing — value type'ni `object` (yoki interfeys) sifatida ishlatganda heap'da yangi ob'ekt yaratib qiymatni unga ko'chirish; unboxing — aniq tipga cast qilib qiymatni qaytarib olish. Har boxing — heap allokatsiya va GC bosimi; issiq kodda (sikl, `ArrayList`, `object` parametr, `string.Format` eski overload'lari) sezilarli sekinlashtiradi", "correct": true },
+        { "id": "a", "text": "Boxing — value type'ni `object`ga o'rab heap'ga ko'chirish; unboxing — qaytarib olish; har biri allokatsiya va GC bosimi", "correct": true },
         { "id": "b", "text": "Boxing — reference type'ni value type'ga aylantirish", "hint": "Yo'nalish teskari: value type `object`ga o'raladi." },
         { "id": "c", "text": "Boxing faqat aniq `(object)` cast yozilganda bo'ladi", "hint": "Ko'pincha yashirin: `object o = 5;`, `ArrayList.Add(5)`, struct'ni interfeys sifatida uzatish." },
-        { "id": "d", "text": "Unboxing'da tipni istalgan mos tipga cast qilsa bo'ladi", "hint": "Box ichidagi aniq tipga cast kerak: `int`ni box qilib `(long)o` qilsangiz `InvalidCastException`." }
+        { "id": "d", "text": "Unboxing'da qiymatni istalgan mos tipga cast qilsa bo'ladi: `int` box'ini `(long)` qilib olish ham to'liq xavfsiz va xatosiz ishlaydi", "hint": "Box ichidagi aniq tipga cast kerak: `int`ni box qilib `(long)o` qilsangiz `InvalidCastException`." }
       ],
-      "explanation": "Oldini olish: generic kolleksiyalar (`List<int>` — boxing yo'q), generic metodlar (`T` constraint bilan), struct'da `IEquatable<T>` implementatsiyasi (`Dictionary` kaliti sifatida `Equals(object)` boxing'idan qochish), string interpolation .NET 6+ handler'lari. Profiler'da allokatsiyalarni ko'rish — `dotnet-counters`, BenchmarkDotNet `[MemoryDiagnoser]`.",
+      "explanation": "Issiq kodda (sikl, `ArrayList`, `object` parametr) sezilarli sekinlashtiradi. Oldini olish: generic kolleksiyalar (`List<int>` — boxing yo'q), generic metodlar (`T` constraint bilan), struct'da `IEquatable<T>` implementatsiyasi (`Dictionary` kaliti sifatida `Equals(object)` boxing'idan qochish), string interpolation .NET 6+ handler'lari. Profiler'da allokatsiyalarni ko'rish — `dotnet-counters`, BenchmarkDotNet `[MemoryDiagnoser]`.",
       "reviewed": false
     },
     {
@@ -130,12 +130,12 @@
       "kind": "concept",
       "prompt": "Nullable reference types (`#nullable enable`) nima beradi?",
       "options": [
-        { "id": "a", "text": "Kompilyatorga reference type null bo'lishi mumkinmi yoki yo'qligini aytadi: `string` — null emas, `string?` — null bo'lishi mumkin; null bo'lishi mumkin qiymatni tekshirmasdan dereference qilsangiz warning beradi. Runtime xulqi o'zgarmaydi — bu statik tahlil, `NullReferenceException`ni erta topish uchun", "correct": true },
-        { "id": "b", "text": "Runtime'da `string`ga null yozishni taqiqlaydi va exception tashlaydi", "hint": "Faqat kompilyatsiya vaqtidagi tahlil va warning'lar; IL va runtime xulqi bir xil." },
+        { "id": "a", "text": "Kompilyator `string` (null emas) va `string?` ni farqlab, tekshirilmagan dereference uchun warning beradi", "correct": true },
+        { "id": "b", "text": "Runtime'da `string` o'zgaruvchiga null yozishni taqiqlaydi va bunday yozishda darhol `NullReferenceException` tashlaydi", "hint": "Faqat kompilyatsiya vaqtidagi tahlil va warning'lar; IL va runtime xulqi bir xil." },
         { "id": "c", "text": "`string?` — `Nullable<string>` struct'i", "hint": "`Nullable<T>` faqat value type uchun (`int?`); reference type'da `?` — faqat annotatsiya." },
         { "id": "d", "text": "`!` operatori qiymatni null'dan tozalaydi", "hint": "Null-forgiving `!` faqat warning'ni o'chiradi — qiymat null bo'lsa baribir exception." }
       ],
-      "explanation": "Yangi loyihalarda default yoqilgan. Foydali atributlar: `[NotNullWhen(true)]` (`TryGet` pattern), `[MemberNotNull]`. Warning'larni `TreatWarningsAsErrors` bilan xatoga aylantirish — qat'iyroq. Tashqi kirish (JSON, DB) baribir null olib kelishi mumkin — chegarada validatsiya kerak.",
+      "explanation": "Runtime xulqi o'zgarmaydi — bu statik tahlil, `NullReferenceException`ni erta topish uchun. Yangi loyihalarda default yoqilgan. Foydali atributlar: `[NotNullWhen(true)]` (`TryGet` pattern), `[MemberNotNull]`. Warning'larni `TreatWarningsAsErrors` bilan xatoga aylantirish — qat'iyroq. Tashqi kirish (JSON, DB) baribir null olib kelishi mumkin — chegarada validatsiya kerak.",
       "reviewed": false
     },
     {
@@ -145,12 +145,12 @@
       "kind": "concept",
       "prompt": "Extension method qanday ishlaydi?",
       "options": [
-        { "id": "a", "text": "`static` class ichidagi `static` metod, birinchi parametri `this` bilan belgilanadi: `public static bool IsEmpty(this string s)`. Chaqiruv `s.IsEmpty()` ko'rinadi, lekin kompilyator uni `StringExt.IsEmpty(s)`ga aylantiradi — tipga yangi a'zo qo'shilmaydi, private a'zolarga kirish yo'q, namespace `using` qilinishi kerak. LINQ shu mexanizmda qurilgan", "correct": true },
-        { "id": "b", "text": "Mavjud class'ni runtime'da o'zgartirib, yangi metod qo'shadi", "hint": "Hech narsa o'zgarmaydi — bu kompilyatsiya vaqtidagi sintaktik qulaylik (statik chaqiruv)." },
+        { "id": "a", "text": "`static` class'dagi `this` parametrli `static` metod: `s.IsEmpty()` aslida `StringExt.IsEmpty(s)` chaqiruvi", "correct": true },
+        { "id": "b", "text": "Mavjud class'ni runtime'da o'zgartirib, unga yangi metodni haqiqiy a'zo sifatida doimiy qo'shib qo'yadi", "hint": "Hech narsa o'zgarmaydi — bu kompilyatsiya vaqtidagi sintaktik qulaylik (statik chaqiruv)." },
         { "id": "c", "text": "Extension method tipning o'z metodidan ustun turadi", "hint": "Teskari: nomi va signaturasi bir xil instance metod bo'lsa, u tanlanadi; extension e'tiborsiz qoladi." },
         { "id": "d", "text": "Extension method ichida `private` maydonlarga kirish mumkin", "hint": "U oddiy statik metod — faqat public (yoki assembly ichida internal) a'zolarni ko'radi." }
       ],
-      "explanation": "Null bilan qiziq xulq: `string s = null; s.IsEmpty()` — exception emas, metodga `null` uzatiladi (instance metodda NRE bo'lardi). Interfeysga extension — barcha implementatsiyalarga umumiy xulq (`IEnumerable<T>` + LINQ). Ortiqcha ishlatish IntelliSense'ni ifloslantiradi — aniq namespace'larda saqlang.",
+      "explanation": "Tipga yangi a'zo qo'shilmaydi, private a'zolarga kirish yo'q, namespace `using` qilinishi kerak; LINQ shu mexanizmda qurilgan. Null bilan qiziq xulq: `string s = null; s.IsEmpty()` — exception emas, metodga `null` uzatiladi (instance metodda NRE bo'lardi). Interfeysga extension — barcha implementatsiyalarga umumiy xulq (`IEnumerable<T>` + LINQ). Ortiqcha ishlatish IntelliSense'ni ifloslantiradi — aniq namespace'larda saqlang.",
       "reviewed": false
     },
     {
