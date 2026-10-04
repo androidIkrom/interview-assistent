@@ -1,31 +1,38 @@
 package uz.devsuhbat.ui.session
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.AssistChip
-import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -34,6 +41,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
@@ -50,13 +58,24 @@ import uz.devsuhbat.R
 import uz.devsuhbat.content.Question
 import uz.devsuhbat.content.QuestionType
 import uz.devsuhbat.data.SessionMode
+import uz.devsuhbat.engine.Progress
 import uz.devsuhbat.engine.QuestionPicker
+import uz.devsuhbat.engine.Readiness
 import uz.devsuhbat.engine.SessionResult
 import uz.devsuhbat.ui.Routes
 import uz.devsuhbat.ui.common.InlineCodeText
-import uz.devsuhbat.ui.design.OptionCard
 import uz.devsuhbat.ui.common.QuestionBody
 import uz.devsuhbat.ui.common.ReportIssueAction
+import uz.devsuhbat.ui.common.titleRes
+import uz.devsuhbat.ui.design.ButtonTone
+import uz.devsuhbat.ui.design.DsMotion
+import uz.devsuhbat.ui.design.ExpressiveButton
+import uz.devsuhbat.ui.design.FeedbackSheet
+import uz.devsuhbat.ui.design.FeedbackTone
+import uz.devsuhbat.ui.design.HapticEvent
+import uz.devsuhbat.ui.design.OptionCard
+import uz.devsuhbat.ui.design.WavyProgress
+import uz.devsuhbat.ui.design.rememberHaptics
 import uz.devsuhbat.ui.theme.LocalExtraColors
 
 /**
@@ -80,6 +99,19 @@ private suspend fun loadSessionQuestions(container: AppContainer, topicId: Strin
     }
 }
 
+/** Readiness of the chosen field and level, as Home shows it; null before a field is chosen. */
+private suspend fun currentReadiness(container: AppContainer): Progress? {
+    val settings = container.settings.settings.first()
+    val fieldId = settings.fieldId ?: return null
+    val level = settings.level ?: return null
+    val states = container.progress.states.first()
+    return withContext(container.io) {
+        val content = container.content
+        val scope = QuestionPicker.eligible(content.topicsOf(fieldId).flatMap { content.questions(it.id) }, level)
+        Readiness.of(scope, states)
+    }
+}
+
 private suspend fun logSession(container: AppContainer, topicId: String, startedAt: Instant, result: SessionResult) {
     val settings = container.settings.settings.first()
     val fieldId = settings.fieldId ?: return
@@ -88,7 +120,6 @@ private suspend fun logSession(container: AppContainer, topicId: String, started
     container.progress.logSession(mode, fieldId, level, startedAt, result)
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SessionScreen(
     container: AppContainer,
@@ -107,6 +138,7 @@ fun SessionScreen(
                     random = random,
                     onOutcome = container.progress::record,
                     onFinished = { result -> logSession(container, topicId, startedAt, result) },
+                    readiness = { currentReadiness(container) },
                 )
             }
         }
@@ -143,43 +175,34 @@ fun SessionScreen(
         )
     }
 
+    val haptics = rememberHaptics()
+    // One buzz per new verdict: a confirm for a right answer, a reject for a wrong one.
+    LaunchedEffect(state.feedback) {
+        when (state.feedback) {
+            is Feedback.Correct -> haptics(HapticEvent.CORRECT)
+            is Feedback.Wrong -> haptics(HapticEvent.WRONG)
+            null -> Unit
+        }
+    }
+
     Scaffold(
-        topBar = {
-            Column {
-                TopAppBar(
-                    title = {
-                        if (state.queueSize > 0) {
-                            Text("${state.position + 1} / ${state.queueSize}", style = MaterialTheme.typography.titleMedium)
-                        }
-                    },
-                    navigationIcon = {
-                        IconButton(onClick = { confirmExit = true }) {
-                            Icon(Icons.Filled.Close, stringResource(R.string.action_close))
-                        }
-                    },
-                    actions = { ReportIssueAction(state.question) },
-                )
-                if (state.queueSize > 0) {
-                    LinearProgressIndicator(
-                        progress = { state.position.toFloat() / state.queueSize },
-                        modifier = Modifier.fillMaxWidth(),
-                        drawStopIndicator = {},
-                    )
-                }
-            }
-        },
+        topBar = { SessionTopBar(state, onClose = { confirmExit = true }) },
         bottomBar = {
             if (state.question != null) {
                 Box(Modifier.navigationBarsPadding().padding(16.dp)) {
                     if (state.solved) {
                         val last = state.position + 1 == state.queueSize
-                        Button(onClick = viewModel::next, modifier = Modifier.fillMaxWidth()) {
-                            Text(stringResource(if (last) R.string.session_finish else R.string.session_next))
-                        }
+                        ExpressiveButton(
+                            text = stringResource(if (last) R.string.session_finish else R.string.session_next),
+                            onClick = viewModel::next,
+                            tone = ButtonTone.SUCCESS,
+                        )
                     } else {
-                        Button(onClick = viewModel::check, enabled = state.canCheck, modifier = Modifier.fillMaxWidth()) {
-                            Text(stringResource(R.string.session_check))
-                        }
+                        ExpressiveButton(
+                            text = stringResource(R.string.session_check),
+                            onClick = viewModel::check,
+                            enabled = state.canCheck,
+                        )
                     }
                 }
             }
@@ -189,30 +212,54 @@ fun SessionScreen(
         if (question == null) {
             Box(Modifier.fillMaxSize().padding(padding), Alignment.Center) { CircularProgressIndicator() }
         } else {
-            QuestionContent(state, question, viewModel::toggle, Modifier.padding(padding))
+            AnimatedContent(
+                targetState = Triple(question.id, state.isRepeat, state.position),
+                transitionSpec = {
+                    (slideInHorizontally(DsMotion.spatialDefault()) { it / 4 } + fadeIn(DsMotion.effectsDefault()))
+                        .togetherWith(slideOutHorizontally(DsMotion.spatialDefault()) { -it / 4 } + fadeOut(DsMotion.effectsDefault()))
+                },
+                label = "question",
+                modifier = Modifier.padding(padding),
+            ) { _ ->
+                QuestionContent(state, question) { optionId ->
+                    haptics(HapticEvent.SELECT)
+                    viewModel.toggle(optionId)
+                }
+            }
         }
     }
 }
 
 @Composable
-private fun QuestionContent(
-    state: SessionUiState,
-    question: Question,
-    onToggle: (String) -> Unit,
-    modifier: Modifier = Modifier,
-) {
+private fun SessionTopBar(state: SessionUiState, onClose: () -> Unit) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = Modifier.fillMaxWidth().statusBarsPadding().padding(horizontal = 8.dp, vertical = 4.dp),
+    ) {
+        IconButton(onClick = onClose) {
+            Icon(Icons.Rounded.Close, contentDescription = stringResource(R.string.action_close))
+        }
+        val fraction = if (state.queueSize > 0) state.position.toFloat() / state.queueSize else 0f
+        WavyProgress(fraction, Modifier.weight(1f))
+        if (state.queueSize > 0) {
+            Text("${state.position + 1} / ${state.queueSize}", style = MaterialTheme.typography.titleSmall)
+        }
+        ReportIssueAction(state.question)
+    }
+}
+
+@Composable
+private fun QuestionContent(state: SessionUiState, question: Question, onToggle: (String) -> Unit) {
     val scroll = rememberScrollState()
-    // A new question starts at the top; new feedback is brought into view at the bottom.
-    LaunchedEffect(question.id, state.position) { scroll.scrollTo(0) }
+    // New feedback is brought into view at the bottom, just above the button.
     LaunchedEffect(state.feedback) { if (state.feedback != null) scroll.animateScrollTo(scroll.maxValue) }
 
     Column(
-        modifier = modifier.fillMaxSize().verticalScroll(scroll).padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
+        modifier = Modifier.fillMaxSize().verticalScroll(scroll).padding(horizontal = 20.dp, vertical = 12.dp),
+        verticalArrangement = Arrangement.spacedBy(14.dp),
     ) {
-        if (state.isRepeat) {
-            AssistChip(onClick = {}, enabled = false, label = { Text(stringResource(R.string.session_repeat)) })
-        }
+        QuestionChips(state, question)
         QuestionBody(question)
         question.options.forEachIndexed { index, option ->
             OptionCard(
@@ -223,49 +270,52 @@ private fun QuestionContent(
                 onClick = { onToggle(option.id) },
             )
         }
-        state.feedback?.let { FeedbackPanel(it) }
+        state.feedback?.let { SessionFeedback(it) }
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun QuestionChips(state: SessionUiState, question: Question) {
+    val colors = MaterialTheme.colorScheme
+    val extra = LocalExtraColors.current
+    FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Chip(stringResource(question.kind.titleRes), colors.primaryContainer, colors.onPrimaryContainer)
+        Chip(stringResource(question.level.titleRes), colors.surfaceContainerLowest, colors.onSurface, BorderStroke(1.dp, colors.outlineVariant))
+        if (state.isRepeat) {
+            Chip(stringResource(R.string.session_repeat), extra.streakContainer, extra.onStreakContainer)
+        }
     }
 }
 
 @Composable
-private fun FeedbackPanel(feedback: Feedback) {
-    val colors = MaterialTheme.colorScheme
-    val extra = LocalExtraColors.current
+private fun Chip(text: String, container: Color, content: Color, border: BorderStroke? = null) {
+    Surface(color = container, contentColor = content, shape = RoundedCornerShape(10.dp), border = border) {
+        Text(text, style = MaterialTheme.typography.labelMedium, modifier = Modifier.padding(horizontal = 10.dp, vertical = 5.dp))
+    }
+}
+
+@Composable
+private fun SessionFeedback(feedback: Feedback) {
     when (feedback) {
-        is Feedback.Correct -> Surface(
-            color = extra.successContainer,
-            contentColor = extra.onSuccessContainer,
-            shape = MaterialTheme.shapes.medium,
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text(stringResource(R.string.session_correct_title), style = MaterialTheme.typography.titleMedium)
-                InlineCodeText(feedback.explanation, style = MaterialTheme.typography.bodyMedium)
-            }
+        is Feedback.Correct -> FeedbackSheet(FeedbackTone.CORRECT, stringResource(R.string.session_correct_title)) {
+            InlineCodeText(feedback.explanation, style = MaterialTheme.typography.bodyMedium)
         }
-        is Feedback.Wrong -> Surface(
-            color = colors.errorContainer,
-            contentColor = colors.onErrorContainer,
-            shape = MaterialTheme.shapes.medium,
-            modifier = Modifier.fillMaxWidth(),
-        ) {
-            Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text(stringResource(R.string.session_wrong_title), style = MaterialTheme.typography.titleMedium)
-                if (feedback.correctPicked != null && feedback.correctMissing != null) {
-                    Text(
-                        text = stringResource(R.string.session_multi_feedback, feedback.correctPicked, feedback.correctMissing),
-                        style = MaterialTheme.typography.bodyMedium,
+        is Feedback.Wrong -> FeedbackSheet(FeedbackTone.WRONG, stringResource(R.string.session_wrong_title)) {
+            if (feedback.correctPicked != null && feedback.correctMissing != null) {
+                Text(
+                    text = stringResource(R.string.session_multi_feedback, feedback.correctPicked, feedback.correctMissing),
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+            }
+            feedback.hints.forEach { (optionText, hint) ->
+                Column {
+                    InlineCodeText(
+                        text = optionText,
+                        style = MaterialTheme.typography.labelLarge,
+                        textDecoration = TextDecoration.LineThrough,
                     )
-                }
-                feedback.hints.forEach { (optionText, hint) ->
-                    Column {
-                        InlineCodeText(
-                            text = optionText,
-                            style = MaterialTheme.typography.labelLarge,
-                            textDecoration = TextDecoration.LineThrough,
-                        )
-                        InlineCodeText(hint, style = MaterialTheme.typography.bodyMedium)
-                    }
+                    InlineCodeText(hint, style = MaterialTheme.typography.bodyMedium)
                 }
             }
         }
