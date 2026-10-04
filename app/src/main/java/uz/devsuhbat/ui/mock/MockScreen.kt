@@ -59,6 +59,7 @@ import uz.devsuhbat.engine.MockResult
 import uz.devsuhbat.engine.QuestionPicker
 import uz.devsuhbat.ui.common.OptionCard
 import uz.devsuhbat.ui.common.QuestionBody
+import uz.devsuhbat.ui.common.ReportIssueAction
 
 private const val LOW_TIME_SECONDS = 60
 
@@ -176,6 +177,7 @@ fun MockScreen(container: AppContainer, onExit: () -> Unit, onMistakes: () -> Un
                         }
                     },
                     actions = {
+                        ReportIssueAction(state.question)
                         TextButton(onClick = { confirmFinish = true }, enabled = state.question != null) {
                             Text(stringResource(R.string.session_finish))
                         }

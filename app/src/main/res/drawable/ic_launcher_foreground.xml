@@ -1,26 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Code brackets with a check mark between them, inside the adaptive icon safe zone. -->
+<!-- Office pass on a lanyard with a code mark and a green check (badge variant). -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
     <path
-        android:pathData="M42,40 L30,54 L42,68"
-        android:strokeColor="#FFFFFFFF"
+        android:pathData="M44.75,16 L50,30 M63.25,16 L58,30"
+        android:strokeColor="#FFB703"
         android:strokeWidth="5"
         android:strokeLineCap="round"
         android:strokeLineJoin="round" />
     <path
-        android:pathData="M66,40 L78,54 L66,68"
-        android:strokeColor="#FFFFFFFF"
-        android:strokeWidth="5"
+        android:fillColor="#FFFFFF"
+        android:pathData="M40,33 H68 A7,7 0 0 1 75,40 V72 A7,7 0 0 1 68,79 H40 A7,7 0 0 1 33,72 V40 A7,7 0 0 1 40,33 Z" />
+    <path
+        android:fillColor="#C9D2F2"
+        android:pathData="M50.5,27 H57.5 A2.5,2.5 0 0 1 60,29.5 V33.5 A2.5,2.5 0 0 1 57.5,36 H50.5 A2.5,2.5 0 0 1 48,33.5 V29.5 A2.5,2.5 0 0 1 50.5,27 Z" />
+    <path
+        android:fillColor="#D7DCEB"
+        android:pathData="M48.5,37.5 H59.5 A1.5,1.5 0 0 1 61,39.0 V39.0 A1.5,1.5 0 0 1 59.5,40.5 H48.5 A1.5,1.5 0 0 1 47,39.0 V39.0 A1.5,1.5 0 0 1 48.5,37.5 Z" />
+    <path
+        android:fillColor="#E6EAFA"
+        android:pathData="M45.5,52 A8.5,8.5 0 1 1 62.5,52 A8.5,8.5 0 1 1 45.5,52 Z" />
+    <path
+        android:pathData="M51.5,48.5 L48,52 L51.5,55.5 M56.5,48.5 L60,52 L56.5,55.5"
+        android:strokeColor="#13235B"
+        android:strokeWidth="2.3"
         android:strokeLineCap="round"
         android:strokeLineJoin="round" />
     <path
-        android:pathData="M47,55 L52,61 L61,47"
-        android:strokeColor="#FFFFD54F"
-        android:strokeWidth="5"
+        android:fillColor="#13235B"
+        android:pathData="M42.75,64 H65.25 A1.75,1.75 0 0 1 67,65.75 V65.75 A1.75,1.75 0 0 1 65.25,67.5 H42.75 A1.75,1.75 0 0 1 41,65.75 V65.75 A1.75,1.75 0 0 1 42.75,64 Z" />
+    <path
+        android:fillColor="#B8C0DA"
+        android:pathData="M46.5,70 H61.5 A1.5,1.5 0 0 1 63,71.5 V71.5 A1.5,1.5 0 0 1 61.5,73 H46.5 A1.5,1.5 0 0 1 45,71.5 V71.5 A1.5,1.5 0 0 1 46.5,70 Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M59.75,71 A9.25,9.25 0 1 1 78.25,71 A9.25,9.25 0 1 1 59.75,71 Z" />
+    <path
+        android:fillColor="#2BD67B"
+        android:pathData="M62.25,71 A6.75,6.75 0 1 1 75.75,71 A6.75,6.75 0 1 1 62.25,71 Z" />
+    <path
+        android:pathData="M65.3,71.2 L68,74 L73,68.4"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2.6"
         android:strokeLineCap="round"
         android:strokeLineJoin="round" />
 </vector>

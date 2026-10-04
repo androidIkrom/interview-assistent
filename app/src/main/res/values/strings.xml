@@ -5,6 +5,8 @@
     <string name="action_back">Orqaga</string>
     <string name="action_cancel">Bekor qilish</string>
     <string name="action_close">Yopish</string>
+    <string name="report_issue">Xato haqida xabar berish</string>
+    <string name="report_issue_chooser">Xato haqida xabarni yuborish</string>
     <string name="action_continue">Davom etish</string>
     <string name="action_start">Boshlash</string>
     <string name="action_save">Saqlash</string>
