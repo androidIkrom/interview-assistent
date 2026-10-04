@@ -4,7 +4,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 /** Destinations reachable from the bottom navigation bar, in bar order. */
-val TOP_LEVEL_ROUTES: List<String> = listOf(Routes.HOME, Routes.TOPICS)
+val TOP_LEVEL_ROUTES: List<String> = listOf(Routes.HOME, Routes.TOPICS, Routes.STATS)
 
 fun isTopLevel(route: String?): Boolean = route in TOP_LEVEL_ROUTES
 

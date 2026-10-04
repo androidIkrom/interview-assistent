@@ -33,4 +33,11 @@ class NavMotionTest {
         assertEquals(80.dp, contentBottomPadding(Routes.HOME, barHeight = 80.dp))
         assertEquals(0.dp, contentBottomPadding(Routes.SESSION, barHeight = 80.dp))
     }
+
+    @Test
+    fun statsIsATab() {
+        assertTrue(isTopLevel(Routes.STATS))
+        assertEquals(NavMotion.FADE, navMotion(Routes.STATS, Routes.HOME))
+        assertEquals(80.dp, contentBottomPadding(Routes.STATS, barHeight = 80.dp))
+    }
 }
