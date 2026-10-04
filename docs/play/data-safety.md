@@ -13,7 +13,7 @@ Play Console → Ilova kontenti (App content) → Data safety. Javoblar ilovanin
 
 ## Nima uchun bu to'g'ri
 
-- Progress va sozlamalar faqat qurilmada (Room va DataStore) saqlanadi va qurilmadan chiqmaydi. Google ta'rifiga ko'ra, qurilmadan tashqariga yuborilmaydigan ma'lumot "yig'ilgan" hisoblanmaydi.
+- Progress va sozlamalar qurilmada (Room va DataStore) saqlanadi; ilova ularni qurilmadan tashqariga yubormaydi. `allowBackup` yoqilgan: foydalanuvchining Android zaxirasi (Google boshqaradi, uchdan-uchgacha shifrlangan) ularni nusxalashi mumkin — Google qoidasiga ko'ra bu ishlab chiquvchi tomonidan "yig'ish" hisoblanmaydi. Google ta'rifiga ko'ra, qurilmadan tashqariga yuborilmaydigan ma'lumot "yig'ilgan" hisoblanmaydi.
 - Eksport fayli foydalanuvchi tanlagan joyga yoziladi (Storage Access Framework); ilova uni o'zi hech qayerga yubormaydi.
 - "Xato haqida xabar berish" tizimning ulashish oynasini ochadi: yuborishni foydalanuvchi o'zi tanlaydi va ilova o'zi hech narsa yubormaydi.
 - Merged manifest'dagi ruxsatlar: `POST_NOTIFICATIONS` (ixtiyoriy kunlik eslatma), WorkManager'ning `WAKE_LOCK`, `RECEIVE_BOOT_COMPLETED`, `FOREGROUND_SERVICE`, `ACCESS_NETWORK_STATE`. `INTERNET` yo'q.
