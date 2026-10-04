@@ -57,8 +57,9 @@ import uz.devsuhbat.R
 import uz.devsuhbat.content.QuestionType
 import uz.devsuhbat.engine.MockResult
 import uz.devsuhbat.engine.QuestionPicker
-import uz.devsuhbat.ui.common.OptionCard
 import uz.devsuhbat.ui.common.QuestionBody
+import uz.devsuhbat.ui.design.OptionCard
+import uz.devsuhbat.ui.design.OptionState
 import uz.devsuhbat.ui.common.ReportIssueAction
 
 private const val LOW_TIME_SECONDS = 60
@@ -221,11 +222,12 @@ fun MockScreen(container: AppContainer, onExit: () -> Unit, onMistakes: () -> Un
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 QuestionBody(question)
-                question.options.forEach { option ->
+                question.options.forEachIndexed { index, option ->
                     OptionCard(
-                        option = option,
+                        text = option.text,
+                        letter = 'A' + index,
+                        state = if (option.id in state.selected) OptionState.SELECTED else OptionState.IDLE,
                         multi = question.type == QuestionType.MULTI,
-                        selected = option.id in state.selected,
                         onClick = { viewModel.toggle(option.id) },
                     )
                 }

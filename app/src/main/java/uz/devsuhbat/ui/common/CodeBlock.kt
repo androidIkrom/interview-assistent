@@ -4,6 +4,7 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -18,9 +19,9 @@ import uz.devsuhbat.ui.theme.JetBrainsMono
 @Composable
 fun CodeBlock(code: String, modifier: Modifier = Modifier) {
     Surface(
-        color = MaterialTheme.colorScheme.surfaceVariant,
-        contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-        shape = MaterialTheme.shapes.small,
+        color = MaterialTheme.colorScheme.surfaceContainer,
+        contentColor = MaterialTheme.colorScheme.onSurface,
+        shape = RoundedCornerShape(20.dp),
         modifier = modifier.fillMaxWidth(),
     ) {
         Text(
@@ -30,7 +31,7 @@ fun CodeBlock(code: String, modifier: Modifier = Modifier) {
             fontSize = 13.sp,
             lineHeight = 19.sp,
             softWrap = false,
-            modifier = Modifier.horizontalScroll(rememberScrollState()).padding(12.dp),
+            modifier = Modifier.horizontalScroll(rememberScrollState()).padding(16.dp),
         )
     }
 }

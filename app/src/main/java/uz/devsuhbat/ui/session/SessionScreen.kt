@@ -54,7 +54,7 @@ import uz.devsuhbat.engine.QuestionPicker
 import uz.devsuhbat.engine.SessionResult
 import uz.devsuhbat.ui.Routes
 import uz.devsuhbat.ui.common.InlineCodeText
-import uz.devsuhbat.ui.common.OptionCard
+import uz.devsuhbat.ui.design.OptionCard
 import uz.devsuhbat.ui.common.QuestionBody
 import uz.devsuhbat.ui.common.ReportIssueAction
 import uz.devsuhbat.ui.theme.LocalExtraColors
@@ -214,14 +214,13 @@ private fun QuestionContent(
             AssistChip(onClick = {}, enabled = false, label = { Text(stringResource(R.string.session_repeat)) })
         }
         QuestionBody(question)
-        question.options.forEach { option ->
+        question.options.forEachIndexed { index, option ->
             OptionCard(
-                option = option,
+                text = option.text,
+                letter = 'A' + index,
+                state = optionState(option.id, state.selected, state.disabled, state.solved),
                 multi = question.type == QuestionType.MULTI,
-                selected = option.id in state.selected,
                 onClick = { onToggle(option.id) },
-                eliminated = option.id in state.disabled,
-                solved = state.solved,
             )
         }
         state.feedback?.let { FeedbackPanel(it) }

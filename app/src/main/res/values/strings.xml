@@ -20,6 +20,10 @@
     <string name="group_backend">Backend</string>
     <string name="group_other">Boshqa</string>
 
+    <string name="kind_concept">Tushuncha</string>
+    <string name="kind_true_false">To\'g\'ri / noto\'g\'ri</string>
+    <string name="kind_code_output">Kod natijasi</string>
+    <string name="kind_code_review">Kod review</string>
     <string name="level_junior">Junior</string>
     <string name="level_middle">Middle</string>
     <string name="level_strong_middle">Strong Middle</string>
