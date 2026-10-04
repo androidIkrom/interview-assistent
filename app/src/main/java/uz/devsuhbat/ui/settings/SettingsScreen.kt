@@ -34,7 +34,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalResources
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
@@ -51,8 +51,8 @@ fun SettingsScreen(container: AppContainer, onBack: () -> Unit, onEditProfile: (
     val scope = rememberCoroutineScope()
     var confirmReset by rememberSaveable { mutableStateOf(false) }
     val snackbar = remember { SnackbarHostState() }
-    val context = LocalContext.current
-    val showMessage: (Int) -> Unit = { id -> scope.launch { snackbar.showSnackbar(context.getString(id)) } }
+    val resources = LocalResources.current
+    val showMessage: (Int) -> Unit = { id -> scope.launch { snackbar.showSnackbar(resources.getString(id)) } }
 
     if (confirmReset) {
         AlertDialog(
