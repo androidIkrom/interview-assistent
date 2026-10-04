@@ -8,12 +8,12 @@
       "kind": "concept",
       "prompt": "Swift'da `let` va `var` qanday farqlanadi?",
       "options": [
-        { "id": "a", "text": "`let` — konstanta: qiymat bir marta beriladi va qayta o'zlashtirilmaydi; `var` — o'zgaruvchi. `let` bilan e'lon qilingan `struct` (value type) xususiyatlarini ham o'zgartirib bo'lmaydi, `let` bilan e'lon qilingan `class` ob'ektida esa havola o'zgarmaydi, lekin uning `var` xususiyatlarini o'zgartirish mumkin", "correct": true },
+        { "id": "a", "text": "`let` — konstanta, qayta o'zlashtirilmaydi; `var` — o'zgaruvchi; `let` class ob'ektida faqat havola o'zgarmas", "correct": true },
         { "id": "b", "text": "`let` faqat sonlar uchun, `var` — boshqa tiplar uchun", "hint": "Ikkalasi istalgan tip bilan ishlaydi; farq — qayta o'zlashtirish mumkinligida." },
-        { "id": "c", "text": "`let` bilan e'lon qilingan class ob'ektining hech qanday xususiyatini o'zgartirib bo'lmaydi", "hint": "Class — reference type: `let` faqat havolani qotiradi, ob'ektning `var` xususiyatlari o'zgaraveradi." },
+        { "id": "c", "text": "`let` bilan e'lon qilingan class ob'ektining hech qanday xususiyatini, hatto `var` xususiyatlarini ham o'zgartirib bo'lmaydi", "hint": "Class — reference type: `let` faqat havolani qotiradi, ob'ektning `var` xususiyatlari o'zgaraveradi." },
         { "id": "d", "text": "`var` tezroq ishlaydi, shuning uchun uni afzal ko'rish kerak", "hint": "Aksincha, Swift uslubi — default `let`; kompilyator o'zgartirilmagan `var` uchun ogohlantiradi." }
       ],
-      "explanation": "Qoida: hamma joyda `let`, kerak bo'lganda `var`. Immutable qiymatlar bilan kod oson tushuniladi va thread'lar o'rtasida xavfsizroq. `let` qiymatini e'londa emas, keyinroq (masalan, `if/else` tarmoqlarida) bir marta berish ham mumkin.",
+      "explanation": "`let` bilan e'lon qilingan `struct` (value type) xususiyatlarini ham o'zgartirib bo'lmaydi; `let` class ob'ektining `var` xususiyatlarini esa o'zgartirish mumkin. Qoida: hamma joyda `let`, kerak bo'lganda `var`. Immutable qiymatlar bilan kod oson tushuniladi va thread'lar o'rtasida xavfsizroq. `let` qiymatini e'londa emas, keyinroq (masalan, `if/else` tarmoqlarida) bir marta berish ham mumkin.",
       "reviewed": false
     },
     {
@@ -55,12 +55,12 @@
       "kind": "concept",
       "prompt": "Swift'da `protocol` nima?",
       "options": [
-        { "id": "a", "text": "Tip bajarishi kerak bo'lgan talablar (metodlar, xususiyatlar) kontrakti; uni `struct`, `class`, `enum` qabul qila oladi va bir tip bir nechta protokolga mos kelishi mumkin. Protocol extension bilan default implementatsiya beriladi — Swift \"protocol-oriented programming\"ning asosi", "correct": true },
+        { "id": "a", "text": "Tip bajarishi kerak bo'lgan talablar kontrakti; `struct`, `class`, `enum` qabul qiladi, bir tip bir nechtasiga mos keladi", "correct": true },
         { "id": "b", "text": "Faqat class'lar qabul qila oladigan abstrakt class", "hint": "Struct va enum ham protokolga mos keladi; class bilan cheklash uchun `AnyObject` talab qilinadi." },
         { "id": "c", "text": "Tarmoq protokoli (HTTP) bilan ishlash uchun tip", "hint": "Bu til konstruksiyasi — interfeys/kontrakt, tarmoqqa aloqasi yo'q." },
-        { "id": "d", "text": "Protokolda saqlanadigan xususiyat (stored property) e'lon qilib, qiymat berish mumkin", "hint": "Protokol faqat talab qo'yadi (`var name: String { get }`); saqlash mos keluvchi tipning ishi." }
+        { "id": "d", "text": "Protokolda saqlanadigan xususiyat (stored property) e'lon qilib, unga to'g'ridan-to'g'ri boshlang'ich qiymat berib qo'yish mumkin", "hint": "Protokol faqat talab qo'yadi (`var name: String { get }`); saqlash mos keluvchi tipning ishi." }
       ],
-      "explanation": "Misollar: `Equatable`, `Hashable`, `Codable`, `Identifiable`. Delegate pattern ham protokol orqali. Protokolni test uchun mock qilish oson — DI'ning asosi.",
+      "explanation": "Protocol extension bilan default implementatsiya beriladi — Swift \"protocol-oriented programming\"ning asosi. Misollar: `Equatable`, `Hashable`, `Codable`, `Identifiable`. Delegate pattern ham protokol orqali. Protokolni test uchun mock qilish oson — DI'ning asosi.",
       "reviewed": false
     },
     {
@@ -70,12 +70,12 @@
       "kind": "concept",
       "prompt": "`guard let` va `if let` qanday farqlanadi?",
       "options": [
-        { "id": "a", "text": "`guard let` shart bajarilmasa `else` ichida doiradan chiqishni majburlaydi (`return`, `throw`, `break`), unwrap qilingan qiymat esa guard'dan keyin butun funksiya davomida ishlatiladi — \"erta chiqish\" va ichma-ich `if`larsiz o'qiladigan kod. `if let` qiymatni faqat o'z bloki ichida beradi", "correct": true },
-        { "id": "b", "text": "`guard let` force unwrap qiladi va nil bo'lsa crash beradi", "hint": "`guard` xavfsiz: nil bo'lsa `else` bloki bajariladi." },
+        { "id": "a", "text": "`guard let` muvaffaqiyatsizlikda doiradan chiqishni majburlaydi, qiymat esa keyin butun funksiyada ishlatiladi", "correct": true },
+        { "id": "b", "text": "`guard let` qiymatni force unwrap qiladi va nil bo'lsa ilova darhol crash beradi, shuning uchun uni faqat test kodida ishlatish kerak", "hint": "`guard` xavfsiz: nil bo'lsa `else` bloki bajariladi." },
         { "id": "c", "text": "`guard`ning `else` blokida chiqish shart emas", "hint": "Kompilyator `else` dan chiqishni talab qiladi — aks holda xato." },
         { "id": "d", "text": "Ikkalasi bir xil, faqat sintaksis farqi", "hint": "Unwrap qilingan nom qayerda ko'rinishi farq qiladi." }
       ],
-      "explanation": "`guard let url = URL(string: s) else { return }` — keyin `url` oddiy qiymat. Bir nechta shartni bitta guard'da: `guard let a, let b, a > 0 else { ... }`. Ko'p ichma-ich `if let` — \"pyramid of doom\".",
+      "explanation": "`else` ichida `return`, `throw` yoki `break` shart — \"erta chiqish\" ichma-ich `if`larsiz o'qiladigan kod beradi. `if let` qiymatni faqat o'z bloki ichida beradi. `guard let url = URL(string: s) else { return }` — keyin `url` oddiy qiymat. Bir nechta shartni bitta guard'da: `guard let a, let b, a > 0 else { ... }`. Ko'p ichma-ich `if let` — \"pyramid of doom\".",
       "reviewed": false
     },
     {
@@ -100,12 +100,12 @@
       "kind": "concept",
       "prompt": "Swift kolleksiyalarida copy-on-write (CoW) qanday ishlaydi?",
       "options": [
-        { "id": "a", "text": "`Array`, `Dictionary`, `String` value type, lekin ichki buferni heap'da saqlaydi. `var b = a` buferni nusxalamaydi — ikkalasi bir buferni bo'lishadi; birinchi o'zgartirishda bufer boshqa egaga ham tegishli bo'lsa (`isKnownUniquelyReferenced`), shunda nusxa olinadi. Natija: value semantikasi + arzon nusxalash", "correct": true },
-        { "id": "b", "text": "Har o'zlashtirishda (`var b = a`) butun massiv darhol nusxalanadi", "hint": "Nusxa faqat yozishda va bufer bo'lishilgan bo'lsa olinadi." },
+        { "id": "a", "text": "Nusxa bitta ichki buferni bo'lishadi; real nusxa faqat birinchi o'zgartirishda, bufer umumiy bo'lsa olinadi", "correct": true },
+        { "id": "b", "text": "Har o'zlashtirishda (`var b = a`) butun massiv darhol nusxalanadi, shuning uchun katta massivni uzatish har doim juda qimmat", "hint": "Nusxa faqat yozishda va bufer bo'lishilgan bo'lsa olinadi." },
         { "id": "c", "text": "CoW barcha struct'lar uchun avtomatik ishlaydi", "hint": "Standart kolleksiyalarda qo'lda implementatsiya qilingan; o'z struct'ingizda kerak bo'lsa o'zingiz yozasiz." },
         { "id": "d", "text": "CoW tufayli `Array` reference type'ga aylanadi", "hint": "Semantika value bo'lib qoladi: `b` o'zgarishi `a`ga hech qachon ta'sir qilmaydi." }
       ],
-      "explanation": "Tuzoq: siklda massivga yozish paytida boshqa nusxa (masalan, closure capture qilgan) mavjud bo'lsa, har iteratsiyada to'liq nusxa — O(n²). Katta qiymatli o'z struct'ingiz uchun CoW: ichki `final class` storage + `isKnownUniquelyReferenced(&storage)` tekshiruvi.",
+      "explanation": "`Array`, `Dictionary`, `String` — value type, lekin buferni heap'da saqlaydi; tekshiruv — `isKnownUniquelyReferenced`. Natija: value semantikasi + arzon nusxalash. Tuzoq: siklda massivga yozish paytida boshqa nusxa (masalan, closure capture qilgan) mavjud bo'lsa, har iteratsiyada to'liq nusxa — O(n²). Katta qiymatli o'z struct'ingiz uchun CoW: ichki `final class` storage + `isKnownUniquelyReferenced(&storage)` tekshiruvi.",
       "reviewed": false
     },
     {
@@ -162,12 +162,12 @@
       "kind": "concept",
       "prompt": "Closure parametrini `@escaping` deb belgilash nimani anglatadi?",
       "options": [
-        { "id": "a", "text": "Closure funksiya qaytgandan keyin ham saqlanishi va chaqirilishi mumkin (xususiyatga yoziladi, asinxron callback). Default — non-escaping: closure faqat funksiya ichida chaqiriladi, kompilyator optimallashtiradi va `self`ni aniq yozish shart emas. Escaping closure'da `self` capture'i aniq ko'rsatiladi — retain cycle xavfi", "correct": true },
+        { "id": "a", "text": "Closure funksiya qaytgandan keyin ham saqlanib chaqirilishi mumkin: xususiyatga yoziladi yoki asinxron callback", "correct": true },
         { "id": "b", "text": "Closure xatolarni tashlay olishini bildiradi", "hint": "Bu `throws`; `@escaping` closure'ning yashash muddati haqida." },
-        { "id": "c", "text": "Closure boshqa thread'da bajarilishini kafolatlaydi", "hint": "Thread haqida hech narsa demaydi — faqat funksiyadan \"qochib\" chiqishi mumkinligini." },
+        { "id": "c", "text": "Closure boshqa fon thread'da bajarilishini kafolatlaydi — `@escaping` belgisi kompilyatorga uni main thread'dan chiqarishni buyuradi", "hint": "Thread haqida hech narsa demaydi — faqat funksiyadan \"qochib\" chiqishi mumkinligini." },
         { "id": "d", "text": "Barcha closure'lar default escaping", "hint": "Swift 3'dan beri default — non-escaping." }
       ],
-      "explanation": "Misol: `func fetch(completion: @escaping (Result<Data, Error>) -> Void)` — completion tarmoq javobidan keyin chaqiriladi. `map`, `filter` closure'lari non-escaping. Escaping closure ichida `[weak self]` va `guard let self else { return }` keng tarqalgan pattern.",
+      "explanation": "Default — non-escaping: faqat funksiya ichida chaqiriladi, kompilyator optimallashtiradi. Escaping closure'da `self` capture'i aniq ko'rsatiladi — retain cycle xavfi. Misol: `func fetch(completion: @escaping (Result<Data, Error>) -> Void)` — completion tarmoq javobidan keyin chaqiriladi. `map`, `filter` closure'lari non-escaping. Escaping closure ichida `[weak self]` va `guard let self else { return }` keng tarqalgan pattern.",
       "reviewed": false
     },
     {

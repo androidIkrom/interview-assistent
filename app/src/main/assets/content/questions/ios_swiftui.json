@@ -8,12 +8,12 @@
       "kind": "concept",
       "prompt": "SwiftUI'da `@State` nima?",
       "options": [
-        { "id": "a", "text": "View'ga tegishli lokal, o'zgaruvchan holat uchun property wrapper: qiymat SwiftUI boshqaradigan xotirada saqlanadi (view struct qayta yaratilsa ham yo'qolmaydi) va o'zgarganda `body` qayta hisoblanadi. Odatda `private` va oddiy qiymatlar uchun: `@State private var isOn = false`", "correct": true },
+        { "id": "a", "text": "View'ning lokal o'zgaruvchan holati: SwiftUI xotirasida saqlanadi va o'zgarganda `body` qayta hisoblanadi", "correct": true },
         { "id": "b", "text": "Ma'lumotni diskka doimiy saqlash mexanizmi", "hint": "Diskka `@AppStorage`/`UserDefaults` yoki SwiftData; `@State` view umri davomida xotirada." },
         { "id": "c", "text": "Ilova bo'ylab global holat", "hint": "`@State` bitta view (va unga uzatilgan bolalar) uchun lokal." },
-        { "id": "d", "text": "`@State` qiymatini o'zgartirish UI'ni yangilamaydi, `refresh()` chaqirish kerak", "hint": "Deklarativ model: holat o'zgarsa SwiftUI view'ni o'zi qayta hisoblaydi." }
+        { "id": "d", "text": "`@State` qiymatini o'zgartirish UI'ni avtomatik yangilamaydi — har safar view'da `refresh()` metodini qo'lda chaqirish kerak", "hint": "Deklarativ model: holat o'zgarsa SwiftUI view'ni o'zi qayta hisoblaydi." }
       ],
-      "explanation": "View — holatning funksiyasi: `body` holatdan UI tavsifini qaytaradi. `@State`ni tashqaridan (init orqali) boshqarishga urinmang — boshlang'ich qiymat faqat birinchi marta olinadi. Bola view o'zgartirishi kerak bo'lsa `$isOn` (Binding) uzatiladi.",
+      "explanation": "View struct qayta yaratilsa ham qiymat yo'qolmaydi. Odatda `private` va oddiy qiymatlar uchun: `@State private var isOn = false`. View — holatning funksiyasi: `body` holatdan UI tavsifini qaytaradi. `@State`ni tashqaridan (init orqali) boshqarishga urinmang — boshlang'ich qiymat faqat birinchi marta olinadi. Bola view o'zgartirishi kerak bo'lsa `$isOn` (Binding) uzatiladi.",
       "reviewed": false
     },
     {
@@ -39,12 +39,12 @@
       "kind": "concept",
       "prompt": "`List`/`ForEach`da elementlar uchun barqaror `id` nima uchun kerak?",
       "options": [
-        { "id": "a", "text": "SwiftUI qaysi element qo'shilgan, o'chirilgan yoki joyini o'zgartirganini `id` bo'yicha aniqlaydi: to'g'ri animatsiya, holat (`@State`) to'g'ri qatorda qolishi va keraksiz qayta chizishning oldini olish uchun. Model `Identifiable` bo'lsa (`let id: UUID` yoki server ID) avtomatik ishlatiladi", "correct": true },
+        { "id": "a", "text": "SwiftUI `id` bo'yicha qo'shilgan, o'chirilgan yoki ko'chgan elementni aniqlaydi: animatsiya va `@State` to'g'ri qoladi", "correct": true },
         { "id": "b", "text": "`id` faqat saralash uchun kerak", "hint": "Tartibni `id` belgilamaydi — u elementlarni yangilanishlar orasida tanish uchun." },
-        { "id": "c", "text": "Massiv indeksini (`id: \\.self` raqamlar ustida yoki `indices`) ishlatish har doim xavfsiz", "hint": "Element o'chirilsa indekslar siljiydi — holat va animatsiya noto'g'ri qatorga o'tadi, ba'zan crash." },
+        { "id": "c", "text": "Massiv indeksini (`id: \\.self` raqamlar ustida yoki `indices`) ishlatish har doim xavfsiz, hatto element o'chirilganda ham", "hint": "Element o'chirilsa indekslar siljiydi — holat va animatsiya noto'g'ri qatorga o'tadi, ba'zan crash." },
         { "id": "d", "text": "Har `body` chaqiruvida yangi `UUID()` yaratish yaxshi amaliyot", "hint": "Har safar yangi identity — SwiftUI barcha qatorlarni yangi deb hisoblab qayta yaratadi, holat yo'qoladi." }
       ],
-      "explanation": "`id` modelning o'zida bo'lishi va vaqt o'tishi bilan o'zgarmasligi kerak. `ForEach(items, id: \\.name)` — nom takrorlansa xato xulq. Identity — SwiftUI ishlashining markaziy tushunchasi (keyinroq: structural va explicit identity).",
+      "explanation": "Keraksiz qayta chizishning ham oldini oladi. Model `Identifiable` bo'lsa (`let id: UUID` yoki server ID) avtomatik ishlatiladi. `id` modelning o'zida bo'lishi va vaqt o'tishi bilan o'zgarmasligi kerak. `ForEach(items, id: \\.name)` — nom takrorlansa xato xulq. Identity — SwiftUI ishlashining markaziy tushunchasi (keyinroq: structural va explicit identity).",
       "reviewed": false
     },
     {
@@ -67,12 +67,12 @@
       "kind": "concept",
       "prompt": "`@State`, `@Binding`, `@StateObject` va `@ObservedObject` qanday farqlanadi?",
       "options": [
-        { "id": "a", "text": "`@State` — view egalik qiladigan oddiy qiymat; `@Binding` — boshqa joydagi holatga ikki tomonlama havola (egalik yo'q); `@StateObject` — view yaratadigan va egalik qiladigan `ObservableObject` (bir marta yaratiladi, view qayta yaratilsa ham saqlanadi); `@ObservedObject` — tashqaridan berilgan ob'ektni kuzatish, egalik yo'q", "correct": true },
+        { "id": "a", "text": "`@State`/`@StateObject` — view egalik qiladi; `@Binding`/`@ObservedObject` — tashqi holatga havola, egaliksiz", "correct": true },
         { "id": "b", "text": "`@ObservedObject` va `@StateObject` bir xil — faqat nomi boshqa", "hint": "Farq — egalik: `@ObservedObject` bilan view ichida yaratilgan ob'ekt parent qayta chizilganda qayta yaratilishi mumkin." },
         { "id": "c", "text": "`@Binding` ma'lumotning nusxasini saqlaydi", "hint": "Nusxa emas — manbaga havola: o'zgarish asl holatga yoziladi." },
-        { "id": "d", "text": "`@State` murakkab reference type view model uchun eng to'g'ri tanlov (iOS 16 va undan oldin)", "hint": "`ObservableObject` uchun `@StateObject`; `@State` class ichidagi o'zgarishlarni kuzatmaydi (iOS 17 `@Observable`dan oldin)." }
+        { "id": "d", "text": "`@State` murakkab reference type view model uchun eng to'g'ri tanlov (iOS 16 va undan oldin) — u ob'ekt o'zgarishlarini ham kuzatadi", "hint": "`ObservableObject` uchun `@StateObject`; `@State` class ichidagi o'zgarishlarni kuzatmaydi (iOS 17 `@Observable`dan oldin)." }
       ],
-      "explanation": "Qoida: kim yaratsa — `@StateObject`; kim olsa — `@ObservedObject`; uzoq daraxt bo'ylab — `@EnvironmentObject`. iOS 17+ `@Observable` makrosi bilan: egalik — `@State var model = Model()`, olish — oddiy `let`/`var`, binding kerak bo'lsa `@Bindable`.",
+      "explanation": "`@State` — oddiy qiymat; `@Binding` — ikki tomonlama havola; `@StateObject` — view yaratadigan `ObservableObject` (bir marta yaratiladi, view qayta yaratilsa ham saqlanadi); `@ObservedObject` — tashqaridan berilgan ob'ektni kuzatish. Qoida: kim yaratsa — `@StateObject`; kim olsa — `@ObservedObject`; uzoq daraxt bo'ylab — `@EnvironmentObject`. iOS 17+ `@Observable` makrosi bilan: egalik — `@State var model = Model()`, olish — oddiy `let`/`var`, binding kerak bo'lsa `@Bindable`.",
       "reviewed": false
     },
     {
@@ -98,12 +98,12 @@
       "kind": "concept",
       "prompt": "iOS 17+ dagi `@Observable` makrosi `ObservableObject`dan nimasi bilan yaxshiroq?",
       "options": [
-        { "id": "a", "text": "Kuzatish xususiyat darajasida: view faqat `body`da haqiqatan o'qigan xususiyatlari o'zgarganda yangilanadi (`ObservableObject`da istalgan `@Published` o'zgarishi ob'ektni kuzatayotgan barcha view'larni yangilaydi). `@Published` kerak emas, oddiy `let`/`var` bilan uzatiladi, egalik — `@State`, binding — `@Bindable`", "correct": true },
+        { "id": "a", "text": "Kuzatish xususiyat darajasida: view faqat `body`da o'qigan xususiyati o'zgarganda yangilanadi; `@Published` kerak emas", "correct": true },
         { "id": "b", "text": "`@Observable` struct'lar uchun, `ObservableObject` class'lar uchun", "hint": "`@Observable` ham class'ga qo'llanadi." },
-        { "id": "c", "text": "`@Observable` Combine'ga asoslangan va `objectWillChange` publisher'ini beradi", "hint": "U Observation framework'iga asoslangan, Combine publisher'lari yo'q." },
+        { "id": "c", "text": "`@Observable` Combine'ga asoslangan va har bir xususiyat uchun alohida `objectWillChange` publisher'ini avtomatik yaratib beradi", "hint": "U Observation framework'iga asoslangan, Combine publisher'lari yo'q." },
         { "id": "d", "text": "U barcha iOS versiyalarida ishlaydi", "hint": "Observation iOS 17 / macOS 14 dan boshlab; undan eski versiyalar uchun `ObservableObject`." }
       ],
-      "explanation": "Natija — kamroq keraksiz qayta hisoblash, ayniqsa katta model va ko'p view bo'lsa. Xususiyatni kuzatuvdan chiqarish: `@ObservationIgnored`. Migratsiyada `@StateObject` → `@State`, `@EnvironmentObject` → `@Environment(Model.self)`.",
+      "explanation": "`ObservableObject`da istalgan `@Published` o'zgarishi barcha kuzatuvchi view'larni yangilaydi. `@Observable`da egalik — `@State`, binding — `@Bindable`. Natija — kamroq keraksiz qayta hisoblash, ayniqsa katta model va ko'p view bo'lsa. Xususiyatni kuzatuvdan chiqarish: `@ObservationIgnored`. Migratsiyada `@StateObject` → `@State`, `@EnvironmentObject` → `@Environment(Model.self)`.",
       "reviewed": false
     },
     {
@@ -113,12 +113,12 @@
       "kind": "concept",
       "prompt": "Ma'lumot yuklash uchun `.task {}` modifier'ini `.onAppear { Task { ... } }`dan nima afzal qiladi?",
       "options": [
-        { "id": "a", "text": "`.task` asinxron ishni view umriga bog'laydi: view ekrandan yo'qolganda vazifa avtomatik bekor qilinadi (cancellation), `.task(id: query)` esa `id` o'zgarganda eskisini bekor qilib qayta ishga tushiradi. `onAppear` ichidagi `Task` — unstructured: view yo'qolsa ham ishlayveradi va bekor qilishni qo'lda boshqarish kerak", "correct": true },
-        { "id": "b", "text": "`.task` fon thread'da ishlaydi, shuning uchun UI'ni undan yangilab bo'lmaydi", "hint": "View kontekstidan meros olib `@MainActor`da ishlaydi; `await` paytlarida thread bloklanmaydi." },
+        { "id": "a", "text": "`.task` ishni view umriga bog'laydi: view yo'qolganda avtomatik bekor qilinadi; `onAppear` ichidagi `Task` — yo'q", "correct": true },
+        { "id": "b", "text": "`.task` har doim fon thread'da ishlaydi, shuning uchun undan UI holatini yangilab bo'lmaydi va natijani main'ga qaytarish kerak", "hint": "View kontekstidan meros olib `@MainActor`da ishlaydi; `await` paytlarida thread bloklanmaydi." },
         { "id": "c", "text": "`.task` faqat bir marta, ilova ishga tushganda bajariladi", "hint": "Har safar view paydo bo'lganda (yoki `id` o'zgarganda) ishlaydi." },
         { "id": "d", "text": "Farq yo'q", "hint": "Bekor qilish va `id` bo'yicha qayta ishga tushirish — asosiy farq." }
       ],
-      "explanation": "Qidiruv maydoni: `.task(id: searchText) { try? await Task.sleep(for: .milliseconds(300)); await model.search(searchText) }` — debounce va eski so'rovni bekor qilish bepul. Bekor qilingan `URLSession` so'rovi `CancellationError`/`URLError.cancelled` tashlaydi — uni xato sifatida ko'rsatmang.",
+      "explanation": "`.task(id: query)` `id` o'zgarganda eskisini bekor qilib qayta ishga tushiradi. `onAppear` ichidagi `Task` unstructured: view yo'qolsa ham ishlayveradi, bekor qilish qo'lda. Qidiruv maydoni: `.task(id: searchText) { try? await Task.sleep(for: .milliseconds(300)); await model.search(searchText) }` — debounce va eski so'rovni bekor qilish bepul. Bekor qilingan `URLSession` so'rovi `CancellationError`/`URLError.cancelled` tashlaydi — uni xato sifatida ko'rsatmang.",
       "reviewed": false
     },
     {
@@ -144,12 +144,12 @@
       "kind": "concept",
       "prompt": "Katta ekranda bitta kichik qiymat o'zgarganda butun `body` qayta hisoblanmoqda. Qanday kamaytiriladi?",
       "options": [
-        { "id": "a", "text": "View'ni kichik subview'larga bo'lish — har biri faqat o'ziga kerak ma'lumotni oladi, shunda o'zgarish faqat tegishli subview `body`sini qayta hisoblatadi; `@Observable` bilan xususiyat darajasidagi kuzatish; kirish qiymatlari solishtiriladigan (Equatable) bo'lishi. Tekshirish: `Self._printChanges()` va Instruments → SwiftUI", "correct": true },
+        { "id": "a", "text": "View'ni kichik subview'larga bo'lish — o'zgarish faqat tegishli `body`ni qayta hisoblatadi; `@Observable` bilan kuzatish", "correct": true },
         { "id": "b", "text": "Hamma narsani bitta katta `body`ga yig'ish — kamroq view, tezroq", "hint": "Katta `body` istalgan holat o'zgarishida butunlay qayta hisoblanadi." },
         { "id": "c", "text": "Har view'ni `AnyView`ga o'rash", "hint": "`AnyView` tip ma'lumotini o'chiradi va SwiftUI farqlash (diffing) samaradorligini pasaytiradi." },
-        { "id": "d", "text": "Barcha holatni bitta `ObservableObject`ga qo'yib, hamma view'larda `@ObservedObject` qilish", "hint": "Istalgan `@Published` o'zgarishi barcha kuzatuvchilarni yangilaydi — aynan ortiqcha qayta hisoblash." }
+        { "id": "d", "text": "Barcha holatni bitta `ObservableObject`ga qo'yib, hamma view'larda `@ObservedObject` qilish — shunda yangilanish bitta joyda bo'ladi", "hint": "Istalgan `@Published` o'zgarishi barcha kuzatuvchilarni yangilaydi — aynan ortiqcha qayta hisoblash." }
       ],
-      "explanation": "Qayta hisoblash (body) va haqiqiy qayta chizish (render) — turli narsalar, lekin ortiqcha `body` CPU'ni yeydi. Closure'lar va o'zgaruvchan ob'ektlar SwiftUI'ning kirishlarni solishtirishiga xalaqit beradi. Kerak bo'lsa `EquatableView`/`.equatable()`.",
+      "explanation": "Kirish qiymatlari Equatable bo'lsin. Tekshirish: `Self._printChanges()` va Instruments → SwiftUI. Qayta hisoblash (body) va haqiqiy qayta chizish (render) — turli narsalar, lekin ortiqcha `body` CPU'ni yeydi. Closure'lar va o'zgaruvchan ob'ektlar SwiftUI'ning kirishlarni solishtirishiga xalaqit beradi. Kerak bo'lsa `EquatableView`/`.equatable()`.",
       "reviewed": false
     },
     {
@@ -159,12 +159,12 @@
       "kind": "concept",
       "prompt": "SwiftUI'da bog'liqliklarni (servis, repository) chuqur view daraxtiga uzatishning to'g'ri usuli qaysi?",
       "options": [
-        { "id": "a", "text": "Environment: maxsus `EnvironmentValues` kaliti (iOS 18+ `@Entry`) yoki `@Observable` model'ni `.environment(model)` bilan daraxtga qo'yish va kerakli view'da `@Environment` bilan o'qish. Preview va testlarda boshqa (mock) qiymat berish oson; har darajada init orqali uzatish shart emas", "correct": true },
-        { "id": "b", "text": "Global singleton'lar (`APIClient.shared`) ni har view ichida to'g'ridan-to'g'ri ishlatish", "hint": "Yashirin bog'liqlik: preview va testlarda almashtirish qiyin, holat global." },
+        { "id": "a", "text": "Environment: maxsus `EnvironmentValues` kaliti yoki `.environment(model)`, view'da `@Environment` bilan o'qish", "correct": true },
+        { "id": "b", "text": "Global singleton'lar (`APIClient.shared`) ni har view ichida to'g'ridan-to'g'ri ishlatish — bu eng sodda va testlash uchun ham qulay", "hint": "Yashirin bog'liqlik: preview va testlarda almashtirish qiyin, holat global." },
         { "id": "c", "text": "Har bir view init'iga barcha servislarni zanjir bo'ylab uzatish yagona yo'l", "hint": "Mumkin, lekin chuqur daraxtda \"prop drilling\" — oraliq view'lar keraksiz bog'liqlik oladi." },
         { "id": "d", "text": "`@State` orqali parent'dan bolaga uzatish", "hint": "`@State` — lokal holat; uni init orqali tashqaridan boshqarib bo'lmaydi." }
       ],
-      "explanation": "`@EnvironmentObject` qiymati berilmagan bo'lsa runtime crash — `@Environment` + default qiymat xavfsizroq. Arxitekturada view'lar view model'ni oladi, view model esa servislarni init orqali (testlanuvchanlik). Environment — UI darajasidagi bog'liqliklar uchun qulay.",
+      "explanation": "iOS 18+ da kalit `@Entry` bilan yoziladi. Preview va testlarda mock qiymat berish oson; har darajada init orqali uzatish shart emas. `@EnvironmentObject` qiymati berilmagan bo'lsa runtime crash — `@Environment` + default qiymat xavfsizroq. Arxitekturada view'lar view model'ni oladi, view model esa servislarni init orqali (testlanuvchanlik). Environment — UI darajasidagi bog'liqliklar uchun qulay.",
       "reviewed": false
     },
     {
@@ -174,12 +174,12 @@
       "kind": "concept",
       "prompt": "Deep link va holatni tiklashni qo'llaydigan SwiftUI navigatsiyasini qanday qurish kerak?",
       "options": [
-        { "id": "a", "text": "Ma'lumotga asoslangan navigatsiya: `NavigationStack(path: $router.path)` + `navigationDestination(for:)`; yo'l — `Hashable` marshrut qiymatlari massivi (yoki `NavigationPath`). Deep link URL'ni marshrutlar ro'yxatiga o'giradi va `path`ni o'rnatadi; `Codable` marshrutlar bilan path'ni saqlab tiklash mumkin. Router (coordinator) view'lardan tashqarida testlanadi", "correct": true },
-        { "id": "b", "text": "Har ekranda `NavigationLink(destination:)` ichida keyingi view'ni to'g'ridan-to'g'ri yaratish", "hint": "Navigatsiya holati view'lar ichida tarqoq — dasturiy boshqarish va deep link qiyin." },
+        { "id": "a", "text": "Ma'lumotga asoslangan: `NavigationStack(path:)` + `navigationDestination(for:)`, deep link `path`ni o'rnatadi", "correct": true },
+        { "id": "b", "text": "Har ekranda `NavigationLink(destination:)` ichida keyingi view'ni to'g'ridan-to'g'ri yaratish — deep link ham shunda o'zi ishlaydi", "hint": "Navigatsiya holati view'lar ichida tarqoq — dasturiy boshqarish va deep link qiyin." },
         { "id": "c", "text": "Eskirgan `NavigationView` va har ekran uchun alohida `isActive` bool'lar", "hint": "Ko'p ekranda bool'lar boshqarib bo'lmaydigan bo'ladi; `NavigationStack` (iOS 16+) path API'si shu muammoni hal qiladi." },
         { "id": "d", "text": "Deep link uchun ilovani qayta ishga tushirish", "hint": "Foydalanuvchi tajribasi yomon; holat path orqali o'rnatiladi." }
       ],
-      "explanation": "Murakkab holatlar: tab + har tab o'z stack'i, modal sheet'lar ham router holatida (`sheet(item:)`). `NavigationPath` heterogen marshrutlarni saqlaydi va `codable` tasviri bor. Router holatini unit test bilan tekshirish — UI testlardan arzon.",
+      "explanation": "Yo'l — `Hashable` marshrutlar massivi yoki `NavigationPath`; `Codable` marshrutlar bilan path saqlanib tiklanadi. Router (coordinator) view'lardan tashqarida testlanadi. Murakkab holatlar: tab + har tab o'z stack'i, modal sheet'lar ham router holatida (`sheet(item:)`). `NavigationPath` heterogen marshrutlarni saqlaydi va `codable` tasviri bor. Router holatini unit test bilan tekshirish — UI testlardan arzon.",
       "reviewed": false
     },
     {
@@ -189,12 +189,12 @@
       "kind": "concept",
       "prompt": "10 000 elementli lenta SwiftUI'da sekin ishlayapti. Qaysi yondashuv to'g'ri?",
       "options": [
-        { "id": "a", "text": "Lazy konteynerlar (`List` yoki `ScrollView` + `LazyVStack`) — faqat ko'rinadigan qatorlar yaratiladi; barqaror, arzon `id`; qator view'larini yengil va bir xil tipda saqlash (`AnyView`siz); rasmlarni downsampling bilan asinxron yuklash; sahifalash (oxiriga yaqinlashganda keyingi qism). O'lchash: Instruments → SwiftUI va Hitches", "correct": true },
-        { "id": "b", "text": "`ScrollView` ichida oddiy `VStack` — barcha 10 000 qatorni birdan yaratish", "hint": "Oddiy `VStack` lazy emas: hammasi darhol yaratiladi va layout qilinadi." },
+        { "id": "a", "text": "Lazy konteynerlar (`List`, `LazyVStack`), barqaror `id`, yengil qatorlar, asinxron rasm va sahifalash", "correct": true },
+        { "id": "b", "text": "`ScrollView` ichida oddiy `VStack` ishlatib, barcha 10 000 qatorni birdan yaratish — keyin scroll paytida hech narsa yuklanmaydi", "hint": "Oddiy `VStack` lazy emas: hammasi darhol yaratiladi va layout qilinadi." },
         { "id": "c", "text": "Har qatorga `.id(UUID())` qo'shib yangilanishni majburlash", "hint": "Har `body`da yangi identity — qatorlar doimiy qayta yaratiladi." },
         { "id": "d", "text": "SwiftUI katta ro'yxatlarga yaramaydi — doim UIKit'ga o'tish kerak", "hint": "To'g'ri yondashuv bilan SwiftUI katta ro'yxatlarni yaxshi ko'taradi; UIKit — o'lchovlar haqiqatan talab qilsagina." }
       ],
-      "explanation": "Qo'shimcha: qator ichida `GeometryReader` va murakkab `.overlay`/`.shadow` larni kamaytirish, formatlangan qiymatlarni modelda oldindan tayyorlash. `List` ichki ravishda hujayra qayta ishlatishdan foydalanadi; `LazyVStack` esa yaratilgan view'larni saqlab qolishi mumkin — juda uzun ro'yxatda xotirani kuzating.",
+      "explanation": "Lazy konteynerda faqat ko'rinadigan qatorlar yaratiladi; qatorlar bir xil tipda (`AnyView`siz), rasmlar downsampling bilan. O'lchash: Instruments → SwiftUI va Hitches. Qo'shimcha: qator ichida `GeometryReader` va murakkab `.overlay`/`.shadow` larni kamaytirish, formatlangan qiymatlarni modelda oldindan tayyorlash. `List` ichki ravishda hujayra qayta ishlatishdan foydalanadi; `LazyVStack` esa yaratilgan view'larni saqlab qolishi mumkin — juda uzun ro'yxatda xotirani kuzating.",
       "reviewed": false
     }
   ]

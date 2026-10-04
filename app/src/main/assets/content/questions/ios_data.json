@@ -8,12 +8,12 @@
       "kind": "concept",
       "prompt": "`UserDefaults`da nimalarni saqlash to'g'ri?",
       "options": [
-        { "id": "a", "text": "Kichik sozlamalar va bayroqlar: tanlangan til, tema, onboarding ko'rilgani, oxirgi tanlangan tab. Katta ma'lumotlar (ro'yxatlar, rasmlar) — fayl yoki DB'ga; parol va tokenlar — Keychain'ga, chunki `UserDefaults` shifrlanmagan plist", "correct": true },
-        { "id": "b", "text": "Foydalanuvchi paroli va access token", "hint": "`UserDefaults` oddiy plist fayl — sirlar uchun Keychain." },
+        { "id": "a", "text": "Kichik sozlamalar va bayroqlar: til, tema, onboarding ko'rilgani; parol va tokenlar esa Keychain'ga", "correct": true },
+        { "id": "b", "text": "Foydalanuvchi paroli va access token — `UserDefaults` ilova sandbox'ida turgani uchun ular u yerda yetarlicha himoyalangan", "hint": "`UserDefaults` oddiy plist fayl — sirlar uchun Keychain." },
         { "id": "c", "text": "Minglab yozuvli ma'lumotlar bazasi", "hint": "U ilova ishga tushganda xotiraga yuklanadi — katta hajm ishga tushishni sekinlashtiradi; SwiftData/Core Data/SQLite kerak." },
         { "id": "d", "text": "Hech narsa — `UserDefaults` eskirgan", "hint": "Sozlamalar uchun hali ham standart vosita; SwiftUI'da `@AppStorage` uning ustiga qurilgan." }
       ],
-      "explanation": "`UserDefaults.standard.set(true, forKey: \"onboarded\")`. Kalitlarni bitta joyda konstanta qilib saqlang. App Group bilan widget va extension'lar bilan bo'lishish: `UserDefaults(suiteName:)`. Maxfiylik manifestida (`PrivacyInfo.xcprivacy`) `UserDefaults` API ishlatilishi sababi ko'rsatiladi.",
+      "explanation": "`UserDefaults` — shifrlanmagan plist; katta ma'lumotlar (ro'yxatlar, rasmlar) fayl yoki DB'ga. `UserDefaults.standard.set(true, forKey: \"onboarded\")`. Kalitlarni bitta joyda konstanta qilib saqlang. App Group bilan widget va extension'lar bilan bo'lishish: `UserDefaults(suiteName:)`. Maxfiylik manifestida (`PrivacyInfo.xcprivacy`) `UserDefaults` API ishlatilishi sababi ko'rsatiladi.",
       "reviewed": false
     },
     {
@@ -23,12 +23,12 @@
       "kind": "concept",
       "prompt": "`Codable` protokoli nima beradi?",
       "options": [
-        { "id": "a", "text": "`Codable` = `Encodable & Decodable`: barcha xususiyatlari ham `Codable` bo'lgan tip uchun kompilyator kodlash/dekodlash kodini o'zi yozadi; `JSONDecoder().decode(User.self, from: data)` va `JSONEncoder().encode(user)` bilan JSON'ga va JSON'dan aylantiriladi", "correct": true },
+        { "id": "a", "text": "Kompilyator tip uchun kodlash/dekodlash kodini o'zi yozadi: `JSONDecoder().decode(User.self, from: data)`", "correct": true },
         { "id": "b", "text": "Faqat class'lar uchun ishlaydi", "hint": "Struct va enum ham — aslida odatda struct ishlatiladi." },
-        { "id": "c", "text": "JSON'ni qo'lda `[String: Any]` lug'atga aylantirib, maydonlarni tortib olish uchun", "hint": "`Codable` aynan shu qo'lda ishni tiplangan avtomatik kod bilan almashtiradi." },
+        { "id": "c", "text": "JSON'ni qo'lda `[String: Any]` lug'atga aylantirib, har bir maydonni kalit bo'yicha alohida tortib olish va cast qilish uchun", "hint": "`Codable` aynan shu qo'lda ishni tiplangan avtomatik kod bilan almashtiradi." },
         { "id": "d", "text": "Faqat JSON formatini qo'llaydi", "hint": "`PropertyListEncoder` va boshqa encoder'lar ham bor; format encoder'ga bog'liq." }
       ],
-      "explanation": "JSON kalitlari Swift nomlaridan farq qilsa — `CodingKeys` enum yoki `keyDecodingStrategy`. Ixtiyoriy maydon — `Optional` xususiyat. Sana formati — `dateDecodingStrategy` (masalan, `.iso8601`).",
+      "explanation": "`Codable` = `Encodable & Decodable`; buning uchun tipning barcha xususiyatlari ham `Codable` bo'lishi kerak; teskari yo'nalish — `JSONEncoder().encode(user)`. JSON kalitlari Swift nomlaridan farq qilsa — `CodingKeys` enum yoki `keyDecodingStrategy`. Ixtiyoriy maydon — `Optional` xususiyat. Sana formati — `dateDecodingStrategy` (masalan, `.iso8601`).",
       "reviewed": false
     },
     {
@@ -38,12 +38,12 @@
       "kind": "concept",
       "prompt": "`URLSession` bilan async/await orqali GET so'rov qanday yuboriladi?",
       "options": [
-        { "id": "a", "text": "`let (data, response) = try await URLSession.shared.data(from: url)` — so'rov thread'ni bloklamasdan kutiladi; keyin `response`ni `HTTPURLResponse`ga cast qilib status kodni tekshirish va `data`ni `JSONDecoder` bilan dekodlash", "correct": true },
-        { "id": "b", "text": "`let data = try Data(contentsOf: url)` main thread'da — eng oddiy va to'g'ri usul", "hint": "Tarmoq uchun sinxron va bloklovchi: UI qotadi, timeout va xatolarni boshqarish yo'q." },
+        { "id": "a", "text": "`let (data, response) = try await URLSession.shared.data(from: url)`, so'ng status kodni tekshirib dekodlash", "correct": true },
+        { "id": "b", "text": "`let data = try Data(contentsOf: url)` ni main thread'da chaqirish — eng oddiy, qisqa va har qanday holatda to'g'ri usul", "hint": "Tarmoq uchun sinxron va bloklovchi: UI qotadi, timeout va xatolarni boshqarish yo'q." },
         { "id": "c", "text": "`URLSession` faqat completion handler bilan ishlaydi", "hint": "iOS 15+ da async/await variantlari (`data(from:)`, `data(for:)`) bor." },
         { "id": "d", "text": "HTTP so'rovi uchun albatta Alamofire kerak", "hint": "`URLSession` — o'rnatilgan va yetarli; Alamofire ixtiyoriy qulaylik." }
       ],
-      "explanation": "POST va header'lar uchun `URLRequest`: `httpMethod`, `setValue(_:forHTTPHeaderField:)`, `httpBody`. ATS (App Transport Security) default'da faqat HTTPS'ga ruxsat beradi. Odatda bitta `APIClient` qatlam so'rov qurish, xatolar va dekodlashni markazlashtiradi.",
+      "explanation": "So'rov thread'ni bloklamasdan kutiladi; `response`ni `HTTPURLResponse`ga cast qilib status tekshiriladi, `data` — `JSONDecoder` bilan. POST va header'lar uchun `URLRequest`: `httpMethod`, `setValue(_:forHTTPHeaderField:)`, `httpBody`. ATS (App Transport Security) default'da faqat HTTPS'ga ruxsat beradi. Odatda bitta `APIClient` qatlam so'rov qurish, xatolar va dekodlashni markazlashtiradi.",
       "reviewed": false
     },
     {
@@ -85,12 +85,12 @@
       "kind": "concept",
       "prompt": "Ro'yxatdagi rasmlar har scroll'da qayta yuklanmoqda. Rasm keshlashni qanday tuzish to'g'ri?",
       "options": [
-        { "id": "a", "text": "Ikki daraja: xotira keshi (`NSCache` — xotira bosimida o'zi tozalanadi) dekodlangan va kerakli o'lchamga kichraytirilgan rasmlar uchun; disk keshi (`URLCache` HTTP kesh sarlavhalari bilan yoki o'z fayl keshi) xom ma'lumot uchun. Bir URL'ga parallel so'rovlarni birlashtirish va ekrandan chiqqan hujayra vazifasini bekor qilish", "correct": true },
+        { "id": "a", "text": "Ikki daraja: `NSCache` xotira keshi (kichraytirilgan rasmlar) va disk keshi; ekrandan chiqqan hujayra vazifasi bekor qilinadi", "correct": true },
         { "id": "b", "text": "Barcha rasmlarni oddiy `[URL: UIImage]` lug'atda abadiy saqlash", "hint": "Cheksiz o'sadi va xotira bosimida tozalanmaydi — tizim ilovani o'ldiradi." },
         { "id": "c", "text": "Rasmlarni `UserDefaults`da saqlash", "hint": "`UserDefaults` katta binar ma'lumot uchun emas — ishga tushishni sekinlashtiradi." },
-        { "id": "d", "text": "Keshlash kerak emas — `URLSession` hammasini avtomatik xotirada saqlaydi", "hint": "`URLCache` faqat HTTP kesh qoidalariga ko'ra va dekodlanmagan ma'lumotni; dekodlangan rasm keshi baribir kerak." }
+        { "id": "d", "text": "Keshlash kerak emas — `URLSession` yuklangan hamma rasmlarni avtomatik ravishda xotirada abadiy saqlaydi va qayta so'rov yubormaydi", "hint": "`URLCache` faqat HTTP kesh qoidalariga ko'ra va dekodlanmagan ma'lumotni; dekodlangan rasm keshi baribir kerak." }
       ],
-      "explanation": "Dekodlash qimmat: 4000×3000 rasm ~48 MB xotira egallaydi — `ImageIO` (`CGImageSourceCreateThumbnailAtIndex`) bilan downsample. Tayyor yechimlar: Kingfisher, Nuke, SDWebImage. SwiftUI `AsyncImage` o'z keshiga ega emas (faqat `URLCache`).",
+      "explanation": "`NSCache` xotira bosimida o'zi tozalanadi; disk uchun `URLCache` (HTTP kesh sarlavhalari) yoki o'z fayl keshi; bir URL'ga parallel so'rovlar birlashtiriladi. Dekodlash qimmat: 4000×3000 rasm ~48 MB xotira egallaydi — `ImageIO` (`CGImageSourceCreateThumbnailAtIndex`) bilan downsample. Tayyor yechimlar: Kingfisher, Nuke, SDWebImage. SwiftUI `AsyncImage` o'z keshiga ega emas (faqat `URLCache`).",
       "reviewed": false
     },
     {
@@ -100,12 +100,12 @@
       "kind": "concept",
       "prompt": "Core Data / SwiftData'da konkurentlik qoidalari qanday?",
       "options": [
-        { "id": "a", "text": "Context (`NSManagedObjectContext` / `ModelContext`) va undan olingan ob'ektlar thread-safe emas — har biri o'z queue/actor'ida ishlatiladi. Core Data: UI uchun `viewContext` (main), fon import uchun `newBackgroundContext()` + `perform {}`; context'lar o'rtasida ob'ekt emas, `NSManagedObjectID` uzatiladi. SwiftData: fon ishi uchun `@ModelActor`, uzatish — `PersistentIdentifier`", "correct": true },
+        { "id": "a", "text": "Context va undan olingan ob'ektlar thread-safe emas: har biri o'z queue/actor'ida, o'rtada faqat ID uzatiladi", "correct": true },
         { "id": "b", "text": "Bitta context'ni barcha thread'lardan bemalol ishlatish mumkin", "hint": "Bu ma'lumot buzilishi va tasodifiy crash'larga olib keladi; debug uchun `-com.apple.CoreData.ConcurrencyDebug 1`." },
-        { "id": "c", "text": "Managed object'ni bir thread'dan boshqasiga to'g'ridan-to'g'ri uzatish to'g'ri", "hint": "Ob'ekt o'z context'iga bog'langan; boshqa context'da `objectID` bo'yicha qayta olinadi." },
+        { "id": "c", "text": "Managed object'ni bir thread'dan boshqasiga to'g'ridan-to'g'ri uzatish to'g'ri — Core Data uning sinxronlashini avtomatik ta'minlaydi", "hint": "Ob'ekt o'z context'iga bog'langan; boshqa context'da `objectID` bo'yicha qayta olinadi." },
         { "id": "d", "text": "Fon context'dagi o'zgarishlar main context'da hech qachon ko'rinmaydi", "hint": "`automaticallyMergesChangesFromParent = true` yoki merge bildirishnomalari bilan ko'rinadi." }
       ],
-      "explanation": "Katta import: fon context'da partiyalab saqlash, `NSBatchInsertRequest` (context'ni chetlab) — keyin o'zgarishlarni merge qilish. Persistent history tracking — extension'lar va bir nechta jarayon bilan ishlaganda kerak. SwiftData'da `@Query` faqat main context bilan ishlaydi.",
+      "explanation": "Core Data: UI uchun `viewContext`, fon uchun `newBackgroundContext()` + `perform {}`, uzatish — `NSManagedObjectID`. SwiftData: `@ModelActor` va `PersistentIdentifier`. Katta import: fon context'da partiyalab saqlash, `NSBatchInsertRequest` (context'ni chetlab) — keyin o'zgarishlarni merge qilish. Persistent history tracking — extension'lar va bir nechta jarayon bilan ishlaganda kerak. SwiftData'da `@Query` faqat main context bilan ishlaydi.",
       "reviewed": false
     },
     {
@@ -115,12 +115,12 @@
       "kind": "concept",
       "prompt": "Combine va `AsyncSequence` (async/await) qanday taqqoslanadi?",
       "options": [
-        { "id": "a", "text": "Ikkalasi vaqt bo'yicha keladigan qiymatlar oqimi. Combine — push asosidagi reaktiv framework: boy operatorlar (`debounce`, `combineLatest`), `AnyCancellable` bilan obunani boshqarish, scheduler'lar. `AsyncSequence` — pull asosida, `for await` bilan chiziqli kod, structured concurrency bilan bekor qilish va xatolar tabiiy. Yangi kod ko'pincha async'ga yo'naladi, operatorlar uchun swift-async-algorithms", "correct": true },
+        { "id": "a", "text": "Ikkalasi qiymatlar oqimi: Combine — push, boy operatorlar; `AsyncSequence` — pull, `for await` bilan chiziqli kod", "correct": true },
         { "id": "b", "text": "Combine Swift Concurrency bilan birga ishlatib bo'lmaydi", "hint": "Ko'prik bor: `publisher.values` — `AsyncSequence` qaytaradi." },
         { "id": "c", "text": "`AsyncSequence`da xatolarni boshqarib bo'lmaydi", "hint": "`AsyncThrowingStream` va `for try await` bilan xatolar oddiy `try/catch`da." },
-        { "id": "d", "text": "Combine obunasi `AnyCancellable` saqlanmasa ham ishlayveradi", "hint": "Cancellable yo'q qilinganda obuna darhol bekor bo'ladi — ko'pincha \"hech narsa kelmayapti\" xatosining sababi." }
+        { "id": "d", "text": "Combine obunasi `AnyCancellable` saqlanmasa ham ishlayveradi — obuna ob'ekt yo'qolgandan keyin ham fon rejimida qiymat olishda davom etadi", "hint": "Cancellable yo'q qilinganda obuna darhol bekor bo'ladi — ko'pincha \"hech narsa kelmayapti\" xatosining sababi." }
       ],
-      "explanation": "Tanlov: mavjud Combine kod bazasi va murakkab oqim kombinatsiyalari — Combine; yangi, ketma-ket ishlov (bildirishnomalar, WebSocket xabarlari) — `AsyncStream`. `NotificationCenter.default.notifications(named:)` — tayyor async sequence.",
+      "explanation": "Combine'da obuna `AnyCancellable` bilan boshqariladi; `AsyncSequence`da bekor qilish va xatolar structured concurrency orqali tabiiy. Yangi kod ko'pincha async'ga yo'naladi, operatorlar — swift-async-algorithms. Tanlov: mavjud Combine kod bazasi va murakkab oqim kombinatsiyalari — Combine; yangi, ketma-ket ishlov (bildirishnomalar, WebSocket xabarlari) — `AsyncStream`. `NotificationCenter.default.notifications(named:)` — tayyor async sequence.",
       "reviewed": false
     },
     {
