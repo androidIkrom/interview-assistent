@@ -8,12 +8,12 @@
       "kind": "concept",
       "prompt": ".NET'da Garbage Collector (GC) nima qiladi?",
       "options": [
-        { "id": "a", "text": "Managed heap'dagi ob'ektlar xotirasini avtomatik boshqaradi: ilova `new` bilan ob'ekt yaratadi, GC vaqti-vaqti bilan root'lardan (stack, statik maydonlar) yetib bo'lmaydigan ob'ektlarni topib xotirasini bo'shatadi va heap'ni zichlaydi. Dasturchi xotirani qo'lda `free` qilmaydi", "correct": true },
+        { "id": "a", "text": "Managed heap'ni avtomatik boshqaradi: root'lardan yetib bo'lmaydigan ob'ektlarni topib, xotirani bo'shatadi va zichlaydi", "correct": true },
         { "id": "b", "text": "Ob'ekt ishlatilmay qolgan zahoti darhol o'chiradi", "hint": "GC yig'ishni o'zi tanlagan vaqtda (allokatsiya bosimi bo'yicha) bajaradi — deterministik emas." },
-        { "id": "c", "text": "Fayl, socket va DB ulanishlarni ham avtomatik va darhol yopadi", "hint": "Tashqi resurslar uchun `Dispose`/`using` kerak — GC faqat managed xotirani biladi." },
+        { "id": "c", "text": "Fayl, socket va DB ulanishlarni ham avtomatik va darhol yopadi, shuning uchun `Dispose` yoki `using` yozish umuman shart emas", "hint": "Tashqi resurslar uchun `Dispose`/`using` kerak — GC faqat managed xotirani biladi." },
         { "id": "d", "text": "GC faqat ilova yopilganda ishlaydi", "hint": "Ilova ishlayotgan paytda doimiy ravishda, kerak bo'lganda ishga tushadi." }
       ],
-      "explanation": "Memory leak .NET'da ham bo'ladi: ob'ektga havola ushlanib qolsa (statik kolleksiya, obuna bo'linib bekor qilinmagan event, cheksiz kesh) GC uni yig'a olmaydi. `GC.Collect()`ni qo'lda chaqirish odatda xato — GC'ning evristikasini buzadi.",
+      "explanation": "Root'lar — stack, statik maydonlar; GC vaqti-vaqti bilan ishlaydi, dasturchi xotirani qo'lda `free` qilmaydi. Memory leak .NET'da ham bo'ladi: ob'ektga havola ushlanib qolsa (statik kolleksiya, obuna bo'linib bekor qilinmagan event, cheksiz kesh) GC uni yig'a olmaydi. `GC.Collect()`ni qo'lda chaqirish odatda xato — GC'ning evristikasini buzadi.",
       "reviewed": false
     },
     {
@@ -36,12 +36,12 @@
       "kind": "concept",
       "prompt": "GC avlodlari (Gen 0, 1, 2) va Large Object Heap (LOH) qanday ishlaydi?",
       "options": [
-        { "id": "a", "text": "Ko'p ob'ektlar qisqa yashaydi degan farazga asoslangan: yangi ob'ektlar Gen 0'da, yig'ishdan omon qolganlar Gen 1, keyin Gen 2'ga ko'tariladi. Gen 0 yig'ish tez va tez-tez, Gen 2 (to'liq) — qimmat. 85 000 baytdan katta ob'ektlar LOH'ga tushadi — u Gen 2 bilan yig'iladi va default'da zichlanmaydi (fragmentatsiya)", "correct": true },
+        { "id": "a", "text": "Yangi ob'ektlar Gen 0'da, omon qolganlar Gen 1 va Gen 2'ga ko'tariladi; 85 000 baytdan kattalari — LOH (Gen 2 bilan)", "correct": true },
         { "id": "b", "text": "Har bir avlod alohida thread'da ishlaydi", "hint": "Avlod — ob'ekt yoshi bo'yicha guruh, thread emas." },
         { "id": "c", "text": "Gen 2 ob'ektlari hech qachon yig'ilmaydi", "hint": "Gen 2 to'liq yig'ishda yig'iladi — faqat kamroq va qimmatroq." },
-        { "id": "d", "text": "Ob'ekt hajmidan qat'i nazar hammasi Gen 0'dan boshlanadi", "hint": "Katta ob'ektlar (≥85 000 bayt) to'g'ridan-to'g'ri LOH'ga ajratiladi." }
+        { "id": "d", "text": "Ob'ekt hajmidan qat'i nazar hammasi Gen 0'dan boshlanadi va yig'ish har doim barcha avlodlarni birdaniga to'liq ko'rib chiqadi", "hint": "Katta ob'ektlar (≥85 000 bayt) to'g'ridan-to'g'ri LOH'ga ajratiladi." }
       ],
-      "explanation": "\"O'rta yoshda o'lish\" (Gen 2'gacha yashab keyin keraksiz bo'lish) eng qimmat pattern — masalan, uzoq keshlangan, lekin keyin tashlanadigan ob'ektlar. Katta buferlar uchun `ArrayPool<T>.Shared` LOH allokatsiyalarini kamaytiradi. Server GC (ASP.NET Core default) — har yadro uchun heap, throughput'ga yo'naltirilgan.",
+      "explanation": "Faraz: ko'p ob'ektlar qisqa yashaydi. Gen 0 yig'ish tez va tez-tez, Gen 2 (to'liq) — qimmat; LOH default'da zichlanmaydi (fragmentatsiya). \"O'rta yoshda o'lish\" (Gen 2'gacha yashab keyin keraksiz bo'lish) eng qimmat pattern — masalan, uzoq keshlangan, lekin keyin tashlanadigan ob'ektlar. Katta buferlar uchun `ArrayPool<T>.Shared` LOH allokatsiyalarini kamaytiradi. Server GC (ASP.NET Core default) — har yadro uchun heap, throughput'ga yo'naltirilgan.",
       "reviewed": false
     },
     {
@@ -67,12 +67,12 @@
       "kind": "concept",
       "prompt": "`Span<T>` va `Memory<T>` nima beradi va qanday cheklovlari bor?",
       "options": [
-        { "id": "a", "text": "`Span<T>` — massiv, `stackalloc` yoki native xotiraning uzluksiz bo'lagiga nusxasiz, xavfsiz \"ko'rinish\": `text.AsSpan(0, 5)` yangi satr yaratmaydi, parsing allokatsiyasiz. `Span<T>` — `ref struct`: faqat stack'da yashaydi — class maydoni bo'la olmaydi, box qilinmaydi, `await`dan keyin ushlab turilmaydi. Asinxron yoki heap'da saqlash uchun `Memory<T>`", "correct": true },
+        { "id": "a", "text": "`Span<T>` — uzluksiz xotiraga nusxasiz ko'rinish, lekin `ref struct`: faqat stack'da; heap va `await` uchun `Memory<T>`", "correct": true },
         { "id": "b", "text": "`Span<T>` — massivning tezroq nusxasi", "hint": "Nusxa emas — mavjud xotiraga ko'rinish (pointer + uzunlik)." },
-        { "id": "c", "text": "`Span<T>`ni class maydonida saqlab, keyin ishlatish mumkin", "hint": "`ref struct` heap'ga tusha olmaydi — kompilyator buni taqiqlaydi; buning uchun `Memory<T>`." },
+        { "id": "c", "text": "`Span<T>`ni class maydonida saqlab, keyin istalgan joyda, jumladan `await`dan keyin ham hech qanday cheklovsiz ishlatish mumkin", "hint": "`ref struct` heap'ga tusha olmaydi — kompilyator buni taqiqlaydi; buning uchun `Memory<T>`." },
         { "id": "d", "text": "`Span<T>` faqat `unsafe` kodda ishlaydi", "hint": "Xavfsiz kodda ishlaydi va chegaralar tekshiriladi; `unsafe` shart emas." }
       ],
-      "explanation": "Qo'llanish: protokol va fayl parsing (`Utf8Parser`, `int.Parse(ReadOnlySpan<char>)`), `string.Create`, `ArrayPool` buferlari bilan ishlash. Kestrel va System.Text.Json ichki ravishda shu primitivlarga qurilgan. Issiq yo'lda allokatsiyalarni kamaytirish GC pauzalarini qisqartiradi — lekin avval profiler bilan issiq yo'lni toping.",
+      "explanation": "Masalan, `text.AsSpan(0, 5)` yangi satr yaratmaydi. `Span<T>` class maydoni bo'la olmaydi, box qilinmaydi, `await`dan keyin ushlab turilmaydi. Qo'llanish: protokol va fayl parsing (`Utf8Parser`, `int.Parse(ReadOnlySpan<char>)`), `string.Create`, `ArrayPool` buferlari bilan ishlash. Kestrel va System.Text.Json ichki ravishda shu primitivlarga qurilgan. Issiq yo'lda allokatsiyalarni kamaytirish GC pauzalarini qisqartiradi — lekin avval profiler bilan issiq yo'lni toping.",
       "reviewed": false
     },
     {
@@ -113,12 +113,12 @@
       "kind": "concept",
       "prompt": "O'sib borayotgan .NET monolitini qanday tuzilmaga keltirish to'g'ri — mikroservislarmi yoki modulli monolitmi?",
       "options": [
-        { "id": "a", "text": "Ko'pincha avval modulli monolit: domen bo'yicha modullar (alohida loyiha/assembly), har modul o'z ma'lumotlari va ochiq kontrakti bilan, modullar o'rtasida faqat interfeys yoki in-process event'lar; chegaralar arxitektura testlari bilan qo'riqlanadi. Mikroservisga faqat aniq sabab (mustaqil deploy, alohida masshtab, jamoa avtonomiyasi) bo'lganda va ishonchli messaging (outbox, idempotent consumer) bilan chiqariladi", "correct": true },
+        { "id": "a", "text": "Avval modulli monolit: domen modullari, o'z ma'lumotlari va kontrakti bilan; mikroservis — faqat aniq sabab bo'lganda", "correct": true },
         { "id": "b", "text": "Darhol har bir jadval uchun alohida mikroservis yaratish", "hint": "Taqsimlangan monolit: tarmoq chaqiruvlari, distributed tranzaksiyalar va deploy murakkabligi, foyda esa yo'q." },
         { "id": "c", "text": "Monolitni o'zgartirmaslik — tuzilma faqat katta kompaniyalarga kerak", "hint": "Chegarasiz monolit vaqt o'tib \"big ball of mud\"ga aylanadi — o'zgarish narxi o'sadi." },
-        { "id": "d", "text": "Mikroservislar o'rtasida bitta umumiy DB jadvallarini to'g'ridan-to'g'ri bo'lishish", "hint": "Umumiy sxema servislarni qattiq bog'laydi — mustaqil deploy va o'zgarish imkoni yo'qoladi." }
+        { "id": "d", "text": "Mikroservislar o'rtasida bitta umumiy DB jadvallarini to'g'ridan-to'g'ri bo'lishish — bu eng sodda va integratsiya uchun eng ishonchli yo'l", "hint": "Umumiy sxema servislarni qattiq bog'laydi — mustaqil deploy va o'zgarish imkoni yo'qoladi." }
       ],
-      "explanation": "Modul chegaralari to'g'ri bo'lsa, keyin modulni servisga chiqarish nisbatan oson. Asboblar: NetArchTest/ArchUnitNET (bog'liqlik qoidalari), har modul uchun alohida `DbContext`/sxema, integratsiya event'lari uchun outbox (MassTransit, Wolverine). Mikroservislar operatsion yuk (observability, CI/CD, versiyalash) talab qiladi — jamoa tayyorligi muhim.",
+      "explanation": "Modullar o'rtasida faqat interfeys yoki in-process event'lar; chegaralar arxitektura testlari bilan qo'riqlanadi. Mikroservis sabablari: mustaqil deploy, alohida masshtab, jamoa avtonomiyasi; ishonchli messaging (outbox, idempotent consumer) bilan. Modul chegaralari to'g'ri bo'lsa, keyin modulni servisga chiqarish nisbatan oson. Asboblar: NetArchTest/ArchUnitNET (bog'liqlik qoidalari), har modul uchun alohida `DbContext`/sxema, integratsiya event'lari uchun outbox (MassTransit, Wolverine). Mikroservislar operatsion yuk (observability, CI/CD, versiyalash) talab qiladi — jamoa tayyorligi muhim.",
       "reviewed": false
     }
   ]

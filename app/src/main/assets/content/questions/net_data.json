@@ -8,12 +8,12 @@
       "kind": "concept",
       "prompt": "EF Core'da `DbContext` va `DbSet<T>` nima?",
       "options": [
-        { "id": "a", "text": "EF Core — ORM: C# class'larni (entity) jadvallarga bog'laydi. `DbContext` — DB bilan ishlash sessiyasi: ulanish, change tracking, `SaveChanges`; `DbSet<T>` — bitta entity to'plami (jadval), unga LINQ yoziladi va EF uni SQL'ga tarjima qiladi: `db.Users.Where(u => u.IsActive).ToListAsync()`", "correct": true },
-        { "id": "b", "text": "`DbContext` — DB serverining o'zi", "hint": "Server tashqarida (SQL Server, PostgreSQL); `DbContext` — ilova tomonidagi ish birligi ob'ekti." },
+        { "id": "a", "text": "`DbContext` — DB sessiyasi (ulanish, change tracking, `SaveChanges`); `DbSet<T>` — bitta entity jadvali, LINQ bilan", "correct": true },
+        { "id": "b", "text": "`DbContext` — DB serverining o'zi: u ilova ichida ishga tushadi va ma'lumotlarni to'g'ridan-to'g'ri o'z xotirasida saqlaydi", "hint": "Server tashqarida (SQL Server, PostgreSQL); `DbContext` — ilova tomonidagi ish birligi ob'ekti." },
         { "id": "c", "text": "`DbSet<T>` — xotiradagi oddiy `List<T>`", "hint": "`DbSet` — `IQueryable<T>`: so'rov DB'da bajariladi, butun jadval xotiraga yuklanmaydi." },
         { "id": "d", "text": "EF Core'da SQL yozib bo'lmaydi", "hint": "`FromSql`, `SqlQuery`, `ExecuteSql` bilan xom SQL ham ishlatish mumkin (parametrlar xavfsiz)." }
       ],
-      "explanation": "`DbContext` qisqa yashashi kerak — odatda HTTP so'rov uchun bitta (scoped). Konfiguratsiya: `OnModelCreating` yoki `IEntityTypeConfiguration<T>` (Fluent API), atributlar (`[Key]`, `[MaxLength]`). Provider tanlanadi: `UseNpgsql`, `UseSqlServer`, `UseSqlite`.",
+      "explanation": "EF Core — ORM: class'larni jadvallarga bog'laydi va LINQ'ni SQL'ga tarjima qiladi: `db.Users.Where(u => u.IsActive).ToListAsync()`. `DbContext` qisqa yashashi kerak — odatda HTTP so'rov uchun bitta (scoped). Konfiguratsiya: `OnModelCreating` yoki `IEntityTypeConfiguration<T>` (Fluent API), atributlar (`[Key]`, `[MaxLength]`). Provider tanlanadi: `UseNpgsql`, `UseSqlServer`, `UseSqlite`.",
       "reviewed": false
     },
     {
@@ -23,12 +23,12 @@
       "kind": "concept",
       "prompt": "EF Core migratsiyalari qanday ishlaydi?",
       "options": [
-        { "id": "a", "text": "Model o'zgargach `dotnet ef migrations add AddUserEmail` — joriy model va oxirgi snapshot farqidan `Up`/`Down` metodli migratsiya klassi yaratiladi; `dotnet ef database update` uni DB'ga qo'llaydi va `__EFMigrationsHistory` jadvaliga yozadi. Migratsiya fayllari git'da saqlanadi va review qilinadi", "correct": true },
-        { "id": "b", "text": "EF Core har ishga tushishda jadvallarni o'chirib qayta yaratadi", "hint": "Bu `EnsureDeleted/EnsureCreated` xulqi (faqat test/prototip uchun); migratsiyalar ma'lumotni saqlab inkremental o'zgartiradi." },
+        { "id": "a", "text": "`migrations add` model va snapshot farqidan `Up`/`Down` klassini yaratadi; `database update` uni DB'ga qo'llaydi", "correct": true },
+        { "id": "b", "text": "EF Core ilova har ishga tushganda barcha jadvallarni o'chirib, ularni joriy model bo'yicha boshidan qayta yaratib chiqadi", "hint": "Bu `EnsureDeleted/EnsureCreated` xulqi (faqat test/prototip uchun); migratsiyalar ma'lumotni saqlab inkremental o'zgartiradi." },
         { "id": "c", "text": "Migratsiya faqat yangi jadval qo'shishi mumkin", "hint": "Ustun qo'shish/o'chirish, indeks, nomni o'zgartirish, xom SQL — hammasi mumkin." },
         { "id": "d", "text": "Migratsiya fayllarini qo'lda tahrirlash taqiqlangan", "hint": "Ko'pincha kerak: ma'lumotni ko'chirish (`migrationBuilder.Sql`), rename'ni drop+add o'rniga to'g'rilash." }
       ],
-      "explanation": "Production'da `database update`ni ilova ishga tushganda avtomatik bajarish o'rniga — `dotnet ef migrations script --idempotent` bilan SQL skript yoki migration bundle, CI/CD bosqichida. Generatsiya qilingan migratsiyani doim tekshiring: ustun nomini o'zgartirish ba'zan drop + add bo'lib, ma'lumot yo'qolishiga olib keladi.",
+      "explanation": "Qo'llangan migratsiyalar `__EFMigrationsHistory` jadvaliga yoziladi; fayllar git'da saqlanadi va review qilinadi. Production'da `database update`ni ilova ishga tushganda avtomatik bajarish o'rniga — `dotnet ef migrations script --idempotent` bilan SQL skript yoki migration bundle, CI/CD bosqichida. Generatsiya qilingan migratsiyani doim tekshiring: ustun nomini o'zgartirish ba'zan drop + add bo'lib, ma'lumot yo'qolishiga olib keladi.",
       "reviewed": false
     },
     {
@@ -41,7 +41,7 @@
       "options": [
         { "id": "a", "text": "Bitta SELECT, keyin `SaveChangesAsync`da bitta UPDATE (Name = 'Gani')", "correct": true },
         { "id": "b", "text": "Bitta SELECT va ikkita UPDATE — har o'zlashtirish uchun", "hint": "Xususiyatga yozish DB'ga bormaydi; change tracker `SaveChanges` paytidagi yakuniy holatni solishtiradi." },
-        { "id": "c", "text": "Faqat SELECT — `Update()` chaqirilmagani uchun o'zgarish saqlanmaydi", "hint": "Kuzatilayotgan (tracked) entity'ning o'zgarishlarini EF o'zi aniqlaydi — `Update()` shart emas." },
+        { "id": "c", "text": "Faqat SELECT — `Update()` chaqirilmagani uchun o'zgarish saqlanmaydi va DB'ga hech narsa yozilmaydi", "hint": "Kuzatilayotgan (tracked) entity'ning o'zgarishlarini EF o'zi aniqlaydi — `Update()` shart emas." },
         { "id": "d", "text": "Hech qanday SQL — `FirstAsync` keshdan o'qiydi", "hint": "Birinchi so'rov DB'ga boradi; context keshidan faqat allaqachon kuzatilayotgan entity'lar qayta ishlatiladi." }
       ],
       "explanation": "Change tracking: yuklangan entity'ning asl qiymatlari snapshot'da saqlanadi; `SaveChanges` `DetectChanges` qilib, faqat o'zgargan ustunlar uchun UPDATE yaratadi va hammasini bitta tranzaksiyada yuboradi. `Add` → INSERT, `Remove` → DELETE.",
@@ -54,12 +54,12 @@
       "kind": "concept",
       "prompt": "`AsNoTracking()` nima qiladi va qachon ishlatiladi?",
       "options": [
-        { "id": "a", "text": "Natija entity'larini change tracker'ga qo'shmaydi: snapshot va identity map xarajati yo'q — tezroq va kam xotira. Faqat o'qish so'rovlari (ro'yxat, hisobot, API GET) uchun. Natijani o'zgartirib `SaveChanges` qilsangiz hech narsa saqlanmaydi", "correct": true },
-        { "id": "b", "text": "So'rov natijasini keshlamaslik uchun — har safar DB'ga borishga majburlaydi", "hint": "EF Core so'rov natijalarini keshlamaydi; `AsNoTracking` change tracking'ni o'chiradi." },
+        { "id": "a", "text": "Entity'lar change tracker'ga qo'shilmaydi — tezroq, kam xotira; faqat o'qish so'rovlari (ro'yxat, hisobot, GET) uchun", "correct": true },
+        { "id": "b", "text": "So'rov natijasini keshlamaslik uchun — EF'ni har safar DB'ga borishga majburlaydi, shuning uchun ma'lumot doim eng yangi bo'ladi", "hint": "EF Core so'rov natijalarini keshlamaydi; `AsNoTracking` change tracking'ni o'chiradi." },
         { "id": "c", "text": "Tranzaksiyani o'chiradi", "hint": "Tranzaksiya bilan bog'liq emas — faqat kuzatish." },
         { "id": "d", "text": "Yangilanadigan entity'lar uchun ham doim ishlatish kerak", "hint": "Kuzatilmagan entity o'zgarishini EF bilmaydi — yangilash uchun tracking kerak (yoki `Attach`/`Update`)." }
       ],
-      "explanation": "Butun context uchun: `QueryTrackingBehavior.NoTracking`. Bir xil entity bir necha marta qaytsa, `AsNoTracking` alohida ob'ektlar yaratadi; `AsNoTrackingWithIdentityResolution` takrorlarni birlashtiradi. Projection (`Select` bilan DTO) — umuman tracking bo'lmaydi va ko'pincha eng samarali.",
+      "explanation": "Snapshot va identity map xarajati yo'q. Natijani o'zgartirib `SaveChanges` qilsangiz hech narsa saqlanmaydi. Butun context uchun: `QueryTrackingBehavior.NoTracking`. Bir xil entity bir necha marta qaytsa, `AsNoTracking` alohida ob'ektlar yaratadi; `AsNoTrackingWithIdentityResolution` takrorlarni birlashtiradi. Projection (`Select` bilan DTO) — umuman tracking bo'lmaydi va ko'pincha eng samarali.",
       "reviewed": false
     },
     {
@@ -70,12 +70,12 @@
       "prompt": "Code review: 100 ta buyurtma uchun bu kod DB'ga 101 ta so'rov yuboradi. Sabab va tuzatish?",
       "code": "// Lazy loading proxy'lari yoqilgan\nvar orders = await db.Orders\n    .Where(o => o.CreatedAt > since)\n    .ToListAsync();\n\nforeach (var order in orders)\n{\n    Console.WriteLine($\"{order.Id}: {order.Customer.Name}\");\n}",
       "options": [
-        { "id": "a", "text": "N+1 muammo: siklda har `order.Customer`ga murojaat lazy loading bilan alohida SELECT yuboradi. Tuzatish: eager loading — `.Include(o => o.Customer)` (bitta JOIN so'rov) yoki faqat kerakli maydonlarni projection: `.Select(o => new { o.Id, CustomerName = o.Customer.Name })`", "correct": true },
+        { "id": "a", "text": "N+1: siklda har `order.Customer` lazy loading bilan alohida SELECT; tuzatish — `.Include(o => o.Customer)` yoki projection", "correct": true },
         { "id": "b", "text": "`ToListAsync` o'rniga `ToList` ishlatish", "hint": "Sinxron/asinxron farqi so'rovlar sonini o'zgartirmaydi." },
         { "id": "c", "text": "`Where` filtri sabab — uni olib tashlash kerak", "hint": "Filtr bitta so'rovda bajariladi; qo'shimcha 100 so'rov sikl ichidagi navigatsiyadan." },
-        { "id": "d", "text": "Muammo yo'q — EF Core `Customer`larni avtomatik birga yuklaydi", "hint": "Navigatsiya default'da yuklanmaydi; lazy loading esa har murojaatda alohida so'rov beradi." }
+        { "id": "d", "text": "Muammo yo'q — EF Core bog'langan `Customer`larni har doim avtomatik birga yuklaydi, 101 ta so'rov esa faqat log'dagi xato ko'rinish", "hint": "Navigatsiya default'da yuklanmaydi; lazy loading esa har murojaatda alohida so'rov beradi." }
       ],
-      "explanation": "Lazy loading (`UseLazyLoadingProxies`, `virtual` navigatsiyalar) N+1'ni yashiradi — ko'p jamoalar uni o'chiq qoldiradi. Logging bilan aniqlash: `LogTo(Console.WriteLine, LogLevel.Information)` yoki MiniProfiler. Ko'p kolleksiya `Include` qilinsa — cartesian explosion; `AsSplitQuery()` ko'rib chiqiladi.",
+      "explanation": "Eager loading bitta JOIN so'rov beradi; projection: `.Select(o => new { o.Id, CustomerName = o.Customer.Name })`. Lazy loading (`UseLazyLoadingProxies`, `virtual` navigatsiyalar) N+1'ni yashiradi — ko'p jamoalar uni o'chiq qoldiradi. Logging bilan aniqlash: `LogTo(Console.WriteLine, LogLevel.Information)` yoki MiniProfiler. Ko'p kolleksiya `Include` qilinsa — cartesian explosion; `AsSplitQuery()` ko'rib chiqiladi.",
       "reviewed": false
     },
     {
@@ -85,12 +85,12 @@
       "kind": "concept",
       "prompt": "EF Core 3+ da `db.Users.Where(u => IsVip(u.Email)).ToList()` (bu yerda `IsVip` oddiy C# metod) bajarilganda nima bo'ladi?",
       "options": [
-        { "id": "a", "text": "`InvalidOperationException` — so'rov SQL'ga tarjima qilinmaydi (\"could not be translated\"). EF Core 3'dan beri `Where` kabi oraliq qismlarda yashirin client evaluation yo'q; shartni tarjima qilinadigan ifodaga aylantirish yoki ataylab `AsEnumerable()` bilan xotiraga o'tish kerak (butun to'plam yuklanishini anglab)", "correct": true },
-        { "id": "b", "text": "EF jim holda butun jadvalni yuklab, filtrni xotirada bajaradi", "hint": "Bu EF Core 2.x xulqi edi; jim katta yuklashlar sabab 3.0 da exception'ga almashtirilgan." },
+        { "id": "a", "text": "`InvalidOperationException` — \"could not be translated\": EF Core 3+ `Where`da yashirin client evaluation qilmaydi", "correct": true },
+        { "id": "b", "text": "EF jim holda butun jadvalni xotiraga yuklab oladi va `IsVip` filtrini hech qanday xato yoki ogohlantirishsiz xotirada bajaradi", "hint": "Bu EF Core 2.x xulqi edi; jim katta yuklashlar sabab 3.0 da exception'ga almashtirilgan." },
         { "id": "c", "text": "`IsVip` SQL'ga avtomatik ravishda funksiya sifatida ko'chiriladi", "hint": "EF ixtiyoriy C# metod tanasini tahlil qilmaydi; faqat ma'lum metodlar yoki `HasDbFunction` bilan ro'yxatdan o'tganlar." },
         { "id": "d", "text": "Kompilyatsiya xatosi", "hint": "Expression tree sifatida kompilyatsiya qilinadi; muammo runtime'da provider tarjimasida." }
       ],
-      "explanation": "Yakuniy `Select` proyeksiyasida client evaluation hali ham ruxsat etiladi (ma'lumot allaqachon olingan). Tarjima qilinadigan metodlar: `string.Contains/StartsWith`, `EF.Functions.Like`, sana amallari va h.k. Murakkab qoidani hisoblangan ustun yoki DB funksiyasiga (`HasDbFunction`) ko'chirish mumkin.",
+      "explanation": "Shartni tarjima qilinadigan ifodaga aylantiring yoki ataylab `AsEnumerable()` bilan xotiraga o'ting (butun to'plam yuklanishini anglab). Yakuniy `Select` proyeksiyasida client evaluation hali ham ruxsat etiladi (ma'lumot allaqachon olingan). Tarjima qilinadigan metodlar: `string.Contains/StartsWith`, `EF.Functions.Like`, sana amallari va h.k. Murakkab qoidani hisoblangan ustun yoki DB funksiyasiga (`HasDbFunction`) ko'chirish mumkin.",
       "reviewed": false
     },
     {
@@ -116,12 +116,12 @@
       "kind": "concept",
       "prompt": "Ikki administrator bir vaqtda bitta mahsulot narxini tahrirlaydi — ikkinchisining saqlashi birinchisini jim yo'qotmasligi kerak. EF Core'da qanday hal qilinadi?",
       "options": [
-        { "id": "a", "text": "Optimistic concurrency: entity'ga concurrency token qo'shish (SQL Server'da `[Timestamp] byte[] RowVersion`, PostgreSQL'da `xmin` yoki `[ConcurrencyCheck]` versiya ustuni). EF UPDATE'ga `WHERE RowVersion = @original` qo'shadi; 0 qator o'zgarsa `DbUpdateConcurrencyException` tashlanadi — ilova foydalanuvchiga konflikt haqida aytadi yoki qayta yuklab birlashtiradi", "correct": true },
-        { "id": "b", "text": "EF Core buni avtomatik hal qiladi — oxirgi saqlash g'olib bo'ladi va bu to'g'ri", "hint": "\"Last write wins\" — aynan jim yo'qotish; token bo'lmasa EF konfliktni aniqlamaydi." },
+        { "id": "a", "text": "Optimistic concurrency: concurrency token (`[Timestamp] RowVersion`); konfliktda `DbUpdateConcurrencyException`", "correct": true },
+        { "id": "b", "text": "EF Core buni o'zi avtomatik hal qiladi — oxirgi saqlash g'olib bo'ladi va bu har qanday biznes holatda to'g'ri hamda xavfsiz xulq", "hint": "\"Last write wins\" — aynan jim yo'qotish; token bo'lmasa EF konfliktni aniqlamaydi." },
         { "id": "c", "text": "Har tahrirlashda butun jadvalni `LOCK TABLE` qilish", "hint": "Pessimistik va qo'pol: boshqa barcha yozishlarni to'xtatadi, foydalanuvchi forma ochib turgan vaqt davomida lock ushlab bo'lmaydi." },
         { "id": "d", "text": "`SaveChanges`ni ikki marta chaqirish", "hint": "Konfliktni aniqlamaydi — ikkinchi chaqiruv shunchaki o'zgarishsiz qaytadi." }
       ],
-      "explanation": "Web'da RowVersion klientga (forma/ETag) beriladi va saqlashda qaytariladi — aks holda tekshiruv faqat bitta so'rov ichida ishlaydi. HTTP'da konflikt — 409 yoki `If-Match`/412. Pessimistik lock (`SELECT ... FOR UPDATE`) qisqa, server tomonidagi kritik amallar (balans) uchun mos.",
+      "explanation": "EF UPDATE'ga `WHERE RowVersion = @original` qo'shadi; 0 qator o'zgarsa exception — foydalanuvchiga konflikt aytiladi yoki qayta yuklab birlashtiriladi. PostgreSQL'da `xmin` yoki `[ConcurrencyCheck]`. Web'da RowVersion klientga (forma/ETag) beriladi va saqlashda qaytariladi — aks holda tekshiruv faqat bitta so'rov ichida ishlaydi. HTTP'da konflikt — 409 yoki `If-Match`/412. Pessimistik lock (`SELECT ... FOR UPDATE`) qisqa, server tomonidagi kritik amallar (balans) uchun mos.",
       "reviewed": false
     },
     {
