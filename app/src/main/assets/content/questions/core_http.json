@@ -11,7 +11,7 @@
         { "id": "a", "text": "GET ma'lumotni o'qish uchun, POST yangi resurs yaratish yoki ma'lumot yuborish uchun", "correct": true },
         { "id": "b", "text": "GET shifrlangan, POST shifrlanmagan", "hint": "Shifrlash metodga emas, HTTPS ishlatilishiga bog'liq." },
         { "id": "c", "text": "POST faqat fayl yuklash uchun", "hint": "POST istalgan ma'lumotni tanada yuboradi." },
-        { "id": "d", "text": "GET tanada (body) JSON yuboradi, POST esa URL'da", "hint": "Aksincha: GET parametrlari URL'da, POST ma'lumoti tanada." }
+        { "id": "d", "text": "GET so'rov tanasida (body) JSON yuboradi, POST esa ma'lumotni faqat URL query qismida uzatadi", "hint": "Aksincha: GET parametrlari URL'da, POST ma'lumoti tanada." }
       ],
       "explanation": "GET xavfsiz (server holatini o'zgartirmaydi) va keshlanadi; parametrlari URL'da ko'rinadi. POST server holatini o'zgartiradi, ma'lumotni tanada yuboradi va keshlanmaydi.",
       "reviewed": false
@@ -39,7 +39,7 @@
       "prompt": "5xx status kodlari qaysi turdagi xatoni bildiradi?",
       "options": [
         { "id": "a", "text": "Server tomonidagi xato: so'rov to'g'ri, lekin server uni bajara olmadi", "correct": true },
-        { "id": "b", "text": "Klient xatosi: so'rov noto'g'ri tuzilgan", "hint": "Klient xatolari 4xx." },
+        { "id": "b", "text": "Klient xatosi: so'rov noto'g'ri tuzilgan yoki unda majburiy maydonlar yetishmaydi", "hint": "Klient xatolari 4xx." },
         { "id": "c", "text": "Qayta yo'naltirish", "hint": "Yo'naltirish kodlari 3xx." },
         { "id": "d", "text": "Tarmoq ulanishi yo'q", "hint": "Ulanish bo'lmasa, javob ham, status kodi ham bo'lmaydi." }
       ],
@@ -54,7 +54,7 @@
       "prompt": "HTTPS HTTP'dan nimasi bilan farq qiladi?",
       "options": [
         { "id": "a", "text": "Ma'lumot TLS orqali shifrlanadi va server sertifikat bilan tasdiqlanadi", "correct": true },
-        { "id": "b", "text": "HTTPS tezroq, chunki ma'lumotni siqadi", "hint": "Siqish alohida mexanizm; asosiy farq xavfsizlikda." },
+        { "id": "b", "text": "HTTPS tezroq ishlaydi, chunki u yuborilayotgan ma'lumotni avtomatik siqadi", "hint": "Siqish alohida mexanizm; asosiy farq xavfsizlikda." },
         { "id": "c", "text": "HTTPS faqat to'lov sahifalari uchun", "hint": "Bugun deyarli barcha saytlar va API'lar HTTPS'da ishlaydi." },
         { "id": "d", "text": "HTTPS'da parol kerak emas", "hint": "Shifrlash autentifikatsiyaning o'rnini bosmaydi." }
       ],
@@ -146,7 +146,7 @@
         { "id": "a", "text": "401 — foydalanuvchi autentifikatsiyadan o'tmagan; 403 — o'tgan, lekin bu amalga ruxsati yo'q", "correct": true },
         { "id": "b", "text": "401 — server xatosi, 403 — klient xatosi", "hint": "Ikkalasi ham 4xx, ya'ni klient tomoniga tegishli." },
         { "id": "c", "text": "Farqi yo'q, ikkalasi bir xil", "hint": "Biri \"kimligingiz noma'lum\", ikkinchisi \"kimligingiz ma'lum, lekin mumkin emas\"." },
-        { "id": "d", "text": "401 — resurs topilmadi, 403 — resurs o'chirilgan", "hint": "Topilmaganlik uchun 404, o'chirilganlik uchun 410 bor." }
+        { "id": "d", "text": "401 — so'ralgan resurs topilmadi, 403 — resurs avval bo'lgan, lekin keyin serverdan o'chirilgan", "hint": "Topilmaganlik uchun 404, o'chirilganlik uchun 410 bor." }
       ],
       "explanation": "401 Unauthorized aslida \"autentifikatsiya qilinmagan\" degani: token yo'q yoki eskirgan, klient kirishni qayta so'rashi kerak. 403 Forbidden — kimligingiz ma'lum, lekin huquq yetarli emas; qayta kirish yordam bermaydi.",
       "reviewed": false
@@ -174,7 +174,7 @@
         { "id": "a", "text": "PUT resursni to'liq almashtiradi, PATCH esa faqat ko'rsatilgan maydonlarni o'zgartiradi", "correct": true },
         { "id": "b", "text": "PUT yaratadi, PATCH o'chiradi", "hint": "O'chirish uchun DELETE bor." },
         { "id": "c", "text": "PATCH — PUT'ning eskirgan nomi", "hint": "Ikkalasi ham amalda." },
-        { "id": "d", "text": "PUT faqat fayllar uchun, PATCH faqat JSON uchun", "hint": "Metodlar ma'lumot formatiga bog'liq emas." }
+        { "id": "d", "text": "PUT faqat fayllarni yuklash uchun, PATCH esa faqat JSON ma'lumotlarni yuborish uchun ishlatiladi", "hint": "Metodlar ma'lumot formatiga bog'liq emas." }
       ],
       "explanation": "`PUT /users/42` tanada to'liq resursni kutadi va uni almashtiradi (yetishmagan maydonlar bo'shaydi). `PATCH /users/42` tanada faqat o'zgarishlarni kutadi, masalan `{\"name\": \"Ali\"}`.",
       "reviewed": false
@@ -202,7 +202,7 @@
       "prompt": "Klient-server modelida kim so'rov yuboradi?",
       "options": [
         { "id": "a", "text": "Klient so'rov yuboradi, server unga javob qaytaradi", "correct": true },
-        { "id": "b", "text": "Server so'rov yuboradi, klient javob beradi", "hint": "Oddiy HTTP'da server o'zi tashabbus ko'rsata olmaydi." },
+        { "id": "b", "text": "Server so'rov yuboradi, klient esa unga javob qaytaradi", "hint": "Oddiy HTTP'da server o'zi tashabbus ko'rsata olmaydi." },
         { "id": "c", "text": "Ikkalasi bir vaqtda, teng huquqli", "hint": "Bu peer-to-peer model." },
         { "id": "d", "text": "So'rovni brauzer emas, DNS yuboradi", "hint": "DNS faqat manzilni topishga yordam beradi." }
       ],
@@ -261,8 +261,8 @@
       "kind": "concept",
       "prompt": "Session cookie va JWT token asosidagi autentifikatsiya farqi nima?",
       "options": [
-        { "id": "a", "text": "Sessiyada holat serverda saqlanadi va cookie faqat identifikatorni tashiydi; JWT'da ma'lumot tokenning o'zida va server uni imzo orqali tekshiradi", "correct": true },
-        { "id": "b", "text": "Cookie faqat brauzerda, JWT faqat mobil ilovada ishlaydi", "hint": "Ikkalasi ham har ikki muhitda ishlatilishi mumkin." },
+        { "id": "a", "text": "Sessiyada holat serverda, cookie faqat ID tashiydi; JWT'da ma'lumot tokenda va server imzoni tekshiradi", "correct": true },
+        { "id": "b", "text": "Cookie faqat brauzerda, JWT esa faqat mobil ilovada ishlaydi — ularni bir-birining o'rnida ishlatib bo'lmaydi", "hint": "Ikkalasi ham har ikki muhitda ishlatilishi mumkin." },
         { "id": "c", "text": "JWT shifrlangan, shuning uchun ichini o'qib bo'lmaydi", "hint": "Oddiy JWT faqat imzolangan; uning ichini istalgan kishi dekodlab o'qiydi." },
         { "id": "d", "text": "Sessiya serverda hech narsa saqlamaydi", "hint": "Aksincha: sessiya ma'lumoti aynan serverda turadi." }
       ],
@@ -276,9 +276,9 @@
       "kind": "concept",
       "prompt": "CORS nima va u kimni cheklaydi?",
       "options": [
-        { "id": "a", "text": "Brauzer mexanizmi: boshqa origin'dagi sahifadan kelgan so'rov javobini server ruxsat bermasa, JavaScript'ga bermaydi", "correct": true },
+        { "id": "a", "text": "Brauzer mexanizmi: server ruxsat bermasa, boshqa origin'dagi sahifa JavaScript'iga javobni bermaydi", "correct": true },
         { "id": "b", "text": "Server so'rovlarni bloklaydigan firewall", "hint": "Cheklovni server emas, brauzer qo'llaydi; server faqat ruxsat sarlavhalarini yuboradi." },
-        { "id": "c", "text": "Mobil ilovalar va `curl` ni ham cheklaydi", "hint": "Brauzerdan tashqaridagi klientlarga bu qoida qo'llanmaydi." },
+        { "id": "c", "text": "Brauzerdan tashqari mobil ilovalar, `curl` va server-server so'rovlarini ham xuddi shunday bir xilda cheklaydi", "hint": "Brauzerdan tashqaridagi klientlarga bu qoida qo'llanmaydi." },
         { "id": "d", "text": "So'rovlarni shifrlash usuli", "hint": "Shifrlashga aloqasi yo'q." }
       ],
       "explanation": "Origin = sxema + xost + port. Brauzer boshqa origin'ga so'rov yuboradi, lekin javobni faqat server `Access-Control-Allow-Origin` bilan ruxsat bersa ochadi. Murakkab so'rovlardan oldin OPTIONS (preflight) so'rovi ketadi.",
@@ -293,7 +293,7 @@
       "options": [
         { "id": "a", "text": "Javobni 3600 soniya davomida serverga qayta murojaat qilmasdan keshdan ishlatish mumkin", "correct": true },
         { "id": "b", "text": "So'rov 3600 soniyadan keyin bekor qilinadi", "hint": "Bu timeout emas; gap javobning yaroqlilik muddati haqida." },
-        { "id": "c", "text": "Server javobni 3600 soniyadan keyin yuboradi", "hint": "Javob darhol yuboriladi." },
+        { "id": "c", "text": "Server javobni darhol emas, so'rov kelganidan 3600 soniya o'tgachgina klientga yuboradi", "hint": "Javob darhol yuboriladi." },
         { "id": "d", "text": "Javobni umuman keshlash mumkin emas", "hint": "Keshlashni `no-store` taqiqlaydi." }
       ],
       "explanation": "`max-age` javobning \"yangi\" hisoblanish muddati. Muddat o'tgach, klient `ETag`/`If-None-Match` bilan tekshirib, o'zgarmagan bo'lsa 304 oladi. `no-cache` — har safar tekshir, `no-store` — umuman saqlama, `private` — faqat brauzer keshida.",
@@ -306,9 +306,9 @@
       "kind": "concept",
       "prompt": "TCP UDP'dan nimasi bilan farq qiladi?",
       "options": [
-        { "id": "a", "text": "TCP ulanish o'rnatadi va paketlarning yetkazilishi hamda tartibini kafolatlaydi; UDP kafolat bermaydi, lekin tezroq va yengilroq", "correct": true },
+        { "id": "a", "text": "TCP ulanish o'rnatadi, yetkazish va tartibni kafolatlaydi; UDP kafolatsiz, lekin tezroq va yengilroq", "correct": true },
         { "id": "b", "text": "UDP ishonchli, TCP esa yo'q", "hint": "Aksincha." },
-        { "id": "c", "text": "TCP faqat veb uchun, UDP faqat elektron pochta uchun", "hint": "Protokollar muayyan ilovaga bog'lanmagan." },
+        { "id": "c", "text": "TCP faqat veb-sahifalar uchun, UDP esa faqat elektron pochta va fayl almashish uchun mo'ljallangan protokol", "hint": "Protokollar muayyan ilovaga bog'lanmagan." },
         { "id": "d", "text": "UDP shifrlangan, TCP shifrlanmagan", "hint": "Ikkalasi ham o'zi shifrlamaydi; shifrlash ustidagi qatlamda (TLS, DTLS)." }
       ],
       "explanation": "TCP uch bosqichli qo'l berish (handshake), tasdiqlash va qayta yuborish bilan ishonchlilik beradi; HTTP/1.1 va HTTP/2 shu ustida. UDP yo'qolgan paketni qayta yubormaydi; video qo'ng'iroq, o'yinlar va QUIC (HTTP/3) uni ishlatadi.",
@@ -324,7 +324,7 @@
         { "id": "a", "text": "Javob hajmi va server yukini cheklash uchun: klient ma'lumotni qismlab oladi", "correct": true },
         { "id": "b", "text": "Ma'lumot xavfsizligini ta'minlash uchun", "hint": "Sahifalash ruxsatlarni tekshirmaydi." },
         { "id": "c", "text": "Faqat UI chiroyli ko'rinishi uchun", "hint": "Asosiy sabab texnik: xotira, tarmoq va baza yuki." },
-        { "id": "d", "text": "So'rovlar sonini kamaytirish uchun", "hint": "So'rovlar soni aksincha ko'payadi; kamayadigani har birining hajmi." }
+        { "id": "d", "text": "So'rovlar sonini kamaytirish uchun — klient hamma ma'lumotni bitta so'rovda oladi", "hint": "So'rovlar soni aksincha ko'payadi; kamayadigani har birining hajmi." }
       ],
       "explanation": "Million yozuvli jadvalni bitta javobda qaytarish bazani, serverni, tarmoqni va klient xotirasini yiqitadi. Sahifalash offset (`?page=3&limit=20`) yoki cursor (`?after=<id>`) usulida bo'ladi; cursor o'zgaruvchan ro'yxatlar uchun barqarorroq.",
       "reviewed": false
@@ -354,7 +354,7 @@
         { "id": "a", "text": "Resurs o'zgarmagan; javob tanasi yuborilmaydi va klient keshdagi nusxani ishlatadi", "correct": true },
         { "id": "b", "text": "So'rov xato tuzilgan", "hint": "3xx kodlar xato emas." },
         { "id": "c", "text": "Resurs boshqa manzilga ko'chgan", "hint": "Ko'chish uchun 301 yoki 308 ishlatiladi." },
-        { "id": "d", "text": "Server keshni tozalashni so'ramoqda", "hint": "Aksincha: kesh hali yaroqli." }
+        { "id": "d", "text": "Server klientdan o'z keshini tozalab, resursni boshidan qaytadan yuklab olishni so'ramoqda", "hint": "Aksincha: kesh hali yaroqli." }
       ],
       "explanation": "`ETag` — resurs versiyasining identifikatori. Klient uni `If-None-Match` da yuboradi; versiya bir xil bo'lsa, server tanasiz 304 qaytaradi va trafik tejaladi. Bu shartli so'rov (conditional request) deyiladi.",
       "reviewed": false
@@ -368,7 +368,7 @@
       "options": [
         { "id": "a", "text": "Server haqiqatan shu domen egasi ekaniga va o'rtada soxta server yo'qligiga ishonch hosil qilish uchun", "correct": true },
         { "id": "b", "text": "Ulanish tezligini aniqlash uchun", "hint": "Sertifikat tezlik haqida hech narsa demaydi." },
-        { "id": "c", "text": "Foydalanuvchi parolini tekshirish uchun", "hint": "Sertifikat serverni tasdiqlaydi, foydalanuvchini emas." },
+        { "id": "c", "text": "Foydalanuvchi parolini tekshirish va uni serverga xavfsiz yuborish mumkinligini oldindan aniqlash uchun", "hint": "Sertifikat serverni tasdiqlaydi, foydalanuvchini emas." },
         { "id": "d", "text": "Sahifa hajmini bilish uchun", "hint": "Hajm sarlavhalarda keladi, sertifikatda emas." }
       ],
       "explanation": "Sertifikatni ishonchli markaz (CA) imzolaydi va u domenga bog'langan. Tekshiruvsiz hujumchi o'zini server qilib ko'rsatishi (man-in-the-middle) mumkin edi. Muddati o'tgan yoki domenга mos kelmaydigan sertifikat brauzerda ogohlantirish beradi.",
@@ -396,8 +396,8 @@
       "kind": "concept",
       "prompt": "POST so'rovi tarmoq uzilishi sababli javobsiz qoldi. Uni shunchaki qayta yuborish nega xavfli?",
       "options": [
-        { "id": "a", "text": "Server birinchi so'rovni bajargan bo'lishi mumkin; qayta yuborish amalni ikki marta bajaradi (masalan, ikki to'lov)", "correct": true },
-        { "id": "b", "text": "POST'ni qayta yuborish protokol tomonidan taqiqlangan", "hint": "Taqiq yo'q; xavf mantiqiy oqibatda." },
+        { "id": "a", "text": "Server birinchi so'rovni bajargan bo'lishi mumkin — qayta yuborish amalni takrorlaydi (masalan, ikki to'lov)", "correct": true },
+        { "id": "b", "text": "POST'ni qayta yuborish HTTP protokoli tomonidan taqiqlangan — brauzer va HTTP klientlar buni avtomatik bloklaydi", "hint": "Taqiq yo'q; xavf mantiqiy oqibatda." },
         { "id": "c", "text": "Ikkinchi so'rov sekinroq bajariladi", "hint": "Tezlikka aloqasi yo'q." },
         { "id": "d", "text": "Server ikkinchi so'rovni avtomatik rad etadi", "hint": "Maxsus himoya qurilmagan bo'lsa, server ikkalasini ham oddiy so'rov deb biladi." }
       ],
@@ -413,7 +413,7 @@
       "options": [
         { "id": "a", "text": "Server javob bermasa, klient cheksiz kutib qolmasligi va resurslarni band qilmasligi uchun", "correct": true },
         { "id": "b", "text": "So'rovni tezlashtirish uchun", "hint": "Timeout tezlashtirmaydi; u kutish chegarasi." },
-        { "id": "c", "text": "Serverni yukdan himoya qilish uchun", "hint": "U klientni himoya qiladi; server yukini rate limiting cheklaydi." },
+        { "id": "c", "text": "Serverni yukdan himoya qilish uchun — timeout tugagach server ortiqcha so'rovlarni o'zi rad etadi", "hint": "U klientni himoya qiladi; server yukini rate limiting cheklaydi." },
         { "id": "d", "text": "Javobni keshlash uchun", "hint": "Kesh alohida mexanizm." }
       ],
       "explanation": "Odatda uch xil timeout bor: ulanish (connect), o'qish (read) va yozish (write). Ularsiz osilib qolgan so'rov oqimni, ulanishni va foydalanuvchining sabrini band qiladi. Qiymat vazifaga qarab tanlanadi, masalan 10–30 soniya.",
@@ -442,7 +442,7 @@
       "prompt": "API xato javobi qanday bo'lishi kerak?",
       "options": [
         { "id": "a", "text": "Mos status kodi (4xx yoki 5xx) va tanada mashina o'qiy oladigan xato kodi hamda tushunarli xabar", "correct": true },
-        { "id": "b", "text": "Har doim 200 OK va tanada `\"error\": true`", "hint": "Unda klient, proksi va monitoring xatoni muvaffaqiyatdan ajrata olmaydi." },
+        { "id": "b", "text": "Har doim 200 OK va tanada `\"error\": true` — status kodlarni faqat brauzerlar tushunadi va ishlatadi", "hint": "Unda klient, proksi va monitoring xatoni muvaffaqiyatdan ajrata olmaydi." },
         { "id": "c", "text": "Faqat status kodi, tanasiz", "hint": "Kod yetarli emas: klient qaysi maydon xato ekanini bilmaydi." },
         { "id": "d", "text": "Serverning to'liq stack trace'i", "hint": "Ichki tafsilotlarni oshkor qilish xavfsizlik muammosi." }
       ],
@@ -459,7 +459,7 @@
         { "id": "a", "text": "Bitta TCP ulanishda ko'p so'rov parallel yuboriladi (multiplexing) va sarlavhalar siqiladi", "correct": true },
         { "id": "b", "text": "HTTP/2 UDP ustida ishlaydi", "hint": "UDP (QUIC) ustida HTTP/3 ishlaydi." },
         { "id": "c", "text": "HTTP/2 shifrlashni bekor qiladi", "hint": "Amalda u deyarli har doim TLS bilan ishlatiladi." },
-        { "id": "d", "text": "Har bir so'rov uchun yangi ulanish ochiladi", "hint": "Aksincha: ulanishlar soni kamayadi." }
+        { "id": "d", "text": "Har bir so'rov uchun alohida yangi ulanish ochiladi va ular hech qachon bir-biriga xalaqit bermaydi", "hint": "Aksincha: ulanishlar soni kamayadi." }
       ],
       "explanation": "HTTP/1.1'da bitta ulanishda so'rovlar navbatma-navbat ketadi, shuning uchun brauzerlar 6 tagacha ulanish ochadi. HTTP/2 binar freymlar bilan bitta ulanishda ko'p oqimni aralashtiradi va HPACK bilan sarlavhalarni siqadi.",
       "reviewed": false
@@ -502,7 +502,7 @@
       "prompt": "Rate limiting'da token bucket algoritmi nimaga imkon beradi?",
       "options": [
         { "id": "a", "text": "O'rtacha tezlikni cheklagan holda qisqa muddatli portlashlarga (burst) ruxsat berishga", "correct": true },
-        { "id": "b", "text": "Har bir so'rovni bir xil vaqt oralig'ida majburan kechiktirishga", "hint": "Bu leaky bucket'ga yaqinroq xatti-harakat." },
+        { "id": "b", "text": "Har bir so'rovni bir xil vaqt oralig'ida majburan kechiktirishga — portlashlar umuman bo'lmaydi", "hint": "Bu leaky bucket'ga yaqinroq xatti-harakat." },
         { "id": "c", "text": "Foydalanuvchini butunlay bloklashga", "hint": "Bloklash emas, cheklash: tokenlar qayta to'ladi." },
         { "id": "d", "text": "So'rovlarni shifrlashga", "hint": "Shifrlashga aloqasi yo'q." }
       ],
@@ -516,9 +516,9 @@
       "kind": "concept",
       "prompt": "Ommaviy API'da breaking o'zgarish kerak bo'ldi. To'g'ri yondashuv qaysi?",
       "options": [
-        { "id": "a", "text": "Yangi versiyani (masalan, `/v2`) chiqarish, eskisini e'lon qilingan muddat davomida qo'llab-quvvatlash va klientlarni ogohlantirish", "correct": true },
+        { "id": "a", "text": "Yangi versiya (`/v2`) chiqarish, eskisini e'lon qilingan muddatgacha saqlash va klientlarni ogohlantirish", "correct": true },
         { "id": "b", "text": "Mavjud endpoint'ni o'zgartirib, hujjatni yangilash", "hint": "Mavjud klientlar bir zumda buziladi." },
-        { "id": "c", "text": "Eski maydonni o'chirib, so'raganlarga 500 qaytarish", "hint": "Bu klient xatosi emas, server shartnomani buzgani." },
+        { "id": "c", "text": "Eski maydonni o'chirib, uni so'ragan klientlarga 500 qaytarish — ular shunda o'zlari tezroq yangilanishga majbur bo'ladi", "hint": "Bu klient xatosi emas, server shartnomani buzgani." },
         { "id": "d", "text": "Har bir klient uchun alohida API yozish", "hint": "Bu qo'llab-quvvatlab bo'lmaydigan darajada qimmat." }
       ],
       "explanation": "Versiyalash URL'da (`/v2`), sarlavhada yoki media turida bo'lishi mumkin. Muhimi — eski versiyani darhol o'chirmaslik, deprecation muddatini e'lon qilish va iloji boricha breaking o'zgarishlardan qochish (maydon qo'shish, o'chirmaslik).",
@@ -531,9 +531,9 @@
       "kind": "concept",
       "prompt": "To'lov API'sida `Idempotency-Key` sarlavhasi nima uchun ishlatiladi?",
       "options": [
-        { "id": "a", "text": "Klient so'rovni qayta yuborganda server bir xil kalitni tanib, amalni ikkinchi marta bajarmaydi va oldingi natijani qaytaradi", "correct": true },
+        { "id": "a", "text": "Qayta yuborilgan so'rovda server kalitni taniydi: amalni takrorlamay, oldingi natijani qaytaradi", "correct": true },
         { "id": "b", "text": "So'rovni shifrlash uchun", "hint": "Shifrlash TLS ishi." },
-        { "id": "c", "text": "Foydalanuvchini autentifikatsiya qilish uchun", "hint": "Kalit kimligini emas, so'rovning takror ekanini bildiradi." },
+        { "id": "c", "text": "Foydalanuvchini autentifikatsiya qilish uchun — kalit har bir to'lovchi uchun doimiy parol vazifasini bajaradi", "hint": "Kalit kimligini emas, so'rovning takror ekanini bildiradi." },
         { "id": "d", "text": "Javobni brauzerda keshlash uchun", "hint": "Keshlashni `Cache-Control` boshqaradi." }
       ],
       "explanation": "Klient har yangi amal uchun yagona kalit (UUID) yaratadi va qayta urinishda o'sha kalitni yuboradi. Server kalit bo'yicha natijani saqlab qo'yadi; shu tufayli POST ham xavfsiz takrorlanadigan bo'ladi. Stripe kabi to'lov API'lari shu usulni ishlatadi.",
@@ -547,10 +547,10 @@
       "prompt": "Foydalanuvchining shaxsiy profilini qaytaradigan endpoint javobida bunday sarlavha bor. Muammo nima?",
       "code": "HTTP/1.1 200 OK\nContent-Type: application/json\nCache-Control: public, max-age=86400",
       "options": [
-        { "id": "a", "text": "Shaxsiy ma'lumot `public` deb belgilangan: umumiy kesh (CDN, proksi) uni saqlab, boshqa foydalanuvchiga berishi mumkin", "correct": true },
+        { "id": "a", "text": "Shaxsiy ma'lumot `public`: umumiy kesh (CDN, proksi) uni saqlab, boshqa foydalanuvchiga berishi mumkin", "correct": true },
         { "id": "b", "text": "`max-age` juda kichik", "hint": "Bir kun kichik emas; muammo muddatda emas." },
         { "id": "c", "text": "GET javoblarini keshlab bo'lmaydi", "hint": "Aynan GET javoblari keshlanadi." },
-        { "id": "d", "text": "`Cache-Control` faqat rasmlar uchun ishlaydi", "hint": "U istalgan javobga qo'llanadi." }
+        { "id": "d", "text": "`Cache-Control` faqat rasm va statik fayllar uchun ishlaydi, JSON javoblarga esa umuman ta'sir qilmaydi", "hint": "U istalgan javobga qo'llanadi." }
       ],
       "explanation": "Foydalanuvchiga xos javoblar `Cache-Control: private` (yoki `no-store`) bo'lishi kerak. `public` CDN va korporativ proksilarga javobni saqlashga ruxsat beradi; `Authorization` bilan kelgan so'rov javobi `public` deb belgilansa, boshqa odamga ko'rsatilishi mumkin.",
       "reviewed": false
@@ -563,7 +563,7 @@
       "prompt": "HTTP klientida connection pool nima uchun kerak?",
       "options": [
         { "id": "a", "text": "Har so'rov uchun TCP va TLS ulanishini qayta o'rnatmaslik: mavjud ulanishlar qayta ishlatiladi", "correct": true },
-        { "id": "b", "text": "So'rovlarni parallel shifrlash uchun", "hint": "Shifrlash har ulanishda alohida; pool ulanish sonini boshqaradi." },
+        { "id": "b", "text": "Bir nechta so'rovni parallel shifrlash va ularni bitta paketga birlashtirib bir vaqtda yuborish uchun", "hint": "Shifrlash har ulanishda alohida; pool ulanish sonini boshqaradi." },
         { "id": "c", "text": "Javoblarni diskka saqlash uchun", "hint": "Bu kesh vazifasi." },
         { "id": "d", "text": "Server manzilini topish uchun", "hint": "Bu DNS vazifasi." }
       ],
@@ -577,9 +577,9 @@
       "kind": "concept",
       "prompt": "Mobil klient ro'yxat ekranini chizish uchun avval `/posts`, keyin har bir post uchun `/users/{id}` chaqiryapti. Muammo va yechim nima?",
       "options": [
-        { "id": "a", "text": "N+1 so'rov: ro'yxat endpoint'i kerakli muallif ma'lumotini birga qaytarishi yoki ID'lar bo'yicha bitta batch so'rov bo'lishi kerak", "correct": true },
+        { "id": "a", "text": "N+1 so'rov: ro'yxat endpoint'i muallif ma'lumotini birga qaytarishi yoki bitta batch so'rov bo'lishi kerak", "correct": true },
         { "id": "b", "text": "Muammo yo'q: REST shunday ishlashi kerak", "hint": "REST bitta ekran uchun o'nlab so'rovni talab qilmaydi; javob shaklini moslashtirish mumkin." },
-        { "id": "c", "text": "So'rovlarni ketma-ket emas, parallel yuborish kifoya", "hint": "Vaqt qisqaradi, lekin so'rovlar soni, trafik va server yuki o'sha-o'sha." },
+        { "id": "c", "text": "So'rovlarni ketma-ket emas, parallel yuborish kifoya — so'rovlar soni hech qachon muammo emas, faqat kutish vaqti", "hint": "Vaqt qisqaradi, lekin so'rovlar soni, trafik va server yuki o'sha-o'sha." },
         { "id": "d", "text": "Timeout'ni oshirish kerak", "hint": "Bu sekinlikni yashiradi, sababini yo'qotmaydi." }
       ],
       "explanation": "Mobil tarmoqda har so'rov qimmat (kechikish, batareya). Yechimlar: javobga bog'liq resursni qo'shish (`/posts?include=author`), batch endpoint (`/users?ids=1,2,3`), yoki klient aynan kerakli maydonlarni so'raydigan GraphQL/BFF qatlami.",
@@ -592,8 +592,8 @@
       "kind": "concept",
       "prompt": "HTTP/3 nega TCP emas, QUIC (UDP ustida) protokoli ustida qurilgan?",
       "options": [
-        { "id": "a", "text": "TCP'dagi head-of-line blocking'ni yo'qotish va ulanishni tezroq o'rnatish uchun; tarmoq almashganda ham ulanish saqlanadi", "correct": true },
-        { "id": "b", "text": "UDP ishonchliroq bo'lgani uchun", "hint": "UDP o'zi kafolat bermaydi; ishonchlilikni QUIC qo'shadi." },
+        { "id": "a", "text": "TCP'dagi head-of-line blocking'ni yo'qotish va tezroq ulanish; tarmoq almashganda ulanish saqlanadi", "correct": true },
+        { "id": "b", "text": "UDP TCP'dan ishonchliroq bo'lgani uchun — u paketlar yo'qolmasligini va tartibini protokol darajasida kafolatlaydi", "hint": "UDP o'zi kafolat bermaydi; ishonchlilikni QUIC qo'shadi." },
         { "id": "c", "text": "Shifrlashdan voz kechish uchun", "hint": "QUIC'da TLS 1.3 majburiy." },
         { "id": "d", "text": "Eski brauzerlar bilan moslik uchun", "hint": "Aksincha, u yangi protokol; eski klientlar HTTP/2 yoki 1.1'ga qaytadi." }
       ],
@@ -607,10 +607,10 @@
       "kind": "concept",
       "prompt": "Circuit breaker patterni qanday muammoni hal qiladi?",
       "options": [
-        { "id": "a", "text": "Nosoz servisga so'rovlarni vaqtincha to'xtatib, kaskadli nosozlik va resurslarning band bo'lishining oldini oladi", "correct": true },
+        { "id": "a", "text": "Nosoz servisga so'rovlarni vaqtincha to'xtatib, kaskadli nosozlik va resurs band bo'lishining oldini oladi", "correct": true },
         { "id": "b", "text": "So'rovlarni shifrlaydi", "hint": "Xavfsizlikka aloqasi yo'q." },
         { "id": "c", "text": "Yukni serverlar orasida teng taqsimlaydi", "hint": "Bu load balancer vazifasi." },
-        { "id": "d", "text": "Muvaffaqiyatsiz so'rovni cheksiz takrorlaydi", "hint": "Aksincha: u takrorlashni to'xtatadi." }
+        { "id": "d", "text": "Muvaffaqiyatsiz so'rovni nosoz servis tiklanguncha cheksiz takrorlab, natijani sabr bilan to'xtovsiz kutib turadi", "hint": "Aksincha: u takrorlashni to'xtatadi." }
       ],
       "explanation": "Breaker uch holatda bo'ladi: yopiq (so'rovlar o'tadi), ochiq (xatolar chegaradan oshgach so'rovlar darhol rad etiladi yoki fallback qaytariladi), yarim ochiq (vaqti-vaqti bilan sinov so'rovi). Bu sekin servis butun tizimni kutishga majbur qilishining oldini oladi.",
       "reviewed": false
@@ -637,8 +637,8 @@
       "kind": "concept",
       "prompt": "L4 va L7 load balancer o'rtasidagi farq nima?",
       "options": [
-        { "id": "a", "text": "L4 TCP/UDP darajasida, paket mazmuniga qaramasdan yo'naltiradi; L7 HTTP darajasida yo'l, sarlavha va cookie bo'yicha qaror qiladi", "correct": true },
-        { "id": "b", "text": "L7 tezroq, chunki kamroq ma'lumot o'qiydi", "hint": "Aksincha: u ko'proq tahlil qiladi, shuning uchun qimmatroq." },
+        { "id": "a", "text": "L4 — TCP/UDP darajasida, mazmunga qaramay yo'naltiradi; L7 — HTTP yo'li, sarlavha va cookie bo'yicha", "correct": true },
+        { "id": "b", "text": "L7 tezroq, chunki u paketlarning kamroq qismini o'qiydi va ularni hech qanday tahlilsiz darhol uzatadi", "hint": "Aksincha: u ko'proq tahlil qiladi, shuning uchun qimmatroq." },
         { "id": "c", "text": "L4 faqat HTTPS bilan ishlaydi", "hint": "U protokol mazmunini bilmaydi; HTTPS ham, boshqa trafik ham unga bir xil." },
         { "id": "d", "text": "Farqi faqat narxda", "hint": "Farq imkoniyatlarda: biri marshrutlashni mazmun bo'yicha qila oladi, ikkinchisi yo'q." }
       ],
@@ -652,12 +652,12 @@
       "kind": "concept",
       "prompt": "API gateway mikroservis arxitekturasida qanday vazifalarni markazlashtiradi?",
       "options": [
-        { "id": "a", "text": "Autentifikatsiya, rate limiting, marshrutlash va kuzatuv kabi kesishuvchi vazifalarni: servislar ularni takrorlamaydi", "correct": true },
+        { "id": "a", "text": "Autentifikatsiya, rate limiting, marshrutlash va kuzatuv kabi kesishuvchi vazifalarni", "correct": true },
         { "id": "b", "text": "Biznes mantig'ini", "hint": "Mantiq gateway'ga ko'chsa, u yangi monolitga aylanadi." },
         { "id": "c", "text": "Ma'lumotlar bazasini", "hint": "Gateway ma'lumot saqlamaydi." },
-        { "id": "d", "text": "Servislar orasidagi barcha ichki chaqiruvlarni", "hint": "Ichki aloqa odatda to'g'ridan-to'g'ri yoki service mesh orqali; gateway tashqi kirish nuqtasi." }
+        { "id": "d", "text": "Servislar orasidagi barcha ichki chaqiruvlarni va ular bajaradigan asosiy biznes mantig'ini", "hint": "Ichki aloqa odatda to'g'ridan-to'g'ri yoki service mesh orqali; gateway tashqi kirish nuqtasi." }
       ],
-      "explanation": "Gateway tashqi klientlar uchun yagona kirish nuqtasi: TLS, autentifikatsiya, kvotalar, so'rovlarni servislarga yo'naltirish, loglash. Mobil uchun alohida BFF (backend for frontend) ham shu qatlamda bo'lishi mumkin.",
+      "explanation": "Shunda servislar bu vazifalarni har biri o'zicha takrorlamaydi. Gateway tashqi klientlar uchun yagona kirish nuqtasi: TLS, autentifikatsiya, kvotalar, so'rovlarni servislarga yo'naltirish, loglash. Mobil uchun alohida BFF (backend for frontend) ham shu qatlamda bo'lishi mumkin.",
       "reviewed": false
     },
     {
@@ -682,12 +682,12 @@
       "kind": "concept",
       "prompt": "Servislar zanjirida (A → B → C) har bir servis o'z timeout'ini mustaqil qo'ysa, qanday muammo chiqadi va yechim nima?",
       "options": [
-        { "id": "a", "text": "Yuqoridagi servis allaqachon kutishdan voz kechgan bo'lsa ham pastdagilar ishlashda davom etadi; deadline'ni zanjir bo'ylab uzatish (deadline propagation) kerak", "correct": true },
+        { "id": "a", "text": "Yuqori servis kutishdan voz kechsa ham pastdagilar ishlayveradi; deadline'ni zanjir bo'ylab uzatish kerak", "correct": true },
         { "id": "b", "text": "Muammo yo'q: har servis o'z vaqtini o'zi biladi", "hint": "Keraksiz ish resursni band qiladi va yuklama paytida vaziyatni og'irlashtiradi." },
         { "id": "c", "text": "Barcha timeout'larni cheksiz qilish kerak", "hint": "Cheksiz kutish resurslarni butunlay band qiladi." },
-        { "id": "d", "text": "Timeout'larni faqat oxirgi servisda qo'yish kerak", "hint": "Unda oraliq servislar o'zlari osilib qolishi mumkin." }
+        { "id": "d", "text": "Timeout'larni faqat zanjirdagi oxirgi servisda qo'yish kerak — qolgan servislar esa undan natijani sabr bilan kutib turadi", "hint": "Unda oraliq servislar o'zlari osilib qolishi mumkin." }
       ],
-      "explanation": "Klient 2 soniya kutsa, B va C ham shu umumiy byudjetdan ortiq ishlamasligi kerak. Deadline so'rov bilan birga uzatiladi (gRPC'da o'rnatilgan, HTTP'da sarlavha orqali); har servis qolgan vaqtni hisoblab, undan oshsa darhol to'xtaydi.",
+      "explanation": "Bu — deadline propagation. Klient 2 soniya kutsa, B va C ham shu umumiy byudjetdan ortiq ishlamasligi kerak. Deadline so'rov bilan birga uzatiladi (gRPC'da o'rnatilgan, HTTP'da sarlavha orqali); har servis qolgan vaqtni hisoblab, undan oshsa darhol to'xtaydi.",
       "reviewed": false
     }
   ]

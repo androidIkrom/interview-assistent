@@ -10,7 +10,7 @@
       "options": [
         { "id": "a", "text": "Stage'dagi (index) o'zgarishlarni lokal repozitoriy tarixiga yangi commit sifatida yozadi", "correct": true },
         { "id": "b", "text": "O'zgarishlarni masofaviy serverga yuboradi", "hint": "Serverga yuborish alohida buyruq; bu buyruq faqat lokal ishlaydi." },
-        { "id": "c", "text": "Barcha o'zgargan fayllarni avtomatik stage'ga qo'shadi", "hint": "Stage'ga qo'shish alohida qadam (yoki `-a` flagi); buyruqning o'zi faqat stage'dagini oladi." },
+        { "id": "c", "text": "Ishchi katalogdagi barcha o'zgargan fayllarni avtomatik stage'ga qo'shib, ularni bitta commit qiladi", "hint": "Stage'ga qo'shish alohida qadam (yoki `-a` flagi); buyruqning o'zi faqat stage'dagini oladi." },
         { "id": "d", "text": "Ishchi katalogdagi o'zgarishlarni bekor qiladi", "hint": "Bekor qilish uchun boshqa buyruqlar bor; bu buyruq aksincha saqlaydi." }
       ],
       "explanation": "Git'da uch soha bor: ishchi katalog, stage (index) va repozitoriy. `git add` o'zgarishni stage'ga oladi, `git commit` stage'dagini tarixga yozadi, `git push` esa tarixni serverga yuboradi.",
@@ -25,7 +25,7 @@
       "options": [
         { "id": "a", "text": "Fayldagi o'zgarishlarni keyingi commit uchun stage'ga (index) qo'shadi", "correct": true },
         { "id": "b", "text": "Yangi branch yaratadi", "hint": "Branch yaratish uchun `git branch` yoki `git switch -c`." },
-        { "id": "c", "text": "O'zgarishlarni darhol commit qiladi", "hint": "Commit alohida qadam; bu buyruq faqat tayyorlaydi." },
+        { "id": "c", "text": "O'zgarishlarni darhol commit qiladi va ularni lokal tarixga yozib qo'yadi", "hint": "Commit alohida qadam; bu buyruq faqat tayyorlaydi." },
         { "id": "d", "text": "Faylni repozitoriydan o'chiradi", "hint": "O'chirish uchun `git rm`." }
       ],
       "explanation": "Stage — keyingi commit'ga nima kirishini tanlash joyi. Shu sabab bitta fayldagi o'zgarishlarning bir qismini ham (`git add -p`) alohida commit qilish mumkin.",
@@ -40,7 +40,7 @@
       "options": [
         { "id": "a", "text": "Masofaviy repozitoriyning to'liq nusxasini (butun tarixi bilan) lokal kompyuterga ko'chiradi", "correct": true },
         { "id": "b", "text": "Faqat oxirgi commit'dagi fayllarni yuklab oladi", "hint": "Standart holatda butun tarix ko'chiriladi; faqat oxirgi holat uchun maxsus `--depth` flagi kerak." },
-        { "id": "c", "text": "Serverda repozitoriyning shaxsiy nusxasini yaratadi", "hint": "Bu fork: u hosting xizmatining (GitHub, GitLab) imkoniyati, Git buyrug'i emas." },
+        { "id": "c", "text": "Serverda (masalan, GitHub'da) repozitoriyning sizga tegishli shaxsiy nusxasini — fork'ini yaratadi", "hint": "Bu fork: u hosting xizmatining (GitHub, GitLab) imkoniyati, Git buyrug'i emas." },
         { "id": "d", "text": "Yangi bo'sh repozitoriy yaratadi", "hint": "Bo'sh repozitoriy `git init` bilan yaratiladi." }
       ],
       "explanation": "Klonlashda barcha commit'lar, branch'lar va teglar ko'chiriladi, masofaviy repozitoriy esa `origin` nomi bilan sozlanadi. Shuning uchun Git'da tarix bilan ishlash tarmoqsiz ham mumkin.",
@@ -53,8 +53,8 @@
       "kind": "concept",
       "prompt": "`.gitignore` fayli nima uchun kerak?",
       "options": [
-        { "id": "a", "text": "Git kuzatmasligi kerak bo'lgan fayl va papkalarni (build natijalari, lokal sozlamalar, sirlar) ko'rsatish uchun", "correct": true },
-        { "id": "b", "text": "Allaqachon commit qilingan fayllarni tarixdan o'chirish uchun", "hint": "U faqat hali kuzatilmagan fayllarga ta'sir qiladi; kuzatilayotgan faylni `git rm --cached` bilan chiqarish kerak." },
+        { "id": "a", "text": "Git kuzatmasligi kerak bo'lgan fayllarni (build natijalari, lokal sozlamalar, sirlar) ko'rsatish uchun", "correct": true },
+        { "id": "b", "text": "Allaqachon commit qilingan fayllarni repozitoriy tarixidan butunlay o'chirish va keyin kuzatmaslik uchun", "hint": "U faqat hali kuzatilmagan fayllarga ta'sir qiladi; kuzatilayotgan faylni `git rm --cached` bilan chiqarish kerak." },
         { "id": "c", "text": "Repozitoriyga kimlar kira olishini cheklash uchun", "hint": "Kirish huquqlari hosting xizmatida sozlanadi." },
         { "id": "d", "text": "Merge konfliktlarini avtomatik hal qilish uchun", "hint": "Konfliktlarga aloqasi yo'q." }
       ],
@@ -69,7 +69,7 @@
       "prompt": "Git'da branch nima?",
       "options": [
         { "id": "a", "text": "Commit'ga ishora qiluvchi ko'chma ko'rsatkich; u mustaqil ish chizig'ini yuritish imkonini beradi", "correct": true },
-        { "id": "b", "text": "Repozitoriyning to'liq nusxasi", "hint": "Branch yaratish hech narsani nusxalamaydi; shuning uchun u bir zumda yaratiladi." },
+        { "id": "b", "text": "Repozitoriyning to'liq nusxasi — har branch o'z fayllari va butun tarixini alohida papkada saqlaydi", "hint": "Branch yaratish hech narsani nusxalamaydi; shuning uchun u bir zumda yaratiladi." },
         { "id": "c", "text": "Masofaviy serverdagi papka", "hint": "Branch lokal ham, masofaviy ham bo'ladi va u papka emas." },
         { "id": "d", "text": "Commit'ning zaxira nusxasi", "hint": "U nusxa emas, mavjud commit'ga havola." }
       ],
@@ -86,7 +86,7 @@
         { "id": "a", "text": "Masofaviy o'zgarishlarni yuklab oladi (`fetch`) va ularni joriy branch'ga birlashtiradi", "correct": true },
         { "id": "b", "text": "Lokal commit'larni serverga yuboradi", "hint": "Bu teskari yo'nalish: yuborish uchun `git push`." },
         { "id": "c", "text": "Faqat yuklab oladi, ishchi fayllarga tegmaydi", "hint": "Bu `git fetch` ning o'zi; `pull` yana bir qadam qo'shadi." },
-        { "id": "d", "text": "Lokal o'zgarishlarni o'chirib, serverdagi holatni qo'yadi", "hint": "U lokal ishni o'chirmaydi; ziddiyat bo'lsa, konflikt chiqadi." }
+        { "id": "d", "text": "Lokal o'zgarishlarni o'chirib, ishchi katalogga serverdagi holatni to'liq ko'chirib qo'yadi", "hint": "U lokal ishni o'chirmaydi; ziddiyat bo'lsa, konflikt chiqadi." }
       ],
       "explanation": "`git pull` = `git fetch` + `git merge` (yoki sozlamaga qarab `rebase`). Avval masofaviy commit'lar yuklanadi, keyin joriy branch ular bilan birlashtiriladi.",
       "reviewed": false
@@ -112,7 +112,7 @@
       "prompt": "Merge konflikti qachon yuzaga keladi?",
       "options": [
         { "id": "a", "text": "Ikki branch bitta faylning bir xil qatorlarini turlicha o'zgartirganda", "correct": true },
-        { "id": "b", "text": "Ikki branch turli fayllarni o'zgartirganda", "hint": "Turli fayllardagi o'zgarishlarni Git o'zi birlashtiradi." },
+        { "id": "b", "text": "Ikki branch turli fayllarni o'zgartirganda — Git ularni avtomatik birlashtira olmaydi", "hint": "Turli fayllardagi o'zgarishlarni Git o'zi birlashtiradi." },
         { "id": "c", "text": "Branch nomlari bir xil bo'lganda", "hint": "Bir repozitoriyda bir xil nomli ikki branch bo'lmaydi." },
         { "id": "d", "text": "Har doim, ikki kishi bir vaqtda ishlasa", "hint": "Bir vaqtda ishlash o'zi muammo emas; faqat bir joyga tegilganda." }
       ],
@@ -128,7 +128,7 @@
       "options": [
         { "id": "a", "text": "Ishchi katalog va stage holatini: o'zgargan, stage'ga qo'shilgan va kuzatilmayotgan fayllarni", "correct": true },
         { "id": "b", "text": "Commit'lar tarixini", "hint": "Tarix uchun `git log`." },
-        { "id": "c", "text": "Fayllardagi o'zgargan qatorlarni", "hint": "Qatorlar farqi uchun `git diff`." },
+        { "id": "c", "text": "Fayllardagi o'zgargan qatorlarni qatorma-qator, qo'shilgan va o'chirilganlarini rang bilan ajratib", "hint": "Qatorlar farqi uchun `git diff`." },
         { "id": "d", "text": "Masofaviy server holatini", "hint": "U tarmoqqa chiqmaydi, faqat lokal holatni ko'rsatadi." }
       ],
       "explanation": "`git status` joriy branch'ni, stage'dagi va stage'ga qo'shilmagan o'zgarishlarni, yangi (untracked) fayllarni va keyingi mumkin bo'lgan buyruqlar bo'yicha maslahatni ko'rsatadi.",
@@ -159,7 +159,7 @@
         { "id": "a", "text": "Qisqa sarlavha nima o'zgarganini aytadi; kerak bo'lsa, tanada nega o'zgargani tushuntiriladi", "correct": true },
         { "id": "b", "text": "\"fix\" yoki \"update\" kabi bitta so'z", "hint": "Bunday xabar tarixni o'qiyotgan odamga hech narsa bermaydi." },
         { "id": "c", "text": "O'zgargan barcha fayllar ro'yxati", "hint": "Fayllar ro'yxatini Git o'zi ko'rsatadi; xabar ma'noni berishi kerak." },
-        { "id": "d", "text": "Imkon qadar uzun, butun kodni tasvirlaydigan matn", "hint": "Kodni diff ko'rsatadi; xabar qisqa va maqsadga yo'naltirilgan bo'lishi kerak." }
+        { "id": "d", "text": "Imkon qadar uzun, butun kodni va o'zgargan har bir faylni batafsil, qatorma-qator tasvirlaydigan matn", "hint": "Kodni diff ko'rsatadi; xabar qisqa va maqsadga yo'naltirilgan bo'lishi kerak." }
       ],
       "explanation": "Keng tarqalgan qoida: sarlavha 50 belgigacha, buyruq maylida (\"Add login screen\"), bo'sh qator, keyin tanada sabab va kontekst. Conventional Commits (`feat:`, `fix:`) uslubi ham ko'p ishlatiladi.",
       "reviewed": false
@@ -186,8 +186,8 @@
       "kind": "concept",
       "prompt": "Pull request (merge request) nima?",
       "options": [
-        { "id": "a", "text": "O'z branch'ingizdagi o'zgarishlarni asosiy branch'ga qo'shishni taklif qilish va ularni ko'rib chiqish (review) jarayoni", "correct": true },
-        { "id": "b", "text": "Serverdan o'zgarishlarni yuklab olish buyrug'i", "hint": "Nomi o'xshash, lekin bu `git pull`; pull request esa hosting xizmatidagi jarayon." },
+        { "id": "a", "text": "O'z branch'ingizdagi o'zgarishlarni asosiy branch'ga qo'shishni taklif qilish va review jarayoni", "correct": true },
+        { "id": "b", "text": "Serverdan boshqalarning o'zgarishlarini yuklab olib, ularni joriy branch'ga birlashtiradigan buyruq", "hint": "Nomi o'xshash, lekin bu `git pull`; pull request esa hosting xizmatidagi jarayon." },
         { "id": "c", "text": "Git'ning ichki buyrug'i", "hint": "Git'da bunday buyruq yo'q; bu GitHub, GitLab kabi xizmatlarning imkoniyati." },
         { "id": "d", "text": "Konfliktni avtomatik hal qiladigan vosita", "hint": "Konfliktni baribir odam hal qiladi." }
       ],
@@ -204,7 +204,7 @@
         { "id": "a", "text": "Ishchi katalogdagi hali stage'ga qo'shilmagan o'zgarishlarni qatorma-qator", "correct": true },
         { "id": "b", "text": "Ikki repozitoriyni birlashtiradi", "hint": "Birlashtirish uchun `merge`; bu buyruq faqat ko'rsatadi." },
         { "id": "c", "text": "Commit'lar ro'yxatini", "hint": "Ro'yxat uchun `git log`." },
-        { "id": "d", "text": "O'zgarishlarni bekor qiladi", "hint": "U hech narsani o'zgartirmaydi, faqat farqni chiqaradi." }
+        { "id": "d", "text": "O'zgarishlarni bekor qiladi va ishchi katalogni oxirgi commit holatiga qaytaradi", "hint": "U hech narsani o'zgartirmaydi, faqat farqni chiqaradi." }
       ],
       "explanation": "`git diff` ishchi katalog bilan stage orasidagi farqni, `git diff --staged` stage bilan oxirgi commit orasidagi farqni, `git diff main..feature` esa ikki branch orasidagi farqni ko'rsatadi.",
       "reviewed": false
@@ -216,12 +216,12 @@
       "kind": "concept",
       "prompt": "`merge` va `rebase` o'rtasidagi farq nima?",
       "options": [
-        { "id": "a", "text": "`merge` ikki tarixni merge commit bilan birlashtiradi; `rebase` commit'laringizni boshqa asos ustiga qayta yozib, chiziqli tarix hosil qiladi", "correct": true },
-        { "id": "b", "text": "`rebase` faqat masofaviy branch'lar bilan ishlaydi", "hint": "U lokal commit'larni qayta yozadi; odatda aynan lokal ish uchun ishlatiladi." },
+        { "id": "a", "text": "`merge` tarixlarni merge commit bilan birlashtiradi; `rebase` commit'larni yangi asos ustiga qayta yozadi", "correct": true },
+        { "id": "b", "text": "`rebase` faqat masofaviy branch'lar bilan ishlaydi, lokal branch'larni esa faqat `merge` bilan birlashtirish mumkin", "hint": "U lokal commit'larni qayta yozadi; odatda aynan lokal ish uchun ishlatiladi." },
         { "id": "c", "text": "`merge` commit'larni o'chiradi, `rebase` saqlaydi", "hint": "Aksincha: tarixni saqlaydigani `merge`, qayta yozadigani `rebase`." },
         { "id": "d", "text": "Farqi yo'q, natija bir xil commit'lar", "hint": "Fayllar holati bir xil bo'lishi mumkin, lekin `rebase` dan keyin commit'lar yangi xeshga ega bo'ladi." }
       ],
-      "explanation": "Rebase commit'larni qayta yaratadi (yangi xeshlar), shuning uchun u faqat hali push qilinmagan yoki faqat sizniki bo'lgan branch'da xavfsiz. Umumiy branch'larda merge ishlatiladi.",
+      "explanation": "Rebase natijasi — chiziqli tarix. Rebase commit'larni qayta yaratadi (yangi xeshlar), shuning uchun u faqat hali push qilinmagan yoki faqat sizniki bo'lgan branch'da xavfsiz. Umumiy branch'larda merge ishlatiladi.",
       "reviewed": false
     },
     {
@@ -232,7 +232,7 @@
       "prompt": "Umumiy branch'ga allaqachon push qilingan xato commit'ni qanday bekor qilish to'g'ri?",
       "options": [
         { "id": "a", "text": "`git revert`: u xato commit'ni teskarilovchi yangi commit yaratadi va tarixni o'zgartirmaydi", "correct": true },
-        { "id": "b", "text": "`git reset --hard` va `push --force`", "hint": "Bu umumiy tarixni qayta yozadi: boshqalarning lokal nusxalari bilan ziddiyat chiqadi." },
+        { "id": "b", "text": "`git reset --hard` bilan commit'ni olib tashlab, so'ng `push --force` bilan serverni ham yangilash", "hint": "Bu umumiy tarixni qayta yozadi: boshqalarning lokal nusxalari bilan ziddiyat chiqadi." },
         { "id": "c", "text": "Commit'ni `.gitignore` ga qo'shish", "hint": "`.gitignore` commit'lar bilan emas, fayllar bilan ishlaydi." },
         { "id": "d", "text": "Branch'ni o'chirib, qaytadan yaratish", "hint": "Bu ham tarixni qayta yozish va boshqalarning ishini buzadi." }
       ],
@@ -246,10 +246,10 @@
       "kind": "concept",
       "prompt": "`git stash` nima qiladi?",
       "options": [
-        { "id": "a", "text": "Commit qilinmagan o'zgarishlarni vaqtincha chetga olib qo'yadi va ishchi katalogni toza holatga qaytaradi", "correct": true },
+        { "id": "a", "text": "Commit qilinmagan o'zgarishlarni vaqtincha chetga olib qo'yadi va ishchi katalogni tozalaydi", "correct": true },
         { "id": "b", "text": "O'zgarishlarni butunlay o'chiradi", "hint": "Ular yo'qolmaydi: keyin `stash pop` bilan qaytariladi." },
         { "id": "c", "text": "O'zgarishlarni serverga zaxira sifatida yuboradi", "hint": "U faqat lokal ishlaydi." },
-        { "id": "d", "text": "Yangi branch yaratib, o'zgarishlarni unga commit qiladi", "hint": "Commit yaratilmaydi va branch o'zgarmaydi." }
+        { "id": "d", "text": "Yangi branch yaratib, commit qilinmagan o'zgarishlarni avtomatik ravishda unga commit qiladi", "hint": "Commit yaratilmaydi va branch o'zgarmaydi." }
       ],
       "explanation": "Stash yarim qolgan ishni commit qilmasdan boshqa branch'ga o'tish kerak bo'lganda qulay. `git stash pop` oxirgisini qaytaradi, `git stash list` barchasini ko'rsatadi.",
       "reviewed": false
@@ -264,7 +264,7 @@
         { "id": "a", "text": "Boshqa branch'dagi bitta commit'ning o'zgarishini joriy branch'ga yangi commit sifatida ko'chiradi", "correct": true },
         { "id": "b", "text": "Ikki branch'ni to'liq birlashtiradi", "hint": "To'liq birlashtirish `merge`; bu buyruq tanlab oladi." },
         { "id": "c", "text": "Commit'ni tarixdan o'chiradi", "hint": "Manba branch o'zgarmaydi." },
-        { "id": "d", "text": "Faylni boshqa branch'dan nusxalaydi", "hint": "U fayl bilan emas, commit'dagi o'zgarish bilan ishlaydi." }
+        { "id": "d", "text": "Ko'rsatilgan faylni boshqa branch'dan joriy branch'ga tarixisiz, oddiy nusxa sifatida ko'chirib qo'yadi", "hint": "U fayl bilan emas, commit'dagi o'zgarish bilan ishlaydi." }
       ],
       "explanation": "Cherry-pick ko'pincha hotfix'ni reliz branch'iga ko'chirish uchun ishlatiladi. Natija — bir xil o'zgarishli, lekin boshqa xeshli yangi commit; shuning uchun keyinroq merge'da takrorlanishga e'tibor berish kerak.",
       "reviewed": false
@@ -277,7 +277,7 @@
       "prompt": "Fast-forward merge nima?",
       "options": [
         { "id": "a", "text": "Maqsad branch'da yangi commit bo'lmaganda Git merge commit yaratmasdan ko'rsatkichni oldinga suradi", "correct": true },
-        { "id": "b", "text": "Konfliktlarni o'tkazib yuboradigan merge", "hint": "Bu holatda konflikt bo'lishi mumkin emas, chunki tarixlar ajralmagan." },
+        { "id": "b", "text": "Konfliktlarni o'tkazib yuborib, har doim avtomatik ravishda joriy branch versiyasini tanlaydigan tezkor merge", "hint": "Bu holatda konflikt bo'lishi mumkin emas, chunki tarixlar ajralmagan." },
         { "id": "c", "text": "Tezroq ishlaydigan maxsus algoritm", "hint": "Gap tezlikda emas, tarix shaklida." },
         { "id": "d", "text": "Faqat masofaviy branch'lar uchun merge", "hint": "U lokal branch'larda ham xuddi shunday ishlaydi." }
       ],
@@ -291,8 +291,8 @@
       "kind": "concept",
       "prompt": "\"Detached HEAD\" holati nimani anglatadi?",
       "options": [
-        { "id": "a", "text": "`HEAD` branch'ga emas, to'g'ridan-to'g'ri commit'ga ishora qilmoqda; bu yerda qilingan commit'lar hech bir branch'ga tegishli bo'lmaydi", "correct": true },
-        { "id": "b", "text": "Repozitoriy buzilgan va qayta klonlash kerak", "hint": "Bu xato emas, oddiy holat: masalan, eski commit'ni ko'rish uchun." },
+        { "id": "a", "text": "`HEAD` branch'ga emas, to'g'ridan-to'g'ri commit'ga ishora qiladi; yangi commit'lar hech bir branch'da bo'lmaydi", "correct": true },
+        { "id": "b", "text": "Repozitoriy buzilgan: `.git` papkasidagi ma'lumotlar zararlangan, shuning uchun uni albatta noldan qayta klonlash kerak", "hint": "Bu xato emas, oddiy holat: masalan, eski commit'ni ko'rish uchun." },
         { "id": "c", "text": "Masofaviy server bilan aloqa uzilgan", "hint": "Tarmoqqa aloqasi yo'q." },
         { "id": "d", "text": "Merge konflikti hal qilinmagan", "hint": "Konflikt holati boshqacha ko'rinadi va boshqa xabar chiqadi." }
       ],
@@ -353,7 +353,7 @@
       "prompt": "Pull request'ni ko'rib chiqish (review) oson bo'lishi uchun eng muhim narsa nima?",
       "options": [
         { "id": "a", "text": "Kichik va bitta maqsadga qaratilgan bo'lishi, tavsifda nima va nega o'zgargani yozilishi", "correct": true },
-        { "id": "b", "text": "Imkon qadar ko'p o'zgarishni bitta PR'ga yig'ish", "hint": "Katta PR'ni hech kim diqqat bilan o'qimaydi; xatolar o'tib ketadi." },
+        { "id": "b", "text": "Imkon qadar ko'p o'zgarishni bitta PR'ga yig'ish — reviewer hammasini bir joyda, birdaniga ko'radi", "hint": "Katta PR'ni hech kim diqqat bilan o'qimaydi; xatolar o'tib ketadi." },
         { "id": "c", "text": "Refaktoring va yangi funksiyani aralashtirish", "hint": "Aralash o'zgarishda mantiqiy o'zgarish shovqin ichida yo'qoladi." },
         { "id": "d", "text": "Tavsifsiz, faqat kod", "hint": "Kontekstsiz reviewer maqsadni bila olmaydi." }
       ],
@@ -367,12 +367,12 @@
       "kind": "concept",
       "prompt": "Trunk-based development'ning asosiy g'oyasi nima?",
       "options": [
-        { "id": "a", "text": "Hamma asosiy branch'ga tez-tez, kichik qismlarda integratsiya qiladi; uzoq yashaydigan branch'lar yo'q, tugallanmagan ish feature flag ortida turadi", "correct": true },
-        { "id": "b", "text": "Har bir reliz uchun alohida uzoq yashaydigan `develop` va `release` branch'lari yuritiladi", "hint": "Bu Git Flow tavsifi." },
+        { "id": "a", "text": "Hamma asosiy branch'ga tez-tez, kichik qismlarda integratsiya qiladi; tugallanmagan ish feature flag ortida", "correct": true },
+        { "id": "b", "text": "Har bir reliz uchun alohida uzoq yashaydigan `develop` va `release` branch'lari yuritiladi va oxirida birlashtiriladi", "hint": "Bu Git Flow tavsifi." },
         { "id": "c", "text": "Har bir dasturchi o'z fork'ida oylab ishlaydi", "hint": "Uzoq ajralib ishlash aynan bu yondashuv qochadigan narsa." },
         { "id": "d", "text": "Asosiy branch'ga to'g'ridan-to'g'ri, review'siz push qilinadi", "hint": "Review va CI saqlanadi; farq branch'lar umrida." }
       ],
-      "explanation": "Qisqa yashaydigan branch'lar (bir-ikki kun) merge konfliktlarini va integratsiya og'rig'ini kamaytiradi. Buning sharti: kuchli avtomatik testlar, kichik PR'lar va tugallanmagan funksiyani yashiradigan feature flag'lar.",
+      "explanation": "Uzoq yashaydigan branch'lar bo'lmaydi. Qisqa yashaydigan branch'lar (bir-ikki kun) merge konfliktlarini va integratsiya og'rig'ini kamaytiradi. Buning sharti: kuchli avtomatik testlar, kichik PR'lar va tugallanmagan funksiyani yashiradigan feature flag'lar.",
       "reviewed": false
     },
     {
@@ -412,9 +412,9 @@
       "kind": "concept",
       "prompt": "`git push --force` o'rniga `--force-with-lease` ishlatish nimani beradi?",
       "options": [
-        { "id": "a", "text": "Agar masofaviy branch'da siz ko'rmagan yangi commit paydo bo'lgan bo'lsa, push rad etiladi va birovning ishi ustidan yozilmaydi", "correct": true },
+        { "id": "a", "text": "Masofaviy branch'da siz ko'rmagan commit bo'lsa push rad etiladi — birovning ishi ustidan yozilmaydi", "correct": true },
         { "id": "b", "text": "Push tezroq bajariladi", "hint": "Tezlik bir xil; farq xavfsizlik tekshiruvida." },
-        { "id": "c", "text": "Himoyalangan (protected) branch'ga ham yozish mumkin bo'ladi", "hint": "Himoya qoidalari server tomonida va ularni flag bilan chetlab bo'lmaydi." },
+        { "id": "c", "text": "Himoyalangan (protected) branch'ga ham yozish mumkin bo'ladi va undagi review talablari avtomatik chetlab o'tiladi", "hint": "Himoya qoidalari server tomonida va ularni flag bilan chetlab bo'lmaydi." },
         { "id": "d", "text": "Konfliktlar avtomatik hal qilinadi", "hint": "Hech narsa birlashtirilmaydi; u faqat shartli ravishda ustidan yozadi." }
       ],
       "explanation": "Rebase'dan keyin shaxsiy branch'ni push qilish uchun kuch kerak. `--force-with-lease` masofaviy branch siz oxirgi marta ko'rgan holatda ekanini tekshiradi: hamkasbingiz orada push qilgan bo'lsa, buyruq to'xtaydi.",
@@ -457,9 +457,9 @@
       "kind": "concept",
       "prompt": "Monorepo'ning polyrepo'ga nisbatan asosiy afzalligi va narxi nima?",
       "options": [
-        { "id": "a", "text": "Afzalligi: bir nechta loyihani qamraydigan atomik o'zgarish va umumiy kodni oson ulashish; narxi: build va CI vositalari murakkablashadi", "correct": true },
+        { "id": "a", "text": "Afzalligi: loyihalararo atomik o'zgarish va umumiy kodni oson ulashish; narxi: build va CI murakkablashadi", "correct": true },
         { "id": "b", "text": "Afzalligi: repozitoriy har doim kichik bo'ladi", "hint": "Aksincha, u juda katta bo'lib ketadi va maxsus vositalar talab qiladi." },
-        { "id": "c", "text": "Afzalligi: jamoalar bir-biridan to'liq mustaqil reliz qiladi", "hint": "Mustaqillik polyrepo'ning kuchli tomoni." },
+        { "id": "c", "text": "Afzalligi: har bir jamoa boshqalardan to'liq mustaqil ravishda o'z versiyasini, bog'liqliklarini va relizini chiqaradi", "hint": "Mustaqillik polyrepo'ning kuchli tomoni." },
         { "id": "d", "text": "Narxi: kodni qayta ishlatib bo'lmaydi", "hint": "Qayta ishlatish monorepo'da eng oson." }
       ],
       "explanation": "Monorepo'da API va uning barcha iste'molchilarini bitta commit'da o'zgartirish mumkin, versiyalash og'rig'i yo'q. Evaziga faqat o'zgargan qismni build va test qiladigan vositalar (Bazel, Nx, Gradle'ning affected tahlili) va repozitoriy hajmini boshqarish kerak bo'ladi.",

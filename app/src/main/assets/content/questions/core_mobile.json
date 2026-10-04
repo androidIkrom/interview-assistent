@@ -8,8 +8,8 @@
       "kind": "concept",
       "prompt": "Native va cross-platform ishlab chiqish o'rtasidagi asosiy farq nima?",
       "options": [
-        { "id": "a", "text": "Native ilova har platforma uchun uning o'z tili va SDK'sida alohida yoziladi; cross-platform'da bitta kod bazasi bir nechta platformada ishlaydi", "correct": true },
-        { "id": "b", "text": "Native ilovalar faqat Android'da, cross-platform ilovalar faqat iOS'da ishlaydi", "hint": "Ikkala yondashuv ham har ikki platformaga tegishli." },
+        { "id": "a", "text": "Native — har platforma uchun o'z tili va SDK'sida alohida kod; cross-platform — bitta kod bir nechta platformada", "correct": true },
+        { "id": "b", "text": "Native ilovalar faqat Android'da, cross-platform ilovalar esa faqat iOS'da ishlaydi va boshqa platformaga o'tmaydi", "hint": "Ikkala yondashuv ham har ikki platformaga tegishli." },
         { "id": "c", "text": "Cross-platform ilovalar brauzerda ochiladigan veb-saytlar", "hint": "Flutter yoki React Native ilovalari do'kondan o'rnatiladi va qurilmada ishlaydi." },
         { "id": "d", "text": "Native ilovalar internetga ulana olmaydi", "hint": "Tarmoq imkoniyati yondashuvga bog'liq emas." }
       ],
@@ -25,7 +25,7 @@
       "options": [
         { "id": "a", "text": "Foydalanuvchi shu imkoniyatni ishlatmoqchi bo'lgan paytda, sababi tushunarli bo'lganda", "correct": true },
         { "id": "b", "text": "Ilova birinchi ochilganda, barcha ruxsatlarni birdaniga", "hint": "Kontekstsiz so'rov ko'pincha rad etiladi va foydalanuvchini cho'chitadi." },
-        { "id": "c", "text": "So'rash shart emas: manifestda (yoki Info.plist'da) yozish kifoya", "hint": "E'lon qilish zarur, lekin xavfli ruxsatlar uchun foydalanuvchining roziligi ham kerak." },
+        { "id": "c", "text": "So'rash shart emas: ruxsatni manifestda (yoki Info.plist'da) yozib qo'yish kifoya, tizim o'zi beradi", "hint": "E'lon qilish zarur, lekin xavfli ruxsatlar uchun foydalanuvchining roziligi ham kerak." },
         { "id": "d", "text": "Faqat ilova yangilanganda", "hint": "Yangilanish ruxsat so'rash vaqtiga aloqador emas." }
       ],
       "explanation": "Ruxsat kontekstda so'raladi: foydalanuvchi \"Rasmga olish\" tugmasini bosganda kamera ruxsati mantiqiy ko'rinadi. Rad etilsa, ilova ishlashda davom etishi va imkoniyat nega kerakligini tushuntirishi kerak.",
@@ -68,7 +68,7 @@
       "options": [
         { "id": "a", "text": "Ichki build raqami (Android'da `versionCode`, iOS'da build number) har yuklashda oshishi shart", "correct": true },
         { "id": "b", "text": "Raqamni o'zgartirmasdan ham yangi build yuklash mumkin", "hint": "Do'kon bir xil raqamli buildni rad etadi." },
-        { "id": "c", "text": "Versiya raqami faqat foydalanuvchiga ko'rinadigan matn, texnik ahamiyati yo'q", "hint": "Ko'rinadigan nom bilan ichki raqam boshqa-boshqa narsalar; ikkinchisini tizim solishtiradi." },
+        { "id": "c", "text": "Versiya raqami faqat foydalanuvchiga ko'rinadigan matn — uning do'kon uchun hech qanday texnik ahamiyati yo'q", "hint": "Ko'rinadigan nom bilan ichki raqam boshqa-boshqa narsalar; ikkinchisini tizim solishtiradi." },
         { "id": "d", "text": "Raqamni kamaytirish orqali eski versiyaga qaytarish mumkin", "hint": "Do'kon va tizim pastroq raqamli buildni yangilanish sifatida qabul qilmaydi." }
       ],
       "explanation": "Ikki xil raqam bor: foydalanuvchiga ko'rinadigan versiya nomi (masalan, 2.3.1) va tizim solishtiradigan ichki raqam. Ichki raqam har yangi build uchun kattaroq bo'lishi kerak, aks holda do'kon uni qabul qilmaydi va qurilma yangilanish deb bilmaydi.",
@@ -81,12 +81,12 @@
       "kind": "concept",
       "prompt": "Ilova turli ekran o'lchamlarida to'g'ri ko'rinishi uchun o'lchamlar qanday beriladi?",
       "options": [
-        { "id": "a", "text": "Zichlikka bog'liq bo'lmagan birliklarda (Android'da dp, iOS'da pt, Flutter'da logical pixel) va moslashuvchan layout bilan", "correct": true },
-        { "id": "b", "text": "Piksellarda, eng mashhur telefon o'lchamiga moslab", "hint": "Piksel zichligi qurilmadan qurilmaga farq qiladi: bir xil pikselli element har xil kattalikda ko'rinadi." },
+        { "id": "a", "text": "Zichlikka bog'liq bo'lmagan birliklarda (dp, pt, logical pixel) va moslashuvchan layout bilan", "correct": true },
+        { "id": "b", "text": "Piksellarda, eng mashhur telefon o'lchamiga moslab — boshqa ekranlarda tizim o'zi masshtablaydi", "hint": "Piksel zichligi qurilmadan qurilmaga farq qiladi: bir xil pikselli element har xil kattalikda ko'rinadi." },
         { "id": "c", "text": "Faqat foizlarda, ekran kengligiga nisbatan", "hint": "Faqat foiz planshet va kichik telefonlarda yomon natija beradi: matn va tugmalar jismoniy o'lchamini saqlashi kerak." },
         { "id": "d", "text": "Har bir qurilma modeli uchun alohida layout yozib", "hint": "Minglab modellar bor; buning o'rniga o'lcham sinflari va moslashuvchan layout ishlatiladi." }
       ],
-      "explanation": "dp, pt va logical pixel jismoniy o'lchamga yaqin birliklar: 48 dp tugma har qanday zichlikdagi ekranda taxminan bir xil kattalikda bo'ladi. Qolganini moslashuvchan layout (weight, constraint, breakpoint'lar) hal qiladi.",
+      "explanation": "dp — Android, pt — iOS, logical pixel — Flutter. dp, pt va logical pixel jismoniy o'lchamga yaqin birliklar: 48 dp tugma har qanday zichlikdagi ekranda taxminan bir xil kattalikda bo'ladi. Qolganini moslashuvchan layout (weight, constraint, breakpoint'lar) hal qiladi.",
       "reviewed": false
     },
     {
@@ -96,9 +96,9 @@
       "kind": "concept",
       "prompt": "Push bildirishnoma qurilmaga qanday yetib keladi?",
       "options": [
-        { "id": "a", "text": "Server xabarni platforma xizmatiga (FCM yoki APNs) yuboradi, u esa qurilmaga yetkazadi; ilova bu vaqtda ishlamayotgan bo'lishi mumkin", "correct": true },
+        { "id": "a", "text": "Server xabarni FCM yoki APNs'ga yuboradi, ular qurilmaga yetkazadi — ilova ishlamayotgan bo'lsa ham", "correct": true },
         { "id": "b", "text": "Ilova fonda serverni doimiy so'rab (polling) turadi", "hint": "Doimiy so'rov batareyani tugatadi va tizim fondagi ilovani baribir to'xtatadi." },
-        { "id": "c", "text": "Server to'g'ridan-to'g'ri qurilmaning IP manziliga ulanadi", "hint": "Mobil qurilmaning manzili doim o'zgaradi va tashqaridan ko'rinmaydi." },
+        { "id": "c", "text": "Server qurilmaning joriy IP manzilini bilib, unga to'g'ridan-to'g'ri doimiy ulanish orqali xabar yuboradi", "hint": "Mobil qurilmaning manzili doim o'zgaradi va tashqaridan ko'rinmaydi." },
         { "id": "d", "text": "Xabar SMS orqali keladi va ilova uni o'qiydi", "hint": "Push internet orqali, platformaning doimiy ulanishi bo'ylab keladi." }
       ],
       "explanation": "Qurilma platforma xizmati bilan bitta doimiy ulanishni ushlab turadi. Ilova ro'yxatdan o'tganda token oladi va uni serverga yuboradi; server xabarni shu token bilan FCM yoki APNs'ga beradi. Yetkazish kafolatlanmagan, shuning uchun muhim ma'lumot faqat push'ga tayanmasligi kerak.",
@@ -141,8 +141,8 @@
       "kind": "concept",
       "prompt": "Mobil ilovada tarmoq so'rovi muvaffaqiyatsiz bo'lganda qaysi yondashuv to'g'ri?",
       "options": [
-        { "id": "a", "text": "Xato turini ajratish (tarmoq yo'q, server xatosi, timeout), tushunarli xabar ko'rsatish va qayta urinish imkonini berish", "correct": true },
-        { "id": "b", "text": "So'rovni muvaffaqiyatli bo'lguncha to'xtovsiz takrorlash", "hint": "To'xtovsiz takrorlash batareya va trafikni yeydi, serverga ham ortiqcha yuk; urinishlar orasida o'sib boruvchi tanaffus kerak." },
+        { "id": "a", "text": "Xato turini ajratish (tarmoq, server, timeout), tushunarli xabar va qayta urinish imkonini berish", "correct": true },
+        { "id": "b", "text": "So'rovni muvaffaqiyatli bo'lguncha to'xtovsiz, kutishsiz takrorlash — foydalanuvchi xatoni sezmaydi", "hint": "To'xtovsiz takrorlash batareya va trafikni yeydi, serverga ham ortiqcha yuk; urinishlar orasida o'sib boruvchi tanaffus kerak." },
         { "id": "c", "text": "Xatoni jimgina yutib, bo'sh ekran ko'rsatish", "hint": "Foydalanuvchi nima bo'lganini bilmaydi va ilova buzilgan deb o'ylaydi." },
         { "id": "d", "text": "Ilovani yopish", "hint": "Tarmoq xatosi mobil ilova uchun odatiy holat, halokat emas." }
       ],
@@ -186,8 +186,8 @@
       "kind": "concept",
       "prompt": "Zamonaviy Android va iOS fondagi ilovalar ishini nega cheklaydi?",
       "options": [
-        { "id": "a", "text": "Batareya va xotirani tejash uchun; uzoq fon ishi uchun tizim rejalashtiruvchisidan (WorkManager, BGTaskScheduler) foydalanish kerak", "correct": true },
-        { "id": "b", "text": "Fon ishi xavfsizlik sababli butunlay taqiqlangan", "hint": "Taqiqlanmagan; u tizim nazorati ostida, ma'lum shartlar bilan bajariladi." },
+        { "id": "a", "text": "Batareya va xotirani tejash uchun; uzoq fon ishi tizim rejalashtiruvchisi (WorkManager, BGTaskScheduler) orqali", "correct": true },
+        { "id": "b", "text": "Fon ishi xavfsizlik sababli butunlay taqiqlangan — ilova faqat ekranda ochiq turganda kod bajara oladi, boshqa vaqtda hech qachon", "hint": "Taqiqlanmagan; u tizim nazorati ostida, ma'lum shartlar bilan bajariladi." },
         { "id": "c", "text": "Fonda protsessor ishlamaydi", "hint": "Protsessor ishlaydi; tizim qaysi ilovaga qancha vaqt berishni hal qiladi." },
         { "id": "d", "text": "Cheklov faqat eski qurilmalarga tegishli", "hint": "Aksincha, har yangi OS versiyasida cheklovlar kuchaygan." }
       ],
@@ -201,12 +201,12 @@
       "kind": "concept",
       "prompt": "Production'dagi crash'larni tahlil qilish uchun nima kerak?",
       "options": [
-        { "id": "a", "text": "Crash reporting xizmati (masalan, Crashlytics yoki Sentry) va obfuskatsiya qilingan stack trace'ni ochish uchun mapping yoki dSYM fayllari", "correct": true },
-        { "id": "b", "text": "Foydalanuvchilardan skrinshot so'rash yetarli", "hint": "Skrinshotda stack trace yo'q va aksar foydalanuvchi hech narsa yubormaydi." },
+        { "id": "a", "text": "Crash reporting xizmati (Crashlytics, Sentry) va stack trace'ni ochish uchun mapping yoki dSYM fayllari", "correct": true },
+        { "id": "b", "text": "Foydalanuvchilardan skrinshot va qadamlar tavsifini so'rash yetarli — crash sababini shundan topish mumkin", "hint": "Skrinshotda stack trace yo'q va aksar foydalanuvchi hech narsa yubormaydi." },
         { "id": "c", "text": "Debug build'ni do'konga chiqarish", "hint": "Debug build sekin, katta va himoyasiz; do'kon uni qabul qilmasligi ham mumkin." },
         { "id": "d", "text": "Barcha kodni `try/catch` ga o'rash", "hint": "Bu xatolarni yashiradi, tuzatmaydi; sababini bilish uchun hisobot kerak." }
       ],
-      "explanation": "Release build'da nomlar qisqartiriladi (R8) yoki simvollar olib tashlanadi, shuning uchun xom stack trace o'qib bo'lmaydi. Crash xizmati hisobotlarni yig'adi, mapping/dSYM fayllari esa ularni asl klass va qator raqamlariga qaytaradi. Bu fayllar har reliz uchun saqlanishi kerak.",
+      "explanation": "Release build obfuskatsiya qilingani uchun stack trace mapping/dSYM'siz o'qilmaydi. Release build'da nomlar qisqartiriladi (R8) yoki simvollar olib tashlanadi, shuning uchun xom stack trace o'qib bo'lmaydi. Crash xizmati hisobotlarni yig'adi, mapping/dSYM fayllari esa ularni asl klass va qator raqamlariga qaytaradi. Bu fayllar har reliz uchun saqlanishi kerak.",
       "reviewed": false
     },
     {
@@ -216,10 +216,10 @@
       "kind": "concept",
       "prompt": "Oflayn rejimda foydalanuvchi bajargan amallarni (masalan, izoh yozish) serverga yetkazishning ishonchli usuli qaysi?",
       "options": [
-        { "id": "a", "text": "Amallarni lokal navbatga (outbox) yozish va tarmoq paydo bo'lganda idempotent so'rovlar bilan ketma-ket yuborish", "correct": true },
+        { "id": "a", "text": "Amallarni lokal navbatga (outbox) yozib, tarmoq paydo bo'lganda idempotent so'rovlar bilan yuborish", "correct": true },
         { "id": "b", "text": "Amalni xotirada ushlab turib, tarmoq paydo bo'lishini kutish", "hint": "Ilova yopilsa yoki tizim uni to'xtatsa, xotiradagi amallar yo'qoladi." },
         { "id": "c", "text": "Tarmoq yo'q bo'lsa, tugmalarni o'chirib qo'yish", "hint": "Bu oflayn ishlash emas: foydalanuvchi ishlay olmay qoladi." },
-        { "id": "d", "text": "Har bir amalni tarmoq paydo bo'lganda bir necha marta yuborish", "hint": "Takroriy yuborish serverda dublikat yaratadi, agar so'rovlar takrorga chidamli qilinmagan bo'lsa." }
+        { "id": "d", "text": "Har bir amalni tarmoq paydo bo'lganda bir necha marta yuborish — hech bo'lmasa bittasi albatta yetib boradi", "hint": "Takroriy yuborish serverda dublikat yaratadi, agar so'rovlar takrorga chidamli qilinmagan bo'lsa." }
       ],
       "explanation": "Outbox yondashuvida amal avval lokal bazaga yoziladi (UI darhol yangilanadi), keyin fon vazifasi navbatni tartib bilan yuboradi. Har bir amalga yagona kalit beriladi, shunda server takroriy so'rovni tanib, ikkinchi marta bajarmaydi. Navbat diskda bo'lgani uchun ilova yopilishi ham xavfli emas.",
       "reviewed": false
@@ -246,12 +246,12 @@
       "kind": "concept",
       "prompt": "Ilova hajmini kamaytirishning eng samarali yo'li qaysi?",
       "options": [
-        { "id": "a", "text": "Hajmni tahlil qilib, eng katta qismlarni (ishlatilmaydigan kutubxonalar, resurslar, native kutubxonalar) olib tashlash va kodni siqish (R8, tree shaking)", "correct": true },
+        { "id": "a", "text": "Hajmni tahlil qilib, eng katta qismlarni (keraksiz kutubxona va resurslar) olib tashlash, kodni siqish (R8)", "correct": true },
         { "id": "b", "text": "Kod izohlarini o'chirish", "hint": "Izohlar kompilyatsiya qilingan ilovaga umuman tushmaydi." },
-        { "id": "c", "text": "O'zgaruvchi nomlarini qo'lda qisqartirish", "hint": "Buni build vositasi avtomatik bajaradi; qo'lda qilish kodni buzadi, foydasi esa arzimas." },
+        { "id": "c", "text": "O'zgaruvchi va funksiya nomlarini qo'lda qisqartirish — manba kodi qancha qisqa bo'lsa, ilova ham shuncha kichik bo'ladi", "hint": "Buni build vositasi avtomatik bajaradi; qo'lda qilish kodni buzadi, foydasi esa arzimas." },
         { "id": "d", "text": "Barcha funksiyalarni bitta faylga yig'ish", "hint": "Fayllar soni yakuniy hajmga ta'sir qilmaydi." }
       ],
-      "explanation": "Avval o'lchash kerak: APK Analyzer yoki Xcode'ning hajm hisoboti nimaning ko'p joy olayotganini ko'rsatadi. Odatda bu native kutubxonalar (har arxitektura uchun alohida), rasmlar va katta SDK'lar. App Bundle yoki App Thinning qurilmaga faqat keraklisini yetkazadi, R8 va tree shaking esa ishlatilmagan kodni olib tashlaydi.",
+      "explanation": "Native kutubxonalar ham ko'p joy oladi; JS/Dart'da — tree shaking. Avval o'lchash kerak: APK Analyzer yoki Xcode'ning hajm hisoboti nimaning ko'p joy olayotganini ko'rsatadi. Odatda bu native kutubxonalar (har arxitektura uchun alohida), rasmlar va katta SDK'lar. App Bundle yoki App Thinning qurilmaga faqat keraklisini yetkazadi, R8 va tree shaking esa ishlatilmagan kodni olib tashlaydi.",
       "reviewed": false
     },
     {
@@ -291,8 +291,8 @@
       "kind": "concept",
       "prompt": "Mobil ilovaning eski versiyalari yillab ishlatiladi. Bu backend API'ga qanday talab qo'yadi?",
       "options": [
-        { "id": "a", "text": "API orqaga mos (backward compatible) bo'lishi kerak: maydonlarni o'chirish yoki ma'nosini o'zgartirish o'rniga yangilarini qo'shish va versiyalash", "correct": true },
-        { "id": "b", "text": "Hech qanday: foydalanuvchilar ilovani darhol yangilaydi", "hint": "Yangilanish majburiy emas; ko'p foydalanuvchi oylab eski versiyada qoladi." },
+        { "id": "a", "text": "API orqaga mos bo'lishi kerak: maydonni o'chirish yoki ma'nosini o'zgartirish o'rniga yangisini qo'shish, versiyalash", "correct": true },
+        { "id": "b", "text": "Hech qanday: foydalanuvchilar ilovani do'kondan avtomatik yangilaydi, shuning uchun eski versiyalar bir necha kunda butunlay yo'qoladi", "hint": "Yangilanish majburiy emas; ko'p foydalanuvchi oylab eski versiyada qoladi." },
         { "id": "c", "text": "Har relizda eski API'ni o'chirish kerak", "hint": "Unda eski versiyadagi ilovalar bir zumda ishlamay qoladi." },
         { "id": "d", "text": "API javoblarini ilova ichida keshlash kifoya", "hint": "Kesh eski javobni saqlaydi, lekin o'zgargan API bilan muloqotni tuzatmaydi." }
       ],
@@ -306,12 +306,12 @@
       "kind": "concept",
       "prompt": "Yangi versiyani chiqarishda staged rollout (bosqichma-bosqich tarqatish) nima beradi?",
       "options": [
-        { "id": "a", "text": "Versiya avval foydalanuvchilarning kichik qismiga chiqadi; crash va metrikalar yomonlashsa, tarqatish to'xtatiladi va zarar cheklanadi", "correct": true },
+        { "id": "a", "text": "Versiya avval kichik qismga chiqadi; crash yoki metrikalar yomonlashsa, tarqatish to'xtatiladi", "correct": true },
         { "id": "b", "text": "Versiya do'kon tekshiruvidan tezroq o'tadi", "hint": "Tekshiruv tezligiga ta'siri yo'q." },
-        { "id": "c", "text": "O'rnatilgan versiyani avtomatik eski versiyaga qaytarish imkonini beradi", "hint": "Mobil'da o'rnatilgan versiyani qaytarib bo'lmaydi; faqat tarqatishni to'xtatish va tuzatilgan build chiqarish mumkin." },
+        { "id": "c", "text": "O'rnatilgan versiyani foydalanuvchilar qurilmasida avtomatik ravishda eski versiyaga qaytarish imkonini beradi", "hint": "Mobil'da o'rnatilgan versiyani qaytarib bo'lmaydi; faqat tarqatishni to'xtatish va tuzatilgan build chiqarish mumkin." },
         { "id": "d", "text": "Foydalanuvchilarni yangilashga majbur qiladi", "hint": "Bu majburiy yangilash mexanizmi; rollout esa versiya kimga taklif qilinishini boshqaradi." }
       ],
-      "explanation": "Mobil relizni ortga qaytarib bo'lmaydi, shuning uchun xatoning ta'sir doirasini kichraytirish muhim. Rollout 1%, 5%, 20% kabi bosqichlarda boradi; har bosqichda crash-free ko'rsatkichi va biznes metrikalari tekshiriladi. Muammo chiqsa, tarqatish to'xtatiladi va hotfix tayyorlanadi.",
+      "explanation": "Shunday qilib zarar foydalanuvchilarning kichik qismi bilan cheklanadi. Mobil relizni ortga qaytarib bo'lmaydi, shuning uchun xatoning ta'sir doirasini kichraytirish muhim. Rollout 1%, 5%, 20% kabi bosqichlarda boradi; har bosqichda crash-free ko'rsatkichi va biznes metrikalari tekshiriladi. Muammo chiqsa, tarqatish to'xtatiladi va hotfix tayyorlanadi.",
       "reviewed": false
     },
     {
@@ -321,10 +321,10 @@
       "kind": "concept",
       "prompt": "Mobil ilovada masofadan boshqariladigan feature flag'larning eng muhim foydasi nima?",
       "options": [
-        { "id": "a", "text": "Funksiyani yangi reliz chiqarmasdan yoqish yoki o'chirish mumkin, chunki do'kon orqali tuzatish kunlab vaqt oladi", "correct": true },
+        { "id": "a", "text": "Funksiyani yangi relizsiz yoqish yoki o'chirish — do'kon orqali tuzatish esa kunlab vaqt oladi", "correct": true },
         { "id": "b", "text": "Ilova hajmi kamayadi", "hint": "Aksincha: o'chirilgan funksiya kodi ham ilova ichida bo'ladi." },
         { "id": "c", "text": "Kod tezroq kompilyatsiya bo'ladi", "hint": "Build vaqtiga aloqasi yo'q; qaror runtime'da qabul qilinadi." },
-        { "id": "d", "text": "Testlash keraksiz bo'lib qoladi", "hint": "Aksincha: har bayroqning ikkala holati ham test qilinishi kerak." }
+        { "id": "d", "text": "Testlash keraksiz bo'lib qoladi — xato chiqsa, funksiyani shunchaki o'chirib qo'yish kifoya bo'ladi", "hint": "Aksincha: har bayroqning ikkala holati ham test qilinishi kerak." }
       ],
       "explanation": "Feature flag kodni chiqarish (release) bilan funksiyani yoqishni (launch) ajratadi. Nosoz funksiya serverdan bir zumda o'chiriladi, yangi funksiya esa foydalanuvchilarning bir qismida sinab ko'riladi. Narxi: bayroqlar texnik qarzga aylanadi, shuning uchun ularni vaqtida olib tashlash intizomi kerak.",
       "reviewed": false
@@ -338,7 +338,7 @@
       "options": [
         { "id": "a", "text": "Feature'lar bir-birini bilmaydi; ular umumiy interfeys yoki navigatsiya qatlami orqali bog'lanadi", "correct": true },
         { "id": "b", "text": "Har bir feature qolgan barcha feature'larga bog'lanadi", "hint": "Unda bitta o'zgarish hammasini qayta yig'adi va modullashtirishdan foyda qolmaydi." },
-        { "id": "c", "text": "Barcha feature'lar bitta umumiy \"utils\" modulida yashaydi", "hint": "Bu modullashtirish emas, boshqa nomdagi monolit." },
+        { "id": "c", "text": "Barcha feature'lar bitta umumiy \"utils\" modulida yashaydi va bir-birining klasslarini bevosita chaqiradi", "hint": "Bu modullashtirish emas, boshqa nomdagi monolit." },
         { "id": "d", "text": "Modullar faqat UI va data qatlamiga bo'linadi", "hint": "Faqat qatlamlar bo'yicha bo'lish jamoalarni va feature'larni ajratmaydi." }
       ],
       "explanation": "Mustaqil feature modullar parallel yig'iladi, alohida test qilinadi va turli jamoalarga tegishli bo'la oladi. Ular orasidagi aloqa tor shartnoma orqali quriladi: navigatsiya interfeysi yoki kichik API moduli. Bog'liqlik yo'nalishi har doim feature'dan umumiy (core) modullarga qarab bo'ladi, aksincha emas.",
@@ -351,8 +351,8 @@
       "kind": "concept",
       "prompt": "Jamoa Android va iOS o'rtasida kodni ulashishni (KMP yoki cross-platform freymvork) ko'rib chiqmoqda. Qarorda eng muhim omil qaysi?",
       "options": [
-        { "id": "a", "text": "Mahsulot talablari va jamoa: qancha mantiq umumiy, platformaga xos UI qanchalik muhim, jamoaning tajribasi va uzoq muddatli qo'llab-quvvatlash narxi", "correct": true },
-        { "id": "b", "text": "Qaysi texnologiya hozir eng mashhur ekani", "hint": "Mashhurlik o'zgaradi; qaror loyihaning o'z ehtiyojidan chiqishi kerak." },
+        { "id": "a", "text": "Qancha mantiq umumiy, platformaga xos UI qanchalik muhim, jamoa tajribasi va uzoq muddatli qo'llab-quvvatlash narxi", "correct": true },
+        { "id": "b", "text": "Qaysi texnologiya hozir eng mashhur va GitHub'da eng ko'p yulduzga ega ekani — jamoa va mahsulot talablari esa ikkinchi darajali masala", "hint": "Mashhurlik o'zgaradi; qaror loyihaning o'z ehtiyojidan chiqishi kerak." },
         { "id": "c", "text": "Kod satrlari sonini maksimal kamaytirish", "hint": "Kam kod har doim ham arzon emas: platforma bilan integratsiya va nosozliklarni tuzatish qiyinlashishi mumkin." },
         { "id": "d", "text": "Faqat birinchi relizgacha bo'lgan tezlik", "hint": "Boshlang'ich tezlik muhim, lekin loyiha yillab qo'llab-quvvatlanadi." }
       ],
