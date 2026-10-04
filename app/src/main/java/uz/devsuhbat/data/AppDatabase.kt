@@ -114,6 +114,31 @@ interface ProgressDao {
         deleteSessions()
         deleteMockResults()
     }
+
+    @Query("SELECT * FROM question_state ORDER BY questionId")
+    suspend fun allStates(): List<QuestionStateEntity>
+
+    @Query("SELECT * FROM mock_topic_result ORDER BY sessionId, rowid")
+    suspend fun allMockResults(): List<MockTopicResultEntity>
+
+    @Insert
+    suspend fun insertStates(states: List<QuestionStateEntity>)
+
+    @Insert
+    suspend fun insertSessions(sessions: List<SessionLogEntity>)
+
+    /** Swaps the whole progress for the given rows in one transaction: all or nothing. */
+    @Transaction
+    suspend fun replaceAll(
+        states: List<QuestionStateEntity>,
+        sessions: List<SessionLogEntity>,
+        mockResults: List<MockTopicResultEntity>,
+    ) {
+        deleteAll()
+        insertStates(states)
+        insertSessions(sessions)
+        insertMockResults(mockResults)
+    }
 }
 
 @Database(
