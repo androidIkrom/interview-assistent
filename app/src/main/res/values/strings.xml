@@ -33,6 +33,8 @@
     <string name="onboarding_level_title">Qaysi darajaga tayyorlanyapsiz?</string>
     <string name="onboarding_level_subtitle">Tanlangan daraja va undan pastki darajalar savollari beriladi.</string>
 
+    <string name="nav_home">Bosh</string>
+    <string name="nav_topics">Mavzular</string>
     <string name="home_practice">Mashq</string>
     <string name="home_practice_desc">Mavzu tanlang va 10 ta savol yeching. Xato javobda to\'g\'ri variant ko\'rsatilmaydi: tushuntirishni o\'qib, qayta urinasiz.</string>
     <string name="home_your_target">Tayyorlanayotgan yo\'nalish</string>
