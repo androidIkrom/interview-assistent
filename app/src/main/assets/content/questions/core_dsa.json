@@ -9,7 +9,7 @@
       "prompt": "Big-O belgisi nimani ifodalaydi?",
       "options": [
         { "id": "a", "text": "Algoritm vaqti yoki xotirasi kirish hajmi o'sganda qanday o'sishini ko'rsatadigan yuqori chegarani", "correct": true },
-        { "id": "b", "text": "Dasturning soniyalardagi aniq bajarilish vaqtini", "hint": "U apparatga bog'liq bo'lmagan o'sish tartibi, aniq vaqt emas." },
+        { "id": "b", "text": "Dasturning muayyan kompyuterdagi soniyalarda o'lchangan aniq bajarilish vaqtini va egallagan xotirasini", "hint": "U apparatga bog'liq bo'lmagan o'sish tartibi, aniq vaqt emas." },
         { "id": "c", "text": "Kod satrlari sonini", "hint": "Satrlar soni bilan bog'liq emas: bitta sikl ham O(n²) bo'lishi mumkin." },
         { "id": "d", "text": "Xotiradagi aniq baytlar sonini", "hint": "Bu ham aniq o'lchov; Big-O o'sish tendensiyasi." }
       ],
@@ -70,10 +70,10 @@
       "kind": "concept",
       "prompt": "Bog'langan ro'yxat (linked list) massivdan nimasi bilan farq qiladi?",
       "options": [
-        { "id": "a", "text": "Elementlar xotirada ketma-ket emas, har biri keyingisiga ishora qiladi; boshiga qo'shish arzon, indeks bo'yicha murojaat esa O(n)", "correct": true },
+        { "id": "a", "text": "Elementlar xotirada ketma-ket emas, bir-biriga ishora qiladi; boshiga qo'shish arzon, indeks bo'yicha — O(n)", "correct": true },
         { "id": "b", "text": "Faqat sonlarni saqlay oladi", "hint": "Istalgan tipni saqlaydi." },
         { "id": "c", "text": "Elementlari saralangan bo'ladi", "hint": "Tartib qo'shilish tartibi; saralash alohida." },
-        { "id": "d", "text": "Indeks bo'yicha murojaat tezroq", "hint": "Aksincha: i-elementga yetish uchun boshidan i ta o'tish kerak." }
+        { "id": "d", "text": "Indeks bo'yicha murojaat massivdan tezroq, chunki har element keyingisining manzilini oldindan aniq biladi va to'g'ridan-to'g'ri o'tadi", "hint": "Aksincha: i-elementga yetish uchun boshidan i ta o'tish kerak." }
       ],
       "explanation": "Massiv: tez murojaat, o'rtaga qo'shish qimmat (siljitish). Ro'yxat: tugunga havola bo'lsa qo'shish va o'chirish O(1), lekin murojaat va qidirish O(n). Amalda massiv asosidagi ro'yxat (`ArrayList`) ko'pincha g'olib, chunki xotira keshi yaxshi ishlaydi.",
       "reviewed": false
@@ -205,7 +205,7 @@
       "options": [
         { "id": "a", "text": "Rekursiyani to'xtatish uchun; aks holda funksiya o'zini cheksiz chaqirib, stack overflow bo'ladi", "correct": true },
         { "id": "b", "text": "Tezlik uchun", "hint": "U optimallashtirish emas, to'g'rilik sharti." },
-        { "id": "c", "text": "Xotirani tejash uchun", "hint": "Usiz xotira emas, stek tugaydi." },
+        { "id": "c", "text": "Xotirani tejash uchun — base case har chaqiruvdan keyin keraksiz lokal o'zgaruvchilarni tozalab beradi", "hint": "Usiz xotira emas, stek tugaydi." },
         { "id": "d", "text": "Kerak emas, ixtiyoriy", "hint": "Usiz chaqiruvlar hech qachon tugamaydi." }
       ],
       "explanation": "Har rekursiv funksiya ikki qismdan iborat: base case (javob to'g'ridan-to'g'ri ma'lum) va rekursiv qadam (masala kichikroq masalaga keltiriladi). Har qadam base case'ga yaqinlashishi shart.",
@@ -309,10 +309,10 @@
       "kind": "concept",
       "prompt": "Hash map'da kolliziya nima va u qanday hal qilinadi?",
       "options": [
-        { "id": "a", "text": "Ikki har xil kalit bir xil chelakka tushishi; zanjirlash (chaining) yoki ochiq manzillash (open addressing) bilan hal qilinadi", "correct": true },
+        { "id": "a", "text": "Ikki har xil kalit bir chelakka tushishi; zanjirlash (chaining) yoki ochiq manzillash bilan hal qilinadi", "correct": true },
         { "id": "b", "text": "Ikki kalit bir xil bo'lishi", "hint": "Bir xil kalit — bu qiymatni yangilash, kolliziya emas." },
         { "id": "c", "text": "Xotira tugashi", "hint": "Hajm masalasi emas, hash funksiya natijasi." },
-        { "id": "d", "text": "Hal qilib bo'lmaydi, map buziladi", "hint": "Har hash map kolliziyani ko'zda tutadi." }
+        { "id": "d", "text": "Kolliziyani hal qilib bo'lmaydi — u yuz bersa, map buziladi va uni butunlay qaytadan yaratish kerak bo'ladi", "hint": "Har hash map kolliziyani ko'zda tutadi." }
       ],
       "explanation": "Chelaklar soni kalitlar sonidan kam, shuning uchun kolliziya muqarrar. Zanjirlashda chelak ro'yxat (yoki daraxt) saqlaydi; ochiq manzillashda keyingi bo'sh katak qidiriladi. To'ldirish koeffitsienti oshganda map kengaytiriladi (rehash).",
       "reviewed": false
@@ -327,7 +327,7 @@
         { "id": "a", "text": "Teng obyektlar bir xil hash berishi shart; aks holda hash map ularni turli chelaklarda qidirib, topa olmaydi", "correct": true },
         { "id": "b", "text": "Kompilyator talab qiladi", "hint": "Kompilyator buni tekshirmaydi; xato runtime'da jimgina chiqadi." },
         { "id": "c", "text": "Xotirani tejash uchun", "hint": "Xotiraga aloqasi yo'q, to'g'rilikka tegishli." },
-        { "id": "d", "text": "Shart emas, bu faqat uslub", "hint": "Shartnoma buzilsa, `HashSet.contains` noto'g'ri `false` qaytaradi." }
+        { "id": "d", "text": "Shart emas, bu faqat kod uslubi masalasi — hash map baribir obyektlarni faqat va faqat `equals` orqali solishtiradi", "hint": "Shartnoma buzilsa, `HashSet.contains` noto'g'ri `false` qaytaradi." }
       ],
       "explanation": "Hash map avval `hashCode` bo'yicha chelakni topadi, keyin ichida `equals` bilan solishtiradi. Teng obyektlar har xil hash bersa, qidiruv noto'g'ri chelakka boradi. Kotlin `data class` ikkalasini birga generatsiya qiladi.",
       "reviewed": false
@@ -339,9 +339,9 @@
       "kind": "concept",
       "prompt": "Saralangan massivda yig'indisi berilgan qiymatga teng juftlikni O(n) da qanday topish mumkin?",
       "options": [
-        { "id": "a", "text": "Two pointers: boshidan va oxiridan ko'rsatkich; yig'indi katta bo'lsa o'ngdagini chapga, kichik bo'lsa chapdagini o'ngga surish", "correct": true },
+        { "id": "a", "text": "Two pointers: boshi va oxiridan; yig'indi katta bo'lsa o'ngdagini chapga, kichik bo'lsa chapdagini o'ngga surish", "correct": true },
         { "id": "b", "text": "Ikki ichma-ich sikl", "hint": "O(n²); saralanganlikdan foydalanilmayapti." },
-        { "id": "c", "text": "Har element uchun binary search", "hint": "O(n log n): ishlaydi, lekin yaxshiroq usul bor." },
+        { "id": "c", "text": "Har bir element uchun massivning qolgan qismida binary search qilish — qidiruv juda tez bo'lgani uchun bu ham O(n)", "hint": "O(n log n): ishlaydi, lekin yaxshiroq usul bor." },
         { "id": "d", "text": "Massivni qayta saralash", "hint": "U allaqachon saralangan." }
       ],
       "explanation": "Saralangan massivda yig'indi katta bo'lsa, faqat o'ngdagi ko'rsatkichni kamaytirish mantiqli. Ko'rsatkichlar uchrashguncha har qadam bittasini suradi: jami n qadam. Saralanmagan massivda hash set bilan ham O(n) qilish mumkin.",
@@ -369,8 +369,8 @@
       "kind": "concept",
       "prompt": "BFS va DFS o'rtasidagi farq nima?",
       "options": [
-        { "id": "a", "text": "BFS qatlam-baqatlam (queue bilan) yuradi va vaznsiz grafda eng qisqa yo'lni topadi; DFS chuqurlikka (stack yoki rekursiya bilan) kiradi", "correct": true },
-        { "id": "b", "text": "BFS stack, DFS queue ishlatadi", "hint": "Aksincha." },
+        { "id": "a", "text": "BFS qatlam-baqatlam (queue) yuradi va vaznsiz grafda eng qisqa yo'lni topadi; DFS chuqurlikka (stack) kiradi", "correct": true },
+        { "id": "b", "text": "BFS stack bilan chuqurlikka, DFS esa queue bilan qatlam-baqatlam yuradi va shuning uchun eng qisqa yo'lni topadi", "hint": "Aksincha." },
         { "id": "c", "text": "DFS har doim tezroq", "hint": "Ikkalasi ham O(V + E)." },
         { "id": "d", "text": "BFS faqat daraxtda ishlaydi", "hint": "Ikkalasi ham istalgan grafda ishlaydi (ko'rilganlar to'plami bilan)." }
       ],
@@ -414,8 +414,8 @@
       "kind": "concept",
       "prompt": "Quick sort'ning eng yomon holati qachon yuzaga keladi?",
       "options": [
-        { "id": "a", "text": "Pivot har safar eng kichik yoki eng katta element bo'lganda (masalan, saralangan massivda birinchi elementni tanlash): O(n²)", "correct": true },
-        { "id": "b", "text": "Hech qachon, u doim O(n log n)", "hint": "Yomon pivot tanlovi uni kvadratik qiladi." },
+        { "id": "a", "text": "Pivot har safar eng kichik yoki eng katta bo'lsa (saralangan massivda birinchi elementni tanlash): O(n²)", "correct": true },
+        { "id": "b", "text": "Hech qachon — quick sort pivot qanday tanlanishidan qat'i nazar har doim kafolatli ravishda O(n log n) da ishlaydi", "hint": "Yomon pivot tanlovi uni kvadratik qiladi." },
         { "id": "c", "text": "Massiv juda katta bo'lganda", "hint": "Hajm emas, pivot sifati muhim." },
         { "id": "d", "text": "Massivda takrorlar bo'lmaganda", "hint": "Takrorlar yo'qligi muammo emas." }
       ],
@@ -444,8 +444,8 @@
       "kind": "concept",
       "prompt": "Rekursiya chuqurligi 100 000 ga yetadigan funksiya nega yiqilishi mumkin va yechim nima?",
       "options": [
-        { "id": "a", "text": "Har chaqiruv call stack'da joy oladi va stek cheklangan: stack overflow. Yechim: iteratsiyaga o'tkazish yoki o'z stack'ingizni ishlatish", "correct": true },
-        { "id": "b", "text": "Protsessor sekinlashadi", "hint": "Tezlik emas, stek chuqurligi muammo." },
+        { "id": "a", "text": "Har chaqiruv call stack'da joy oladi, stek cheklangan — stack overflow; iteratsiya yoki o'z stack'ingiz kerak", "correct": true },
+        { "id": "b", "text": "Protsessor sekinlashadi va operatsion tizim uzoq ishlayotgan jarayonni ma'lum vaqtdan keyin avtomatik to'xtatib qo'yadi", "hint": "Tezlik emas, stek chuqurligi muammo." },
         { "id": "c", "text": "Heap xotira tugaydi", "hint": "Heap emas, chaqiruvlar steki (odatda bir necha MB) tugaydi." },
         { "id": "d", "text": "Yechimi yo'q", "hint": "Har rekursiyani iteratsiya va aniq stack bilan yozish mumkin." }
       ],
@@ -461,7 +461,7 @@
       "options": [
         { "id": "a", "text": "Hajm tugaganda sig'im ikki barobar kengaytiriladi; nusxalash kam uchraydi va amortizatsiyalangan narxi O(1)", "correct": true },
         { "id": "b", "text": "Nusxalash hech qachon bo'lmaydi", "hint": "Sig'im tugaganda albatta yangi massivga ko'chiriladi." },
-        { "id": "c", "text": "Har qo'shishda bitta katak qo'shiladi", "hint": "Unda har qo'shish O(n) bo'lar edi." },
+        { "id": "c", "text": "Har qo'shishda faqat bitta yangi katak qo'shiladi, shuning uchun mavjud elementlar hech qachon ko'chirilmaydi", "hint": "Unda har qo'shish O(n) bo'lar edi." },
         { "id": "d", "text": "Bu aslida O(n), savol noto'g'ri", "hint": "n ta qo'shishning jami narxi O(n), ya'ni har biri o'rtacha O(1)." }
       ],
       "explanation": "Ikki barobar kengaytirishda nusxalashlar yig'indisi 1 + 2 + 4 + ... + n < 2n. Shuning uchun n ta qo'shish jami O(n). Agar sig'im oldindan ma'lum bo'lsa, `ArrayList(capacity)` nusxalashlardan butunlay qutqaradi.",
@@ -493,7 +493,7 @@
         { "id": "a", "text": "Eng kichik (yoki eng katta) elementni O(1) da ko'rish, qo'shish va uni olib tashlash O(log n)", "correct": true },
         { "id": "b", "text": "Istalgan elementni O(1) da qidirish", "hint": "Ixtiyoriy qidirish O(n)." },
         { "id": "c", "text": "Elementlarni to'liq saralangan holda saqlash", "hint": "Heap faqat qisman tartib saqlaydi: ota bola'dan kichik (yoki katta)." },
-        { "id": "d", "text": "Indeks bo'yicha k-chi kichik elementga O(1) murojaat", "hint": "k-chi element uchun k marta olib tashlash kerak." }
+        { "id": "d", "text": "Indeks bo'yicha k-chi kichik elementga O(1) murojaat va istalgan elementni ham O(1) vaqtda o'chirish", "hint": "k-chi element uchun k marta olib tashlash kerak." }
       ],
       "explanation": "Heap massivda saqlanadigan to'liq binary daraxt. Qo'llanishi: Dijkstra, vazifalarni ustuvorlik bo'yicha bajarish, top-k, k ta saralangan ro'yxatni birlashtirish, oqimda median topish (ikki heap).",
       "reviewed": false
@@ -538,7 +538,7 @@
         { "id": "a", "text": "Satr o'zgarmas: har qo'shishda yangi satr yaratilib, eskisi to'liq nusxalanadi, jami O(n²); `StringBuilder` kerak", "correct": true },
         { "id": "b", "text": "Satrlar juda katta", "hint": "Muammo hajmda emas, har qadamda nusxalashda." },
         { "id": "c", "text": "Sikl o'zi sekin", "hint": "Sikl O(n); sekinlik ichidagi amalda." },
-        { "id": "d", "text": "`+` operatori satrlar uchun taqiqlangan", "hint": "Ruxsat etilgan, faqat siklda qimmat." }
+        { "id": "d", "text": "`+` operatori satrlar uchun taqiqlangan va kompilyator uni har safar juda sekin ishlaydigan metod chaqiruviga aylantiradi", "hint": "Ruxsat etilgan, faqat siklda qimmat." }
       ],
       "explanation": "Satr uzunligi 1, 2, 3, ... n bo'lib boradi va har qadamda nusxalanadi: 1 + 2 + ... + n ≈ n²/2. `StringBuilder` ichki buferni kengaytirib boradi, amortizatsiyalangan O(1) qo'shish bilan jami O(n).",
       "reviewed": false
@@ -550,8 +550,8 @@
       "kind": "concept",
       "prompt": "Fibonacci'ni oddiy rekursiya (`fib(n-1) + fib(n-2)`) bilan hisoblash nega eksponensial va qanday tuzatiladi?",
       "options": [
-        { "id": "a", "text": "Bir xil qiymatlar qayta-qayta hisoblanadi; natijalarni eslab qolish (memoization) yoki pastdan yuqoriga hisoblash (DP) O(n) qiladi", "correct": true },
-        { "id": "b", "text": "Rekursiya o'zi har doim sekin", "hint": "Rekursiya emas, takroriy hisoblash muammo." },
+        { "id": "a", "text": "Bir xil qiymatlar qayta-qayta hisoblanadi; memoization yoki pastdan yuqoriga DP uni O(n) qiladi", "correct": true },
+        { "id": "b", "text": "Rekursiya o'zi har doim sekin — har qanday rekursiv funksiya iterativ variantidan eksponensial sekinroq", "hint": "Rekursiya emas, takroriy hisoblash muammo." },
         { "id": "c", "text": "Sonlar katta bo'lib ketadi", "hint": "Hajm emas, chaqiruvlar soni (≈ 2ⁿ) muammo." },
         { "id": "d", "text": "Tuzatib bo'lmaydi", "hint": "Memoization bilan daraxt chiziqli bo'ladi." }
       ],
@@ -583,7 +583,7 @@
       "options": [
         { "id": "a", "text": "O'lchami 10 bo'lgan min-heap: har son heap tepasidan katta bo'lsa almashtiriladi; O(n log k) vaqt, O(k) xotira", "correct": true },
         { "id": "b", "text": "Hammasini saralash", "hint": "O(n log n) va hammasini xotiraga sig'dirish kerak." },
-        { "id": "c", "text": "10 marta maksimumni topib o'chirish", "hint": "Xotiraga sig'masa o'chirib bo'lmaydi; 10 marta to'liq o'tish ham kerak." },
+        { "id": "c", "text": "10 marta butun ro'yxatdan maksimumni topib o'chirish — bu eng sodda va xotirani eng kam ishlatadigan to'g'ri usul", "hint": "Xotiraga sig'masa o'chirib bo'lmaydi; 10 marta to'liq o'tish ham kerak." },
         { "id": "d", "text": "Hash map'da sanash", "hint": "Chastota emas, eng kattalar kerak; map hamma sonni saqlashi kerak bo'ladi." }
       ],
       "explanation": "Min-heap'da eng kichigi tepada turadi: yangi son undan katta bo'lsa, tepadagisi chiqarilib yangisi qo'shiladi. Oqim tugaganda heap'da eng katta 10 ta qoladi. Bu \"top-k\" masalalarining standart yechimi, oqim ma'lumotlar uchun ham ishlaydi.",
@@ -614,7 +614,7 @@
         { "id": "a", "text": "Topologik saralash (Kahn algoritmi yoki DFS); sikl bo'lsa, tartib mavjud emas", "correct": true },
         { "id": "b", "text": "Vazifalarni alifbo bo'yicha saralash", "hint": "Nom bog'liqlik haqida hech narsa demaydi." },
         { "id": "c", "text": "Dijkstra", "hint": "Dijkstra masofa topadi, tartib emas." },
-        { "id": "d", "text": "Vazifalarni tasodifiy tartibda bajarib, xato bo'lsa qayta urinish", "hint": "Eksponensial va sikl bo'lsa hech qachon tugamaydi." }
+        { "id": "d", "text": "Vazifalarni tasodifiy tartibda bajarib, bog'liqlik xatosi chiqsa qayta urinish", "hint": "Eksponensial va sikl bo'lsa hech qachon tugamaydi." }
       ],
       "explanation": "Kahn: kiruvchi qirrasi 0 bo'lgan tugunlarni navbatga olib, ularni chiqargach qo'shnilarining kiruvchi sonini kamaytirish. Hamma tugun chiqmasa, grafda sikl bor. Qo'llanishi: build tizimlari, kurslar rejasi, migratsiyalar tartibi.",
       "reviewed": false
@@ -626,10 +626,10 @@
       "kind": "concept",
       "prompt": "Dinamik dasturlash (DP) qachon qo'llanadi?",
       "options": [
-        { "id": "a", "text": "Masala bir-biriga bog'liq, takrorlanadigan kichik masalalarga bo'linganda va optimal yechim kichik masalalar optimalidan tuzilganda", "correct": true },
+        { "id": "a", "text": "Masala takrorlanadigan, o'zaro bog'liq kichik masalalarga bo'linsa va optimal yechim ulardan tuzilsa", "correct": true },
         { "id": "b", "text": "Har qanday rekursiv masalada", "hint": "Kichik masalalar takrorlanmasa (masalan, merge sort) DP hech narsa bermaydi." },
         { "id": "c", "text": "Faqat graf masalalarida", "hint": "DP satrlar, massivlar, kombinatorika va boshqa ko'p sohada ishlaydi." },
-        { "id": "d", "text": "Ma'lumot saralangan bo'lganda", "hint": "Saralanganlik DP sharti emas." }
+        { "id": "d", "text": "Ma'lumot saralangan bo'lganda — DP faqat saralangan massiv va ro'yxatlarda ishlaydigan tezkor qidiruv usuli", "hint": "Saralanganlik DP sharti emas." }
       ],
       "explanation": "Ikki belgi: optimal qism tuzilma va takrorlanuvchi kichik masalalar. Namunalar: eng uzun umumiy qism ketma-ketlik, tanga almashtirish, ryukzak, zinapoyadan chiqish yo'llari soni. Yondashuv: holatni aniqlash, o'tish formulasi, base case, keyin memoization yoki jadval.",
       "reviewed": false
@@ -641,10 +641,10 @@
       "kind": "concept",
       "prompt": "LRU cache'ni `get` va `put` O(1) bo'ladigan qilib qanday qurish mumkin?",
       "options": [
-        { "id": "a", "text": "Hash map + ikki tomonlama bog'langan ro'yxat: map kalitdan tugunga olib boradi, ro'yxat foydalanish tartibini saqlaydi", "correct": true },
+        { "id": "a", "text": "Hash map + ikki tomonlama bog'langan ro'yxat: map kalitdan tugunga, ro'yxat foydalanish tartibini saqlaydi", "correct": true },
         { "id": "b", "text": "Faqat hash map", "hint": "Eng uzoq ishlatilmagan elementni topish uchun tartib kerak; map'da u yo'q." },
         { "id": "c", "text": "Faqat massiv", "hint": "Elementni oxiriga ko'chirish va o'chirish O(n)." },
-        { "id": "d", "text": "Binary search tree", "hint": "Amallar O(log n) bo'ladi, O(1) emas." }
+        { "id": "d", "text": "Binary search tree — kalitlar saralangan holda saqlanadi va eng eski ishlatilgani doim eng chap tomonda turadi", "hint": "Amallar O(log n) bo'ladi, O(1) emas." }
       ],
       "explanation": "`get` da tugun ro'yxat boshiga ko'chiriladi (O(1), chunki tugunga havola bor), `put` da sig'im to'lsa ro'yxat oxiridagi tugun o'chiriladi. Java'da `LinkedHashMap(accessOrder = true)` aynan shu tuzilma.",
       "reviewed": false
@@ -657,7 +657,7 @@
       "prompt": "Hash map amallari qachon eng yomon holatda O(n) bo'lib qoladi?",
       "options": [
         { "id": "a", "text": "Barcha kalitlar bitta chelakka tushganda: yomon hash funksiya yoki ataylab tanlangan kalitlar (hash flooding)", "correct": true },
-        { "id": "b", "text": "Map juda katta bo'lganda", "hint": "Hajm o'zi muammo emas; map kengayib boradi." },
+        { "id": "b", "text": "Map juda katta bo'lganda — million elementdan oshsa, hash map ichki tuzilmasini avtomatik ravishda oddiy ro'yxatga aylantiradi", "hint": "Hajm o'zi muammo emas; map kengayib boradi." },
         { "id": "c", "text": "Kalitlar satr bo'lganda", "hint": "Satrlar uchun yaxshi hash funksiyalar bor." },
         { "id": "d", "text": "Hech qachon", "hint": "Hamma kalit bir chelakka tushsa, u oddiy ro'yxatga aylanadi." }
       ],
@@ -732,8 +732,8 @@
       "kind": "concept",
       "prompt": "Uchrashuvlar ro'yxati (boshlanish, tugash) berilgan. Bir vaqtda kerak bo'ladigan maksimal xonalar sonini qanday topish mumkin?",
       "options": [
-        { "id": "a", "text": "Boshlanish va tugash vaqtlarini alohida saralab, ikki ko'rsatkich bilan yurish (yoki min-heap'da tugash vaqtlari): O(n log n)", "correct": true },
-        { "id": "b", "text": "Har juftlikni solishtirib kesishishlarni sanash", "hint": "O(n²) va bir nuqtada nechta kesishishni to'g'ri bermaydi." },
+        { "id": "a", "text": "Boshlanish va tugash vaqtlarini alohida saralab, ikki ko'rsatkich bilan yurish (yoki min-heap): O(n log n)", "correct": true },
+        { "id": "b", "text": "Har juftlikni o'zaro solishtirib kesishishlarni sanash — natija eng ko'p kesishish soniga aynan teng bo'ladi", "hint": "O(n²) va bir nuqtada nechta kesishishni to'g'ri bermaydi." },
         { "id": "c", "text": "Faqat eng uzun uchrashuvni topish", "hint": "Uzunlik bir vaqtdagi yuk haqida hech narsa demaydi." },
         { "id": "d", "text": "Xonalar sonini uchrashuvlar soniga tenglash", "hint": "Bu to'g'ri, lekin ortiqcha; minimal sonni topish kerak." }
       ],
@@ -747,10 +747,10 @@
       "kind": "concept",
       "prompt": "Tez-tez qidiriladigan, lekin saralangan tartibda aylanib chiqish ham kerak bo'ladigan ma'lumot uchun qaysi tuzilma?",
       "options": [
-        { "id": "a", "text": "Balanslangan BST (`TreeMap`/`TreeSet`): qidirish va qo'shish O(log n), tartibli aylanib chiqish va diapazon so'rovlari", "correct": true },
+        { "id": "a", "text": "Balanslangan BST (`TreeMap`/`TreeSet`): qidirish va qo'shish O(log n), tartibli aylanish, diapazon so'rovlari", "correct": true },
         { "id": "b", "text": "Hash map", "hint": "O(1) qidiradi, lekin tartib yo'q; har safar saralash O(n log n)." },
         { "id": "c", "text": "Saralangan massiv", "hint": "Qidirish O(log n), lekin qo'shish O(n)." },
-        { "id": "d", "text": "Bog'langan ro'yxat", "hint": "Qidirish O(n)." }
+        { "id": "d", "text": "Bog'langan ro'yxat — elementlar qo'shilish tartibida turadi, shuning uchun saralangan aylanish ham, qidirish ham oson", "hint": "Qidirish O(n)." }
       ],
       "explanation": "Tuzilma tanlash — amallar to'plamiga qarab qilinadi: faqat qidiruv bo'lsa hash map, tartib va diapazon (\"100 dan 200 gacha\") kerak bo'lsa daraxt, faqat eng kichigi kerak bo'lsa heap. Interviewda bu mulohazani ovoz chiqarib aytish muhim.",
       "reviewed": false
@@ -762,9 +762,9 @@
       "kind": "concept",
       "prompt": "Keshlash serverlari sonini o'zgartirganda kalitlarning ko'pchiligi joyini o'zgartirmasligi uchun qanday usul ishlatiladi?",
       "options": [
-        { "id": "a", "text": "Consistent hashing: server va kalitlar halqaga joylashadi; server qo'shilganda yoki ketganda faqat qo'shni oraliqdagi kalitlar ko'chadi", "correct": true },
+        { "id": "a", "text": "Consistent hashing: server va kalitlar halqada; server qo'shilsa yoki ketsa faqat qo'shni oraliq kalitlari ko'chadi", "correct": true },
         { "id": "b", "text": "`hash(key) % n`", "hint": "n o'zgarganda deyarli barcha kalitlar boshqa serverga tushadi va kesh bo'shab qoladi." },
-        { "id": "c", "text": "Kalitlarni alifbo bo'yicha serverlarga bo'lish", "hint": "Notekis taqsimot va qayta bo'lishda ko'p ko'chish." },
+        { "id": "c", "text": "Kalitlarni alifbo bo'yicha serverlarga bo'lish — har bir server o'z harflar diapazoniga javob beradi va yuk teng taqsimlanadi", "hint": "Notekis taqsimot va qayta bo'lishda ko'p ko'chish." },
         { "id": "d", "text": "Har kalitni hamma serverga nusxalash", "hint": "Xotira n barobar; bu taqsimlash emas." }
       ],
       "explanation": "Halqada har server bir nechta virtual nuqta oladi (yukni tekislash uchun). Kalit soat yo'nalishida birinchi uchragan serverga tegishli. Server ketganda uning kalitlari faqat keyingi serverga o'tadi: 1/n qism ko'chadi. Memcached klientlari, Cassandra, DynamoDB shu usulda.",
@@ -777,9 +777,9 @@
       "kind": "concept",
       "prompt": "Milliardlab URL orasida \"bu URL ilgari ko'rilganmi\" tekshiruvini kam xotirada, soxta salbiy javobsiz qanday qilish mumkin?",
       "options": [
-        { "id": "a", "text": "Bloom filter: bir nechta hash funksiya bit massivda; \"yo'q\" javobi aniq, \"bor\" javobi kichik ehtimol bilan xato bo'lishi mumkin", "correct": true },
+        { "id": "a", "text": "Bloom filter: bir nechta hash funksiya va bit massiv; \"yo'q\" aniq, \"bor\" kichik ehtimol bilan xato", "correct": true },
         { "id": "b", "text": "Hash set", "hint": "Har URL'ni saqlash o'nlab gigabayt xotira." },
-        { "id": "c", "text": "Saralangan fayl va binary search", "hint": "Har tekshiruv bir nechta disk kirishi; sekin." },
+        { "id": "c", "text": "Barcha URL'larni saralangan faylda saqlab, binary search bilan qidirish — bu holda operativ xotira deyarli kerak bo'lmaydi", "hint": "Har tekshiruv bir nechta disk kirishi; sekin." },
         { "id": "d", "text": "Trie", "hint": "Hash set'dan ham ko'p xotira olishi mumkin." }
       ],
       "explanation": "Bloom filter elementni saqlamaydi, faqat k ta bitni 1 qiladi. Tekshiruvda bitlardan biri 0 bo'lsa, element aniq yo'q. Soxta ijobiy ehtimoli hajm va k bilan boshqariladi (masalan, 1%). Qo'llanishi: veb-kroulerlar, bazada mavjud bo'lmagan kalitlarni diskka bormasdan rad etish, CDN kesh.",
@@ -792,9 +792,9 @@
       "kind": "concept",
       "prompt": "100 GB fayldagi yozuvlarni saralash kerak, kompyuterda 8 GB RAM bor. Usul qaysi?",
       "options": [
-        { "id": "a", "text": "Tashqi saralash: faylni xotiraga sig'adigan bo'laklarga bo'lib, har birini saralab diskka yozish, keyin k-yo'lli birlashtirish (min-heap bilan)", "correct": true },
+        { "id": "a", "text": "Tashqi saralash: xotiraga sig'adigan bo'laklarni saralab diskka yozish, keyin k-yo'lli birlashtirish (min-heap)", "correct": true },
         { "id": "b", "text": "Quick sort xotirada", "hint": "Fayl xotiraga sig'maydi." },
-        { "id": "c", "text": "Bubble sort to'g'ridan-to'g'ri diskda", "hint": "O(n²) disk kirishi; yillab ishlaydi." },
+        { "id": "c", "text": "Bubble sort'ni to'g'ridan-to'g'ri diskdagi faylda bajarish — u hech qanday qo'shimcha operativ xotira talab qilmaydi va oddiy", "hint": "O(n²) disk kirishi; yillab ishlaydi." },
         { "id": "d", "text": "Faylni bazaga yuklash kifoya", "hint": "Baza ham ichida aynan tashqi saralash qiladi; usulni tushunish kerak." }
       ],
       "explanation": "~13 ta 8 GB bo'lak saralanadi (O(n log n) har biri), keyin 13 ta saralangan oqim heap orqali bitta oqimga birlashtiriladi: har qadamda eng kichik bosh element olinadi. Disk ketma-ket o'qiladi, bu tasodifiy kirishdan yuz barobar tez. MapReduce'dagi shuffle ham shu g'oya.",
@@ -807,12 +807,12 @@
       "kind": "concept",
       "prompt": "Interviewda masalaga O(n²) yechim topdingiz. Keyin nima qilish to'g'ri?",
       "options": [
-        { "id": "a", "text": "Avval to'g'ri yechimni aytib, keyin qaysi qism takrorlanayotganini aniqlab, hash map, saralash yoki ikki ko'rsatkich bilan yaxshilashni ovoz chiqarib muhokama qilish", "correct": true },
+        { "id": "a", "text": "Avval to'g'ri yechimni aytib, takrorlanayotgan qismni topish va hash map, saralash yoki ikki ko'rsatkich bilan yaxshilash", "correct": true },
         { "id": "b", "text": "Yaxshiroq yechim topilmaguncha jim o'ylash", "hint": "Interviewer fikrlash jarayonini ko'rishi kerak; jimlik hech narsa bermaydi." },
         { "id": "c", "text": "O(n²) yetarli deb to'xtash", "hint": "Ko'pincha intervyuer aynan yaxshilashni kutadi." },
-        { "id": "d", "text": "Kod yozmasdan faqat murakkablik haqida gapirish", "hint": "Ishlaydigan kod ham baholanadi." }
+        { "id": "d", "text": "Kod umuman yozmasdan faqat murakkablik haqida gapirish va intervyuer o'zi yaxshiroq yechimni aytib berishini jim kutib turish", "hint": "Ishlaydigan kod ham baholanadi." }
       ],
-      "explanation": "Ko'p masalalarda brute force → optimallashtirish yo'li kutiladi. Namunalar: ichma-ich siklni hash bilan, takroriy hisobni memoization bilan, qidiruvni saralash + binary search bilan almashtirish. Vaqt va xotira savdosini aniq aytish senior belgisidir.",
+      "explanation": "Fikrni ovoz chiqarib muhokama qilish muhim. Ko'p masalalarda brute force → optimallashtirish yo'li kutiladi. Namunalar: ichma-ich siklni hash bilan, takroriy hisobni memoization bilan, qidiruvni saralash + binary search bilan almashtirish. Vaqt va xotira savdosini aniq aytish senior belgisidir.",
       "reviewed": false
     },
     {
@@ -822,10 +822,10 @@
       "kind": "concept",
       "prompt": "Sliding window log usulidagi rate limiter'ning kamchiligi va yechimi nima?",
       "options": [
-        { "id": "a", "text": "Har so'rov vaqtini saqlash O(so'rovlar soni) xotira oladi; sliding window counter yoki token bucket bilan O(1) xotira", "correct": true },
+        { "id": "a", "text": "Har so'rov vaqtini saqlash O(so'rovlar) xotira oladi; sliding window counter yoki token bucket — O(1)", "correct": true },
         { "id": "b", "text": "Kamchiligi yo'q", "hint": "Million foydalanuvchi × minglab vaqt belgisi — katta xotira." },
         { "id": "c", "text": "Xotira emas, hisoblash vaqti muammo", "hint": "Hisoblash arzon; saqlash qimmat." },
-        { "id": "d", "text": "Yechim: so'rovlarni umuman hisoblamaslik", "hint": "Unda cheklov ishlamaydi." }
+        { "id": "d", "text": "Yechim: so'rovlarni umuman hisoblamaslik va faqat server yuki oshganda barcha klientlarni birdaniga bloklash", "hint": "Unda cheklov ishlamaydi." }
       ],
       "explanation": "Sliding window log aniq, lekin qimmat. Sliding window counter joriy va oldingi oyna hisoblagichlarini vazn bilan qo'shadi (taxminiy, lekin O(1)). Token bucket esa bir-ikki o'zgaruvchi bilan burst'ga ham ruxsat beradi. Tanlov aniqlik va resurs o'rtasidagi savdo.",
       "reviewed": false
@@ -837,9 +837,9 @@
       "kind": "concept",
       "prompt": "Nazariy jihatdan bog'langan ro'yxat o'rtaga qo'shishda O(1), lekin amalda `ArrayList` ko'pincha tezroq. Nega?",
       "options": [
-        { "id": "a", "text": "Massiv xotirada ketma-ket: CPU keshi va prefetch samarali ishlaydi; ro'yxat tugunlari tarqoq, har o'tish kesh xatosi (cache miss)", "correct": true },
+        { "id": "a", "text": "Massiv xotirada ketma-ket — CPU keshi va prefetch ishlaydi; ro'yxat tugunlari tarqoq, har o'tish cache miss", "correct": true },
         { "id": "b", "text": "Nazariya noto'g'ri", "hint": "Nazariya to'g'ri; u konstantalarni va xotira ierarxiyasini hisobga olmaydi." },
-        { "id": "c", "text": "JVM bog'langan ro'yxatni qo'llamaydi", "hint": "`LinkedList` bor, shunchaki kamdan-kam foydali." },
+        { "id": "c", "text": "JVM bog'langan ro'yxatni to'g'ridan-to'g'ri qo'llamaydi va uni ichki tomondan baribir oddiy massiv sifatida saqlaydi", "hint": "`LinkedList` bor, shunchaki kamdan-kam foydali." },
         { "id": "d", "text": "Massiv har doim kamroq xotira oladi", "hint": "Bu ham rost (tugun sarlavhalari yo'q), lekin asosiy sabab tezlikda — kesh." }
       ],
       "explanation": "Xotiradan o'qish protsessor amalidan yuzlab barobar sekin; kesh esa ketma-ket ma'lumotni oldindan yuklaydi. O'rtaga qo'shishda `ArrayList` elementlarni siljitadi, lekin bu `memcpy` juda tez; ro'yxatda esa o'rtaga yetish uchun n/2 ta tarqoq tugunni o'tish kerak. Big-O boshlang'ich yo'riqnoma, o'lchov esa haqiqat.",

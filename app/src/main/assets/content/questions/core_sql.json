@@ -56,7 +56,7 @@
       "options": [
         { "id": "a", "text": "Har bir qatorni yagona aniqlaydigan ustun (yoki ustunlar); `NULL` bo'lmaydi va takrorlanmaydi", "correct": true },
         { "id": "b", "text": "Jadvaldagi birinchi ustun", "hint": "O'rni ahamiyatsiz; muhimi yagonalik." },
-        { "id": "c", "text": "Boshqa jadvalga ishora qiluvchi ustun", "hint": "Bu tashqi kalit (FOREIGN KEY)." },
+        { "id": "c", "text": "Boshqa jadvalning birlamchi kalitiga ishora qiluvchi va jadvallarni o'zaro bog'laydigan ustun", "hint": "Bu tashqi kalit (FOREIGN KEY)." },
         { "id": "d", "text": "Eng ko'p ishlatiladigan ustun", "hint": "Ishlatish chastotasiga aloqasi yo'q." }
       ],
       "explanation": "Birlamchi kalit qatorning manzili: boshqa jadvallar unga tashqi kalit orqali ishora qiladi. Odatda `id` ustuni (avtoinkrement yoki UUID) tanlanadi va u avtomatik indekslanadi.",
@@ -69,10 +69,10 @@
       "kind": "concept",
       "prompt": "Tashqi kalit (FOREIGN KEY) nima uchun kerak?",
       "options": [
-        { "id": "a", "text": "Boshqa jadvalning birlamchi kalitiga ishora qilib, jadvallar orasidagi bog'lanishni va ma'lumot yaxlitligini ta'minlash uchun", "correct": true },
+        { "id": "a", "text": "Boshqa jadval birlamchi kalitiga ishora qilib, jadvallar bog'lanishi va ma'lumot yaxlitligini ta'minlash", "correct": true },
         { "id": "b", "text": "Jadvalning zaxira kaliti sifatida", "hint": "U zaxira emas, boshqa jadvalga havola." },
         { "id": "c", "text": "Ma'lumotni shifrlash uchun", "hint": "Xavfsizlikka aloqasi yo'q." },
-        { "id": "d", "text": "Faqat `JOIN` tezligi uchun indeks sifatida", "hint": "U indeks emas, cheklov (constraint); indeks alohida qo'shiladi." }
+        { "id": "d", "text": "Faqat `JOIN` tezligini oshirish uchun — tashqi kalit aslida ikki jadval orasida avtomatik yaratiladigan oddiy indeks", "hint": "U indeks emas, cheklov (constraint); indeks alohida qo'shiladi." }
       ],
       "explanation": "`orders.user_id` → `users.id` tashqi kaliti mavjud bo'lmagan foydalanuvchiga buyurtma yozishga yo'l qo'ymaydi va foydalanuvchi o'chirilganda nima bo'lishini (`CASCADE`, `RESTRICT`, `SET NULL`) belgilaydi.",
       "reviewed": false
@@ -102,7 +102,7 @@
         { "id": "a", "text": "Chap jadvalning barcha qatorlarini; o'ng tomonda mos qator bo'lmasa, uning ustunlari `NULL` bo'ladi", "correct": true },
         { "id": "b", "text": "Faqat mos keladigan qatorlarni", "hint": "Bu `INNER JOIN`." },
         { "id": "c", "text": "O'ng jadvalning barcha qatorlarini", "hint": "Bu `RIGHT JOIN`." },
-        { "id": "d", "text": "Chap jadvaldan faqat mos kelmaganlarni", "hint": "Mos kelganlar ham kiradi; faqat mos kelmaganlar uchun `WHERE right.id IS NULL` qo'shiladi." }
+        { "id": "d", "text": "Chap jadvaldan faqat o'ng jadvalda mosi topilmagan qatorlarni, mos kelganlarini esa tashlab yuboradi", "hint": "Mos kelganlar ham kiradi; faqat mos kelmaganlar uchun `WHERE right.id IS NULL` qo'shiladi." }
       ],
       "explanation": "`LEFT JOIN` \"hamma foydalanuvchilar va bor bo'lsa buyurtmalari\" degan savolga javob beradi. Buyurtmasi yo'q foydalanuvchilarni topish uchun `WHERE orders.id IS NULL` qo'shiladi.",
       "reviewed": false
@@ -313,7 +313,7 @@
         { "id": "a", "text": "`WHERE` guruhlashdan oldin qatorlarni, `HAVING` guruhlashdan keyin guruhlarni filtrlaydi", "correct": true },
         { "id": "b", "text": "Farqi yo'q, `HAVING` eskirgan yozuv", "hint": "Ikkalasi ham kerak va boshqa bosqichda ishlaydi." },
         { "id": "c", "text": "`HAVING` faqat `JOIN` bilan ishlatiladi", "hint": "U `GROUP BY` bilan bog'liq, `JOIN` bilan emas." },
-        { "id": "d", "text": "`WHERE` agregat funksiyalar bilan ishlaydi, `HAVING` esa yo'q", "hint": "Aksincha: agregat bo'yicha shart faqat `HAVING` da." }
+        { "id": "d", "text": "`WHERE` agregat funksiyalar (`COUNT`, `SUM`) bilan ishlaydi, `HAVING` esa ular bilan ishlay olmaydi", "hint": "Aksincha: agregat bo'yicha shart faqat `HAVING` da." }
       ],
       "explanation": "Bajarilish tartibi: `FROM` → `WHERE` → `GROUP BY` → `HAVING` → `SELECT` → `ORDER BY`. Shuning uchun `WHERE COUNT(*) > 5` xato, `HAVING COUNT(*) > 5` to'g'ri.",
       "reviewed": false
@@ -341,8 +341,8 @@
       "kind": "concept",
       "prompt": "`email` ustunida indeks bor, lekin `WHERE LOWER(email) = 'a@b.c'` so'rovi sekin. Nega?",
       "options": [
-        { "id": "a", "text": "Ustunga funksiya qo'llanganda oddiy indeks ishlatilmaydi; funksional indeks yoki qiymatni oldindan normallashtirish kerak", "correct": true },
-        { "id": "b", "text": "Indeks faqat sonli ustunlarda ishlaydi", "hint": "Matnli ustunlar ham indekslanadi." },
+        { "id": "a", "text": "Ustunga funksiya qo'llansa oddiy indeks ishlatilmaydi; funksional indeks yoki oldindan normallashtirish kerak", "correct": true },
+        { "id": "b", "text": "Indeks faqat sonli ustunlarda ishlaydi — `email` kabi matnli ustunlarda esa u hech qachon va hech qanday holatda qo'llanmaydi", "hint": "Matnli ustunlar ham indekslanadi." },
         { "id": "c", "text": "`=` operatori indeksdan foydalanmaydi", "hint": "Tenglik indeks uchun eng qulay shart." },
         { "id": "d", "text": "Jadval juda kichik", "hint": "Kichik jadvalda sekinlik sezilmas edi." }
       ],
@@ -356,8 +356,8 @@
       "kind": "concept",
       "prompt": "`WHERE id IN (SELECT user_id FROM orders)` ni `JOIN` bilan almashtirish qachon foydali?",
       "options": [
-        { "id": "a", "text": "Ikkala jadvaldan ustunlar kerak bo'lganda yoki optimizator ichki so'rovni yomon rejalashtirganda; faqat mavjudlikni tekshirish uchun `EXISTS` ham mos", "correct": true },
-        { "id": "b", "text": "Har doim: ichki so'rovlar taqiqlangan", "hint": "Ichki so'rovlar to'liq qonuniy va ko'pincha o'qish uchun aniqroq." },
+        { "id": "a", "text": "Ikkala jadvaldan ustun kerak bo'lsa yoki optimizator ichki so'rovni yomon rejalashtirsa; mavjudlik uchun `EXISTS`", "correct": true },
+        { "id": "b", "text": "Har doim almashtirish kerak: ichki so'rovlar zamonaviy SQL standartida taqiqlangan va ko'p bazalarda umuman ishlamaydi", "hint": "Ichki so'rovlar to'liq qonuniy va ko'pincha o'qish uchun aniqroq." },
         { "id": "c", "text": "Hech qachon: `JOIN` har doim sekinroq", "hint": "Zamonaviy optimizatorlar ko'pincha ikkalasini bir xil rejaga keltiradi." },
         { "id": "d", "text": "Faqat `NULL` lar bo'lmasa", "hint": "`NULL` muammosi `NOT IN` ga tegishli, `IN` ga emas." }
       ],
@@ -372,7 +372,7 @@
       "prompt": "Uchinchi normal shakl (3NF) ning asosiy talabi nima?",
       "options": [
         { "id": "a", "text": "Kalit bo'lmagan ustunlar faqat birlamchi kalitga bog'liq bo'lishi, bir-biriga emas (tranzitiv bog'liqlik yo'q)", "correct": true },
-        { "id": "b", "text": "Har bir katakda bitta atomar qiymat bo'lishi", "hint": "Bu 1NF talabi." },
+        { "id": "b", "text": "Har bir katakda faqat bitta atomar qiymat bo'lishi va jadvalda bir xil qatorlar hech qachon, hech qayerda takrorlanmasligi", "hint": "Bu 1NF talabi." },
         { "id": "c", "text": "Jadvalda 3 tadan ortiq ustun bo'lmasligi", "hint": "Ustunlar soni cheklanmagan." },
         { "id": "d", "text": "Barcha jadvallar bir-biriga `JOIN` qilinishi", "hint": "Normal shakllar bog'lanish soni haqida emas." }
       ],
@@ -387,7 +387,7 @@
       "prompt": "Qachon ataylab denormalizatsiya qilinadi?",
       "options": [
         { "id": "a", "text": "O'qish ko'p va `JOIN` lar qimmat bo'lganda, ma'lumot takrorlanishi narxini bilgan holda", "correct": true },
-        { "id": "b", "text": "Har doim, chunki normal shakllar eskirgan", "hint": "Normalizatsiya hali ham standart boshlang'ich nuqta." },
+        { "id": "b", "text": "Har doim, chunki normal shakllar eskirgan va zamonaviy bazalarda hech qanday foyda bermaydi", "hint": "Normalizatsiya hali ham standart boshlang'ich nuqta." },
         { "id": "c", "text": "Yozish ko'p bo'lganda", "hint": "Yozishda takrorlangan ma'lumotni hamma joyda yangilash kerak; bu aksincha qiyinlashadi." },
         { "id": "d", "text": "Jadval kichik bo'lganda", "hint": "Kichik jadvalda `JOIN` arzon; denormalizatsiya kerak emas." }
       ],
@@ -402,7 +402,7 @@
       "prompt": "ACID'dagi atomarlik (A) nimani bildiradi?",
       "options": [
         { "id": "a", "text": "Tranzaksiyadagi barcha amallar yoki to'liq bajariladi, yoki umuman bajarilmaydi", "correct": true },
-        { "id": "b", "text": "Tranzaksiya boshqalardan ajratilgan holda bajariladi", "hint": "Bu izolyatsiya (I)." },
+        { "id": "b", "text": "Tranzaksiya boshqa tranzaksiyalardan to'liq ajratilgan holda, ularni ko'rmasdan bajariladi", "hint": "Bu izolyatsiya (I)." },
         { "id": "c", "text": "Natija commit'dan keyin diskda saqlanib qoladi", "hint": "Bu bardoshlilik (D)." },
         { "id": "d", "text": "Ma'lumot cheklovlarga mos holatda qoladi", "hint": "Bu izchillik (C)." }
       ],
@@ -433,7 +433,7 @@
       "prompt": "Bitta jadvalda nechta `PRIMARY KEY` va nechta `UNIQUE` cheklov bo'lishi mumkin?",
       "options": [
         { "id": "a", "text": "Bitta birlamchi kalit (bir yoki bir nechta ustundan), `UNIQUE` esa istalgancha", "correct": true },
-        { "id": "b", "text": "Ikkalasi ham faqat bittadan", "hint": "Yagonalik cheklovlari bir nechta bo'lishi mumkin (masalan, `email` va `username`)." },
+        { "id": "b", "text": "Ikkalasi ham faqat bittadan bo'ladi — aks holda jadval yaxlitligi va indekslar buziladi", "hint": "Yagonalik cheklovlari bir nechta bo'lishi mumkin (masalan, `email` va `username`)." },
         { "id": "c", "text": "Birlamchi kalit istalgancha", "hint": "Qatorning \"asosiy manzili\" bitta bo'ladi." },
         { "id": "d", "text": "`UNIQUE` faqat bitta", "hint": "Cheklov yo'q." }
       ],
@@ -463,7 +463,7 @@
       "prompt": "ORM'da 100 ta buyurtma uchun har birining mijozini alohida so'rov bilan yuklash qanday muammo?",
       "options": [
         { "id": "a", "text": "N+1 so'rov: 101 ta so'rov o'rniga `JOIN` yoki oldindan yuklash (eager loading) bilan 1–2 ta so'rov kerak", "correct": true },
-        { "id": "b", "text": "Muammo yo'q, ORM shunday ishlashi kerak", "hint": "ORM'lar aynan bu holat uchun `select_related`, `fetch join`, `include` kabi vositalar beradi." },
+        { "id": "b", "text": "Muammo yo'q, ORM shunday ishlashi kerak — har bir mijoz o'z alohida so'rovi bilan tez va xavfsiz yuklanadi", "hint": "ORM'lar aynan bu holat uchun `select_related`, `fetch join`, `include` kabi vositalar beradi." },
         { "id": "c", "text": "Xotira yetishmaydi", "hint": "Muammo xotirada emas, bazaga borib-kelishlar sonida." },
         { "id": "d", "text": "Tranzaksiya buziladi", "hint": "Tranzaksiya to'g'ri qoladi, faqat sekin." }
       ],
@@ -479,7 +479,7 @@
       "options": [
         { "id": "a", "text": "Bir tranzaksiya boshqa tranzaksiyaning hali commit qilinmagan o'zgarishini o'qishi", "correct": true },
         { "id": "b", "text": "Indekssiz jadvaldan o'qish", "hint": "Tezlik masalasi; izchillikka aloqasi yo'q." },
-        { "id": "c", "text": "Bir xil qatorni ikki marta o'qib, har xil natija olish", "hint": "Bu non-repeatable read; dirty read commit qilinmagan ma'lumot haqida." },
+        { "id": "c", "text": "Bir tranzaksiya ichida bir xil qatorni ikki marta o'qib, har safar har xil natija olish", "hint": "Bu non-repeatable read; dirty read commit qilinmagan ma'lumot haqida." },
         { "id": "d", "text": "`NULL` qiymatlarni o'qish", "hint": "`NULL` oddiy holat, anomaliya emas." }
       ],
       "explanation": "Agar o'sha tranzaksiya keyin `ROLLBACK` qilsa, siz hech qachon mavjud bo'lmagan ma'lumotni ko'rgan bo'lasiz. `READ COMMITTED` va undan yuqori izolyatsiya darajalari buni oldini oladi.",
@@ -494,7 +494,7 @@
       "options": [
         { "id": "a", "text": "So'rovning bajarilish rejasini: qaysi indekslar ishlatiladi, jadvallar qanday tartibda va usulda skanerlanadi", "correct": true },
         { "id": "b", "text": "So'rovni tezlashtiradi", "hint": "U faqat ko'rsatadi, hech narsani o'zgartirmaydi." },
-        { "id": "c", "text": "So'rov sintaksisini tekshiradi", "hint": "Sintaksis xatosi bo'lsa, oddiy xato chiqadi; reja boshqa narsa." },
+        { "id": "c", "text": "So'rov sintaksisini bajarmasdan tekshiradi va xato bo'lsa, u qaysi qator va ustunda ekanini aniq ko'rsatib beradi", "hint": "Sintaksis xatosi bo'lsa, oddiy xato chiqadi; reja boshqa narsa." },
         { "id": "d", "text": "Jadval tuzilmasini chiqaradi", "hint": "Tuzilma uchun `DESCRIBE` yoki `\\d` kabi buyruqlar bor." }
       ],
       "explanation": "`EXPLAIN ANALYZE` so'rovni haqiqatan bajarib, taxminiy va haqiqiy qator sonlarini solishtiradi. Katta farq statistika eskirganini (`ANALYZE` kerak) bildiradi; `Seq Scan` katta jadvalda indeks yetishmasligiga ishora.",
@@ -507,10 +507,10 @@
       "kind": "concept",
       "prompt": "`LIMIT 20 OFFSET 100000` nega sekin?",
       "options": [
-        { "id": "a", "text": "Baza avval 100020 qatorni o'qib, 100000 tasini tashlab yuboradi; katta offset'da keyset (cursor) sahifalash yaxshiroq", "correct": true },
+        { "id": "a", "text": "Baza 100020 qatorni o'qib, 100000 tasini tashlaydi; katta offset'da keyset (cursor) sahifalash yaxshiroq", "correct": true },
         { "id": "b", "text": "`LIMIT` indeksni o'chiradi", "hint": "`LIMIT` indeksga ta'sir qilmaydi." },
         { "id": "c", "text": "20 ta qator ko'p", "hint": "20 qator arzimas; muammo o'tkazib yuboriladiganlarda." },
-        { "id": "d", "text": "`OFFSET` har doim butun jadvalni saralaydi", "hint": "Indeks bo'lsa saralash arzon; muammo tashlab yuboriladigan qatorlarda." }
+        { "id": "d", "text": "`OFFSET` har doim butun jadvalni saralaydi va natijani vaqtinchalik jadvalga diskda to'liq nusxalab chiqadi", "hint": "Indeks bo'lsa saralash arzon; muammo tashlab yuboriladigan qatorlarda." }
       ],
       "explanation": "Keyset sahifalash: `WHERE id > :last_id ORDER BY id LIMIT 20`. Baza to'g'ridan-to'g'ri kerakli joydan boshlaydi, shuning uchun 1000-sahifa ham 1-sahifa kabi tez.",
       "reviewed": false
@@ -523,7 +523,7 @@
       "prompt": "View nima?",
       "options": [
         { "id": "a", "text": "Saqlangan so'rov; unga jadvaldek murojaat qilinadi, lekin ma'lumot asosiy jadvallarda turadi", "correct": true },
-        { "id": "b", "text": "Jadvalning nusxasi", "hint": "Oddiy view ma'lumot saqlamaydi; nusxa saqlaydigani materialized view." },
+        { "id": "b", "text": "Jadvalning diskda alohida saqlanadigan to'liq nusxasi — u har kecha avtomatik ravishda yangilanib turadi", "hint": "Oddiy view ma'lumot saqlamaydi; nusxa saqlaydigani materialized view." },
         { "id": "c", "text": "Indeks turi", "hint": "U qidiruvni tezlashtirmaydi." },
         { "id": "d", "text": "Tranzaksiya logi", "hint": "Logga aloqasi yo'q." }
       ],
@@ -583,10 +583,10 @@
       "kind": "concept",
       "prompt": "`READ COMMITTED` va `REPEATABLE READ` izolyatsiya darajalari farqi nima?",
       "options": [
-        { "id": "a", "text": "`REPEATABLE READ` da tranzaksiya ichida bir xil qatorni qayta o'qish bir xil natija beradi; `READ COMMITTED` da boshqa tranzaksiyaning commit'i ko'rinib qolishi mumkin", "correct": true },
+        { "id": "a", "text": "`REPEATABLE READ`da qatorni qayta o'qish bir xil natija beradi; `READ COMMITTED`da boshqalarning commit'i ko'rinadi", "correct": true },
         { "id": "b", "text": "`READ COMMITTED` dirty read'ga ruxsat beradi", "hint": "Yo'q, u faqat commit qilinganni ko'rsatadi; dirty read `READ UNCOMMITTED` da." },
         { "id": "c", "text": "Farqi faqat tezlikda", "hint": "Farq ko'rinadigan ma'lumotda." },
-        { "id": "d", "text": "`REPEATABLE READ` barcha anomaliyalarni yo'qotadi", "hint": "Phantom read (standart bo'yicha) va write skew qolishi mumkin; to'liq kafolat `SERIALIZABLE` da." }
+        { "id": "d", "text": "`REPEATABLE READ` barcha anomaliyalarni, jumladan phantom read'ni ham to'liq yo'qotadi, ya'ni u amalda `SERIALIZABLE` bilan bir xil", "hint": "Phantom read (standart bo'yicha) va write skew qolishi mumkin; to'liq kafolat `SERIALIZABLE` da." }
       ],
       "explanation": "Ko'p bazalarda standart daraja `READ COMMITTED`. `REPEATABLE READ` tranzaksiya boshidagi snapshot'ni ko'rsatadi (PostgreSQL'da phantom'larni ham to'xtatadi). `SERIALIZABLE` ketma-ket bajarilgandek kafolat beradi, lekin konflikt xatolari chiqishi mumkin.",
       "reviewed": false
@@ -598,8 +598,8 @@
       "kind": "concept",
       "prompt": "Deadlock qanday yuzaga keladi va qanday kamaytiriladi?",
       "options": [
-        { "id": "a", "text": "Ikki tranzaksiya bir-biri ushlab turgan qulfni kutadi; qatorlarni bir xil tartibda yangilash va tranzaksiyalarni qisqa tutish yordam beradi", "correct": true },
-        { "id": "b", "text": "Indeks yetishmasligidan; indeks qo'shish hal qiladi", "hint": "Indeks sekinlikni kamaytiradi, lekin o'zaro kutish qulflar tartibidan kelib chiqadi." },
+        { "id": "a", "text": "Ikki tranzaksiya bir-birining qulfini kutadi; qatorlarni bir xil tartibda yangilash, tranzaksiyani qisqa tutish", "correct": true },
+        { "id": "b", "text": "Indeks yetishmasligidan — tegishli ustunlarga yangi indeks qo'shish deadlock muammosini har doim to'liq hal qiladi", "hint": "Indeks sekinlikni kamaytiradi, lekin o'zaro kutish qulflar tartibidan kelib chiqadi." },
         { "id": "c", "text": "Faqat `SELECT` so'rovlarida", "hint": "Oddiy `SELECT` qulf qo'ymaydi; deadlock yozuvlar orasida bo'ladi." },
         { "id": "d", "text": "Baza uni hech qachon aniqlamaydi", "hint": "Zamonaviy bazalar deadlock'ni aniqlab, tranzaksiyalardan birini bekor qiladi." }
       ],
@@ -613,8 +613,8 @@
       "kind": "concept",
       "prompt": "Optimistik qulflash qanday ishlaydi?",
       "options": [
-        { "id": "a", "text": "Qator versiyasi (yoki `updated_at`) o'qiladi; yangilashda `WHERE version = ?` tekshiriladi, mos kelmasa konflikt deb qabul qilinadi", "correct": true },
-        { "id": "b", "text": "`SELECT ... FOR UPDATE` bilan qator oldindan qulflanadi", "hint": "Bu pessimistik yondashuv." },
+        { "id": "a", "text": "Versiya (yoki `updated_at`) o'qiladi; yangilashda `WHERE version = ?` — mos kelmasa konflikt", "correct": true },
+        { "id": "b", "text": "`SELECT ... FOR UPDATE` bilan qator oldindan qulflanadi va boshqa tranzaksiyalar uni navbat bilan kutib turadi", "hint": "Bu pessimistik yondashuv." },
         { "id": "c", "text": "Tranzaksiya `SERIALIZABLE` qilinadi", "hint": "Bu izolyatsiya darajasi, qulflash strategiyasi emas." },
         { "id": "d", "text": "Konfliktlar e'tiborga olinmaydi", "hint": "Aksincha, konflikt aniq aniqlanadi; faqat qulf oldindan qo'yilmaydi." }
       ],
@@ -645,7 +645,7 @@
       "prompt": "`EXPLAIN` katta jadvalda `Seq Scan` ko'rsatdi, so'rovda `WHERE user_id = 5` bor. Nima qilish kerak?",
       "options": [
         { "id": "a", "text": "`user_id` da indeks bor-yo'qligini va statistika yangiligini tekshirish; indeks qo'shish yoki `ANALYZE` bajarish", "correct": true },
-        { "id": "b", "text": "`SELECT *` ni `SELECT id` ga almashtirish", "hint": "Ustunlar soni skanerlash usulini o'zgartirmaydi." },
+        { "id": "b", "text": "`SELECT *` ni `SELECT id` ga almashtirish — kam ustun o'qilsa, baza o'zi avtomatik ravishda indeksdan foydalana boshlaydi", "hint": "Ustunlar soni skanerlash usulini o'zgartirmaydi." },
         { "id": "c", "text": "Jadvalni qayta yaratish", "hint": "Tuzilma muammosi emas." },
         { "id": "d", "text": "`LIMIT` qo'shish", "hint": "`LIMIT` qidirishni emas, qaytariladigan sonni cheklaydi." }
       ],
@@ -660,7 +660,7 @@
       "prompt": "Covering (qamrab oluvchi) indeks nima?",
       "options": [
         { "id": "a", "text": "So'rovga kerakli barcha ustunlarni o'z ichiga olgan indeks; baza jadvalga murojaat qilmaydi (index-only scan)", "correct": true },
-        { "id": "b", "text": "Jadvalning barcha ustunlarini qamragan indeks", "hint": "Hamma ustun emas, aynan shu so'rovga kerakli ustunlar." },
+        { "id": "b", "text": "Jadvalning barcha ustunlarini qamragan va har bir yangi ustun qo'shilganda o'zi avtomatik ravishda kengayadigan indeks", "hint": "Hamma ustun emas, aynan shu so'rovga kerakli ustunlar." },
         { "id": "c", "text": "Bir nechta jadvalni qamrab oluvchi indeks", "hint": "Indeks bitta jadvalga tegishli." },
         { "id": "d", "text": "Avtomatik yaratiladigan indeks", "hint": "Uni aniq maqsad bilan qo'lda yaratishadi." }
       ],
@@ -675,7 +675,7 @@
       "prompt": "`WHERE id NOT IN (SELECT user_id FROM orders)` ba'zan bo'sh natija qaytaradi, garchi buyurtmasiz foydalanuvchilar bo'lsa ham. Nega?",
       "options": [
         { "id": "a", "text": "Ichki so'rovda bitta `NULL` bo'lsa, `NOT IN` butun shart uchun noma'lum beradi; `NOT EXISTS` ishlatish kerak", "correct": true },
-        { "id": "b", "text": "`NOT IN` katta ro'yxatlar bilan ishlamaydi", "hint": "Hajm cheklovi emas; muammo `NULL` semantikasida." },
+        { "id": "b", "text": "`NOT IN` katta ro'yxatlar bilan ishlamaydi — 1000 dan ortiq qiymatda baza jimgina va ogohlantirishsiz natijani bo'sh qaytaradi", "hint": "Hajm cheklovi emas; muammo `NULL` semantikasida." },
         { "id": "c", "text": "`orders` jadvali bo'sh", "hint": "Bo'sh ro'yxatda aksincha hamma qator qaytadi." },
         { "id": "d", "text": "Indeks yo'q", "hint": "Indeks natijaga ta'sir qilmaydi." }
       ],
@@ -690,7 +690,7 @@
       "prompt": "Katta jadvalga `NOT NULL` ustun production'da downtime'siz qanday qo'shiladi?",
       "options": [
         { "id": "a", "text": "Avval nullable ustun qo'shish, ma'lumotni partiyalab to'ldirish, keyin `NOT NULL` cheklovini qo'yish", "correct": true },
-        { "id": "b", "text": "Bitta `ALTER TABLE ... NOT NULL` bilan, jadvalni qulflab", "hint": "Katta jadvalda uzoq qulf xizmatni to'xtatadi (bazaga va versiyaga qarab farq qiladi)." },
+        { "id": "b", "text": "Bitta `ALTER TABLE ... NOT NULL` buyrug'i bilan, jadvalni qisqa vaqtga qulflab — bu eng tez va xavfsiz yo'l", "hint": "Katta jadvalda uzoq qulf xizmatni to'xtatadi (bazaga va versiyaga qarab farq qiladi)." },
         { "id": "c", "text": "Jadvalni o'chirib, qaytadan yaratish", "hint": "Ma'lumot va xizmat yo'qoladi." },
         { "id": "d", "text": "Ustunni bazada emas, ilovada emulyatsiya qilish", "hint": "Bu sxemani ilovaga yashiradi va boshqa iste'molchilar uchun ishlamaydi." }
       ],
@@ -704,8 +704,8 @@
       "kind": "concept",
       "prompt": "Backend'da ma'lumotlar bazasiga connection pool nima uchun kerak va o'lchami qanday tanlanadi?",
       "options": [
-        { "id": "a", "text": "Ulanish ochish qimmat, pool ularni qayta ishlatadi; o'lchami baza imkoniyati va CPU'dan kelib chiqadi, \"qancha ko'p, shuncha yaxshi\" emas", "correct": true },
-        { "id": "b", "text": "Pool bazani tezlashtiradi, shuning uchun 1000 ta ulanish yaxshi", "hint": "Haddan ortiq ulanish bazani sekinlashtiradi: kontekst almashish va qulflar ko'payadi." },
+        { "id": "a", "text": "Ulanish ochish qimmat — pool qayta ishlatadi; o'lchami baza va CPU imkoniyatidan, \"ko'p — yaxshi\" emas", "correct": true },
+        { "id": "b", "text": "Pool bazani tezlashtiradi, shuning uchun 1000 ta ulanish yaxshi — qancha ko'p bo'lsa, baza shuncha tez ishlaydi", "hint": "Haddan ortiq ulanish bazani sekinlashtiradi: kontekst almashish va qulflar ko'payadi." },
         { "id": "c", "text": "Har so'rov uchun yangi ulanish ochish arzonroq", "hint": "Ulanish TCP, autentifikatsiya va jarayon/oqim ajratishni talab qiladi." },
         { "id": "d", "text": "Pool faqat tranzaksiyalar uchun kerak", "hint": "U barcha so'rovlar uchun ishlatiladi." }
       ],
@@ -719,8 +719,8 @@
       "kind": "concept",
       "prompt": "`WHERE description LIKE '%telefon%'` katta jadvalda sekin. Yechim nima?",
       "options": [
-        { "id": "a", "text": "Oldida `%` bo'lgan `LIKE` oddiy indeksdan foydalana olmaydi; to'liq matnli qidiruv (full-text yoki trigram indeks) kerak", "correct": true },
-        { "id": "b", "text": "`description` ga oddiy B-tree indeks qo'shish", "hint": "Prefiks noma'lum bo'lgani uchun B-tree yordam bermaydi." },
+        { "id": "a", "text": "Oldida `%` bo'lgan `LIKE` oddiy indeksni ishlata olmaydi; full-text yoki trigram indeks kerak", "correct": true },
+        { "id": "b", "text": "`description` ustuniga oddiy B-tree indeks qo'shish — shunda `LIKE` har qanday shaklda tezlashadi", "hint": "Prefiks noma'lum bo'lgani uchun B-tree yordam bermaydi." },
         { "id": "c", "text": "`LIKE` ni `=` ga almashtirish", "hint": "Unda qidiruv ma'nosi o'zgaradi: faqat aynan `telefon` topiladi." },
         { "id": "d", "text": "Jadvalni ikkiga bo'lish", "hint": "Ikkala yarmini ham to'liq skanerlashga to'g'ri keladi." }
       ],
@@ -737,7 +737,7 @@
       "options": [
         { "id": "a", "text": "Bitta so'rovda yangilash (`WHERE id IN (...)` yoki partiyalab); har so'rov alohida borib-kelish (round trip)", "correct": true },
         { "id": "b", "text": "`for` ni `while` ga almashtirish", "hint": "Sikl turi so'rovlar sonini o'zgartirmaydi." },
-        { "id": "c", "text": "Har iteratsiyada `COMMIT` qo'shish", "hint": "Bu yanada sekinlashtiradi: har commit disk yozuvi." },
+        { "id": "c", "text": "Har iteratsiyada `COMMIT` qo'shish — kichik tranzaksiyalar bazani ancha tezroq va kamroq yuklab, samaraliroq ishlatadi", "hint": "Bu yanada sekinlashtiradi: har commit disk yozuvi." },
         { "id": "d", "text": "`id` ustuniga indeks qo'shish", "hint": "`id` birlamchi kalit, indeks allaqachon bor; muammo so'rovlar sonida." }
       ],
       "explanation": "10 000 so'rov × ~1 ms tarmoq = 10 soniya. `UPDATE users SET active = 1 WHERE id = ANY(%s)` bitta so'rovda bajaradi. Juda katta ro'yxatlar 1000 talik partiyalarga bo'linadi, qulf vaqtini cheklash uchun.",
@@ -751,7 +751,7 @@
       "prompt": "Milliard qatorli jadvalda `created_at` bo'yicha oylik hisobotlar sekin. Qaysi yondashuv to'g'ri?",
       "options": [
         { "id": "a", "text": "Jadvalni sana bo'yicha partitsiyalash va/yoki oldindan hisoblangan agregat jadval", "correct": true },
-        { "id": "b", "text": "Har safar to'liq jadvalni skanerlash, lekin kuchliroq serverda", "hint": "Hajm o'sgan sari bu yana sekinlashadi; muammo hal bo'lmaydi." },
+        { "id": "b", "text": "Har safar to'liq jadvalni skanerlash, lekin kuchliroq va ko'proq xotirali serverda", "hint": "Hajm o'sgan sari bu yana sekinlashadi; muammo hal bo'lmaydi." },
         { "id": "c", "text": "`created_at` ni matn sifatida saqlash", "hint": "Matn bilan sana bo'yicha oraliq qidiruv yomonlashadi." },
         { "id": "d", "text": "Indekslarni o'chirish", "hint": "Bu o'qishni yanada sekinlashtiradi." }
       ],
@@ -765,12 +765,12 @@
       "kind": "concept",
       "prompt": "Master-replica replikatsiyada foydalanuvchi profilni yangilagach, darhol eski ma'lumotni ko'rdi. Sabab va yechim nima?",
       "options": [
-        { "id": "a", "text": "Replikatsiya kechikishi: o'qish replikadan ketgan; yozgan foydalanuvchining keyingi o'qishlarini qisqa muddat masterdan qilish (read-your-writes)", "correct": true },
-        { "id": "b", "text": "Kesh muammosi, bazaga aloqasi yo'q", "hint": "Kesh bo'lmasa ham asinxron replika kechikadi." },
+        { "id": "a", "text": "Replikatsiya kechikishi: o'qish replikadan; yozgan foydalanuvchi o'qishini qisqa muddat masterdan qilish", "correct": true },
+        { "id": "b", "text": "Kesh muammosi, bazaga aloqasi yo'q — foydalanuvchi brauzer keshini tozalasa, yangi ma'lumot darhol ko'rinadi", "hint": "Kesh bo'lmasa ham asinxron replika kechikadi." },
         { "id": "c", "text": "Tranzaksiya commit bo'lmagan", "hint": "Commit bo'lgan; replika hali uni olmagan." },
         { "id": "d", "text": "Indeks eskirgan", "hint": "Indeks ma'lumot yangiligiga ta'sir qilmaydi." }
       ],
-      "explanation": "Asinxron replikatsiya yuqori o'qish yukini ko'tarishga yordam beradi, lekin oxir-oqibat izchillik (eventual consistency) beradi. Yechimlar: yozuvdan keyin bir necha soniya masterdan o'qish, sessiyaga LSN/vaqt belgisini bog'lab replika yetib kelganini tekshirish, yoki sinxron replika.",
+      "explanation": "Bu — read-your-writes kafolati. Asinxron replikatsiya yuqori o'qish yukini ko'tarishga yordam beradi, lekin oxir-oqibat izchillik (eventual consistency) beradi. Yechimlar: yozuvdan keyin bir necha soniya masterdan o'qish, sessiyaga LSN/vaqt belgisini bog'lab replika yetib kelganini tekshirish, yoki sinxron replika.",
       "reviewed": false
     },
     {
@@ -781,7 +781,7 @@
       "prompt": "Shard kalitini tanlashda eng muhim mezon nima?",
       "options": [
         { "id": "a", "text": "Ma'lumot va yuk shardlar orasida teng taqsimlanishi va ko'p so'rovlar bitta shard ichida bajarilishi", "correct": true },
-        { "id": "b", "text": "Kalit har doim avtoinkrement id bo'lishi", "hint": "Ketma-ket id oxirgi shardga issiq nuqta (hotspot) yaratadi." },
+        { "id": "b", "text": "Kalit har doim avtoinkrement id bo'lishi — u ketma-ket o'sgani uchun yangi yozuvlarni joylash uchun eng qulay va tez", "hint": "Ketma-ket id oxirgi shardga issiq nuqta (hotspot) yaratadi." },
         { "id": "c", "text": "Eng kichik ustun bo'lishi", "hint": "Hajm emas, taqsimot va so'rovlar shakli muhim." },
         { "id": "d", "text": "Alifbo tartibidagi birinchi ustun", "hint": "Tartibning ahamiyati yo'q." }
       ],
@@ -812,7 +812,7 @@
       "options": [
         { "id": "a", "text": "Sxema tez o'zgaradigan, ichma-ich hujjatlar bilan ishlanadigan va ko'p jadvalli tranzaksiya kam bo'lgan holatlarda", "correct": true },
         { "id": "b", "text": "Har doim, chunki u tezroq", "hint": "Tezlik ish yukiga bog'liq; universal g'olib yo'q." },
-        { "id": "c", "text": "Murakkab `JOIN` va qat'iy izchillik kerak bo'lganda", "hint": "Bu aynan relyatsion bazaning kuchli tomoni." },
+        { "id": "c", "text": "Murakkab `JOIN`lar, ko'p jadvalli tranzaksiyalar va qat'iy izchillik talab qilinganda — hujjatli baza ularni yaxshiroq qiladi", "hint": "Bu aynan relyatsion bazaning kuchli tomoni." },
         { "id": "d", "text": "Ma'lumot kichik bo'lganda", "hint": "Kichik ma'lumotda ikkalasi ham bemalol ishlaydi; hajm hal qiluvchi emas." }
       ],
       "explanation": "Hujjatli model \"bitta agregat = bitta hujjat\" bo'lganda tabiiy: mahsulot kartochkasi, foydalanuvchi profili, hodisa logi. Ko'p jadvalga tarqalgan munosabatlar va hisobotlar uchun relyatsion baza va SQL hali ham eng kuchli vosita.",
@@ -825,8 +825,8 @@
       "kind": "concept",
       "prompt": "Ustun nomini production'da downtime'siz qanday o'zgartirish mumkin?",
       "options": [
-        { "id": "a", "text": "Expand-contract: yangi ustun qo'shish, ikkala ustunga yozish, ma'lumotni ko'chirish, ilovani yangi ustunga o'tkazish, eskisini o'chirish", "correct": true },
-        { "id": "b", "text": "`ALTER TABLE RENAME COLUMN` va ilovani bir vaqtda deploy qilish", "hint": "Deploy bir zumda bo'lmaydi; oraliqda eski kod yangi nomni topa olmaydi (yoki aksincha)." },
+        { "id": "a", "text": "Expand-contract: yangi ustun, ikkalasiga yozish, ma'lumotni ko'chirish, ilovani o'tkazish, eskisini o'chirish", "correct": true },
+        { "id": "b", "text": "`ALTER TABLE RENAME COLUMN` va ilovani bir vaqtda deploy qilish — oradagi bir necha soniyalik farq hech kimga sezilmaydi", "hint": "Deploy bir zumda bo'lmaydi; oraliqda eski kod yangi nomni topa olmaydi (yoki aksincha)." },
         { "id": "c", "text": "Jadvalni nusxalab, almashtirish", "hint": "Nusxalash paytidagi yozuvlar yo'qoladi va almashtirish qulf talab qiladi." },
         { "id": "d", "text": "Ustun nomini hech qachon o'zgartirmaslik", "hint": "Ba'zan haqiqatan shunday qilinadi, lekin bu yechim emas, undan qochish." }
       ],
@@ -840,12 +840,12 @@
       "kind": "concept",
       "prompt": "Yozish juda ko'p bo'lgan jadvalda 12 ta indeks bor. Buning oqibati nima?",
       "options": [
-        { "id": "a", "text": "Har yozishda barcha indekslar yangilanadi: yozish sekinlashadi, WAL va disk hajmi oshadi; ishlatilmaydigan indekslarni topib o'chirish kerak", "correct": true },
-        { "id": "b", "text": "Oqibati yo'q, indekslar faqat o'qishga ta'sir qiladi", "hint": "Har `INSERT`/`UPDATE` indekslarni ham o'zgartiradi." },
+        { "id": "a", "text": "Har yozishda barcha indekslar yangilanadi: yozish sekinlashadi, disk o'sadi; ishlatilmaydiganlarini o'chirish", "correct": true },
+        { "id": "b", "text": "Oqibati yo'q, indekslar faqat o'qishga ta'sir qiladi — yozish tezligi va disk hajmi esa umuman o'zgarmay qoladi", "hint": "Har `INSERT`/`UPDATE` indekslarni ham o'zgartiradi." },
         { "id": "c", "text": "Faqat o'qish sekinlashadi", "hint": "O'qish aksincha tezlashishi mumkin; narx yozishda." },
         { "id": "d", "text": "Baza ortiqcha indekslarni avtomatik o'chiradi", "hint": "Baza buni qilmaydi; ishlatilish statistikasi (`pg_stat_user_indexes`) odam tomonidan tahlil qilinadi." }
       ],
-      "explanation": "Indeks o'qishni sotib olish uchun yozishni sotishdir. Yuqori yozish yukida indekslar soni minimal bo'lishi, bir xil ustunlarni qamragan indekslar birlashtirilishi va vaqti-vaqti bilan ishlatilmaganlari o'chirilishi kerak.",
+      "explanation": "WAL hajmi ham oshadi. Indeks o'qishni sotib olish uchun yozishni sotishdir. Yuqori yozish yukida indekslar soni minimal bo'lishi, bir xil ustunlarni qamragan indekslar birlashtirilishi va vaqti-vaqti bilan ishlatilmaganlari o'chirilishi kerak.",
       "reviewed": false
     },
     {
@@ -855,8 +855,8 @@
       "kind": "concept",
       "prompt": "Baza yozuvi va message broker'ga xabar yuborish atomik bo'lishi kerak. Yechim nima?",
       "options": [
-        { "id": "a", "text": "Transactional outbox: xabar baza tranzaksiyasida `outbox` jadvaliga yoziladi, alohida jarayon uni broker'ga yetkazadi", "correct": true },
-        { "id": "b", "text": "Avval broker'ga yuborish, keyin bazaga yozish", "hint": "Baza yozuvi muvaffaqiyatsiz bo'lsa, xabar allaqachon ketgan bo'ladi." },
+        { "id": "a", "text": "Transactional outbox: xabar tranzaksiyada `outbox` jadvaliga yoziladi, alohida jarayon uni yetkazadi", "correct": true },
+        { "id": "b", "text": "Avval broker'ga yuborish, keyin bazaga yozish — xabar hech qachon yo'qolmasligi uchun shu tartibning o'zi yetarli", "hint": "Baza yozuvi muvaffaqiyatsiz bo'lsa, xabar allaqachon ketgan bo'ladi." },
         { "id": "c", "text": "Ikkalasini bitta `try/catch` ga olish", "hint": "Ikki mustaqil tizim orasida atomiklikni `try/catch` bera olmaydi." },
         { "id": "d", "text": "Har doim ikki fazali commit (2PC)", "hint": "2PC og'ir, sekin va ko'p broker'lar uni qo'llamaydi." }
       ],
@@ -870,12 +870,12 @@
       "kind": "concept",
       "prompt": "Zaxira nusxa strategiyasida RPO va RTO nima?",
       "options": [
-        { "id": "a", "text": "RPO — yo'qotish mumkin bo'lgan maksimal ma'lumot vaqti; RTO — tiklash uchun ruxsat etilgan maksimal vaqt; ular zaxira chastotasi va usulini belgilaydi", "correct": true },
-        { "id": "b", "text": "Ikkalasi ham zaxira nusxa hajmini bildiradi", "hint": "Hajm emas, vaqt ko'rsatkichlari." },
+        { "id": "a", "text": "RPO — yo'qotish mumkin bo'lgan maksimal ma'lumot vaqti; RTO — tiklash uchun ruxsat etilgan maksimal vaqt", "correct": true },
+        { "id": "b", "text": "Ikkalasi ham zaxira nusxa hajmini bildiradi: RPO — to'liq zaxira, RTO esa inkremental zaxira nusxasining hajmi", "hint": "Hajm emas, vaqt ko'rsatkichlari." },
         { "id": "c", "text": "RPO — replikalar soni, RTO — jadvallar soni", "hint": "Sonlar emas, biznes talablari." },
         { "id": "d", "text": "Bular faqat bulutli bazalarga tegishli", "hint": "Har qanday ma'lumot saqlash tizimiga tegishli." }
       ],
-      "explanation": "RPO 5 daqiqa bo'lsa, kunlik dump yetmaydi: uzluksiz WAL arxivi (point-in-time recovery) kerak. RTO 15 daqiqa bo'lsa, zaxiradan qayta tiklash emas, tayyor replika (failover) kerak. Zaxira nusxa muntazam tiklab sinalmasa, u yo'q deb hisoblanadi.",
+      "explanation": "Ular zaxira chastotasi va usulini belgilaydi. RPO 5 daqiqa bo'lsa, kunlik dump yetmaydi: uzluksiz WAL arxivi (point-in-time recovery) kerak. RTO 15 daqiqa bo'lsa, zaxiradan qayta tiklash emas, tayyor replika (failover) kerak. Zaxira nusxa muntazam tiklab sinalmasa, u yo'q deb hisoblanadi.",
       "reviewed": false
     }
   ]
