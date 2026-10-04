@@ -39,6 +39,24 @@
 
     <string name="nav_home">Bosh</string>
     <string name="nav_topics">Mavzular</string>
+    <string name="nav_stats">Statistika</string>
+    <string name="stats_title">Statistika</string>
+    <string name="stats_activity">Faollik</string>
+    <string name="stats_streak_current">joriy seriya</string>
+    <string name="stats_streak_longest">eng uzun seriya</string>
+    <string name="stats_weeks">So\'nggi 18 hafta</string>
+    <string name="stats_less">kam</string>
+    <string name="stats_more">ko\'p</string>
+    <string name="stats_heatmap_a11y">So\'nggi 18 haftada %1$d kun mashq qilingan</string>
+    <string name="stats_leitner">Savollar holati</string>
+    <string name="stats_fresh">Yangi</string>
+    <string name="stats_learning">O\'rganilmoqda</string>
+    <string name="stats_mastered">O\'zlashtirilgan</string>
+    <string name="stats_topics">Mavzular</string>
+    <string name="stats_mock">Mock tarixi</string>
+    <string name="stats_mock_empty">Hali mock interview topshirilmagan</string>
+    <string name="stats_mock_start">Mock\'ni boshlash</string>
+    <string name="stats_mock_a11y">Oxirgi %1$d ta mock, so\'nggisi %2$d%%</string>
     <string name="home_greeting">Bugun ham bir qadam</string>
     <string name="home_start_practice">Mashqni boshlash</string>
     <string name="home_mastered_label">savol o\'zlashtirilgan</string>

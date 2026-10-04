@@ -367,36 +367,6 @@ private fun WeakTopicsCard(topics: List<TopicProgress>, onTopic: (String) -> Uni
             Text(stringResource(R.string.home_weak_title), style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(1f))
             TextButton(onClick = onAllTopics) { Text(stringResource(R.string.home_weak_all)) }
         }
-        topics.forEach { topic -> WeakTopicRow(topic) { onTopic(topic.topicId) } }
-    }
-}
-
-@Composable
-private fun WeakTopicRow(topic: TopicProgress, onClick: () -> Unit) {
-    val colors = MaterialTheme.colorScheme
-    val target = topic.progress.percent / 100f
-    val still = LocalReducedMotion.current
-    val fill = remember { Animatable(if (still) target else 0f) }
-    LaunchedEffect(target) { if (still) fill.snapTo(target) else fill.animateTo(target, DsMotion.spatialDefault()) }
-
-    Column(
-        verticalArrangement = Arrangement.spacedBy(6.dp),
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(12.dp))
-            .clickable(onClick = onClick)
-            .padding(vertical = 6.dp),
-    ) {
-        Row {
-            Text(topic.title, style = MaterialTheme.typography.bodyMedium, modifier = Modifier.weight(1f))
-            Text(
-                stringResource(R.string.home_percent, topic.progress.percent),
-                style = MaterialTheme.typography.labelLarge,
-                color = colors.onSurfaceVariant,
-            )
-        }
-        Box(Modifier.fillMaxWidth().height(8.dp).clip(RoundedCornerShape(4.dp)).background(colors.surfaceContainer)) {
-            Box(Modifier.fillMaxHeight().fillMaxWidth(fill.value).clip(RoundedCornerShape(4.dp)).background(colors.primary))
-        }
+        topics.forEach { topic -> TopicProgressRow(topic) { onTopic(topic.topicId) } }
     }
 }
