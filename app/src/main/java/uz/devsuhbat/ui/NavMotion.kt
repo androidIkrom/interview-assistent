@@ -14,6 +14,10 @@ fun isTopLevel(route: String?): Boolean = route in TOP_LEVEL_ROUTES
  */
 fun contentBottomPadding(route: String?, barHeight: Dp): Dp = if (isTopLevel(route)) barHeight else 0.dp
 
+/** Where "Yana mashq" and Back lead from a finished session: the tab it was opened from, otherwise Home. */
+fun sessionReturnRoute(previousRoute: String?): String =
+    if (previousRoute != null && isTopLevel(previousRoute)) previousRoute else Routes.HOME
+
 enum class NavMotion { FADE, SLIDE }
 
 /** Tabs cross-fade into each other; any screen opened above them slides in from the side. */

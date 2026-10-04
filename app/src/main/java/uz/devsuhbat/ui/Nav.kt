@@ -218,11 +218,9 @@ fun DevSuhbatNavHost(container: AppContainer, startDestination: String) {
                     container = container,
                     topicId = entry.arguments?.getString(Routes.TOPIC_ID) ?: Routes.MIXED,
                     onExit = { nav.popBackStack() },
-                    // Back to where the session was opened from: the topic list, or Home for a mistakes session.
+                    // Back to the tab the session was opened from; Home when it came from elsewhere.
                     onAgain = {
-                        if (!nav.popBackStack(Routes.TOPICS, inclusive = false)) {
-                            nav.popBackStack(Routes.HOME, inclusive = false)
-                        }
+                        nav.popBackStack(sessionReturnRoute(nav.previousBackStackEntry?.destination?.route), inclusive = false)
                     },
                     onHome = { nav.popBackStack(Routes.HOME, inclusive = false) },
                 )
