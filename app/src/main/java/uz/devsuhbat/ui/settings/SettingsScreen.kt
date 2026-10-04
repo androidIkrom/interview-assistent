@@ -129,6 +129,9 @@ fun SettingsScreen(container: AppContainer, onBack: () -> Unit, onEditProfile: (
             }
             HorizontalDivider(Modifier.padding(top = 8.dp))
 
+            settings?.let { ReminderSettings(container, it.reminderEnabled, it.reminderMinutes) }
+            HorizontalDivider()
+
             Text(
                 text = stringResource(R.string.settings_reset),
                 style = MaterialTheme.typography.titleMedium,

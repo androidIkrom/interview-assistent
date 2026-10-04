@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -155,5 +156,19 @@ class ProgressRepositoryTest {
         assertEquals(MockSummary(correct = 1, total = 1), repository.lastMock("android").first())
         assertEquals(MockSummary(correct = 1, total = 3), repository.lastMock("ios").first())
         assertEquals(null, repository.lastMock("qa").first())
+    }
+
+    @Test
+    fun lastFinishedAtIsNullWithoutSessions() = runTest {
+        assertNull(repository.lastFinishedAt())
+    }
+
+    @Test
+    fun lastFinishedAtIsTheNewestSession() = runTest {
+        val later = ProgressRepository(db, Clock.fixed(Instant.parse("2026-10-02T12:00:00Z"), zone))
+        later.logSession(SessionMode.PRACTICE, "android", Level.JUNIOR, Instant.EPOCH, SessionResult(10, 9, 1))
+        repository.logSession(SessionMode.MISTAKES, "android", Level.JUNIOR, Instant.EPOCH, SessionResult(1, 1, 0))
+
+        assertEquals(Instant.parse("2026-10-02T12:00:00Z"), repository.lastFinishedAt())
     }
 }

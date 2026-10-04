@@ -71,6 +71,9 @@ class ProgressRepository(
             row?.let { MockSummary(correct = it.firstTryCorrect, total = it.total) }
         }
 
+    /** When the latest session of any mode finished, or null when none has. */
+    suspend fun lastFinishedAt(): Instant? = dao.lastFinishedAt()?.let(Instant::ofEpochMilli)
+
     suspend fun reset() = dao.deleteAll()
 
     private fun sessionRow(mode: SessionMode, fieldId: String, level: Level, startedAt: Instant, total: Int, correct: Int) =

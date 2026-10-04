@@ -68,6 +68,12 @@
     <string name="theme_system">Tizim</string>
     <string name="theme_light">Yorug\'</string>
     <string name="theme_dark">Qorong\'i</string>
+    <string name="reminder_title">Kunlik eslatma</string>
+    <string name="reminder_summary">Har kuni tanlangan vaqtda mashq qilishni eslatadi</string>
+    <string name="reminder_time">Eslatma vaqti</string>
+    <string name="reminder_denied">Bildirishnomalarga ruxsat berilmagan. Uni tizim sozlamalarida yoqing.</string>
+    <string name="reminder_channel">Kunlik eslatma</string>
+    <string name="reminder_text">Bugun 10 ta savol yechamizmi?</string>
     <string name="settings_reset">Progressni tozalash</string>
     <string name="settings_reset_text">Barcha javoblar tarixi va tayyorlik ko\'rsatkichi o\'chiriladi. Buni ortga qaytarib bo\'lmaydi.</string>
     <string name="settings_reset_confirm">Tozalash</string>
