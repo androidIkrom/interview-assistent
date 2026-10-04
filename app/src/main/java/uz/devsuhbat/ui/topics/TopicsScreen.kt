@@ -12,12 +12,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -40,7 +38,7 @@ import uz.devsuhbat.ui.Routes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopicsScreen(container: AppContainer, onBack: () -> Unit, onOpen: (topicId: String) -> Unit) {
+fun TopicsScreen(container: AppContainer, onOpen: (topicId: String) -> Unit) {
     val viewModel: TopicsViewModel = viewModel(
         factory = viewModelFactory {
             initializer {
@@ -52,14 +50,7 @@ fun TopicsScreen(container: AppContainer, onBack: () -> Unit, onOpen: (topicId: 
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.topics_title)) },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.action_back))
-                    }
-                },
-            )
+            TopAppBar(title = { Text(stringResource(R.string.topics_title)) })
         },
     ) { padding ->
         when {

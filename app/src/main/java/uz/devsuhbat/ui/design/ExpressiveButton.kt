@@ -39,6 +39,9 @@ fun ExpressiveButton(
     tone: ButtonTone = ButtonTone.PRIMARY,
     enabled: Boolean = true,
     trailingIcon: ImageVector? = null,
+    /** Overrides [tone]'s colours, e.g. an inverted button on a primary-coloured card. */
+    containerColor: Color? = null,
+    contentColor: Color? = null,
 ) {
     val colors = MaterialTheme.colorScheme
     val extra = LocalExtraColors.current
@@ -49,6 +52,7 @@ fun ExpressiveButton(
 
     val (container, content) = when {
         !enabled -> colors.onSurface.copy(alpha = 0.12f) to colors.onSurface.copy(alpha = 0.38f)
+        containerColor != null && contentColor != null -> containerColor to contentColor
         tone == ButtonTone.PRIMARY -> colors.primary to colors.onPrimary
         tone == ButtonTone.SUCCESS -> extra.success to extra.onSuccess
         else -> Color.Transparent to colors.primary

@@ -28,8 +28,8 @@ class HomeViewModelTest {
     private val dispatcher = UnconfinedTestDispatcher()
     private val today = 100L
 
-    private fun question(n: Int, level: String = "junior") = """
-        {"id":"a.t.00$n","level":"$level","type":"single","prompt":"p",
+    private fun question(n: Int, level: String = "junior", topic: String = "a.t") = """
+        {"id":"$topic.00$n","level":"$level","type":"single","prompt":"p",
          "options":[{"id":"a","text":"1","correct":true},{"id":"b","text":"2","hint":"h"}],"explanation":"e"}
     """.trimIndent()
 
@@ -37,11 +37,17 @@ class HomeViewModelTest {
         "content/catalog.json" to """
             {"version":1,
              "fields":[{"id":"android","title":"Android","group":"mobile","topics":["a.t"]},
-                       {"id":"ios","title":"iOS","group":"mobile","topics":["i.t"]}],
-             "topics":[{"id":"a.t","title":"T","file":"a_t.json"},{"id":"i.t","title":"I"}]}
+                       {"id":"ios","title":"iOS","group":"mobile","topics":["i.t"]},
+                       {"id":"multi","title":"Multi","group":"mobile","topics":["a.t","a.u","a.e"]}],
+             "topics":[{"id":"a.t","title":"T","file":"a_t.json"},{"id":"i.t","title":"I"},
+                       {"id":"a.u","title":"U","file":"a_u.json"},{"id":"a.e","title":"E","file":"a_e.json"}]}
         """.trimIndent(),
         "content/questions/a_t.json" to
             """{"topic":"a.t","questions":[${question(1)},${question(2)},${question(3)},${question(4)},${question(5, "senior")}]}""",
+        "content/questions/a_u.json" to
+            """{"topic":"a.u","questions":[${question(1, topic = "a.u")},${question(2, topic = "a.u")}]}""",
+        "content/questions/a_e.json" to
+            """{"topic":"a.e","questions":[${question(1, "senior", topic = "a.e")}]}""",
     )
     private val content = ContentStore { files[it] }
 
@@ -138,5 +144,37 @@ class HomeViewModelTest {
         settings.value = settings.value.copy(fieldId = "ios")
 
         assertEquals(null, viewModel.state.first { it.fieldTitle == "iOS" }.lastMock)
+    }
+    @Test
+    fun streakComesFromSessionDays() = runTest(dispatcher) {
+        val viewModel = HomeViewModel(
+            content, settings, states, { today }, dispatcher,
+            sessionDays = flowOf(listOf(today - 1, today - 1, today)),
+        )
+
+        assertEquals(2, viewModel.state.first { !it.loading }.streak.current)
+    }
+
+    @Test
+    fun weakTopicsAreLowestFirst() = runTest(dispatcher) {
+        settings.value = settings.value.copy(fieldId = "multi")
+
+        val weak = viewModel().state.first { !it.loading }.weakTopics
+
+        assertEquals(listOf("a.u", "a.t"), weak.map { it.topicId })
+        assertEquals("U", weak.first().title)
+    }
+
+    @Test
+    fun weakTopicsSkipMasteredAndEmptyTopics() = runTest(dispatcher) {
+        settings.value = settings.value.copy(fieldId = "multi")
+        fun mastered(id: String) = id to QuestionState(id, box = 3, dueDay = 200)
+        states.value = states.value + mastered("a.u.001") + mastered("a.u.002")
+
+        assertEquals(listOf("a.t"), viewModel().state.first { !it.loading }.weakTopics.map { it.topicId })
+
+        states.value = listOf("a.t.001", "a.t.002", "a.t.003", "a.t.004", "a.u.001", "a.u.002").associate(::mastered)
+
+        assertEquals(emptyList<TopicProgress>(), viewModel().state.first { !it.loading }.weakTopics)
     }
 }

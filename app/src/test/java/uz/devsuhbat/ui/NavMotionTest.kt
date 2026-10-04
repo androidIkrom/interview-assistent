@@ -1,0 +1,36 @@
+package uz.devsuhbat.ui
+
+import androidx.compose.ui.unit.dp
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
+import org.junit.Test
+
+class NavMotionTest {
+    @Test
+    fun tabsFadeBetweenEachOther() {
+        assertEquals(NavMotion.FADE, navMotion(Routes.HOME, Routes.TOPICS))
+    }
+
+    @Test
+    fun screensAboveTabsSlide() {
+        assertEquals(NavMotion.SLIDE, navMotion(Routes.HOME, Routes.SESSION))
+        assertEquals(NavMotion.SLIDE, navMotion(Routes.SESSION, Routes.HOME))
+        assertEquals(NavMotion.SLIDE, navMotion(Routes.HOME, Routes.SETTINGS))
+    }
+
+    @Test
+    fun onlyTabsAreTopLevel() {
+        assertTrue(isTopLevel(Routes.HOME))
+        assertTrue(isTopLevel(Routes.TOPICS))
+        assertFalse(isTopLevel(Routes.SESSION))
+        assertFalse(isTopLevel(null))
+    }
+
+    @Test
+    fun onlyTabsReserveRoomForTheBar() {
+        // A screen above the tabs takes the full height at once, so it does not jump while the bar slides away.
+        assertEquals(80.dp, contentBottomPadding(Routes.HOME, barHeight = 80.dp))
+        assertEquals(0.dp, contentBottomPadding(Routes.SESSION, barHeight = 80.dp))
+    }
+}

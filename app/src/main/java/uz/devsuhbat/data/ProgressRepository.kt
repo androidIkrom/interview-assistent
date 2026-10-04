@@ -71,6 +71,11 @@ class ProgressRepository(
             row?.let { MockSummary(correct = it.firstTryCorrect, total = it.total) }
         }
 
+    /** The local calendar day each finished session started on, one entry per session, oldest first. */
+    fun sessionDays(): Flow<List<Long>> = dao.observeSessions().map { rows ->
+        rows.map { Instant.ofEpochMilli(it.startedAt).atZone(clock.zone).toLocalDate().toEpochDay() }
+    }
+
     /** When the latest session of any mode finished, or null when none has. */
     suspend fun lastFinishedAt(): Instant? = dao.lastFinishedAt()?.let(Instant::ofEpochMilli)
 
