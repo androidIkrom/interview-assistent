@@ -150,6 +150,7 @@ fun SessionScreen(
         BackHandler(onBack = onAgain)
         SessionResultScreen(
             result = result,
+            readiness = readinessLine(state.readinessBefore, state.readinessAfter),
             onAgain = onAgain.takeIf { topicId != Routes.MISTAKES },
             onHome = onHome,
         )

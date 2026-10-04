@@ -118,7 +118,13 @@
     <string name="session_exit_text">Javob berilmagan savollar hisobga olinmaydi.</string>
     <string name="session_exit_confirm">Chiqish</string>
 
-    <string name="result_title">Sessiya yakunlandi</string>
+    <string name="result_great">Zo\'r natija!</string>
+    <string name="result_good">Yaxshi harakat</string>
+    <string name="result_keep_going">Davom eting</string>
+    <string name="result_readiness">Tayyorlik</string>
+    <string name="result_readiness_value">Tayyorlik: %1$d%%</string>
+    <string name="result_readiness_grew">%1$d%% → %2$d%%</string>
+    <string name="result_score">%1$d / %2$d</string>
     <string name="result_total">Savollar</string>
     <string name="result_first_try">Birinchi urinishda to\'g\'ri</string>
     <string name="result_reworked">Qayta ishlangan</string>
