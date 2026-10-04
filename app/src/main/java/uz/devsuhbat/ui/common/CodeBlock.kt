@@ -9,9 +9,9 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import uz.devsuhbat.ui.theme.JetBrainsMono
 
 /** A multi-line code snippet. Long lines scroll sideways instead of wrapping. */
 @Composable
@@ -24,7 +24,7 @@ fun CodeBlock(code: String, modifier: Modifier = Modifier) {
     ) {
         Text(
             text = code,
-            fontFamily = FontFamily.Monospace,
+            fontFamily = JetBrainsMono,
             fontSize = 13.sp,
             lineHeight = 19.sp,
             softWrap = false,
