@@ -8,12 +8,12 @@
       "kind": "concept",
       "prompt": "PHP'da class, interface va trait qanday farqlanadi?",
       "options": [
-        { "id": "a", "text": "Class — holat + xatti-harakat, bitta klassdan meros; interface — kontrakt (metod imzolari, konstantalar), ko'p implement; trait — kodni qayta ishlatish (metod va property'lar) ko'p meros o'rniga, `use` bilan klassga qo'shiladi, instansiya qilinmaydi", "correct": true },
+        { "id": "a", "text": "Class — holat va xatti-harakat; interface — kontrakt, ko'p implement; trait — `use` bilan qo'shiladigan kod", "correct": true },
         { "id": "b", "text": "Trait — interface'ning eski nomi", "hint": "Trait implementatsiya saqlaydi, interface — faqat imzolar." },
         { "id": "c", "text": "PHP'da ko'p meros bor", "hint": "Yo'q — trait va interface uning o'rnini bosadi." },
-        { "id": "d", "text": "Interface'da metod tanasi bo'lishi mumkin", "hint": "PHP interface'da tana yo'q (default metod yo'q); trait'da bor." }
+        { "id": "d", "text": "Interface metodlarida ham to'liq tana yozish mumkin — u abstract class bilan amalda deyarli bir xil narsa", "hint": "PHP interface'da tana yo'q (default metod yo'q); trait'da bor." }
       ],
-      "explanation": "Trait konflikt: ikki trait bir xil metod — `use A, B { A::foo insteadof B; B::foo as barFoo; }`. Trait abstract metod talab qilishi mumkin. Laravel: `HasFactory`, `SoftDeletes`, `Notifiable` — trait'lar. Haddan ortiq trait — yashirin bog'liqlik, kompozitsiya afzal.",
+      "explanation": "Klass bitta klassdan meros oladi; trait instansiya qilinmaydi va ko'p meros o'rnini bosadi. Trait konflikt: ikki trait bir xil metod — `use A, B { A::foo insteadof B; B::foo as barFoo; }`. Trait abstract metod talab qilishi mumkin. Laravel: `HasFactory`, `SoftDeletes`, `Notifiable` — trait'lar. Haddan ortiq trait — yashirin bog'liqlik, kompozitsiya afzal.",
       "reviewed": false
     },
     {
@@ -23,12 +23,12 @@
       "kind": "concept",
       "prompt": "Namespace va Composer autoload (PSR-4) qanday ishlaydi?",
       "options": [
-        { "id": "a", "text": "Namespace — klass nomlari to'qnashuvini oldini oladi (`App\\Services\\UserService`); PSR-4 — namespace prefiksi → katalog mapping (`\"App\\\\\": \"app/\"`), klass fayl yo'li namespace'dan hisoblanadi; `vendor/autoload.php` klassni birinchi ishlatilganda yuklaydi (`spl_autoload_register`)", "correct": true },
+        { "id": "a", "text": "Namespace — nomlar to'qnashuvini oldini oladi; PSR-4 — namespace prefiksini katalogga moslaydi, klass kerak bo'lganda yuklanadi", "correct": true },
         { "id": "b", "text": "Hamma klass qo'lda `require` qilinadi", "hint": "Autoload buni yo'q qiladi." },
-        { "id": "c", "text": "Namespace — papka nomi, boshqa ma'nosi yo'q", "hint": "Mantiqiy nom; PSR-4 uni papkaga bog'laydi — konvensiya." },
+        { "id": "c", "text": "Namespace — shunchaki papka nomi, uning boshqa hech qanday ma'nosi yo'q va Composer autoload jarayoniga umuman hech qanday ta'sir qilmaydi", "hint": "Mantiqiy nom; PSR-4 uni papkaga bog'laydi — konvensiya." },
         { "id": "d", "text": "Composer faqat paket yuklash uchun", "hint": "Paket + autoload + skriptlar." }
       ],
-      "explanation": "`composer dump-autoload -o` — classmap optimizatsiya (production). `composer.lock` — aniq versiyalar, git'ga kiradi; `composer install` lock'dan, `update` — yangilaydi. Semver cheklovlar `^8.0`. `composer require --dev` — faqat ishlab chiqish. `composer audit` — zaifliklar.",
+      "explanation": "`vendor/autoload.php` `spl_autoload_register` orqali klassni birinchi ishlatilganda yuklaydi. `composer dump-autoload -o` — classmap optimizatsiya (production). `composer.lock` — aniq versiyalar, git'ga kiradi; `composer install` lock'dan, `update` — yangilaydi. Semver cheklovlar `^8.0`. `composer require --dev` — faqat ishlab chiqish. `composer audit` — zaifliklar.",
       "reviewed": false
     },
     {
@@ -54,12 +54,12 @@
       "kind": "concept",
       "prompt": "PHP'da magic metodlar (`__get`, `__set`, `__call`, `__toString`) nima va qanday ehtiyotkorlik kerak?",
       "options": [
-        { "id": "a", "text": "Mavjud bo'lmagan property/metodga murojaatni ushlash (`__get`/`__set`/`__call`/`__callStatic`), satrga o'girish (`__toString`), `__invoke` — ob'ektni funksiya kabi; kuchli (Eloquent atributlari shunday), lekin IDE/statik tahlil ko'rmaydi, yashirin xatti-harakat — kam ishlatish, `@property` PHPDoc bilan hujjatlash", "correct": true },
+        { "id": "a", "text": "Yo'q property/metodga murojaatni ushlash, `__toString`, `__invoke`; kuchli, lekin statik tahlil ko'rmaydi", "correct": true },
         { "id": "b", "text": "Faqat `__construct` va `__destruct`", "hint": "Ular ham magic, lekin ro'yxat uzun." },
         { "id": "c", "text": "Eskirgan, PHP 8 da olib tashlangan", "hint": "Bor va keng ishlatiladi (Eloquent, Facade)." },
-        { "id": "d", "text": "Doim ishlatish tavsiya — kod qisqaradi", "hint": "Qisqa, lekin \"sehrli\" — debug va autocomplete qiyin." }
+        { "id": "d", "text": "Ularni doim ishlatish tavsiya etiladi — kod qisqaradi va IDE ham hamma narsani avtomatik to'liq tushunadi", "hint": "Qisqa, lekin \"sehrli\" — debug va autocomplete qiyin." }
       ],
-      "explanation": "Eloquent `$user->name` — `__get` orqali `attributes` massividan; Facade `Cache::get()` — `__callStatic` orqali container'dagi instansiya. `__toString` — `Stringable` interfeysi (8.0 avtomatik). `__serialize`/`__unserialize`, `__clone`. Laravel IDE Helper — magic uchun PHPDoc generatsiya.",
+      "explanation": "Eloquent atributlari shunday ishlaydi; kam ishlatish va `@property` PHPDoc bilan hujjatlash kerak. Eloquent `$user->name` — `__get` orqali `attributes` massividan; Facade `Cache::get()` — `__callStatic` orqali container'dagi instansiya. `__toString` — `Stringable` interfeysi (8.0 avtomatik). `__serialize`/`__unserialize`, `__clone`. Laravel IDE Helper — magic uchun PHPDoc generatsiya.",
       "reviewed": false
     },
     {
@@ -69,12 +69,12 @@
       "kind": "concept",
       "prompt": "`composer.json` va `composer.lock` qanday farqlanadi, qaysi biri git'ga kiradi?",
       "options": [
-        { "id": "a", "text": "`composer.json` — talablar (versiya diapazoni `^10.0`), skriptlar, autoload; `composer.lock` — `install`/`update` natijasida o'rnatilgan aniq versiyalar va hash'lar; ikkalasi git'da (ilova uchun) — jamoa va production bir xil versiya oladi; kutubxona uchun lock odatda ignore", "correct": true },
-        { "id": "b", "text": "`lock` — vaqtinchalik fayl, git'ga kirmaydi", "hint": "Ilovada lock git'da — aks holda har deploy boshqa versiya." },
+        { "id": "a", "text": "`json` — versiya diapazonlari va sozlamalar; `lock` — o'rnatilgan aniq versiyalar; ilova uchun ikkalasi git'da", "correct": true },
+        { "id": "b", "text": "`composer.lock` — vaqtinchalik fayl, u har `install` da qayta yaratiladi, shuning uchun uni hech qachon git'ga kiritmaslik kerak", "hint": "Ilovada lock git'da — aks holda har deploy boshqa versiya." },
         { "id": "c", "text": "Bir xil mazmun, ikki format", "hint": "Biri diapazon, ikkinchisi aniq versiya." },
         { "id": "d", "text": "`composer.json` qo'lda yozilmaydi", "hint": "Qo'lda ham, `composer require` ham o'zgartiradi." }
       ],
-      "explanation": "CI/production: `composer install --no-dev --optimize-autoloader --no-interaction` — lock'dan, dev paketlarsiz. `composer update vendor/package` — bitta paketni yangilash. Dependabot/Renovate — lock'ni avtomatik yangilash PR'lari. `composer outdated` — eskirganlar.",
+      "explanation": "Lock bilan jamoa va production bir xil versiyalarni oladi; kutubxona uchun lock odatda ignore qilinadi. CI/production: `composer install --no-dev --optimize-autoloader --no-interaction` — lock'dan, dev paketlarsiz. `composer update vendor/package` — bitta paketni yangilash. Dependabot/Renovate — lock'ni avtomatik yangilash PR'lari. `composer outdated` — eskirganlar.",
       "reviewed": false
     },
     {
@@ -84,12 +84,12 @@
       "kind": "concept",
       "prompt": "PHP'da interface + abstract class + trait birgalikda qanday dizayn beradi va qachon qaysi biri?",
       "options": [
-        { "id": "a", "text": "Interface — tashqi kontrakt (DI, test uchun almashtirish, type hint); abstract class — umumiy ildiz + Template Method (qisman implementatsiya, konstruktor); trait — gorizontal qayta ishlatish ierarxiyasiz (logging, timestamps). Default — interface + kompozitsiya; abstract — aniq \"is-a\" ierarxiya; trait — kichik, holatsiz yordamchilar", "correct": true },
+        { "id": "a", "text": "Interface — tashqi kontrakt; abstract class — umumiy ildiz va Template Method; trait — kichik holatsiz yordamchilar", "correct": true },
         { "id": "b", "text": "Hamma joyda abstract class", "hint": "Bitta meros — kengayish cheklanadi; interface moslashuvchan." },
         { "id": "c", "text": "Trait hamma narsani almashtiradi", "hint": "Trait — yashirin bog'liqlik, test qiyin; haddan oshsa \"trait soup\"." },
-        { "id": "d", "text": "Interface kerak emas — duck typing bor", "hint": "PHP'da type hint interface orqali — kompilyator/PHPStan tekshiradi." }
+        { "id": "d", "text": "Interface umuman kerak emas — PHP'da duck typing bor va interfeys bo'yicha type hint'lar hech qanday foyda bermaydi", "hint": "PHP'da type hint interface orqali — kompilyator/PHPStan tekshiradi." }
       ],
-      "explanation": "Laravel misoli: `Illuminate\\Contracts\\Cache\\Repository` (interface) → `CacheManager` → driver'lar; `Model` — abstract-ish ildiz; `SoftDeletes` — trait. Trait'da `abstract` metod — klassdan nimani kutishini aniq aytish. Trait'da konstruktor — qochish.",
+      "explanation": "Default — interface + kompozitsiya; abstract — aniq \"is-a\" ierarxiya uchun. Laravel misoli: `Illuminate\\Contracts\\Cache\\Repository` (interface) → `CacheManager` → driver'lar; `Model` — abstract-ish ildiz; `SoftDeletes` — trait. Trait'da `abstract` metod — klassdan nimani kutishini aniq aytish. Trait'da konstruktor — qochish.",
       "reviewed": false
     },
     {
@@ -115,12 +115,12 @@
       "kind": "concept",
       "prompt": "PSR standartlari nima va qaysilari muhim?",
       "options": [
-        { "id": "a", "text": "PHP-FIG interop standartlari: PSR-4 (autoload), PSR-12 (kod uslubi), PSR-3 (Logger interface), PSR-7/15/17 (HTTP message, middleware, factory), PSR-11 (Container), PSR-6/16 (Cache), PSR-14 (Event dispatcher), PSR-18 (HTTP client) — kutubxonalar framework'dan mustaqil almashinadi", "correct": true },
-        { "id": "b", "text": "PHP rasmiy sintaksis qoidalari", "hint": "Til qoidasi emas — jamoatchilik interop standartlari." },
+        { "id": "a", "text": "PHP-FIG interop standartlari: PSR-4 autoload, PSR-12 uslub, PSR-3 logger, PSR-7/15 HTTP va boshqalar", "correct": true },
+        { "id": "b", "text": "PHP tilining rasmiy sintaksis qoidalari — ularga amal qilmagan kod interpretator tomonidan bajarilmaydi", "hint": "Til qoidasi emas — jamoatchilik interop standartlari." },
         { "id": "c", "text": "Faqat Laravel uchun", "hint": "Framework'dan mustaqil — Symfony, Laravel, Slim hammasi qo'llaydi." },
         { "id": "d", "text": "Eskirgan, endi ishlatilmaydi", "hint": "Har zamonaviy paket PSR-4, PSR-3, PSR-7/18 ga tayanadi." }
       ],
-      "explanation": "Misol: Monolog PSR-3 implement qiladi — Laravel ham, Symfony ham ishlatadi. Guzzle PSR-7/18. Laravel o'z HTTP abstraksiyasini ishlatadi (Symfony HttpFoundation), lekin PSR-7 ga ko'prik bor. Suhbatda: \"PSR-4 va PSR-12 ni bilasizmi\" — minimal kutish.",
+      "explanation": "Ular tufayli kutubxonalar framework'dan mustaqil almashinadi: PSR-11 container, PSR-6/16 cache, PSR-18 HTTP client. Misol: Monolog PSR-3 implement qiladi — Laravel ham, Symfony ham ishlatadi. Guzzle PSR-7/18. Laravel o'z HTTP abstraksiyasini ishlatadi (Symfony HttpFoundation), lekin PSR-7 ga ko'prik bor. Suhbatda: \"PSR-4 va PSR-12 ni bilasizmi\" — minimal kutish.",
       "reviewed": false
     },
     {
@@ -130,12 +130,12 @@
       "kind": "concept",
       "prompt": "PHP 8 attributes nima va qayerda ishlatiladi?",
       "options": [
-        { "id": "a", "text": "Kodga strukturali metadata (`#[Route('/users')]`, `#[ORM\\Column]`) — PHPDoc annotatsiya o'rniga, tilning qismi, reflection orqali o'qiladi (`getAttributes()`); Symfony route/validation, Doctrine mapping, Laravel (8.x+ ba'zi joylar, 11 da ko'proq), PHPUnit `#[Test]`, `#[Override]` (8.3), `#[Deprecated]` (8.4)", "correct": true },
+        { "id": "a", "text": "Kodga tilning o'zidagi strukturali metadata (`#[Route]`), reflection bilan o'qiladi — PHPDoc annotatsiya o'rniga", "correct": true },
         { "id": "b", "text": "Klass property'larining yangi nomi", "hint": "Property emas — metadata deklaratsiya." },
-        { "id": "c", "text": "Runtime'da kodni o'zgartiradi", "hint": "Passiv — faqat o'qiladi, framework unga qarab ish qiladi." },
+        { "id": "c", "text": "Ular runtime'da kodni o'zi o'zgartiradi: atribut qo'yilgan metod avtomatik ravishda boshqacha va tezroq ishlay boshlaydi", "hint": "Passiv — faqat o'qiladi, framework unga qarab ish qiladi." },
         { "id": "d", "text": "Faqat izoh — ta'siri yo'q", "hint": "PHPDoc'dan farqi — til tekshiradi, reflection beradi." }
       ],
-      "explanation": "O'z attribute: `#[Attribute(Attribute::TARGET_METHOD)] class Cacheable { public function __construct(public int $ttl) {} }` → `$method->getAttributes(Cacheable::class)[0]->newInstance()`. Attribute vs interface: metadata — attribute, xatti-harakat — interface. Reflection narxi — cache qilish.",
+      "explanation": "Symfony route va validation, Doctrine mapping, PHPUnit `#[Test]`, `#[Override]` (8.3). O'z attribute: `#[Attribute(Attribute::TARGET_METHOD)] class Cacheable { public function __construct(public int $ttl) {} }` → `$method->getAttributes(Cacheable::class)[0]->newInstance()`. Attribute vs interface: metadata — attribute, xatti-harakat — interface. Reflection narxi — cache qilish.",
       "reviewed": false
     },
     {
