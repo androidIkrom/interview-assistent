@@ -35,19 +35,25 @@
 
     <string name="nav_home">Bosh</string>
     <string name="nav_topics">Mavzular</string>
-    <string name="home_practice">Mashq</string>
-    <string name="home_practice_desc">Mavzu tanlang va 10 ta savol yeching. Xato javobda to\'g\'ri variant ko\'rsatilmaydi: tushuntirishni o\'qib, qayta urinasiz.</string>
+    <string name="home_greeting">Bugun ham bir qadam</string>
+    <string name="home_start_practice">Mashqni boshlash</string>
+    <string name="home_mastered_label">savol o\'zlashtirilgan</string>
+    <string name="home_mistakes_tile">xato takrorlashni kutmoqda</string>
+    <string name="home_streak_days">%1$d kun</string>
+    <string name="home_streak_label">ketma-ket mashq</string>
+    <string name="home_streak_start">Bugun boshlang</string>
+    <string name="home_streak_a11y">%1$d kunlik seriya</string>
+    <string name="home_mock_meta">%1$d savol · 30 daqiqa</string>
+    <string name="home_weak_title">Bo\'sh mavzular</string>
+    <string name="home_weak_all">Barchasi</string>
+    <string name="home_percent">%1$d%%</string>
     <string name="home_your_target">Tayyorlanayotgan yo\'nalish</string>
     <string name="home_readiness">Tayyorlik: %1$d%%</string>
-    <string name="home_mastered">%1$d / %2$d savol o\'zlashtirilgan</string>
-    <string name="home_mistakes">Xatolar</string>
-    <string name="home_mistakes_due">%1$d ta savol takrorlashni kutmoqda</string>
     <string name="home_mistakes_none">Bugun takrorlanadigan savol yo\'q</string>
     <string name="home_mistakes_tomorrow">%1$d ta savol ertaga qaytadi</string>
     <string name="home_mistakes_later">%1$d ta savol %2$d kundan keyin qaytadi</string>
     <string name="home_mistakes_action">Takrorlash</string>
     <string name="home_mock">Mock interview</string>
-    <string name="home_mock_desc">%1$d ta savol, 30 daqiqa. Javoblar faqat oxirida tekshiriladi.</string>
     <string name="home_mock_unavailable">Mock interview uchun kamida 5 ta savol kerak.</string>
     <string name="home_mock_last">Oxirgi natija: %1$d / %2$d</string>
 

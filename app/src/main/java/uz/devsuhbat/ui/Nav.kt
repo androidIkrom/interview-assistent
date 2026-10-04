@@ -153,9 +153,11 @@ fun DevSuhbatNavHost(container: AppContainer, startDestination: String) {
             composable(Routes.HOME) {
                 HomeScreen(
                     container = container,
-                    onPractice = { nav.openTab(Routes.TOPICS) },
+                    onPractice = { nav.navigate(Routes.session(Routes.MIXED)) },
                     onMistakes = { nav.navigate(Routes.session(Routes.MISTAKES)) },
                     onMock = { nav.navigate(Routes.MOCK) },
+                    onTopic = { topicId -> nav.navigate(Routes.session(topicId)) },
+                    onAllTopics = { nav.openTab(Routes.TOPICS) },
                     onSettings = { nav.navigate(Routes.SETTINGS) },
                 )
             }
