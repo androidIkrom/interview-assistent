@@ -213,16 +213,19 @@ fun SessionScreen(
         if (question == null) {
             Box(Modifier.fillMaxSize().padding(padding), Alignment.Center) { CircularProgressIndicator() }
         } else {
+            // Each pane draws the state it was given, so the answered question slides out as it was left.
             AnimatedContent(
-                targetState = Triple(question.id, state.isRepeat, state.position),
+                targetState = state,
+                contentKey = { Triple(it.question?.id, it.isRepeat, it.position) },
                 transitionSpec = {
                     (slideInHorizontally(DsMotion.spatialDefault()) { it / 4 } + fadeIn(DsMotion.effectsDefault()))
                         .togetherWith(slideOutHorizontally(DsMotion.spatialDefault()) { -it / 4 } + fadeOut(DsMotion.effectsDefault()))
                 },
                 label = "question",
                 modifier = Modifier.padding(padding),
-            ) { _ ->
-                QuestionContent(state, question) { optionId ->
+            ) { pane ->
+                val paneQuestion = pane.question ?: return@AnimatedContent
+                QuestionContent(pane, paneQuestion) { optionId ->
                     haptics(HapticEvent.SELECT)
                     viewModel.toggle(optionId)
                 }
