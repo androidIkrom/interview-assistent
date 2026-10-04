@@ -8,12 +8,12 @@
       "kind": "concept",
       "prompt": "CI, Continuous Delivery va Continuous Deployment qanday farqlanadi?",
       "options": [
-        { "id": "a", "text": "CI — har bir o'zgarish asosiy branch'ga tez-tez birlashtiriladi va avtomatik build + testlardan o'tadi. Continuous Delivery — har muvaffaqiyatli o'zgarish production'ga chiqishga tayyor holatga keltiriladi, chiqarish esa qo'lda tasdiqlanadi. Continuous Deployment — testlardan o'tgan har o'zgarish inson aralashuvisiz avtomatik production'ga chiqadi", "correct": true },
+        { "id": "a", "text": "CI — tez-tez merge va avtomatik test; Delivery — reliz tayyor, chiqarish qo'lda; Deployment — avtomatik production'ga", "correct": true },
         { "id": "b", "text": "Uchalasi bir xil narsaning turli nomlari", "hint": "Farq — production'ga chiqarish qadami qo'lda yoki avtomatik ekanida va jarayon qayerda tugashida." },
         { "id": "c", "text": "CI — faqat kodni serverga nusxalash", "hint": "CI'ning mohiyati — tez-tez integratsiya va avtomatik tekshiruv." },
-        { "id": "d", "text": "Continuous Deployment'da testlar kerak emas", "hint": "Aksincha — inson tekshiruvisiz chiqarilgani uchun avtomatik testlar va monitoring juda ishonchli bo'lishi kerak." }
+        { "id": "d", "text": "Continuous Deployment'da testlar kerak emas — o'zgarishlar shunchaki to'g'ridan-to'g'ri production'ga ko'chiriladi va xato bo'lsa qaytariladi", "hint": "Aksincha — inson tekshiruvisiz chiqarilgani uchun avtomatik testlar va monitoring juda ishonchli bo'lishi kerak." }
       ],
-      "explanation": "CI'ning asosiy foydasi — integratsiya muammolarini kichik bo'laklarda, erta topish (\"merge do'zaxi\" yo'q). Uzoq yashaydigan feature branch'lar CI g'oyasiga zid — trunk-based development va feature flag'lar ko'proq mos.",
+      "explanation": "CI'da har o'zgarish asosiy branch'ga birlashtirilib build va testlardan o'tadi; Continuous Deployment'da testdan o'tgan o'zgarish inson aralashuvisiz chiqadi. CI'ning asosiy foydasi — integratsiya muammolarini kichik bo'laklarda, erta topish (\"merge do'zaxi\" yo'q). Uzoq yashaydigan feature branch'lar CI g'oyasiga zid — trunk-based development va feature flag'lar ko'proq mos.",
       "reviewed": false
     },
     {
@@ -23,12 +23,12 @@
       "kind": "concept",
       "prompt": "Pull request ochilganda CI pipeline odatda nima qiladi?",
       "options": [
-        { "id": "a", "text": "Kodni toza muhitda yig'adi (build), linter va formatlash tekshiruvini, unit va integration testlarni ishga tushiradi, statik tahlil va xavfsizlik skanerlarini bajaradi; natija PR'da status sifatida ko'rinadi va qizil bo'lsa merge bloklanadi (branch protection)", "correct": true },
+        { "id": "a", "text": "Toza muhitda build, linter, unit/integration testlar va skanerlar; qizil natija merge'ni bloklaydi", "correct": true },
         { "id": "b", "text": "Kodni darhol production'ga deploy qiladi", "hint": "PR hali ko'rib chiqilmagan va birlashtirilmagan — production deploy odatda merge'dan keyin." },
-        { "id": "c", "text": "Faqat kod muallifining kompyuterida testlarni ishga tushiradi", "hint": "CI'ning qiymati — barcha uchun bir xil, toza va takrorlanadigan muhit." },
+        { "id": "c", "text": "Faqat kod muallifining kompyuterida testlarni ishga tushiradi va natijani qo'lda PR izohiga yozib qo'yadi", "hint": "CI'ning qiymati — barcha uchun bir xil, toza va takrorlanadigan muhit." },
         { "id": "d", "text": "Faqat commit xabarini tekshiradi", "hint": "Asosiy vazifa — build va testlar orqali o'zgarish ishlashini tekshirish." }
       ],
-      "explanation": "\"Mening kompyuterimda ishlaydi\" muammosini CI hal qiladi. PR tekshiruvi tez bo'lishi kerak (10–15 daqiqagacha) — sekin pipeline'ni jamoa chetlab o'tishni boshlaydi.",
+      "explanation": "Statik tahlil va xavfsizlik skanerlari ham ishlaydi; natija PR'da status sifatida ko'rinadi, bloklash — branch protection orqali. \"Mening kompyuterimda ishlaydi\" muammosini CI hal qiladi. PR tekshiruvi tez bo'lishi kerak (10–15 daqiqagacha) — sekin pipeline'ni jamoa chetlab o'tishni boshlaydi.",
       "reviewed": false
     },
     {
@@ -38,12 +38,12 @@
       "kind": "concept",
       "prompt": "CI/CD'da \"artifact\" nima?",
       "options": [
-        { "id": "a", "text": "Pipeline natijasida yaratilgan va saqlanadigan mahsulot: Docker image, JAR, APK, zip arxiv, test hisobotlari. Artifact versiyalanadi va registry/omborga (Docker registry, Nexus, S3) yuklanadi, keyingi bosqichlar (deploy) aynan shu artifact'dan foydalanadi", "correct": true },
+        { "id": "a", "text": "Pipeline yaratgan, versiyalangan mahsulot (Docker image, JAR, APK) — deploy aynan shundan foydalanadi", "correct": true },
         { "id": "b", "text": "Pipeline'dagi xato xabari", "hint": "Artifact — build natijasi, xato emas." },
-        { "id": "c", "text": "Git repozitoriydagi manba kod", "hint": "Manba kod — kirish; artifact — undan yig'ilgan chiqish." },
+        { "id": "c", "text": "Git repozitoriydagi manba kod — pipeline uni har bosqichda qayta yuklab olib, to'g'ridan-to'g'ri serverga nusxalaydi", "hint": "Manba kod — kirish; artifact — undan yig'ilgan chiqish." },
         { "id": "d", "text": "Faqat pipeline loglari", "hint": "Loglar ham saqlanishi mumkin, lekin asosiy artifact — deploy qilinadigan paket." }
       ],
-      "explanation": "Artifact noyob versiya bilan belgilanadi (commit SHA, semver) — production'da qaysi kod ishlayotganini aniq bilish uchun. Saqlash muddati siyosati (retention) ombor hajmini nazorat qiladi.",
+      "explanation": "Test hisobotlari ham artifact; ular registry yoki omborga (Docker registry, Nexus, S3) yuklanadi. Artifact noyob versiya bilan belgilanadi (commit SHA, semver) — production'da qaysi kod ishlayotganini aniq bilish uchun. Saqlash muddati siyosati (retention) ombor hajmini nazorat qiladi.",
       "reviewed": false
     },
     {
@@ -53,12 +53,12 @@
       "kind": "concept",
       "prompt": "Pipeline'da DB paroli va API kalitlari qanday saqlanishi kerak?",
       "options": [
-        { "id": "a", "text": "CI platformasining maxfiy o'zgaruvchilari (GitHub Actions secrets, GitLab CI variables masked/protected) yoki tashqi secret manager (Vault, cloud secret manager) orqali; repozitoriyda emas. Loglarda niqoblanadi, faqat kerakli job/muhitga beriladi; imkon bo'lsa uzoq muddatli kalitlar o'rniga OIDC bilan qisqa muddatli token", "correct": true },
-        { "id": "b", "text": "Repozitoriydagi `.env` faylida — jamoa uchun qulay", "hint": "Git tarixida sir abadiy qoladi va repo'ga kirgan har kim uni ko'radi." },
+        { "id": "a", "text": "CI maxfiy o'zgaruvchilari yoki secret manager (Vault) orqali, repozitoriyda emas; loglarda niqoblanadi", "correct": true },
+        { "id": "b", "text": "Repozitoriydagi `.env` faylida — jamoa uchun qulay, repozitoriy esa baribir faqat kompaniya ichida yopiq turadi", "hint": "Git tarixida sir abadiy qoladi va repo'ga kirgan har kim uni ko'radi." },
         { "id": "c", "text": "Pipeline YAML faylining o'zida ochiq yozish", "hint": "YAML ham repozitoriyda — xuddi shu muammo." },
         { "id": "d", "text": "Debug uchun sirlarni `echo` bilan log'ga chiqarish", "hint": "Loglar ko'p odamga ochiq va uzoq saqlanadi — sirlar oqib chiqadi." }
       ],
-      "explanation": "Sir tasodifan commit qilinsa — uni darhol bekor qilish (rotate) kerak, tarixdan o'chirish yetarli emas. Secret scanning (GitHub push protection, gitleaks) bunday xatolarning oldini oladi. Fork'dan kelgan PR'larga sirlar berilmasligi kerak.",
+      "explanation": "Masalan, GitHub Actions secrets, GitLab masked/protected variables. Sir faqat kerakli job/muhitga beriladi; imkon bo'lsa uzoq muddatli kalitlar o'rniga OIDC bilan qisqa muddatli token. Sir tasodifan commit qilinsa — uni darhol bekor qilish (rotate) kerak, tarixdan o'chirish yetarli emas. Secret scanning (GitHub push protection, gitleaks) bunday xatolarning oldini oladi. Fork'dan kelgan PR'larga sirlar berilmasligi kerak.",
       "reviewed": false
     },
     {
@@ -68,12 +68,12 @@
       "kind": "concept",
       "prompt": "Tipik pipeline bosqichlarining mantiqiy tartibi qaysi?",
       "options": [
-        { "id": "a", "text": "Lint va statik tekshiruv → build → unit testlar → integration testlar → artifact (image) yaratish va skanerlash → registry'ga yuklash → staging'ga deploy → smoke/E2E → production'ga deploy (tasdiq yoki avtomatik) → deploy'dan keyingi tekshiruv. Tez va arzon tekshiruvlar oldinda — xato bo'lsa pipeline erta to'xtaydi", "correct": true },
+        { "id": "a", "text": "Lint → build → unit → integration → image va skan → staging → smoke/E2E → production; arzon tekshiruvlar oldinda", "correct": true },
         { "id": "b", "text": "Avval production'ga deploy, keyin testlar", "hint": "Xatolar foydalanuvchilarga yetib boradi — testlar deploy'dan oldin." },
-        { "id": "c", "text": "Eng sekin E2E testlar birinchi bo'lishi kerak", "hint": "Sekin bosqich birinchi bo'lsa, oddiy lint xatosi uchun ham uzoq kutiladi." },
+        { "id": "c", "text": "Eng sekin E2E testlar birinchi bo'lishi kerak — ular eng ko'p xato topadi, qolgan tekshiruvlarni esa keyinga qoldirsa bo'ladi", "hint": "Sekin bosqich birinchi bo'lsa, oddiy lint xatosi uchun ham uzoq kutiladi." },
         { "id": "d", "text": "Har muhit uchun kodni qaytadan build qilish", "hint": "Bir marta build qilingan artifact barcha muhitlarga ko'chirilishi kerak — aks holda testlangan va chiqarilgan narsa farq qilishi mumkin." }
       ],
-      "explanation": "Mustaqil bosqichlarni parallel ishga tushirish (lint va unit testlar) vaqtni qisqartiradi. Production deploy'dan oldin \"environment protection\" (tasdiqlovchilar, vaqt oynalari) qo'yiladi.",
+      "explanation": "Image registry'ga yuklanadi, production deploy tasdiq bilan yoki avtomatik, keyin deploy'dan keyingi tekshiruv. Xato bo'lsa pipeline erta to'xtaydi. Mustaqil bosqichlarni parallel ishga tushirish (lint va unit testlar) vaqtni qisqartiradi. Production deploy'dan oldin \"environment protection\" (tasdiqlovchilar, vaqt oynalari) qo'yiladi.",
       "reviewed": false
     },
     {
@@ -83,12 +83,12 @@
       "kind": "concept",
       "prompt": "CI'da har safar bog'liqliklarni (npm, Maven, Gradle) internetdan qayta yuklash pipeline'ni sekinlashtirmoqda. Qanday tezlashtiriladi?",
       "options": [
-        { "id": "a", "text": "Bog'liqliklar keshini lock fayl xeshi bo'yicha kalit bilan saqlash (masalan, `actions/cache` yoki `setup-node` ichidagi `cache: npm`) — lock fayl o'zgarmaguncha kesh qayta ishlatiladi; Docker build uchun qatlam keshi; kerak bo'lsa ichki proxy/mirror (Nexus, Artifactory)", "correct": true },
+        { "id": "a", "text": "Bog'liqliklar keshini lock fayl xeshi kaliti bilan saqlash (`actions/cache`, `cache: npm`) va Docker qatlam keshi", "correct": true },
         { "id": "b", "text": "`node_modules` papkasini repozitoriyga commit qilish", "hint": "Repo shishadi, platformaga xos binarlar buziladi, yangilash qiyin." },
         { "id": "c", "text": "Lock faylni o'chirib, har safar eng yangi versiyalarni olish", "hint": "Build'lar takrorlanmas bo'lib qoladi va kutilmagan buzilishlar paydo bo'ladi." },
-        { "id": "d", "text": "Keshni hech qachon yangilamaslik, bitta umumiy kalit bilan saqlash", "hint": "Eskirgan kesh noto'g'ri versiyalar bilan build qilishga olib keladi; kalit lock faylga bog'liq bo'lishi kerak." }
+        { "id": "d", "text": "Keshni hech qachon yangilamaslik, barcha branch va loyihalar uchun bitta umumiy doimiy kalit bilan saqlab qo'yish", "hint": "Eskirgan kesh noto'g'ri versiyalar bilan build qilishga olib keladi; kalit lock faylga bog'liq bo'lishi kerak." }
       ],
-      "explanation": "Kesh — optimallashtirish, to'g'rilik manbai emas: keshsiz ham build ishlashi shart. Gradle'da remote build cache, monorepo'larda Nx/Turborepo remote cache bajarilgan vazifalar natijasini ham qayta ishlatadi.",
+      "explanation": "Lock fayl o'zgarmaguncha kesh qayta ishlatiladi; kerak bo'lsa ichki proxy/mirror (Nexus, Artifactory). Kesh — optimallashtirish, to'g'rilik manbai emas: keshsiz ham build ishlashi shart. Gradle'da remote build cache, monorepo'larda Nx/Turborepo remote cache bajarilgan vazifalar natijasini ham qayta ishlatadi.",
       "reviewed": false
     },
     {
@@ -114,12 +114,12 @@
       "kind": "concept",
       "prompt": "\"Build once, deploy many\" tamoyili nimani anglatadi?",
       "options": [
-        { "id": "a", "text": "Artifact (masalan, Docker image) bir marta yig'iladi va aynan shu artifact dev → staging → production bo'ylab ko'chiriladi (promote); muhitlar orasidagi farq faqat konfiguratsiyada (env o'zgaruvchilar, ConfigMap, secret'lar). Shunda production'da staging'da testlangan aynan o'sha bitlar ishlaydi", "correct": true },
+        { "id": "a", "text": "Artifact bir marta yig'iladi va aynan shu artifact dev → staging → production bo'ylab ko'chiriladi", "correct": true },
         { "id": "b", "text": "Har muhit uchun alohida branch va alohida build", "hint": "Har build biroz farq qilishi mumkin (bog'liqlik versiyasi, build muhiti) — testlangan narsa chiqarilmaydi." },
-        { "id": "c", "text": "Production konfiguratsiyasini image ichiga qotirish", "hint": "Unda image'ni boshqa muhitda ishlatib bo'lmaydi; konfiguratsiya tashqaridan beriladi (12-factor)." },
+        { "id": "c", "text": "Production konfiguratsiyasini image ichiga qotirish — shunda image har qanday muhitda sozlamasiz darhol ishlay oladi", "hint": "Unda image'ni boshqa muhitda ishlatib bo'lmaydi; konfiguratsiya tashqaridan beriladi (12-factor)." },
         { "id": "d", "text": "Bitta serverga bir nechta marta deploy qilish", "hint": "Gap bitta artifact'ni ko'p muhitga ko'chirish haqida." }
       ],
-      "explanation": "Image teg sifatida commit SHA ishlatiladi; promote — yangi teg qo'shish yoki GitOps repo'sida versiyani yangilash. Rollback ham oson: oldingi artifact versiyasini qayta deploy qilish.",
+      "explanation": "Muhitlar orasidagi farq faqat konfiguratsiyada (env o'zgaruvchilar, ConfigMap, secret'lar) — production'da staging'da testlangan aynan o'sha bitlar ishlaydi. Image teg sifatida commit SHA ishlatiladi; promote — yangi teg qo'shish yoki GitOps repo'sida versiyani yangilash. Rollback ham oson: oldingi artifact versiyasini qayta deploy qilish.",
       "reviewed": false
     },
     {
@@ -144,12 +144,12 @@
       "kind": "concept",
       "prompt": "Blue-green va canary deployment strategiyalari qanday farqlanadi?",
       "options": [
-        { "id": "a", "text": "Blue-green — ikki to'liq muhit: yangi versiya (green) yonma-yon tayyorlanadi va tekshiriladi, keyin trafik birdan unga o'tkaziladi; rollback — trafikni blue'ga qaytarish (tez, lekin ikki baravar resurs). Canary — yangi versiya avval trafikning kichik qismiga (1–5%) beriladi, metrikalar (xato, latency) kuzatilib, bosqichma-bosqich 100% gacha oshiriladi — xavf kichik foydalanuvchilar guruhi bilan cheklanadi", "correct": true },
+        { "id": "a", "text": "Blue-green — ikki to'liq muhit, trafik birdan almashadi; canary — avval trafikning kichik qismi, so'ng bosqichma-bosqich", "correct": true },
         { "id": "b", "text": "Canary — barcha foydalanuvchilarga birdan chiqarish", "hint": "Canary aynan kichik ulushdan boshlanadi." },
         { "id": "c", "text": "Blue-green'da rollback uchun qayta build kerak", "hint": "Eski muhit ishlab turgani uchun rollback — faqat trafikni qaytarish." },
-        { "id": "d", "text": "Ikkala strategiyada ham DB sxemasi o'zgarishlari hech qanday muammo tug'dirmaydi", "hint": "Ikkala versiya bir vaqtda bitta DB bilan ishlaydi — migratsiyalar orqaga mos bo'lishi kerak." }
+        { "id": "d", "text": "Ikkala strategiyada ham DB sxemasi o'zgarishlari hech qanday muammo tug'dirmaydi, chunki eski va yangi versiya hech qachon birga ishlamaydi", "hint": "Ikkala versiya bir vaqtda bitta DB bilan ishlaydi — migratsiyalar orqaga mos bo'lishi kerak." }
       ],
-      "explanation": "Kubernetes'da rolling update — default; canary uchun Argo Rollouts yoki Flagger metrikalar asosida avtomatik oshirish/rollback qiladi. Feature flag'lar deploy'ni release'dan ajratadi — kod chiqadi, funksiya keyin yoqiladi.",
+      "explanation": "Blue-green'da rollback — trafikni blue'ga qaytarish (tez, lekin ikki baravar resurs). Canary'da 1–5% dan boshlab metrikalar (xato, latency) kuzatiladi — xavf kichik guruh bilan cheklanadi. Kubernetes'da rolling update — default; canary uchun Argo Rollouts yoki Flagger metrikalar asosida avtomatik oshirish/rollback qiladi. Feature flag'lar deploy'ni release'dan ajratadi — kod chiqadi, funksiya keyin yoqiladi.",
       "reviewed": false
     },
     {

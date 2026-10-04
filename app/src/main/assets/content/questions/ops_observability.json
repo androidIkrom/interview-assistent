@@ -8,12 +8,12 @@
       "kind": "concept",
       "prompt": "Kuzatuvchanlikning (observability) uchta asosiy signali — log, metrika va trace — qanday farqlanadi?",
       "options": [
-        { "id": "a", "text": "Log — alohida hodisalar haqidagi batafsil yozuvlar (nima, qachon, kontekst); metrika — vaqt bo'yicha yig'ilgan sonli ko'rsatkichlar (so'rovlar soni, xato %, latency, CPU) — dashboard va alert uchun arzon; trace — bitta so'rovning servislar bo'ylab yo'li (span'lar va ularning davomiyligi) — qayerda sekinlashgan yoki yiqilganini ko'rsatadi", "correct": true },
-        { "id": "b", "text": "Uchalasi bir xil ma'lumotni turli formatda saqlaydi", "hint": "Har biri turli savolga javob beradi: nima bo'ldi (log), qanchalik (metrika), qayerda (trace)." },
+        { "id": "a", "text": "Log — alohida hodisa tafsiloti; metrika — vaqt bo'yicha yig'ilgan sonlar; trace — so'rovning servislar bo'ylab yo'li", "correct": true },
+        { "id": "b", "text": "Uchalasi bir xil ma'lumotni turli formatda saqlaydi, shuning uchun ulardan bittasini yig'ish butun tizim uchun yetarli", "hint": "Har biri turli savolga javob beradi: nima bo'ldi (log), qanchalik (metrika), qayerda (trace)." },
         { "id": "c", "text": "Metrikalar har bir so'rov tafsilotini saqlaydi", "hint": "Metrikalar agregatsiyalangan — tafsilot uchun log va trace." },
         { "id": "d", "text": "Trace faqat monolit ilovalar uchun kerak", "hint": "Distributed tracing aynan ko'p servisli tizimlarda eng foydali." }
       ],
-      "explanation": "OpenTelemetry — uchala signalni yig'ish uchun ochiq standart. Signallarni bog'lash: log'larga trace ID qo'shish — metrikadagi sakrashdan aniq so'rov trace'iga, undan loglarga o'tish mumkin bo'ladi.",
+      "explanation": "Metrika (so'rovlar soni, xato %, latency, CPU) dashboard va alert uchun arzon; trace span'lari qayerda sekinlashgan yoki yiqilganini ko'rsatadi. OpenTelemetry — uchala signalni yig'ish uchun ochiq standart. Signallarni bog'lash: log'larga trace ID qo'shish — metrikadagi sakrashdan aniq so'rov trace'iga, undan loglarga o'tish mumkin bo'ladi.",
       "reviewed": false
     },
     {
@@ -23,12 +23,12 @@
       "kind": "concept",
       "prompt": "Yaxshi alert qanday bo'lishi kerak?",
       "options": [
-        { "id": "a", "text": "Foydalanuvchiga ta'sir qiladigan va inson harakati talab qilinadigan holatda ishlaydi (masalan, xatolar ulushi yoki latency SLO'dan oshdi); aniq nomi, og'irligi, ta'siri, dashboard va runbook havolasi bilan; kam soxta signal. Faqat ma'lumot uchun bo'lgan narsalar — dashboard yoki ticket, tungi qo'ng'iroq emas", "correct": true },
-        { "id": "b", "text": "Har bir metrikaga, har kichik o'zgarishga alert qo'yish — hech narsa o'tkazib yuborilmaydi", "hint": "Alert charchog'i: jamoa shovqinga ko'nikib, haqiqiy muammoni ham e'tiborsiz qoldiradi." },
+        { "id": "a", "text": "Foydalanuvchiga ta'sir qilganda va inson harakati kerak bo'lganda ishlaydi; runbook havolasi bilan, kam soxta signal", "correct": true },
+        { "id": "b", "text": "Har bir metrikaga, har kichik o'zgarishga alert qo'yish — shunda hech narsa o'tkazib yuborilmaydi va jamoa doim xabardor", "hint": "Alert charchog'i: jamoa shovqinga ko'nikib, haqiqiy muammoni ham e'tiborsiz qoldiradi." },
         { "id": "c", "text": "CPU 80% dan oshsa — doim tungi qo'ng'iroq", "hint": "Yuqori CPU o'zi muammo bo'lmasligi mumkin; foydalanuvchi ta'siri (simptom) bo'yicha alert yaxshiroq." },
         { "id": "d", "text": "Alert matnida faqat \"Xato!\" yozuvi yetarli", "hint": "Navbatchi nima bo'lganini, qayerda va nima qilish kerakligini darhol tushunishi kerak." }
       ],
-      "explanation": "Qoida: har alert harakat talab qilsin; agar \"bu alertga hech narsa qilmaymiz\" desangiz — uni o'chiring yoki dashboard'ga o'tkazing. Alertlarni muntazam ko'rib chiqish (qaysilari soxta, qaysi incident alert'siz o'tib ketdi).",
+      "explanation": "Masalan, xatolar ulushi yoki latency SLO'dan oshdi. Alertda aniq nom, og'irlik, ta'sir va dashboard bo'ladi; faqat ma'lumot uchun narsalar — dashboard yoki ticket, tungi qo'ng'iroq emas. Qoida: har alert harakat talab qilsin; agar \"bu alertga hech narsa qilmaymiz\" desangiz — uni o'chiring yoki dashboard'ga o'tkazing. Alertlarni muntazam ko'rib chiqish (qaysilari soxta, qaysi incident alert'siz o'tib ketdi).",
       "reviewed": false
     },
     {
@@ -38,12 +38,12 @@
       "kind": "concept",
       "prompt": "Prometheus qanday ishlaydi va metrika turlari (counter, gauge, histogram) qanday farqlanadi?",
       "options": [
-        { "id": "a", "text": "Prometheus pull modelida ishlaydi: belgilangan oraliqda servislarning `/metrics` endpoint'idan qiymatlarni yig'adi (scrape) va vaqt qatorlari sifatida saqlaydi; PromQL bilan so'rov. Counter — faqat o'sadi (so'rovlar soni; tezligi `rate()` bilan); gauge — ko'tarilib-tushadi (xotira, navbat uzunligi); histogram — qiymatlar taqsimoti (latency) bucket'larda — `histogram_quantile` bilan p95/p99", "correct": true },
+        { "id": "a", "text": "Pull: `/metrics`dan scrape; counter — faqat o'sadi, gauge — ko'tarilib-tushadi, histogram — bucket'lardagi taqsimot", "correct": true },
         { "id": "b", "text": "Prometheus faqat ilova loglarini saqlaydi", "hint": "Prometheus — metrikalar uchun; loglar uchun Loki, Elasticsearch." },
         { "id": "c", "text": "Counter qiymatini to'g'ridan-to'g'ri grafikda ko'rsatish eng foydali", "hint": "O'sib boruvchi umumiy son kam ma'lumot beradi; tezlik (`rate`) va qayta ishga tushishdagi nolga tushishni hisobga olish kerak." },
-        { "id": "d", "text": "Label'larga foydalanuvchi ID'si yoki so'rov ID'sini qo'yish yaxshi amaliyot", "hint": "Yuqori kardinallik — millionlab vaqt qatorlari, Prometheus xotirasi va narxi portlaydi." }
+        { "id": "d", "text": "Label'larga foydalanuvchi ID'si yoki so'rov ID'sini qo'yish yaxshi amaliyot — shunda har bir so'rovni alohida kuzatish mumkin", "hint": "Yuqori kardinallik — millionlab vaqt qatorlari, Prometheus xotirasi va narxi portlaydi." }
       ],
-      "explanation": "Tipik so'rov: `sum(rate(http_requests_total{status=~\"5..\"}[5m])) / sum(rate(http_requests_total[5m]))` — xatolar ulushi. Uzoq saqlash va ko'p klaster uchun Thanos, Mimir yoki VictoriaMetrics. Vizualizatsiya — Grafana.",
+      "explanation": "Vaqt qatorlari PromQL bilan so'raladi; counter tezligi `rate()` bilan, histogram'dan p95/p99 — `histogram_quantile`. Gauge misoli: xotira, navbat uzunligi. Tipik so'rov: `sum(rate(http_requests_total{status=~\"5..\"}[5m])) / sum(rate(http_requests_total[5m]))` — xatolar ulushi. Uzoq saqlash va ko'p klaster uchun Thanos, Mimir yoki VictoriaMetrics. Vizualizatsiya — Grafana.",
       "reviewed": false
     },
     {
@@ -53,12 +53,12 @@
       "kind": "concept",
       "prompt": "Mikroservislarda loglarni samarali boshqarish uchun qaysi yondashuv to'g'ri?",
       "options": [
-        { "id": "a", "text": "Strukturalangan (JSON) loglar stdout'ga: vaqt, daraja, servis, xabar, va kontekst maydonlari (trace/correlation ID, foydalanuvchi ID); agent (Fluent Bit, Vector, OTel Collector) ularni markaziy tizimga (Loki, Elasticsearch/OpenSearch) yuboradi; har servis so'rov ID'sini keyingi servisga uzatadi. Maxfiy ma'lumot (parol, token, karta) loglanmaydi; saqlash muddati va hajmi nazorat qilinadi", "correct": true },
-        { "id": "b", "text": "Har servis loglarni o'z container'idagi faylga yozsin, kerak bo'lganda SSH bilan kirib o'qiladi", "hint": "Container o'chsa loglar yo'qoladi; o'nlab servis bo'ylab qidirish imkonsiz." },
+        { "id": "a", "text": "Strukturalangan JSON loglar stdout'ga, trace/correlation ID bilan; agent markaziy tizimga yuboradi, sirlar loglanmaydi", "correct": true },
+        { "id": "b", "text": "Har servis loglarni o'z container'idagi faylga yozsin, kerak bo'lganda SSH bilan kirib o'qiladi — bu eng sodda va arzon usul", "hint": "Container o'chsa loglar yo'qoladi; o'nlab servis bo'ylab qidirish imkonsiz." },
         { "id": "c", "text": "Hamma narsani DEBUG darajasida production'da loglash", "hint": "Hajm va narx keskin oshadi, muhim yozuvlar shovqinda yo'qoladi; daraja konfiguratsiya bilan boshqariladi." },
         { "id": "d", "text": "Debug uchun so'rov tanasini (parollar bilan birga) to'liq loglash", "hint": "Sirlar va shaxsiy ma'lumotlar log tizimiga oqadi — xavfsizlik va qonun talablari buziladi." }
       ],
-      "explanation": "Correlation ID bilan bitta foydalanuvchi so'rovining barcha servislardagi loglarini bitta qidiruv bilan topish mumkin. Log darajalarini to'g'ri ishlatish: ERROR — harakat talab qiladigan, WARN — g'ayrioddiy, lekin boshqarilgan, INFO — muhim biznes hodisalari.",
+      "explanation": "Agent — Fluent Bit, Vector, OTel Collector; markaz — Loki, Elasticsearch/OpenSearch. Har servis so'rov ID'sini keyingisiga uzatadi; saqlash muddati va hajmi nazorat qilinadi. Correlation ID bilan bitta foydalanuvchi so'rovining barcha servislardagi loglarini bitta qidiruv bilan topish mumkin. Log darajalarini to'g'ri ishlatish: ERROR — harakat talab qiladigan, WARN — g'ayrioddiy, lekin boshqarilgan, INFO — muhim biznes hodisalari.",
       "reviewed": false
     },
     {
@@ -84,12 +84,12 @@
       "kind": "concept",
       "prompt": "Ko'p servisli tizimda sirlarni (DB parollari, API kalitlari) boshqarishning to'g'ri yondashuvi qaysi?",
       "options": [
-        { "id": "a", "text": "Markaziy secret manager (HashiCorp Vault, AWS Secrets Manager, GCP Secret Manager): kirish identifikatsiya asosida (servis akkaunti, workload identity), minimal huquq, audit log; Kubernetes'ga External Secrets Operator orqali sinxronlash; iloji bo'lsa dinamik va qisqa muddatli credential'lar (Vault DB secrets engine) va avtomatik rotatsiya", "correct": true },
+        { "id": "a", "text": "Markaziy secret manager (Vault va h.k.): identifikatsiya asosida kirish, minimal huquq, audit va avtomatik rotatsiya", "correct": true },
         { "id": "b", "text": "Sirlarni barcha servislar uchun umumiy bitta `.env` faylda saqlash", "hint": "Har servis keraksiz sirlarni ham ko'radi; oqish butun tizimga ta'sir qiladi, rotatsiya qiyin." },
         { "id": "c", "text": "Sirlarni container image ichiga joylash", "hint": "Image registry'ga kirgan har kim sirni chiqarib oladi; rotatsiya uchun qayta build kerak." },
-        { "id": "d", "text": "Bir marta yaratilgan parolni hech qachon o'zgartirmaslik — barqarorlik uchun", "hint": "Oqib chiqqan sir abadiy amal qiladi; muntazam va avtomatik rotatsiya xavfni kamaytiradi." }
+        { "id": "d", "text": "Bir marta yaratilgan parolni hech qachon o'zgartirmaslik — barqarorlik uchun, aks holda servislar ulanishni yo'qotib yiqiladi", "hint": "Oqib chiqqan sir abadiy amal qiladi; muntazam va avtomatik rotatsiya xavfni kamaytiradi." }
       ],
-      "explanation": "Cloud'da eng yaxshi variant — sirlarsiz kirish: workload identity/IRSA bilan servis to'g'ridan-to'g'ri cloud API'ga ruxsat oladi. Sir oqib chiqqanda: darhol bekor qilish, audit log'da foydalanishni tekshirish, sababni yopish.",
+      "explanation": "Masalan, AWS/GCP Secret Manager; servis akkaunti yoki workload identity; Kubernetes'ga External Secrets Operator orqali; iloji bo'lsa dinamik qisqa muddatli credential'lar (Vault DB secrets engine). Cloud'da eng yaxshi variant — sirlarsiz kirish: workload identity/IRSA bilan servis to'g'ridan-to'g'ri cloud API'ga ruxsat oladi. Sir oqib chiqqanda: darhol bekor qilish, audit log'da foydalanishni tekshirish, sababni yopish.",
       "reviewed": false
     },
     {
@@ -99,12 +99,12 @@
       "kind": "concept",
       "prompt": "SLI, SLO va error budget nima va ular jamoa qarorlariga qanday ta'sir qiladi?",
       "options": [
-        { "id": "a", "text": "SLI — foydalanuvchi tajribasini o'lchaydigan ko'rsatkich (masalan, muvaffaqiyatli va 300 ms dan tez javoblar ulushi); SLO — unga maqsad (28 kunda 99,9%); error budget — ruxsat etilgan nosozlik (0,1% ≈ 40 daqiqa/oy). Budjet yetarli bo'lsa — tez reliz va tajribalar; tez sarflansa (burn-rate alert) — relizlarni sekinlashtirib, ishonchlilikka e'tibor. Bu tezlik va barqarorlik o'rtasidagi bahsni ma'lumotga asoslaydi", "correct": true },
+        { "id": "a", "text": "SLI — o'lchov, SLO — unga maqsad, error budget — ruxsat etilgan nosozlik; budjet reliz tezligini belgilaydi", "correct": true },
         { "id": "b", "text": "SLO har doim 100% bo'lishi kerak", "hint": "100% amalda erishib bo'lmaydi va juda qimmat; foydalanuvchi uchun yetarli daraja tanlanadi." },
-        { "id": "c", "text": "SLI sifatida server CPU foydalanishi eng yaxshi ko'rsatkich", "hint": "SLI foydalanuvchi ko'radigan natijani o'lchashi kerak (mavjudlik, latency), ichki resurslarni emas." },
+        { "id": "c", "text": "SLI sifatida server CPU foydalanishi eng yaxshi ko'rsatkich, chunki u foydalanuvchi tajribasini to'g'ridan-to'g'ri aks ettiradi", "hint": "SLI foydalanuvchi ko'radigan natijani o'lchashi kerak (mavjudlik, latency), ichki resurslarni emas." },
         { "id": "d", "text": "SLA va SLO bir xil narsa", "hint": "SLA — mijoz bilan huquqiy shartnoma (jarima bilan); SLO — ichki, odatda SLA'dan qat'iyroq maqsad." }
       ],
-      "explanation": "SLO'ni kim uchun va qaysi foydalanuvchi oqimi uchun belgilash muhim (login, to'lov). Error budget siyosati oldindan kelishiladi: budjet tugasa nima bo'ladi. Google SRE kitobi — tayanch manba.",
+      "explanation": "Masalan, SLI — 300 ms dan tez muvaffaqiyatli javoblar ulushi; SLO — 28 kunda 99,9%; budjet — 0,1% ≈ 40 daqiqa/oy. Budjet tez sarflansa (burn-rate alert) relizlar sekinlashtirilib, ishonchlilikka e'tibor beriladi. SLO'ni kim uchun va qaysi foydalanuvchi oqimi uchun belgilash muhim (login, to'lov). Error budget siyosati oldindan kelishiladi: budjet tugasa nima bo'ladi. Google SRE kitobi — tayanch manba.",
       "reviewed": false
     },
     {

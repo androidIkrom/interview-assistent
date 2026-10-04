@@ -8,12 +8,12 @@
       "kind": "concept",
       "prompt": "Docker image va container qanday farqlanadi?",
       "options": [
-        { "id": "a", "text": "Image — o'zgarmas shablon: ilova, bog'liqliklar va fayl tizimi qatlamlari (layer) to'plami, registry'da saqlanadi. Container — image'dan ishga tushirilgan jarayon: image ustiga yoziladigan qatlam qo'shiladi, o'z izolyatsiyalangan muhiti bor. Bitta image'dan ko'p container yaratish mumkin", "correct": true },
+        { "id": "a", "text": "Image — o'zgarmas qatlamli shablon; container — image'dan ishga tushgan izolyatsiyalangan jarayon", "correct": true },
         { "id": "b", "text": "Container — image'ning siqilgan arxivi", "hint": "Arxiv/shablon — bu image; container — ishlayotgan nusxa." },
-        { "id": "c", "text": "Container ichida qilingan o'zgarishlar image'ni avtomatik yangilaydi", "hint": "Image o'zgarmas; o'zgarishlar container qatlamida qoladi va container o'chirilsa yo'qoladi." },
+        { "id": "c", "text": "Container ichida qilingan o'zgarishlar image'ni avtomatik yangilaydi va keyingi container'lar ham ularni ko'radi", "hint": "Image o'zgarmas; o'zgarishlar container qatlamida qoladi va container o'chirilsa yo'qoladi." },
         { "id": "d", "text": "Har bir container alohida virtual mashina", "hint": "Container host yadrosini bo'lishadi — VM'dan yengil; izolyatsiya namespace va cgroup orqali." }
       ],
-      "explanation": "Analogiya: image — klass, container — ob'ekt. Image teg bilan versiyalanadi (`myapp:1.4.2`); production'da `latest` tegidan qochish — qaysi versiya ishlayotgani noaniq bo'ladi.",
+      "explanation": "Image registry'da saqlanadi; container image ustiga yoziladigan qatlam qo'shadi. Bitta image'dan ko'p container yaratish mumkin. Analogiya: image — klass, container — ob'ekt. Image teg bilan versiyalanadi (`myapp:1.4.2`); production'da `latest` tegidan qochish — qaysi versiya ishlayotgani noaniq bo'ladi.",
       "reviewed": false
     },
     {
@@ -23,12 +23,12 @@
       "kind": "concept",
       "prompt": "Dockerfile'da `RUN` va `CMD` qanday farqlanadi?",
       "options": [
-        { "id": "a", "text": "`RUN` — image build paytida bajariladi va natijasi yangi qatlam sifatida saqlanadi (paket o'rnatish, kompilyatsiya). `CMD` — container ishga tushganda bajariladigan default buyruq; `docker run image <buyruq>` bilan almashtirilishi mumkin", "correct": true },
+        { "id": "a", "text": "`RUN` — build paytida bajariladi va qatlam bo'ladi; `CMD` — container ishga tushgandagi default buyruq", "correct": true },
         { "id": "b", "text": "Ikkalasi ham container ishga tushganda bajariladi", "hint": "`RUN` faqat build vaqtida — ishlayotgan container'da qayta bajarilmaydi." },
-        { "id": "c", "text": "Dockerfile'da bir nechta `CMD` bo'lsa, hammasi ketma-ket bajariladi", "hint": "Faqat oxirgi `CMD` kuchda bo'ladi." },
+        { "id": "c", "text": "Dockerfile'da bir nechta `CMD` bo'lsa, ularning hammasi container ishga tushganda yozilgan tartibda ketma-ket bajariladi", "hint": "Faqat oxirgi `CMD` kuchda bo'ladi." },
         { "id": "d", "text": "`CMD` bilan paketlar o'rnatiladi", "hint": "Har ishga tushishda o'rnatish — sekin va ishonchsiz; o'rnatish build vaqtida `RUN` bilan." }
       ],
-      "explanation": "Asosiy ko'rsatmalar: `FROM` (baza image), `WORKDIR`, `COPY`, `RUN`, `ENV`, `EXPOSE` (hujjat uchun), `USER`, `ENTRYPOINT`/`CMD`. Har `RUN` yangi qatlam — bog'liq buyruqlarni `&&` bilan birlashtirib, keshni bir qatlamda tozalash image hajmini kamaytiradi.",
+      "explanation": "`RUN` misollari: paket o'rnatish, kompilyatsiya. `CMD`ni `docker run image <buyruq>` bilan almashtirish mumkin. Asosiy ko'rsatmalar: `FROM` (baza image), `WORKDIR`, `COPY`, `RUN`, `ENV`, `EXPOSE` (hujjat uchun), `USER`, `ENTRYPOINT`/`CMD`. Har `RUN` yangi qatlam — bog'liq buyruqlarni `&&` bilan birlashtirib, keshni bir qatlamda tozalash image hajmini kamaytiradi.",
       "reviewed": false
     },
     {
@@ -38,12 +38,12 @@
       "kind": "concept",
       "prompt": "`docker run -p 8080:80 nginx` buyrug'idagi `-p 8080:80` nimani anglatadi?",
       "options": [
-        { "id": "a", "text": "Host'ning 8080-portiga kelgan so'rovlar container ichidagi 80-portga yo'naltiriladi: brauzerda `http://localhost:8080` ochilsa, container'dagi nginx javob beradi. Format — `HOST:CONTAINER`", "correct": true },
+        { "id": "a", "text": "Host'ning 8080-portiga kelgan so'rovlar container'ning 80-portiga yo'naltiriladi (`HOST:CONTAINER`)", "correct": true },
         { "id": "b", "text": "Container'ning 8080-porti host'ning 80-portiga ulanadi", "hint": "Tartib: chapda host porti, o'ngda container porti." },
         { "id": "c", "text": "nginx 8080 dan 80 gacha bo'lgan barcha portlarni tinglaydi", "hint": "Bu diapazon emas — bitta port xaritalash." },
-        { "id": "d", "text": "`EXPOSE 80` Dockerfile'da bo'lsa, `-p` kerak emas — port avtomatik ochiladi", "hint": "`EXPOSE` faqat hujjat/metadata; host'dan kirish uchun `-p` (yoki `-P`) kerak." }
+        { "id": "d", "text": "`EXPOSE 80` Dockerfile'da bo'lsa, `-p` kerak emas — port host'da avtomatik ravishda o'sha raqam bilan ochiladi", "hint": "`EXPOSE` faqat hujjat/metadata; host'dan kirish uchun `-p` (yoki `-P`) kerak." }
       ],
-      "explanation": "`-p 127.0.0.1:8080:80` — faqat lokal interfeysda ochish (xavfsizroq). Docker iptables qoidalarini o'zi qo'shadi va ba'zan host firewall (ufw) qoidalarini chetlab o'tadi — production'da buni hisobga oling.",
+      "explanation": "Brauzerda `http://localhost:8080` ochilsa, container'dagi nginx javob beradi. `-p 127.0.0.1:8080:80` — faqat lokal interfeysda ochish (xavfsizroq). Docker iptables qoidalarini o'zi qo'shadi va ba'zan host firewall (ufw) qoidalarini chetlab o'tadi — production'da buni hisobga oling.",
       "reviewed": false
     },
     {
@@ -66,12 +66,12 @@
       "kind": "concept",
       "prompt": "Ishlayotgan container ichidagi muammoni tekshirish uchun qaysi buyruqlar ishlatiladi?",
       "options": [
-        { "id": "a", "text": "`docker ps` (ishlayotgan container'lar, `-a` — to'xtaganlari ham), `docker logs -f <nom>` (stdout/stderr), `docker exec -it <nom> sh` (ichiga kirish), `docker inspect <nom>` (konfiguratsiya, tarmoq, mount'lar, exit code), `docker stats` (CPU/xotira)", "correct": true },
+        { "id": "a", "text": "`docker ps`, `docker logs -f`, `docker exec -it <nom> sh`, `docker inspect` va `docker stats`", "correct": true },
         { "id": "b", "text": "Faqat container'ni o'chirib qayta yaratish — ichini ko'rib bo'lmaydi", "hint": "`exec`, `logs` va `inspect` bilan ishlayotgan container'ni tekshirish mumkin." },
         { "id": "c", "text": "`docker build` — ishlayotgan container loglarini ko'rsatadi", "hint": "`build` image yaratadi; loglar — `docker logs`." },
-        { "id": "d", "text": "Container ichidagi log fayllarni ko'rish uchun SSH serverini o'rnatish kerak", "hint": "`docker exec` yetarli; container'ga SSH o'rnatish — anti-pattern." }
+        { "id": "d", "text": "Container ichidagi log fayllarni ko'rish uchun avval unga SSH serverini o'rnatib, port ochish kerak", "hint": "`docker exec` yetarli; container'ga SSH o'rnatish — anti-pattern." }
       ],
-      "explanation": "Ilova loglarni faylga emas, stdout/stderr'ga yozsin — shunda `docker logs` va markazlashgan log tizimlari ularni oladi. Minimal image'larda (distroless) shell yo'q — `docker debug` yoki vaqtincha debug container ishlatiladi.",
+      "explanation": "`ps -a` to'xtaganlarni ham ko'rsatadi; `logs` — stdout/stderr; `exec` — ichiga kirish; `inspect` — konfiguratsiya, tarmoq, mount'lar, exit code; `stats` — CPU/xotira. Ilova loglarni faylga emas, stdout/stderr'ga yozsin — shunda `docker logs` va markazlashgan log tizimlari ularni oladi. Minimal image'larda (distroless) shell yo'q — `docker debug` yoki vaqtincha debug container ishlatiladi.",
       "reviewed": false
     },
     {
@@ -97,12 +97,12 @@
       "kind": "concept",
       "prompt": "Multi-stage build nima uchun ishlatiladi?",
       "options": [
-        { "id": "a", "text": "Bir Dockerfile'da bir nechta `FROM` bosqichi: build bosqichida kompilyator, SDK va dev bog'liqliklar bilan yig'iladi, yakuniy bosqichga esa faqat natija (`COPY --from=build /app/dist ./dist`) ko'chiriladi. Natija — kichik image, kamroq zaiflik va tezroq deploy; build vositalari production'ga tushmaydi", "correct": true },
-        { "id": "b", "text": "Bir nechta container'ni bitta image'da ishga tushirish uchun", "hint": "Bosqichlar faqat build vaqtida; yakunda bitta image va odatda bitta jarayon." },
+        { "id": "a", "text": "Bir nechta `FROM` bosqichi: build bosqichida yig'ib, yakuniy image'ga faqat natijani ko'chirish", "correct": true },
+        { "id": "b", "text": "Bir nechta container'ni bitta image ichida birga ishga tushirish uchun — har bosqich alohida jarayon bo'ladi", "hint": "Bosqichlar faqat build vaqtida; yakunda bitta image va odatda bitta jarayon." },
         { "id": "c", "text": "Image'ni bir nechta registry'ga yuklash uchun", "hint": "Bu push masalasi; multi-stage — build optimallashtirish." },
         { "id": "d", "text": "Multi-stage build yakuniy image hajmini oshiradi", "hint": "Aksincha — oraliq bosqichlardagi vositalar yakuniy image'ga kirmaydi." }
       ],
-      "explanation": "Go/Rust uchun yakuniy bosqich `scratch` yoki `distroless` bo'lishi mumkin (bir necha MB). Java: `maven` bosqichi → `eclipse-temurin:21-jre`. `--target build` bilan oraliq bosqichni alohida yig'ish testlar uchun qulay.",
+      "explanation": "Masalan, `COPY --from=build /app/dist ./dist`. Natija — kichik image, kamroq zaiflik va tezroq deploy; kompilyator va SDK production'ga tushmaydi. Go/Rust uchun yakuniy bosqich `scratch` yoki `distroless` bo'lishi mumkin (bir necha MB). Java: `maven` bosqichi → `eclipse-temurin:21-jre`. `--target build` bilan oraliq bosqichni alohida yig'ish testlar uchun qulay.",
       "reviewed": false
     },
     {
@@ -112,12 +112,12 @@
       "kind": "concept",
       "prompt": "Docker Compose'da `api` servisi `db` servisidagi PostgreSQL'ga `localhost:5432` orqali ulana olmayapti. Sabab?",
       "options": [
-        { "id": "a", "text": "Har container o'z tarmoq namespace'iga ega: `api` ichidagi `localhost` — `api` container'ining o'zi. Compose umumiy tarmoq yaratadi va servislar bir-birini servis nomi bo'yicha topadi (ichki DNS): `postgres://db:5432/app`. Bundan tashqari, `depends_on` faqat ishga tushish tartibini beradi — DB tayyorligini kutish uchun healthcheck + `condition: service_healthy` yoki ilovada qayta urinish", "correct": true },
+        { "id": "a", "text": "Container ichida `localhost` — o'zi; Compose tarmog'ida DB'ga servis nomi bilan ulanish kerak: `db:5432`", "correct": true },
         { "id": "b", "text": "PostgreSQL container'da ishlamaydi", "hint": "Ishlaydi; muammo — ulanish manzili." },
-        { "id": "c", "text": "`ports: \"5432:5432\"` qo'shilsa, `localhost` container ichidan ham ishlaydi", "hint": "Port xaritalash host'dan kirish uchun; container ichidagi `localhost` baribir o'zi." },
+        { "id": "c", "text": "`ports: \"5432:5432\"` qo'shilsa, `localhost:5432` boshqa container'lar ichidan ham DB'ga to'g'ridan-to'g'ri ishlay boshlaydi", "hint": "Port xaritalash host'dan kirish uchun; container ichidagi `localhost` baribir o'zi." },
         { "id": "d", "text": "Container'lar hech qachon bir-biri bilan tarmoq orqali bog'lana olmaydi", "hint": "Bir tarmoqdagi container'lar bemalol bog'lanadi — servis nomi bo'yicha." }
       ],
-      "explanation": "Tarmoq turlari: bridge (default), host (host tarmog'ini bo'lishish), none, overlay (Swarm). DB portini host'ga ochish faqat lokal debug uchun kerak — production'da ichki tarmoqda qoldiring.",
+      "explanation": "Ichki DNS: `postgres://db:5432/app`. `depends_on` faqat tartibni beradi — DB tayyorligini kutish uchun healthcheck + `condition: service_healthy` yoki ilovada qayta urinish. Tarmoq turlari: bridge (default), host (host tarmog'ini bo'lishish), none, overlay (Swarm). DB portini host'ga ochish faqat lokal debug uchun kerak — production'da ichki tarmoqda qoldiring.",
       "reviewed": false
     },
     {
@@ -158,12 +158,12 @@
       "kind": "concept",
       "prompt": "Java servis container'i 1 GB xotira limiti bilan ishlaydi va vaqti-vaqti bilan `OOMKilled` (exit code 137) bo'lmoqda, heap esa `-Xmx1g` qilib qo'yilgan. Muammo nima?",
       "options": [
-        { "id": "a", "text": "Container limiti butun jarayon xotirasini hisoblaydi: heap + metaspace + thread stack'lari + kod keshi + direct buffer'lar. `-Xmx1g` bilan jami 1 GB dan oshib, cgroup jarayonni o'ldiradi. Heap'ni limitdan kichik qilish kerak (masalan, `-XX:MaxRAMPercentage=75`), qolganini native xotiraga qoldirish va haqiqiy sarfni monitoring qilish", "correct": true },
+        { "id": "a", "text": "Limit heap'dan tashqari metaspace, stack'lar va native xotirani ham hisoblaydi — heap'ni limitdan kichik qilish", "correct": true },
         { "id": "b", "text": "Exit code 137 — ilovadagi `NullPointerException`", "hint": "137 = 128 + 9 (SIGKILL) — tashqaridan o'ldirilgan, odatda OOM." },
-        { "id": "c", "text": "JVM container limitini umuman ko'rmaydi, shuning uchun hech narsa qilib bo'lmaydi", "hint": "Zamonaviy JVM'lar (10+) cgroup limitlarini taniydi; muammo — heap'ni limitga teng qilib qo'yishda." },
+        { "id": "c", "text": "JVM container limitini umuman ko'rmaydi, shuning uchun bu muammoni hech qanday JVM sozlamasi bilan hal qilib bo'lmaydi", "hint": "Zamonaviy JVM'lar (10+) cgroup limitlarini taniydi; muammo — heap'ni limitga teng qilib qo'yishda." },
         { "id": "d", "text": "Limitni olib tashlash eng yaxshi yechim", "hint": "Limitsiz container host'dagi boshqa servislarni xotirasiz qoldirishi mumkin." }
       ],
-      "explanation": "Xuddi shu tamoyil Node.js (`--max-old-space-size`), .NET (`GCHeapHardLimit`) va boshqalarga ham tegishli. Kubernetes'da `requests` va `limits` to'g'ri sozlanmasa — tasodifiy OOM va node darajasidagi evict'lar.",
+      "explanation": "`-Xmx1g` bilan jami 1 GB dan oshib, cgroup jarayonni o'ldiradi (exit 137). Masalan, `-XX:MaxRAMPercentage=75`, qolganini native xotiraga qoldirish va haqiqiy sarfni monitoring qilish. Xuddi shu tamoyil Node.js (`--max-old-space-size`), .NET (`GCHeapHardLimit`) va boshqalarga ham tegishli. Kubernetes'da `requests` va `limits` to'g'ri sozlanmasa — tasodifiy OOM va node darajasidagi evict'lar.",
       "reviewed": false
     },
     {

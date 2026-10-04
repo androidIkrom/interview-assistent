@@ -192,6 +192,7 @@ class ContentAssetsTest {
         "net.arch", "net.aspnet", "net.async", "net.csharp", "net.data", "net.types",
         "ios.arch", "ios.concurrency", "ios.data", "ios.swift", "ios.swiftui", "ios.ui",
         "qa.api", "qa.auto", "qa.design", "qa.docs", "qa.process", "qa.theory",
+        "ops.cicd", "ops.docker", "ops.iac", "ops.k8s", "ops.linux", "ops.observability",
     )
 
     /**
