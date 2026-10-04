@@ -2,6 +2,7 @@ package uz.devsuhbat.ui.design
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -43,6 +44,26 @@ private fun BasicComponents() {
     ExpressiveButton("Bosh sahifa", onClick = {}, tone = ButtonTone.OUTLINED)
     ExpressiveButton("Tekshirish", onClick = {}, enabled = false)
 }
+
+@Composable
+private fun ProgressComponents() {
+    Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+        ReadinessRing(fraction = 0.5f, centerText = "50%")
+        Box(Modifier.background(MaterialTheme.colorScheme.primary, MaterialTheme.shapes.large)) {
+            ReadinessRing(fraction = 0.5f, centerText = "50%", colors = RingDefaults.onPrimaryColors())
+        }
+    }
+    WavyProgress(fraction = 0.17f)
+    WavyProgress(fraction = 0.83f)
+}
+
+@Preview(name = "Progress · light", widthDp = 390)
+@Composable
+private fun ProgressLight() = PreviewFrame(dark = false) { ProgressComponents() }
+
+@Preview(name = "Progress · dark", widthDp = 390)
+@Composable
+private fun ProgressDark() = PreviewFrame(dark = true) { ProgressComponents() }
 
 @Preview(name = "Basic · light", widthDp = 390)
 @Composable
