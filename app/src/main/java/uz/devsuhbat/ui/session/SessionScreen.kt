@@ -56,6 +56,7 @@ import uz.devsuhbat.ui.Routes
 import uz.devsuhbat.ui.common.InlineCodeText
 import uz.devsuhbat.ui.common.OptionCard
 import uz.devsuhbat.ui.common.QuestionBody
+import uz.devsuhbat.ui.common.ReportIssueAction
 import uz.devsuhbat.ui.theme.LocalExtraColors
 
 /**
@@ -156,6 +157,7 @@ fun SessionScreen(
                             Icon(Icons.Filled.Close, stringResource(R.string.action_close))
                         }
                     },
+                    actions = { ReportIssueAction(state.question) },
                 )
                 if (state.queueSize > 0) {
                     LinearProgressIndicator(
