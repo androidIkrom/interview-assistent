@@ -12,6 +12,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import java.io.IOException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import uz.devsuhbat.content.Level
 
@@ -63,6 +64,32 @@ class SettingsRepository(private val dataStore: DataStore<Preferences>) {
         dataStore.edit { prefs ->
             prefs[REMINDER_ENABLED] = enabled
             prefs[REMINDER_MINUTES] = minutes
+        }
+    }
+
+    /** The stored settings in backup form. */
+    suspend fun backup(): BackupSettings {
+        val prefs = dataStore.data.first()
+        return BackupSettings(
+            fieldId = prefs[FIELD],
+            level = prefs[LEVEL],
+            onboardingDone = prefs[ONBOARDING_DONE] ?: false,
+            theme = prefs[THEME] ?: ThemeMode.SYSTEM.name,
+            reminderEnabled = prefs[REMINDER_ENABLED] ?: false,
+            reminderMinutes = prefs[REMINDER_MINUTES] ?: DEFAULT_REMINDER_MINUTES,
+        )
+    }
+
+    /** Replaces the stored settings with [settings] from a backup. */
+    suspend fun restore(settings: BackupSettings) {
+        dataStore.edit { prefs ->
+            prefs.clear()
+            settings.fieldId?.let { prefs[FIELD] = it }
+            settings.level?.let { prefs[LEVEL] = it }
+            prefs[ONBOARDING_DONE] = settings.onboardingDone
+            prefs[THEME] = settings.theme
+            prefs[REMINDER_ENABLED] = settings.reminderEnabled
+            prefs[REMINDER_MINUTES] = settings.reminderMinutes
         }
     }
 

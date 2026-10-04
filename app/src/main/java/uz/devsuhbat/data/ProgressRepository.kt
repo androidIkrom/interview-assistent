@@ -76,6 +76,38 @@ class ProgressRepository(
 
     suspend fun reset() = dao.deleteAll()
 
+    /** The whole progress, with [settings] attached, ready to be written as a backup file. */
+    suspend fun snapshot(settings: BackupSettings?): Backup = Backup(
+        exportedAt = clock.millis(),
+        settings = settings,
+        questionStates = dao.allStates().map {
+            BackupQuestionState(it.questionId, it.box, it.dueDay, it.attempts, it.wrongAttempts, it.lastAnsweredAt)
+        },
+        sessions = dao.sessions().map {
+            BackupSession(it.id, it.mode, it.fieldId, it.level, it.startedAt, it.finishedAt, it.total, it.firstTryCorrect)
+        },
+        mockTopicResults = dao.allMockResults().map { BackupMockTopicResult(it.sessionId, it.topicId, it.total, it.correct) },
+    )
+
+    /**
+     * Replaces the whole progress with [backup]. States of questions missing from [knownQuestionIds]
+     * (removed from the content since the export) are skipped.
+     */
+    suspend fun restore(backup: Backup, knownQuestionIds: Set<String>) {
+        val sessionIds = backup.sessions.map { it.id }.toSet()
+        dao.replaceAll(
+            states = backup.questionStates.filter { it.questionId in knownQuestionIds }.map {
+                QuestionStateEntity(it.questionId, it.box, it.dueDay, it.attempts, it.wrongAttempts, it.lastAnsweredAt)
+            },
+            sessions = backup.sessions.map {
+                SessionLogEntity(it.id, it.mode, it.fieldId, it.level, it.startedAt, it.finishedAt, it.total, it.firstTryCorrect)
+            },
+            mockResults = backup.mockTopicResults.filter { it.sessionId in sessionIds }.map {
+                MockTopicResultEntity(it.sessionId, it.topicId, it.total, it.correct)
+            },
+        )
+    }
+
     private fun sessionRow(mode: SessionMode, fieldId: String, level: Level, startedAt: Instant, total: Int, correct: Int) =
         SessionLogEntity(
             mode = mode.name,
