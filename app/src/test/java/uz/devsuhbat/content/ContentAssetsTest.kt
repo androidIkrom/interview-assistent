@@ -193,6 +193,7 @@ class ContentAssetsTest {
         "ios.arch", "ios.concurrency", "ios.data", "ios.swift", "ios.swiftui", "ios.ui",
         "qa.api", "qa.auto", "qa.design", "qa.docs", "qa.process", "qa.theory",
         "ops.cicd", "ops.docker", "ops.iac", "ops.k8s", "ops.linux", "ops.observability",
+        "ml.classic", "ml.dl", "ml.eval", "ml.ops", "ml.python", "ml.stats",
     )
 
     /**

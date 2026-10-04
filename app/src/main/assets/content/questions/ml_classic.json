@@ -8,12 +8,12 @@
       "kind": "concept",
       "prompt": "Supervised va unsupervised learning qanday farqlanadi?",
       "options": [
-        { "id": "a", "text": "Supervised — har misol uchun to'g'ri javob (label) bor: model kirishdan javobni bashorat qilishni o'rganadi (narx, spam yoki yo'q). Unsupervised — label yo'q: model ma'lumotdagi tuzilmani topadi (klasterlash — mijoz segmentlari, o'lchamni kamaytirish, anomaliya qidirish)", "correct": true },
-        { "id": "b", "text": "Supervised — inson nazoratida o'qitiladi, unsupervised — kompyuter o'zi", "hint": "Farq — ma'lumotda javoblar (label'lar) borligida, o'qitish jarayonini kim kuzatishida emas." },
+        { "id": "a", "text": "Supervised — misollar label bilan, model javobni bashorat qiladi; unsupervised — label yo'q, tuzilma topiladi", "correct": true },
+        { "id": "b", "text": "Supervised — inson har qadamni kuzatib turgan holda o'qitiladi, unsupervised — kompyuter o'zi nazoratsiz o'rganadi", "hint": "Farq — ma'lumotda javoblar (label'lar) borligida, o'qitish jarayonini kim kuzatishida emas." },
         { "id": "c", "text": "Klasterlash — supervised learning'ning turi", "hint": "Klasterlashda oldindan ma'lum guruhlar (label) yo'q — unsupervised." },
         { "id": "d", "text": "Unsupervised modellar har doim aniqroq", "hint": "Ular boshqa vazifa uchun; javob ma'lum bo'lsa, supervised odatda to'g'ridan-to'g'ri samaraliroq." }
       ],
-      "explanation": "Oraliq turlar: semi-supervised (oz label + ko'p label'siz ma'lumot), self-supervised (ma'lumotning o'zidan vazifa yasash — LLM'lar keyingi tokenni bashorat qilib o'qitiladi), reinforcement learning (mukofot orqali).",
+      "explanation": "Supervised misollar: narx, spam yoki yo'q. Unsupervised: klasterlash (mijoz segmentlari), o'lchamni kamaytirish, anomaliya qidirish. Oraliq turlar: semi-supervised (oz label + ko'p label'siz ma'lumot), self-supervised (ma'lumotning o'zidan vazifa yasash — LLM'lar keyingi tokenni bashorat qilib o'qitiladi), reinforcement learning (mukofot orqali).",
       "reviewed": false
     },
     {
@@ -23,12 +23,12 @@
       "kind": "concept",
       "prompt": "Quyidagi vazifalardan qaysi biri regressiya, qaysi biri klassifikatsiya?",
       "options": [
-        { "id": "a", "text": "Kvartira narxini bashorat qilish — regressiya (uzluksiz son); mijoz kreditni qaytaradimi yoki yo'qmi — klassifikatsiya (kategoriya); xatni toifaga ajratish (ish, reklama, shaxsiy) — ko'p sinfli klassifikatsiya", "correct": true },
-        { "id": "b", "text": "Narxni bashorat qilish — klassifikatsiya, chunki narxlar har xil", "hint": "Natija uzluksiz son bo'lsa — regressiya." },
+        { "id": "a", "text": "Narx — regressiya (uzluksiz son); kreditni qaytarish — klassifikatsiya; xat toifasi — ko'p sinfli klassifikatsiya", "correct": true },
+        { "id": "b", "text": "Narxni bashorat qilish — klassifikatsiya, chunki narxlar har xil bo'ladi va har bir narx alohida sinf hisoblanadi", "hint": "Natija uzluksiz son bo'lsa — regressiya." },
         { "id": "c", "text": "Logistik regressiya — regressiya vazifasi uchun", "hint": "Nomiga qaramay, logistik regressiya klassifikatsiya modeli (ehtimol beradi)." },
         { "id": "d", "text": "Klassifikatsiya modeli faqat ikki sinf bilan ishlaydi", "hint": "Ko'p sinfli va ko'p yorliqli (multi-label) klassifikatsiya ham bor." }
       ],
-      "explanation": "Vazifa turini to'g'ri aniqlash metrika va model tanlovini belgilaydi: regressiya — MAE, RMSE; klassifikatsiya — precision, recall, ROC-AUC. Ba'zan regressiyani klassifikatsiyaga aylantirish (narx diapazonlari) biznes uchun qulayroq.",
+      "explanation": "Kredit misolida natija — kategoriya (qaytaradi yoki yo'q); xat toifalari — ish, reklama, shaxsiy. Vazifa turini to'g'ri aniqlash metrika va model tanlovini belgilaydi: regressiya — MAE, RMSE; klassifikatsiya — precision, recall, ROC-AUC. Ba'zan regressiyani klassifikatsiyaga aylantirish (narx diapazonlari) biznes uchun qulayroq.",
       "reviewed": false
     },
     {
@@ -38,12 +38,12 @@
       "kind": "concept",
       "prompt": "Model train ma'lumotida 99% aniqlik, test ma'lumotida 70% ko'rsatdi. Bu qanday holat?",
       "options": [
-        { "id": "a", "text": "Overfitting: model umumiy qonuniyat o'rniga train ma'lumotining shovqini va tafsilotlarini yodlab olgan, yangi ma'lumotga yaxshi umumlashtirmaydi. Choralar: soddaroq model, regularizatsiya, ko'proq ma'lumot, xususiyatlarni kamaytirish, daraxtlarda chuqurlikni cheklash, early stopping", "correct": true },
+        { "id": "a", "text": "Overfitting: model shovqinni yodlab olgan va yangi ma'lumotga umumlashmaydi — soddalashtirish, regularizatsiya", "correct": true },
         { "id": "b", "text": "Underfitting — model juda sodda", "hint": "Underfitting'da train natijasi ham past bo'ladi; bu yerda train juda yuqori." },
         { "id": "c", "text": "Bu ideal holat — train natijasi yuqori bo'lishi kerak", "hint": "Muhimi — ko'rilmagan ma'lumotdagi natija; katta farq — muammo belgisi." },
-        { "id": "d", "text": "Test ma'lumoti noto'g'ri — uni train'ga qo'shib qayta baholash kerak", "hint": "Test'ni train'ga aralashtirish baholashni buzadi (leakage)." }
+        { "id": "d", "text": "Test ma'lumoti noto'g'ri tanlangan — uni train'ga qo'shib, butun ma'lumotda qayta baholash kerak, shunda natija to'g'ri chiqadi", "hint": "Test'ni train'ga aralashtirish baholashni buzadi (leakage)." }
       ],
-      "explanation": "Train va validation xatosi egri chiziqlarini (learning curves) solishtirish diagnostikaga yordam beradi. Test to'plami oxirgi baholash uchun saqlanadi — u bo'yicha qayta-qayta sozlash ham yashirin overfitting'ga olib keladi.",
+      "explanation": "Boshqa choralar: ko'proq ma'lumot, xususiyatlarni kamaytirish, daraxtlarda chuqurlikni cheklash, early stopping. Train va validation xatosi egri chiziqlarini (learning curves) solishtirish diagnostikaga yordam beradi. Test to'plami oxirgi baholash uchun saqlanadi — u bo'yicha qayta-qayta sozlash ham yashirin overfitting'ga olib keladi.",
       "reviewed": false
     },
     {
@@ -53,12 +53,12 @@
       "kind": "concept",
       "prompt": "Ma'lumotni nima uchun train va test (va ko'pincha validation) qismlarga bo'lish kerak?",
       "options": [
-        { "id": "a", "text": "Modelning yangi, ko'rilmagan ma'lumotdagi sifatini halol baholash uchun: train — o'qitish, validation — giperparametr va model tanlash, test — yakuniy, bir marta baholash. Bo'lish vazifaga mos bo'lishi kerak: sinflar nisbati saqlanadi (stratify), vaqt qatorlarida — vaqt bo'yicha, bir foydalanuvchining ma'lumoti faqat bitta qismda (group split)", "correct": true },
-        { "id": "b", "text": "Ma'lumot juda ko'p bo'lgani uchun — hisoblashni tezlashtirish maqsadida", "hint": "Asosiy maqsad — baholashning halolligi, tezlik emas." },
+        { "id": "a", "text": "Ko'rilmagan ma'lumotda sifatni halol baholash: train — o'qitish, validation — tanlash, test — yakuniy baho", "correct": true },
+        { "id": "b", "text": "Ma'lumot juda ko'p bo'lgani uchun — hisoblashni tezlashtirish maqsadida, har qismda alohida kichikroq model o'qitiladi", "hint": "Asosiy maqsad — baholashning halolligi, tezlik emas." },
         { "id": "c", "text": "Butun ma'lumotda o'qitib, o'sha ma'lumotda baholash yetarli", "hint": "Model yodlab olgan ma'lumotda baholash juda optimistik natija beradi." },
         { "id": "d", "text": "Vaqt qatorlarini tasodifiy aralashtirib bo'lish har doim to'g'ri", "hint": "Kelajak ma'lumoti train'ga tushib qoladi — real ishlashdagidan yaxshiroq natija ko'rinadi." }
       ],
-      "explanation": "sklearn: `train_test_split(X, y, test_size=0.2, stratify=y, random_state=42)`. Kichik ma'lumotda — cross-validation. Preprocessing (scaler, imputer) faqat train'da `fit` qilinadi.",
+      "explanation": "Bo'lish vazifaga mos: sinflar nisbati saqlanadi (stratify), vaqt qatorlarida — vaqt bo'yicha, bir foydalanuvchi ma'lumoti faqat bitta qismda (group split). sklearn: `train_test_split(X, y, test_size=0.2, stratify=y, random_state=42)`. Kichik ma'lumotda — cross-validation. Preprocessing (scaler, imputer) faqat train'da `fit` qilinadi.",
       "reviewed": false
     },
     {
@@ -68,12 +68,12 @@
       "kind": "concept",
       "prompt": "Bias-variance trade-off nimani anglatadi?",
       "options": [
-        { "id": "a", "text": "Umumlashtirish xatosi asosan ikki manbadan: bias — model juda sodda, haqiqiy bog'liqlikni ushlay olmaydi (underfitting); variance — model train ma'lumotining tasodifiy xususiyatlariga juda sezgir (overfitting). Model murakkabligini oshirish bias'ni kamaytiradi, variance'ni oshiradi — maqsad yig'indi xatoni minimallashtiradigan muvozanat", "correct": true },
-        { "id": "b", "text": "Bias — ma'lumotdagi ijtimoiy adolatsizlik, variance — ma'lumot hajmi", "hint": "Bu kontekstda bias — statistik xato komponenti; adolat (fairness) alohida mavzu." },
+        { "id": "a", "text": "Bias — juda sodda model (underfitting), variance — shovqinga sezgir model (overfitting); maqsad — muvozanat", "correct": true },
+        { "id": "b", "text": "Bias — ma'lumotdagi ijtimoiy adolatsizlik, variance esa ma'lumot hajmi; ular faqat etika va ma'lumot yig'ishga tegishli", "hint": "Bu kontekstda bias — statistik xato komponenti; adolat (fairness) alohida mavzu." },
         { "id": "c", "text": "Murakkabroq model har doim ham bias, ham variance'ni kamaytiradi", "hint": "Odatda bittasi kamaysa ikkinchisi oshadi — shuning uchun \"trade-off\"." },
         { "id": "d", "text": "Ko'proq ma'lumot bias'ni kamaytirishning asosiy yo'li", "hint": "Ko'proq ma'lumot asosan variance'ni kamaytiradi; bias uchun kuchliroq model yoki yaxshiroq xususiyatlar kerak." }
       ],
-      "explanation": "Amaliy diagnostika: train xatosi yuqori — bias muammosi (murakkabroq model, yangi xususiyatlar); train past, validation yuqori — variance (regularizatsiya, ko'proq ma'lumot, ensemble). Bagging (random forest) variance'ni, boosting ko'proq bias'ni kamaytiradi.",
+      "explanation": "Model murakkabligini oshirish bias'ni kamaytirib, variance'ni oshiradi — yig'indi xatoni minimallashtiradigan nuqta tanlanadi. Amaliy diagnostika: train xatosi yuqori — bias muammosi (murakkabroq model, yangi xususiyatlar); train past, validation yuqori — variance (regularizatsiya, ko'proq ma'lumot, ensemble). Bagging (random forest) variance'ni, boosting ko'proq bias'ni kamaytiradi.",
       "reviewed": false
     },
     {
@@ -83,12 +83,12 @@
       "kind": "concept",
       "prompt": "L1 (Lasso) va L2 (Ridge) regularizatsiyasi qanday farqlanadi?",
       "options": [
-        { "id": "a", "text": "Ikkalasi ham yo'qotish funksiyasiga og'irliklar kattaligi uchun jarima qo'shib overfitting'ni kamaytiradi. L1 — og'irliklar modullari yig'indisi: ko'p og'irliklarni aynan 0 ga tushiradi (xususiyat tanlash, siyrak model). L2 — kvadratlar yig'indisi: og'irliklarni kichraytiradi, lekin nolga tushirmaydi, korrelyatsiyalangan xususiyatlar orasida taqsimlaydi. Elastic Net — ikkalasining aralashmasi", "correct": true },
+        { "id": "a", "text": "Ikkalasi og'irliklarga jarima qo'shadi: L1 ko'p og'irlikni 0 ga tushiradi (siyrak), L2 kichraytiradi, nolga emas", "correct": true },
         { "id": "b", "text": "L1 og'irliklarni kattalashtiradi, L2 kichraytiradi", "hint": "Ikkalasi ham kichraytiradi; farq — nolga tushirish xulqida." },
-        { "id": "c", "text": "Regularizatsiya koeffitsienti qanchalik katta bo'lsa, overfitting shunchalik kuchli", "hint": "Katta koeffitsient — kuchli jarima, model soddalashadi (haddan oshsa underfitting)." },
+        { "id": "c", "text": "Regularizatsiya koeffitsienti qanchalik katta bo'lsa, overfitting shunchalik kuchli bo'ladi va model murakkablashadi", "hint": "Katta koeffitsient — kuchli jarima, model soddalashadi (haddan oshsa underfitting)." },
         { "id": "d", "text": "Regularizatsiyadan oldin xususiyatlarni masshtablash shart emas", "hint": "Jarima og'irliklar kattaligiga bog'liq — turli masshtabdagi xususiyatlar teng bo'lmagan jarima oladi." }
       ],
-      "explanation": "sklearn'da `LogisticRegression(C=...)` — C teskari kuch (kichik C — kuchli regularizatsiya). Koeffitsient cross-validation bilan tanlanadi. Neyron tarmoqlarda L2 — weight decay.",
+      "explanation": "L1 — modullar yig'indisi (xususiyat tanlash), L2 — kvadratlar yig'indisi (korrelyatsiyalangan xususiyatlar orasida taqsimlaydi). Elastic Net — ikkalasining aralashmasi. sklearn'da `LogisticRegression(C=...)` — C teskari kuch (kichik C — kuchli regularizatsiya). Koeffitsient cross-validation bilan tanlanadi. Neyron tarmoqlarda L2 — weight decay.",
       "reviewed": false
     },
     {
@@ -98,12 +98,12 @@
       "kind": "concept",
       "prompt": "Logistik regressiya qanday ishlaydi?",
       "options": [
-        { "id": "a", "text": "Xususiyatlarning chiziqli kombinatsiyasini (w·x + b) sigmoid funksiyasi orqali 0–1 oralig'idagi ehtimolga aylantiradi; log-loss (cross-entropy) minimallashtirilib o'qitiladi. Natija — ehtimol, sinfga ajratish chegara (default 0,5) bilan; koeffitsientlar log-odds o'zgarishi sifatida talqin qilinadi", "correct": true },
+        { "id": "a", "text": "Chiziqli kombinatsiyani (w·x + b) sigmoid bilan 0–1 ehtimolga aylantiradi; log-loss bilan o'qitiladi", "correct": true },
         { "id": "b", "text": "U sonli qiymatni (narxni) bashorat qiladi", "hint": "Nomida \"regressiya\" bo'lsa ham, chiqishi — sinf ehtimoli." },
-        { "id": "c", "text": "Faqat chiziqsiz murakkab chegaralarni o'rganadi", "hint": "Qaror chegarasi chiziqli; chiziqsizlik uchun xususiyatlarni o'zgartirish kerak." },
+        { "id": "c", "text": "Faqat chiziqsiz murakkab chegaralarni o'rganadi, shuning uchun u chuqur neyron tarmoq bilan bir xil ishlaydi", "hint": "Qaror chegarasi chiziqli; chiziqsizlik uchun xususiyatlarni o'zgartirish kerak." },
         { "id": "d", "text": "Chegara har doim 0,5 bo'lishi shart", "hint": "Chegara biznes xarajatlariga qarab tanlanadi (masalan, firibgarlikda pastroq)." }
       ],
-      "explanation": "Logistik regressiya — tez, talqin qilinadigan va kuchli baseline. Ko'p sinf uchun softmax (multinomial). Yaxshi kalibrlangan ehtimollar beradi — boshqa modellar ko'pincha alohida kalibrovka talab qiladi.",
+      "explanation": "Sinfga ajratish chegara bilan (default 0,5); koeffitsientlar log-odds o'zgarishi sifatida talqin qilinadi. Logistik regressiya — tez, talqin qilinadigan va kuchli baseline. Ko'p sinf uchun softmax (multinomial). Yaxshi kalibrlangan ehtimollar beradi — boshqa modellar ko'pincha alohida kalibrovka talab qiladi.",
       "reviewed": false
     },
     {
@@ -113,12 +113,12 @@
       "kind": "concept",
       "prompt": "Random forest va gradient boosting qanday farqlanadi?",
       "options": [
-        { "id": "a", "text": "Random forest — bagging: ko'p chuqur daraxtlar tasodifiy tanlanmalar va xususiyat to'plamlarida mustaqil (parallel) o'qitiladi, natijalari o'rtachalanadi — variance kamayadi, sozlash oson. Gradient boosting — daraxtlar ketma-ket qo'shiladi, har biri oldingilarining xatosini (gradient) tuzatadi — odatda aniqroq (XGBoost, LightGBM, CatBoost), lekin giperparametrlarga sezgir va overfitting'ga moyil (learning rate, early stopping kerak)", "correct": true },
+        { "id": "a", "text": "Random forest — mustaqil daraxtlar o'rtachasi (bagging); boosting — daraxtlar ketma-ket, oldingi xatoni tuzatadi", "correct": true },
         { "id": "b", "text": "Ikkalasi ham bitta katta daraxt quradi", "hint": "Ikkalasi ham ko'p daraxtli ensemble; farq — ularni qanday qurish va birlashtirishda." },
-        { "id": "c", "text": "Random forest daraxtlari ketma-ket, boosting daraxtlari mustaqil quriladi", "hint": "Teskari: bagging — mustaqil, boosting — ketma-ket." },
+        { "id": "c", "text": "Random forest daraxtlari ketma-ket, boosting daraxtlari esa bir-biridan mustaqil, parallel ravishda va tasodifiy tanlanmalarda quriladi", "hint": "Teskari: bagging — mustaqil, boosting — ketma-ket." },
         { "id": "d", "text": "Daraxt asosidagi modellar uchun xususiyatlarni masshtablash shart", "hint": "Daraxtlar chegaralar bo'yicha bo'ladi — masshtab ta'sir qilmaydi." }
       ],
-      "explanation": "Jadval (tabular) ma'lumotlarda gradient boosting ko'pincha eng kuchli variant. LightGBM — tez, katta ma'lumot uchun; CatBoost — kategorik xususiyatlarni yaxshi ishlaydi. Boosting'da validation to'plam bilan early stopping — standart amaliyot.",
+      "explanation": "Forest variance'ni kamaytiradi va sozlash oson. Boosting (XGBoost, LightGBM, CatBoost) odatda aniqroq, lekin giperparametrlarga sezgir va overfitting'ga moyil — learning rate, early stopping kerak. Jadval (tabular) ma'lumotlarda gradient boosting ko'pincha eng kuchli variant. LightGBM — tez, katta ma'lumot uchun; CatBoost — kategorik xususiyatlarni yaxshi ishlaydi. Boosting'da validation to'plam bilan early stopping — standart amaliyot.",
       "reviewed": false
     },
     {

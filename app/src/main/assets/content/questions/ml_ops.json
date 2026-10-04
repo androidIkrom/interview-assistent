@@ -8,12 +8,12 @@
       "kind": "concept",
       "prompt": "ML modelini production'ga chiqarishda oddiy dasturiy ta'minotdan farqli ravishda nimalarni versiyalash kerak?",
       "options": [
-        { "id": "a", "text": "Faqat kod emas: o'qitish ma'lumotlari (yoki uning snapshot'i), xususiyatlarni tayyorlash kodi, giperparametrlar, model artefakti (og'irliklar) va muhit (kutubxona versiyalari). Shunda modelni qayta yaratish, solishtirish va oldingisiga qaytish mumkin; model registry'da versiya, metrikalar va bosqich (staging/production) saqlanadi", "correct": true },
+        { "id": "a", "text": "Kod bilan birga ma'lumot, xususiyat kodi, giperparametrlar, model artefakti va muhitni versiyalash", "correct": true },
         { "id": "b", "text": "Faqat model fayli (`model.pkl`) yetarli", "hint": "Qaysi ma'lumot va kod bilan olinganini bilmasangiz, modelni qayta yaratib yoki muammoni tushuntirib bo'lmaydi." },
         { "id": "c", "text": "ML'da versiyalash kerak emas — har safar yangi model o'qitiladi", "hint": "Production'dagi model nega shunday ishlayotganini va qanday qaytarishni bilish uchun versiyalar shart." },
-        { "id": "d", "text": "Katta ma'lumot fayllarini to'g'ridan-to'g'ri Git'ga commit qilish", "hint": "Git katta binar fayllar uchun mos emas; DVC, lakeFS yoki obyekt saqlash + versiya havolasi ishlatiladi." }
+        { "id": "d", "text": "Katta ma'lumot fayllarini to'g'ridan-to'g'ri Git'ga commit qilish — shunda ma'lumot va kod doim birga turadi", "hint": "Git katta binar fayllar uchun mos emas; DVC, lakeFS yoki obyekt saqlash + versiya havolasi ishlatiladi." }
       ],
-      "explanation": "ML tizimida xulq kod + ma'lumot + model kombinatsiyasidan kelib chiqadi. Vositalar: MLflow Model Registry, DVC, W&B Artifacts. Har production bashorati qaysi model versiyasidan kelganini log qilish — debug uchun zarur.",
+      "explanation": "Shunda modelni qayta yaratish, solishtirish va oldingisiga qaytish mumkin; model registry'da versiya, metrikalar va bosqich (staging/production) saqlanadi. ML tizimida xulq kod + ma'lumot + model kombinatsiyasidan kelib chiqadi. Vositalar: MLflow Model Registry, DVC, W&B Artifacts. Har production bashorati qaysi model versiyasidan kelganini log qilish — debug uchun zarur.",
       "reviewed": false
     },
     {
@@ -23,12 +23,12 @@
       "kind": "concept",
       "prompt": "Batch inference va online (real-time) inference qanday farqlanadi?",
       "options": [
-        { "id": "a", "text": "Batch — bashoratlar rejalashtirilgan vaqtda ko'p ob'ekt uchun birdan hisoblanib saqlanadi (masalan, har kecha barcha mijozlar uchun churn bali): oddiy, arzon, lekin natija eskirishi mumkin. Online — har so'rov kelganda darhol (millisekundlarda) API orqali bashorat: yangi ma'lumot bilan ishlaydi (firibgarlik tekshiruvi), lekin latency, mavjudlik va masshtab talablari qattiqroq", "correct": true },
+        { "id": "a", "text": "Batch — rejali vaqtda ko'p ob'ektga oldindan hisoblash (arzon, eskirishi mumkin); online — so'rovda darhol", "correct": true },
         { "id": "b", "text": "Batch inference har doim aniqroq", "hint": "Model bir xil; farq — qachon va qaysi ma'lumot bilan hisoblanishida." },
         { "id": "c", "text": "Firibgarlikni aniqlash uchun kechki batch yetarli", "hint": "To'lov paytida qaror kerak — tranzaksiya amalga oshgandan keyin kech bo'ladi." },
-        { "id": "d", "text": "Online inference uchun model yaxshi bo'lsa, latency ahamiyatsiz", "hint": "Foydalanuvchi oqimida har millisekund muhim; sekin model butun mahsulotni sekinlashtiradi." }
+        { "id": "d", "text": "Online inference uchun model sifati yaxshi bo'lsa, latency va mavjudlik ahamiyatsiz — foydalanuvchi kutib turadi", "hint": "Foydalanuvchi oqimida har millisekund muhim; sekin model butun mahsulotni sekinlashtiradi." }
       ],
-      "explanation": "Oraliq variant — streaming (hodisalar oqimida, masalan Kafka). Ko'p tizimlar gibrid: og'ir xususiyatlar batch'da oldindan hisoblanadi, yakuniy bashorat online.",
+      "explanation": "Batch misoli — har kecha barcha mijozlar uchun churn bali. Online — millisekundlarda API orqali (firibgarlik tekshiruvi), lekin latency, mavjudlik va masshtab talablari qattiqroq. Oraliq variant — streaming (hodisalar oqimida, masalan Kafka). Ko'p tizimlar gibrid: og'ir xususiyatlar batch'da oldindan hisoblanadi, yakuniy bashorat online.",
       "reviewed": false
     },
     {
@@ -38,12 +38,12 @@
       "kind": "concept",
       "prompt": "Training-serving skew nima va uning oldini qanday olish mumkin?",
       "options": [
-        { "id": "a", "text": "Model o'qitishda ko'rgan xususiyatlar bilan production'da oladigan xususiyatlar farqi: o'qitishda Python/SQL'da bir tarzda, servisda boshqa tilda qayta yozilgan mantiq, boshqa ma'lumot manbai, vaqt farqi yoki kelajak ma'lumotidan foydalanish. Oldini olish: xususiyatlarni bitta kod/pipeline bilan hisoblash (feature store yoki umumiy kutubxona), servisdagi xususiyatlarni log qilib train taqsimoti bilan solishtirish", "correct": true },
+        { "id": "a", "text": "O'qitishdagi va production'dagi xususiyatlar farqi; oldini olish — bitta kod/pipeline va xususiyatlarni log qilish", "correct": true },
         { "id": "b", "text": "Bu — modelning train ma'lumotiga overfitting'i", "hint": "Overfitting model xususiyati; skew esa kirish ma'lumotlari o'qitish va servis o'rtasida farq qilishi." },
         { "id": "c", "text": "Skew faqat GPU va CPU farqi tufayli bo'ladi", "hint": "Ko'p hollarda sabab — xususiyatlarni tayyorlash mantiqi va ma'lumot manbalari farqi." },
-        { "id": "d", "text": "Validatsiya natijasi yaxshi bo'lsa, skew bo'lishi mumkin emas", "hint": "Validatsiya o'qitish pipeline'i ma'lumotida — servisdagi farqni ko'rmaydi." }
+        { "id": "d", "text": "Validatsiya natijasi yaxshi bo'lsa, skew bo'lishi mumkin emas — production ma'lumoti har doim train ma'lumoti bilan aynan bir xil", "hint": "Validatsiya o'qitish pipeline'i ma'lumotida — servisdagi farqni ko'rmaydi." }
       ],
-      "explanation": "Klassik misol: o'qitishda \"oxirgi 30 kun xaridlari\" kun oxiridagi to'liq ma'lumotdan, servisda esa kechikkan qisman ma'lumotdan hisoblanadi. Point-in-time correct join'lar — o'qitish ma'lumotida har misol uchun faqat o'sha paytda ma'lum bo'lgan qiymatlar.",
+      "explanation": "Sabablar: servisda boshqa tilda qayta yozilgan mantiq, boshqa ma'lumot manbai, vaqt farqi yoki kelajak ma'lumoti. Yechim — feature store yoki umumiy kutubxona; servis xususiyatlari train taqsimoti bilan solishtiriladi. Klassik misol: o'qitishda \"oxirgi 30 kun xaridlari\" kun oxiridagi to'liq ma'lumotdan, servisda esa kechikkan qisman ma'lumotdan hisoblanadi. Point-in-time correct join'lar — o'qitish ma'lumotida har misol uchun faqat o'sha paytda ma'lum bo'lgan qiymatlar.",
       "reviewed": false
     },
     {
@@ -53,12 +53,12 @@
       "kind": "concept",
       "prompt": "Jamoa o'nlab tajribalarni noutbuklarda o'tkazmoqda va qaysi model qaysi parametrlar bilan eng yaxshi bo'lganini eslay olmayapti. Nima kerak?",
       "options": [
-        { "id": "a", "text": "Experiment tracking (MLflow, Weights & Biases va h.k.): har ishga tushirishda parametrlar, kod versiyasi (commit), ma'lumot versiyasi, metrikalar, grafiklar va model artefakti avtomatik yoziladi; natijalarni solishtirish va eng yaxshisini registry'ga ko'chirish mumkin. Qayta yaratiladiganlik uchun tasodifiy seed va muhit ham saqlanadi", "correct": true },
+        { "id": "a", "text": "Experiment tracking (MLflow, W&B): parametrlar, commit, ma'lumot versiyasi, metrikalar va model avtomatik yoziladi", "correct": true },
         { "id": "b", "text": "Natijalarni Excel jadvaliga qo'lda yozib borish", "hint": "Unutiladi, xatolarga moyil va kod/ma'lumot versiyasi bilan bog'lanmaydi." },
         { "id": "c", "text": "Faqat eng yaxshi modelni saqlab, qolganlarini o'chirish", "hint": "Nega aynan u yaxshi ekanini va oldingi urinishlarni solishtirish imkoni yo'qoladi." },
-        { "id": "d", "text": "Noutbuk fayl nomlariga versiya qo'shish (`model_final_v3_real.ipynb`)", "hint": "Tartibsiz va qaysi natija qaysi kod holatidan kelganini kafolatlamaydi." }
+        { "id": "d", "text": "Noutbuk fayl nomlariga versiya qo'shish (`model_final_v3_real.ipynb`) — bu oddiy, tushunarli va butun jamoa uchun yetarli tizim", "hint": "Tartibsiz va qaysi natija qaysi kod holatidan kelganini kafolatlamaydi." }
       ],
-      "explanation": "Noutbuklar tadqiqot uchun qulay, lekin production o'qitish — takrorlanadigan skript/pipeline'da (Airflow, Kubeflow, Prefect). Tracking server jamoa uchun umumiy bo'lsin — bilim bir odamning kompyuterida qolmasin.",
+      "explanation": "Natijalar solishtiriladi va eng yaxshisi registry'ga ko'chiriladi; qayta yaratiladiganlik uchun seed va muhit ham saqlanadi. Noutbuklar tadqiqot uchun qulay, lekin production o'qitish — takrorlanadigan skript/pipeline'da (Airflow, Kubeflow, Prefect). Tracking server jamoa uchun umumiy bo'lsin — bilim bir odamning kompyuterida qolmasin.",
       "reviewed": false
     },
     {
@@ -68,12 +68,12 @@
       "kind": "concept",
       "prompt": "Production'dagi model sifati vaqt o'tib pasaymoqda. Data drift va concept drift qanday farqlanadi va qanday kuzatiladi?",
       "options": [
-        { "id": "a", "text": "Data drift — kirish xususiyatlari taqsimoti o'zgaradi (yangi foydalanuvchi segmenti, yangi qurilmalar): PSI, KS-test kabi statistikalar bilan train taqsimotiga solishtiriladi. Concept drift — kirish va natija o'rtasidagi bog'liqlik o'zgaradi (firibgarlar yangi usul topdi): bashorat va haqiqiy natijalar (label kechikib keladi) bo'yicha sifat metrikalari bilan aniqlanadi. Ikkalasi uchun ham alertlar, segment tahlili va qayta o'qitish siyosati", "correct": true },
+        { "id": "a", "text": "Data drift — kirish taqsimoti o'zgaradi; concept drift — kirish va natija bog'liqligi o'zgaradi", "correct": true },
         { "id": "b", "text": "Ikkalasi bir xil — faqat nomlanishi boshqa", "hint": "Biri kirish taqsimoti, ikkinchisi kirish→natija bog'liqligi o'zgarishi; aniqlash usullari ham farq qiladi." },
-        { "id": "c", "text": "Model bir marta o'qitilgandan keyin abadiy ishlaydi — monitoring kerak emas", "hint": "Dunyo o'zgaradi; monitoringsiz model jim yomonlashadi." },
+        { "id": "c", "text": "Model bir marta yaxshi o'qitilgandan keyin abadiy ishlaydi — production'da sifat monitoringi kerak emas", "hint": "Dunyo o'zgaradi; monitoringsiz model jim yomonlashadi." },
         { "id": "d", "text": "Data drift aniqlansa, model albatta yomonlashgan", "hint": "Ba'zi taqsimot o'zgarishlari model uchun ahamiyatsiz; haqiqiy ta'sirni sifat metrikalari bilan tekshirish kerak." }
       ],
-      "explanation": "Label'lar kechikib kelsa (kredit default — oylar o'tib), proksi metrikalar kuzatiladi: bashorat taqsimoti, ishonch darajasi, biznes ko'rsatkichlari. Qayta o'qitish — jadval bo'yicha yoki drift trigger'i bilan, har doim yangi modelni eskisi bilan solishtirib (champion/challenger).",
+      "explanation": "Data drift PSI, KS-test bilan train taqsimotiga solishtiriladi (yangi segment, yangi qurilmalar). Concept drift (firibgarlar yangi usul topdi) haqiqiy natijalar bo'yicha sifat metrikalari bilan aniqlanadi; alertlar, segment tahlili va qayta o'qitish siyosati kerak. Label'lar kechikib kelsa (kredit default — oylar o'tib), proksi metrikalar kuzatiladi: bashorat taqsimoti, ishonch darajasi, biznes ko'rsatkichlari. Qayta o'qitish — jadval bo'yicha yoki drift trigger'i bilan, har doim yangi modelni eskisi bilan solishtirib (champion/challenger).",
       "reviewed": false
     },
     {
@@ -83,12 +83,12 @@
       "kind": "concept",
       "prompt": "Feature store nima va qachon foydali?",
       "options": [
-        { "id": "a", "text": "Xususiyatlarni markazlashgan holda aniqlash, hisoblash va saqlash tizimi: offline qism — o'qitish uchun tarixiy qiymatlar (point-in-time to'g'ri join'lar bilan), online qism — servis uchun past latency'li so'nggi qiymatlar; bir xil ta'rif ikkalasini ham to'ldiradi. Bir nechta model va jamoa bir xil xususiyatlardan foydalanganda, training-serving skew muammo bo'lganda foydali (Feast, Tecton, cloud yechimlar)", "correct": true },
+        { "id": "a", "text": "Xususiyatlarni markaziy aniqlash va saqlash: offline — o'qitish uchun tarix, online — servis uchun so'nggi qiymatlar", "correct": true },
         { "id": "b", "text": "Feature store — modelning og'irliklarini saqlash joyi", "hint": "Og'irliklar model registry'da; feature store kirish xususiyatlari uchun." },
-        { "id": "c", "text": "Har qanday kichik loyihada birinchi kundan feature store shart", "hint": "Bitta model va oddiy xususiyatlar uchun ortiqcha infratuzilma; ehtiyoj paydo bo'lganda kiritiladi." },
+        { "id": "c", "text": "Har qanday kichik loyihada birinchi kundan feature store shart — usiz ML modelini production'ga umuman chiqarib bo'lmaydi", "hint": "Bitta model va oddiy xususiyatlar uchun ortiqcha infratuzilma; ehtiyoj paydo bo'lganda kiritiladi." },
         { "id": "d", "text": "Feature store'da faqat xom ma'lumotlar saqlanadi", "hint": "U aynan hisoblangan, qayta ishlatiladigan xususiyatlarni saqlaydi." }
       ],
-      "explanation": "Point-in-time correctness — o'qitish misoli uchun xususiyat qiymati aynan o'sha vaqtda mavjud bo'lgan holatda olinadi, aks holda kelajakdan leakage. Xususiyatlar katalogi jamoalar o'rtasida takroriy ishni kamaytiradi.",
+      "explanation": "Bitta ta'rif ikkalasini to'ldiradi (point-in-time to'g'ri join'lar). Ko'p model va jamoa bir xil xususiyatlardan foydalanganda yoki skew muammo bo'lganda foydali (Feast, Tecton, cloud yechimlar). Point-in-time correctness — o'qitish misoli uchun xususiyat qiymati aynan o'sha vaqtda mavjud bo'lgan holatda olinadi, aks holda kelajakdan leakage. Xususiyatlar katalogi jamoalar o'rtasida takroriy ishni kamaytiradi.",
       "reviewed": false
     },
     {
