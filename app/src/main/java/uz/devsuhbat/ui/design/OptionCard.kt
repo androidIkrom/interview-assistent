@@ -2,6 +2,7 @@ package uz.devsuhbat.ui.design
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.AnimationVector1D
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.keyframes
 import androidx.compose.foundation.BorderStroke
@@ -17,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -40,7 +42,10 @@ import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.withContext
 import uz.devsuhbat.ui.common.InlineCodeText
+import uz.devsuhbat.ui.theme.ExtraColors
 import uz.devsuhbat.ui.theme.LocalExtraColors
 
 enum class OptionState {
@@ -54,23 +59,60 @@ enum class OptionState {
 fun shouldShake(previous: OptionState?, current: OptionState): Boolean =
     current == OptionState.WRONG && previous != null && previous != OptionState.WRONG
 
-private class OptionColors(val container: Color, val border: Color, val badge: Color, val onBadge: Color)
+internal class OptionPalette(
+    val container: Color,
+    val content: Color,
+    val border: Color,
+    val badge: Color,
+    val onBadge: Color,
+)
 
-@Composable
-private fun optionColors(state: OptionState): OptionColors {
-    val c = MaterialTheme.colorScheme
-    val extra = LocalExtraColors.current
-    return when (state) {
-        OptionState.IDLE, OptionState.DIMMED ->
-            OptionColors(c.surfaceContainerLowest, c.outlineVariant, c.surfaceContainer, c.primary)
-        OptionState.SELECTED -> OptionColors(c.primaryContainer, c.primary, c.primary, c.onPrimary)
-        OptionState.WRONG -> OptionColors(
-            c.errorContainer.copy(alpha = 0.35f).compositeOver(c.surfaceContainerLowest),
-            c.error.copy(alpha = 0.35f),
-            c.errorContainer,
-            c.error,
-        )
-        OptionState.CORRECT -> OptionColors(extra.successContainer, extra.success, extra.success, extra.onSuccess)
+internal fun optionPalette(state: OptionState, c: ColorScheme, extra: ExtraColors): OptionPalette = when (state) {
+    OptionState.IDLE, OptionState.DIMMED ->
+        OptionPalette(c.surfaceContainerLowest, c.onSurface, c.outlineVariant, c.surfaceContainer, c.primary)
+    OptionState.SELECTED -> OptionPalette(c.primaryContainer, c.onPrimaryContainer, c.primary, c.primary, c.onPrimary)
+    OptionState.WRONG -> OptionPalette(
+        c.errorContainer.copy(alpha = 0.35f).compositeOver(c.surfaceContainerLowest),
+        c.onSurfaceVariant,
+        c.error.copy(alpha = 0.35f),
+        c.errorContainer,
+        c.error,
+    )
+    OptionState.CORRECT ->
+        OptionPalette(extra.successContainer, extra.onSuccessContainer, extra.success, extra.success, extra.onSuccess)
+}
+
+/**
+ * Plays the shake into WRONG or the pop into CORRECT. When the state changes again mid-way this is cancelled,
+ * and the card must come back to rest rather than stay shifted or enlarged.
+ */
+internal suspend fun playOptionMotion(
+    previous: OptionState?,
+    state: OptionState,
+    shake: Animatable<Float, AnimationVector1D>,
+    pop: Animatable<Float, AnimationVector1D>,
+    shakePx: Float,
+) {
+    try {
+        if (shouldShake(previous, state)) {
+            shake.animateTo(0f, keyframes {
+                durationMillis = 550
+                -shakePx at 80
+                shakePx at 160
+                -shakePx at 240
+                shakePx at 320
+                -shakePx * 0.45f at 420
+            })
+        }
+        if (state == OptionState.CORRECT && previous != null && previous != OptionState.CORRECT) {
+            pop.animateTo(1.045f, DsMotion.spatialFast())
+            pop.animateTo(1f, DsMotion.spatialFast())
+        }
+    } finally {
+        withContext(NonCancellable) {
+            shake.snapTo(0f)
+            pop.snapTo(1f)
+        }
     }
 }
 
@@ -85,8 +127,9 @@ fun OptionCard(
     modifier: Modifier = Modifier,
 ) {
     val still = LocalReducedMotion.current
-    val target = optionColors(state)
+    val target = optionPalette(state, MaterialTheme.colorScheme, LocalExtraColors.current)
     val container by animateColorAsState(target.container, DsMotion.effectsDefault(), label = "container")
+    val content by animateColorAsState(target.content, DsMotion.effectsDefault(), label = "content")
     val border by animateColorAsState(target.border, DsMotion.effectsDefault(), label = "border")
     val badge by animateColorAsState(target.badge, DsMotion.effectsDefault(), label = "badge")
     val corner by animateDpAsState(
@@ -112,21 +155,7 @@ fun OptionCard(
     LaunchedEffect(state) {
         val previous = last.value
         last.value = state
-        if (still) return@LaunchedEffect
-        if (shouldShake(previous, state)) {
-            shake.animateTo(0f, keyframes {
-                durationMillis = 550
-                -shakePx at 80
-                shakePx at 160
-                -shakePx at 240
-                shakePx at 320
-                -shakePx * 0.45f at 420
-            })
-        }
-        if (state == OptionState.CORRECT && previous != null && previous != OptionState.CORRECT) {
-            pop.animateTo(1.045f, DsMotion.spatialFast())
-            pop.animateTo(1f, DsMotion.spatialFast())
-        }
+        if (!still) playOptionMotion(previous, state, shake, pop, shakePx)
     }
 
     Surface(
@@ -134,6 +163,7 @@ fun OptionCard(
         enabled = state.interactive,
         shape = RoundedCornerShape(corner),
         color = container,
+        contentColor = content,
         border = BorderStroke(1.5.dp, border),
         modifier = modifier
             .fillMaxWidth()
@@ -167,7 +197,6 @@ fun OptionCard(
             InlineCodeText(
                 text = text,
                 style = MaterialTheme.typography.bodyLarge,
-                color = if (state == OptionState.WRONG) MaterialTheme.colorScheme.onSurfaceVariant else Color.Unspecified,
                 textDecoration = if (state == OptionState.WRONG) TextDecoration.LineThrough else null,
             )
         }
