@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import uz.devsuhbat.ui.common.InlineCodeText
 import uz.devsuhbat.ui.theme.DevSuhbatTheme
 import uz.devsuhbat.ui.theme.LocalExtraColors
 
@@ -65,6 +66,34 @@ private fun ProgressLight() = PreviewFrame(dark = false) { ProgressComponents() 
 @Preview(name = "Progress · dark", widthDp = 390)
 @Composable
 private fun ProgressDark() = PreviewFrame(dark = true) { ProgressComponents() }
+
+@Composable
+private fun QuestionComponents() {
+    val options = listOf(
+        "Klassni avtomatik `Serializable` qiladi" to OptionState.WRONG,
+        "Klassdan faqat bitta nusxa (singleton) yaratilishini kompilyator darajasida ta'minlaydi" to OptionState.IDLE,
+        "`equals`, `hashCode`, `toString`, `copy` va `componentN` ni generatsiya qiladi" to OptionState.SELECTED,
+        "Obyektni avtomatik ravishda o'zgarmas (immutable) qiladi" to OptionState.DIMMED,
+    )
+    options.forEachIndexed { i, (text, state) ->
+        OptionCard(text, 'A' + i, state, multi = false, onClick = {})
+    }
+    OptionCard("`equals`, `hashCode` ni generatsiya qiladi", 'C', OptionState.CORRECT, multi = true, onClick = {})
+    FeedbackSheet(FeedbackTone.WRONG, "Bu emas. Yana urinib ko'ring") {
+        InlineCodeText("Serializatsiya uchun alohida interfeys yoki annotatsiya kerak.")
+    }
+    FeedbackSheet(FeedbackTone.CORRECT, "To'g'ri!") {
+        InlineCodeText("Kompilyator nusxalash (`copy`) va destrukturizatsiya (`componentN`) funksiyalarini yozib beradi.")
+    }
+}
+
+@Preview(name = "Question · light", widthDp = 390)
+@Composable
+private fun QuestionLight() = PreviewFrame(dark = false) { QuestionComponents() }
+
+@Preview(name = "Question · dark", widthDp = 390)
+@Composable
+private fun QuestionDark() = PreviewFrame(dark = true) { QuestionComponents() }
 
 @Preview(name = "Confetti", widthDp = 390, heightDp = 400)
 @Composable
