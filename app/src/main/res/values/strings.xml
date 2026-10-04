@@ -74,6 +74,16 @@
     <string name="reminder_denied">Bildirishnomalarga ruxsat berilmagan. Uni tizim sozlamalarida yoqing.</string>
     <string name="reminder_channel">Kunlik eslatma</string>
     <string name="reminder_text">Bugun 10 ta savol yechamizmi?</string>
+    <string name="backup_export">Progressni eksport qilish</string>
+    <string name="backup_import">Progressni import qilish</string>
+    <string name="backup_import_confirm">Joriy progress almashtiriladi. Davom etasizmi?</string>
+    <string name="backup_import_action">Import qilish</string>
+    <string name="backup_exported">Progress faylga saqlandi</string>
+    <string name="backup_imported">Progress tiklandi</string>
+    <string name="backup_write_failed">Faylni saqlab bo\'lmadi</string>
+    <string name="backup_malformed">Fayl buzilgan</string>
+    <string name="backup_wrong_format">Bu DevSuhbat zaxira fayli emas</string>
+    <string name="backup_newer_version">Bu fayl ilovaning yangiroq versiyasida yaratilgan</string>
     <string name="settings_reset">Progressni tozalash</string>
     <string name="settings_reset_text">Barcha javoblar tarixi va tayyorlik ko\'rsatkichi o\'chiriladi. Buni ortga qaytarib bo\'lmaydi.</string>
     <string name="settings_reset_confirm">Tozalash</string>
