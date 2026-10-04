@@ -1,0 +1,1125 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DevSuhbat UI yo'nalishlari</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400..700&family=Geist:wght@400..700&family=Geist+Mono:wght@400..700&family=JetBrains+Mono:wght@400;500;700&family=Lexend:wght@400..800&display=swap">
+<style>
+/* Registered at document level so the animated number counters work inside the shadow roots. */
+@property --n { syntax: '<integer>'; initial-value: 0; inherits: false; }
+
+:root {
+  --bg: #121316;
+  --card: #1B1C20;
+  --line: #2A2B31;
+  --text: #ECECEF;
+  --muted: #A1A1AA;
+  --accent: #A99BFF;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Figtree', system-ui, sans-serif; line-height: 1.5; }
+.wrap { max-width: 1440px; margin: 0 auto; padding: 48px 24px 96px; }
+h1 { font-family: 'Bricolage Grotesque', 'Figtree', sans-serif; font-size: clamp(32px, 5vw, 52px); line-height: 1.05; margin: 0 0 16px; letter-spacing: -1px; }
+.intro { max-width: 820px; color: var(--muted); font-size: 17px; margin: 0 0 12px; }
+.intro strong { color: var(--text); }
+.howto { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0 0; padding: 0; list-style: none; }
+.howto li { background: var(--card); border: 1px solid var(--line); border-radius: 99px; padding: 6px 14px; font-size: 14px; color: var(--muted); }
+section.dir { margin-top: 72px; padding-top: 40px; border-top: 1px solid var(--line); }
+.dirhead { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 16px; margin-bottom: 8px; }
+.dirhead h2 { font-family: 'Bricolage Grotesque', 'Figtree', sans-serif; font-size: 32px; margin: 0; letter-spacing: -0.5px; }
+.dirhead .tagline { color: var(--muted); font-size: 16px; }
+.row { display: flex; flex-wrap: wrap; gap: 32px; align-items: flex-start; margin-top: 24px; }
+.shot { display: flex; flex-direction: column; gap: 10px; }
+.shot .cap { display: flex; justify-content: space-between; align-items: center; gap: 12px; font-size: 14px; color: var(--muted); }
+.shot .cap b { color: var(--text); font-weight: 600; }
+.replay { font: inherit; font-size: 13px; color: var(--text); background: var(--card); border: 1px solid var(--line); border-radius: 99px; padding: 5px 12px; cursor: pointer; }
+.replay:hover { border-color: var(--accent); }
+.phone { width: 390px; height: 844px; border-radius: 28px; overflow: hidden; background: #000; box-shadow: 0 0 0 1px var(--line), 0 24px 60px rgba(0,0,0,0.45); transition: box-shadow .3s; }
+.phone.flash { box-shadow: 0 0 0 3px var(--accent), 0 24px 60px rgba(0,0,0,0.45); }
+.spec { flex: 1 1 300px; max-width: 380px; background: var(--card); border: 1px solid var(--line); border-radius: 20px; padding: 22px; font-size: 15px; }
+.spec h3 { margin: 0 0 4px; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); font-weight: 600; }
+.spec p { margin: 0 0 16px; }
+.spec p:last-child { margin-bottom: 0; }
+.swatches { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0 16px; }
+.sw { display: inline-flex; align-items: center; gap: 6px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--muted); }
+.sw i { width: 18px; height: 18px; border-radius: 5px; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.15); }
+.feedback { margin-top: 72px; padding: 28px; background: var(--card); border: 1px solid var(--line); border-radius: 20px; max-width: 820px; }
+.feedback h2 { font-family: 'Bricolage Grotesque', 'Figtree', sans-serif; margin: 0 0 12px; font-size: 26px; }
+.feedback ol { margin: 0; padding-left: 20px; color: var(--muted); }
+.feedback li { margin: 6px 0; }
+.feedback li strong { color: var(--text); }
+@media (max-width: 440px) {
+  .wrap { padding: 32px 16px 64px; }
+  .phone { zoom: 0.88; }
+  .row { gap: 24px; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>DevSuhbat: 3 ta UI yo'nalishi</h1>
+  <p class="intro">Dasturlash suhbatlariga tayyorlanish uchun Android ilova. Har bir yo'nalishda 3 ta ekran bor: <strong>Bosh sahifa</strong>, <strong>Savol</strong> va <strong>Natija</strong>. Ekranlar jonli: animatsiya ham, bosiladigan joylar ham ishlaydi. Savol ilovadagi haqiqiy savol, raqamlar esa namunaviy (demo).</p>
+  <ul class="howto">
+    <li>Savol ekranida variant tanlang va "Tekshirish"ni bosing</li>
+    <li>Xato javob: shake va maslahat chiqadi</li>
+    <li>To'g'ri javob: tasdiq animatsiyasi chiqadi</li>
+    <li>Natija ekranida halqa yoki raqamni bosing: animatsiya qayta o'ynaydi</li>
+    <li>Android telefonda ochsangiz tebranish (haptika) ham seziladi</li>
+  </ul>
+
+  <section class="dir">
+    <div class="dirhead"><h2>A — Expressive</h2><span class="tagline">Material 3 Expressive asosida. Hozirgi ilovaning tabiiy evolyutsiyasi</span></div>
+    <div class="row">
+      <div class="shot"><div class="cap"><b>Bosh sahifa</b><button class="replay" data-replay="A-home">Qayta o'ynatish</button></div><div class="phone" data-screen="A-home"></div></div>
+      <div class="shot"><div class="cap"><b>Savol</b><button class="replay" data-replay="A-session">Qayta boshlash</button></div><div class="phone" data-screen="A-session"></div></div>
+      <div class="shot"><div class="cap"><b>Natija</b><button class="replay" data-replay="A-result">Qayta o'ynatish</button></div><div class="phone" data-screen="A-result"></div></div>
+      <aside class="spec">
+        <h3>G'oya</h3>
+        <p>Google'ning Material 3 Expressive tiliga eng yaqin variant. Xavfi eng kam: Compose'dagi tayyor komponentlar bilan quriladi.</p>
+        <h3>Ranglar</h3>
+        <div class="swatches">
+          <span class="sw"><i style="background:#4433D1"></i>#4433D1</span>
+          <span class="sw"><i style="background:#F6F4FD"></i>#F6F4FD</span>
+          <span class="sw"><i style="background:#E3DEFF"></i>#E3DEFF</span>
+          <span class="sw"><i style="background:#1E7A45"></i>#1E7A45</span>
+          <span class="sw"><i style="background:#B3261E"></i>#B3261E</span>
+          <span class="sw"><i style="background:#F07A2B"></i>#F07A2B</span>
+          <span class="sw"><i style="background:#1C1B22"></i>#1C1B22</span>
+        </div>
+        <h3>Shrift</h3>
+        <p>Bricolage Grotesque (sarlavha, raqamlar), Figtree (matn), JetBrains Mono (kod).</p>
+        <h3>Shakl</h3>
+        <p>"Cookie" (scallop) shakli, 22–32px radius. Variant tanlanganda burchaklari morph bo'ladi, badge kvadratdan doiraga aylanadi.</p>
+        <h3>Motion</h3>
+        <p>Spring (overshoot) bilan kirish, readiness halqasi chizilib chiqadi, to'lqinsimon progress, xatoda shake, to'g'ri javobda pop va pastdan bottom sheet chiqadi.</p>
+        <h3>Kamchilik</h3>
+        <p>Pixel ilovalariga o'xshab qolishi mumkin. Expressive komponentlar hozircha alpha versiyada.</p>
+      </aside>
+    </div>
+  </section>
+
+  <section class="dir">
+    <div class="dirhead"><h2>B — Terminal</h2><span class="tagline">Dark-first, dasturchi uslubi</span></div>
+    <div class="row">
+      <div class="shot"><div class="cap"><b>Bosh sahifa</b><button class="replay" data-replay="B-home">Qayta o'ynatish</button></div><div class="phone" data-screen="B-home"></div></div>
+      <div class="shot"><div class="cap"><b>Savol</b><button class="replay" data-replay="B-session">Qayta boshlash</button></div><div class="phone" data-screen="B-session"></div></div>
+      <div class="shot"><div class="cap"><b>Natija</b><button class="replay" data-replay="B-result">Qayta o'ynatish</button></div><div class="phone" data-screen="B-result"></div></div>
+      <aside class="spec">
+        <h3>G'oya</h3>
+        <p>Auditoriya dasturchilar, shuning uchun IDE va terminal tili ishlatiladi: xato javob kompilyator xabari kabi, natija esa log kabi ko'rinadi. OLED ekran uchun deyarli qora fon.</p>
+        <h3>Ranglar</h3>
+        <div class="swatches">
+          <span class="sw"><i style="background:#0A0D13"></i>#0A0D13</span>
+          <span class="sw"><i style="background:#121722"></i>#121722</span>
+          <span class="sw"><i style="background:#263043"></i>#263043</span>
+          <span class="sw"><i style="background:#3DDC97"></i>#3DDC97</span>
+          <span class="sw"><i style="background:#FFB547"></i>#FFB547</span>
+          <span class="sw"><i style="background:#FF6B6B"></i>#FF6B6B</span>
+          <span class="sw"><i style="background:#E6EDF3"></i>#E6EDF3</span>
+        </div>
+        <h3>Shrift</h3>
+        <p>Geist (matn), Geist Mono (raqam, teg, kod).</p>
+        <h3>Effektlar</h3>
+        <p>GitHub uslubidagi faollik heatmap'i, segmentli progress, glass (blur) header va floating toolbar, nuqtali fon teksturasi, mint glow.</p>
+        <h3>Motion</h3>
+        <p>Segmentlar ketma-ket yonadi, xatoda glitch-shake, natija qatorlari yozilayotgandek chiqadi, piksel uchqunlar ko'tariladi.</p>
+        <h3>Kamchilik</h3>
+        <p>Light mode'ni alohida ishlash kerak. Yangi boshlovchiga biroz "sovuq" tuyulishi mumkin.</p>
+      </aside>
+    </div>
+  </section>
+
+  <section class="dir">
+    <div class="dirhead"><h2>C — Tactile</h2><span class="tagline">O'yinli, motivatsion</span></div>
+    <div class="row">
+      <div class="shot"><div class="cap"><b>Bosh sahifa</b><button class="replay" data-replay="C-home">Qayta o'ynatish</button></div><div class="phone" data-screen="C-home"></div></div>
+      <div class="shot"><div class="cap"><b>Savol</b><button class="replay" data-replay="C-session">Qayta boshlash</button></div><div class="phone" data-screen="C-session"></div></div>
+      <div class="shot"><div class="cap"><b>Natija</b><button class="replay" data-replay="C-result">Qayta o'ynatish</button></div><div class="phone" data-screen="C-result"></div></div>
+      <aside class="spec">
+        <h3>G'oya</h3>
+        <p>Har kuni qaytib kelishga undaydi: seriya, kunlik maqsad, "bosiladigan" 3D tugmalar va katta nishonlash. Neo-brutalizm ruhida: qalin chiziq va qattiq soya.</p>
+        <h3>Ranglar</h3>
+        <div class="swatches">
+          <span class="sw"><i style="background:#F4F6FB"></i>#F4F6FB</span>
+          <span class="sw"><i style="background:#16161D"></i>#16161D</span>
+          <span class="sw"><i style="background:#2563EB"></i>#2563EB</span>
+          <span class="sw"><i style="background:#FFCB2B"></i>#FFCB2B</span>
+          <span class="sw"><i style="background:#1FA463"></i>#1FA463</span>
+          <span class="sw"><i style="background:#FF6B57"></i>#FF6B57</span>
+        </div>
+        <h3>Shrift</h3>
+        <p>Lexend (o'qilishi oson, o'quv ilovalari uchun yaratilgan), JetBrains Mono (kod).</p>
+        <h3>Motion</h3>
+        <p>Tugma bosilganda pastga "cho'kadi", xatoda chayqaladi, to'g'ri javobda sakraydi, natijada nishon pop bo'ladi va konfetti tushadi.</p>
+        <h3>Kamchilik</h3>
+        <p>Haddan tashqari o'yinli ko'rinishi mumkin, Senior darajadagi foydalanuvchiga jiddiy tuyulmasligi ehtimoli bor.</p>
+      </aside>
+    </div>
+  </section>
+
+  <div class="feedback">
+    <h2>Dizaynerdan kutilayotgan fikr</h2>
+    <ol>
+      <li><strong>Qaysi yo'nalish asos bo'lsin:</strong> A, B yoki C?</li>
+      <li><strong>Boshqa variantlardan nima olinsin?</strong> Masalan, A'ning motion'i va B'ning heatmap'i yoki C'ning seriya kartasi.</li>
+      <li><strong>Ranglar va shriftlar</strong> bo'yicha o'zgartirish kerak bo'lgan joylar.</li>
+      <li><strong>Natija ekranidagi "50% → 54%"</strong> (tayyorlik o'sishi) kerakmi? Bu hozirgi ilovada yo'q yangi g'oya.</li>
+      <li><strong>Animatsiyalar me'yordami,</strong> yoki ba'zilari ortiqchami?</li>
+    </ol>
+  </div>
+</div>
+
+<!-- ============================== A: Expressive ============================== -->
+<template id="tpl-A-home">
+<style>
+:host{display:block}
+.root{width:390px;height:844px;background:#F6F4FD;color:#1C1B22;font-family:'Figtree',system-ui,sans-serif;display:flex;flex-direction:column;overflow:hidden;position:relative}
+.disp{font-family:'Bricolage Grotesque','Figtree',system-ui,sans-serif}
+.ic{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.scroll{flex:1;min-height:0;overflow-y:auto;padding:4px 16px 24px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:max-content;gap:12px;align-content:start}
+.tile{border-radius:28px;padding:18px;display:flex;flex-direction:column;gap:10px;box-sizing:border-box}
+.rise{animation:rise .8s cubic-bezier(.2,1.3,.4,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(28px) scale(.96)}}
+.spin{transform-origin:70px 70px;animation:spin 24s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ring{animation:ring 1.4s cubic-bezier(.3,1.1,.4,1) .3s both}
+@keyframes ring{from{stroke-dashoffset:289}}
+.iconbtn{all:unset;width:48px;height:48px;border-radius:16px;display:grid;place-items:center;cursor:pointer;color:#3A3850;transition:background .2s,border-radius .3s}
+.iconbtn:hover{background:#ECE9FA;border-radius:24px}
+.press{transition:transform .35s cubic-bezier(.3,1.7,.5,1)}
+.press:active{transform:scale(.95)}
+.cta{display:flex;align-items:center;justify-content:center;gap:8px;height:52px;border-radius:26px;background:#FFFFFF;color:#2E21A8;font-weight:700;font-size:16px;text-decoration:none;transition:transform .35s cubic-bezier(.3,1.7,.5,1),border-radius .35s}
+.cta:active{transform:scale(.96);border-radius:16px}
+.smallbtn{all:unset;box-sizing:border-box;height:40px;padding:0 16px;border-radius:20px;display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:14px;cursor:pointer;transition:transform .35s cubic-bezier(.3,1.7,.5,1),border-radius .3s}
+.smallbtn:active{transform:scale(.94);border-radius:12px}
+.bar{height:8px;border-radius:4px;background:#E7E3F5;overflow:hidden}
+.fill{height:100%;border-radius:4px;background:#4433D1;transform-origin:left;animation:grow 1s cubic-bezier(.3,1.2,.4,1) both}
+@keyframes grow{from{transform:scaleX(0)}}
+.dot{width:16px;height:16px;border-radius:50%;box-sizing:border-box}
+.today{border:2px solid #F07A2B;animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.25)}}
+.nav{height:80px;flex:none;background:#FFFFFF;display:flex;justify-content:space-around;align-items:center;border-top:1px solid #ECE9F6}
+.navitem{all:unset;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:12px;font-weight:600;color:#57556A;cursor:pointer;width:88px}
+.pill{width:64px;height:32px;border-radius:16px;display:grid;place-items:center;transition:background .3s}
+.navitem.on{color:#1A0F6B}
+.navitem.on .pill{background:#E3DEFF;animation:pillin .5s cubic-bezier(.3,1.6,.5,1)}
+@keyframes pillin{from{transform:scaleX(.4)}}
+a:focus-visible,button:focus-visible{outline:3px solid #8C7CFF;outline-offset:2px}
+</style>
+<div class="root">
+  <header style="display: flex; align-items: center; justify-content: space-between; padding: 20px 16px 14px 20px">
+    <div style="display: flex; flex-direction: column; gap: 2px">
+      <span style="font-size: 14px; color: #57556A">Bugun ham bir qadam</span>
+      <span class="disp" style="font-size: 28px; font-weight: 800; letter-spacing: -0.5px">DevSuhbat</span>
+    </div>
+    <button class="iconbtn" aria-label="Sozlamalar"><svg width="24" height="24" viewBox="0 0 24 24" class="ic"><path d="M20 7h-9M14 17H5"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></svg></button>
+  </header>
+  <main class="scroll">
+    <section class="tile rise" style="grid-column: span 2; background: #4433D1; color: #FFFFFF; position: relative; overflow: hidden; gap: 16px; padding: 22px">
+      <div style="display: flex; flex-direction: column; gap: 6px">
+        <span style="font-size: 13px; opacity: 0.85">Tayyorlanayotgan yo'nalish</span>
+        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap">
+          <span class="disp" style="font-size: 26px; font-weight: 700; line-height: 1.1">Android (Kotlin)</span>
+          <span style="font-size: 13px; font-weight: 700; padding: 4px 12px; border-radius: 12px; background: rgba(255,255,255,0.18)">Junior</span>
+        </div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 16px">
+        <svg width="120" height="120" viewBox="0 0 140 140" style="flex: none; margin: -6px 0 -6px -8px">
+          <path class="spin" data-cookie="70,70,62,9,0.07" style="fill: rgba(255,255,255,0.12)"/>
+          <circle cx="70" cy="70" r="46" style="fill: none; stroke: rgba(255,255,255,0.22); stroke-width: 10"/>
+          <circle class="ring" cx="70" cy="70" r="46" transform="rotate(-90 70 70)" style="fill: none; stroke: #FFFFFF; stroke-width: 10; stroke-linecap: round; stroke-dasharray: 289; stroke-dashoffset: 144.5"/>
+          <text x="70" y="79" class="disp" style="fill: #FFFFFF; font-size: 28px; font-weight: 800; text-anchor: middle">50%</text>
+        </svg>
+        <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0">
+          <span class="disp" style="font-size: 22px; font-weight: 800">60 / 120</span>
+          <span style="font-size: 14px; opacity: 0.9">savol o'zlashtirilgan</span>
+        </div>
+      </div>
+      <a class="cta" href="#" data-go="A-session">Mashqni boshlash <svg width="20" height="20" viewBox="0 0 24 24" class="ic"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+    </section>
+    <section class="tile rise" style="background: #FFDAD6; color: #410E0B; animation-delay: 0.08s">
+      <div style="width: 40px; height: 40px; border-radius: 14px; background: #FFFFFF; display: grid; place-items: center; color: #B3261E"><svg width="22" height="22" viewBox="0 0 24 24" class="ic"><path d="M3 12a9 9 0 0 1 15.5-6.3L21 8M21 3v5h-5M21 12a9 9 0 0 1-15.5 6.3L3 16M3 21v-5h5"/></svg></div>
+      <span class="disp" style="font-size: 40px; font-weight: 800; line-height: 1">8</span>
+      <span style="font-size: 14px; line-height: 1.3">xato takrorlashni kutmoqda</span>
+      <button class="smallbtn" style="background: #B3261E; color: #FFFFFF; align-self: flex-start">Takrorlash</button>
+    </section>
+    <section class="tile rise" style="background: #FFE6D2; color: #4A1D00; animation-delay: 0.14s">
+      <div style="width: 40px; height: 40px; border-radius: 50%; background: #FFFFFF; display: grid; place-items: center; color: #D2600F"><svg width="22" height="22" viewBox="0 0 24 24" class="ic"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg></div>
+      <span class="disp" style="font-size: 40px; font-weight: 800; line-height: 1">5 <span style="font-size: 18px; font-weight: 700">kun</span></span>
+      <span style="font-size: 14px; line-height: 1.3">ketma-ket mashq</span>
+      <div data-slot="week" style="display: flex; gap: 5px; align-items: center; padding-top: 6px"></div>
+    </section>
+    <section class="tile rise" style="grid-column: span 2; background: #FFFFFF; flex-direction: row; align-items: center; gap: 14px; animation-delay: 0.2s">
+      <div style="flex: none; width: 52px; height: 52px; border-radius: 18px; background: #E3DEFF; color: #4433D1; display: grid; place-items: center"><svg width="26" height="26" viewBox="0 0 24 24" class="ic"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M9 2h6"/></svg></div>
+      <div style="flex: 1; display: flex; flex-direction: column; gap: 2px; min-width: 0">
+        <span class="disp" style="font-size: 18px; font-weight: 700">Mock interview</span>
+        <span style="font-size: 13px; color: #57556A">25 savol · 30 daqiqa · oxirgi: 19/25</span>
+      </div>
+      <button class="iconbtn press" aria-label="Mock interviewni boshlash" style="background: #4433D1; color: #FFFFFF; border-radius: 50%"><svg width="20" height="20" viewBox="0 0 24 24"><path d="M7 4.5v15l12-7.5z" style="fill: currentColor"/></svg></button>
+    </section>
+    <section class="tile rise" data-slot="weak" style="grid-column: span 2; background: #FFFFFF; gap: 14px; animation-delay: 0.26s">
+      <div style="display: flex; justify-content: space-between; align-items: baseline">
+        <span class="disp" style="font-size: 18px; font-weight: 700">Bo'sh mavzular</span>
+        <span style="font-size: 13px; color: #4433D1; font-weight: 700">Barchasi</span>
+      </div>
+    </section>
+  </main>
+  <nav class="nav">
+    <button class="navitem on"><span class="pill"><svg width="22" height="22" viewBox="0 0 24 24" class="ic"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg></span>Bosh</button>
+    <button class="navitem"><span class="pill"><svg width="22" height="22" viewBox="0 0 24 24" class="ic"><path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/></svg></span>Mavzular</button>
+    <button class="navitem"><span class="pill"><svg width="22" height="22" viewBox="0 0 24 24" class="ic"><path d="M4 20V10M10 20V4M16 20v-7M21 20H3"/></svg></span>Statistika</button>
+  </nav>
+</div>
+</template>
+
+<template id="tpl-A-session">
+<style>
+:host{display:block}
+.root{width:390px;height:844px;background:#F6F4FD;color:#1C1B22;font-family:'Figtree',system-ui,sans-serif;display:flex;flex-direction:column;overflow:hidden}
+.disp{font-family:'Bricolage Grotesque','Figtree',system-ui,sans-serif}
+.ic{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.code{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.84em;background:#E7E3FA;color:#2B1FA0;padding:1px 6px;border-radius:7px}
+.iconbtn{all:unset;flex:none;width:48px;height:48px;border-radius:16px;display:grid;place-items:center;cursor:pointer;color:#3A3850;transition:background .2s,border-radius .3s}
+.iconbtn:hover{background:#ECE9FA;border-radius:24px}
+.wbox{flex:1;position:relative;height:20px}
+.wclip{position:absolute;left:0;top:0;height:20px;overflow:hidden;transition:width .7s cubic-bezier(.3,1.3,.4,1)}
+.wave{animation:wave .9s linear infinite}
+@keyframes wave{to{transform:translateX(-16px)}}
+.wtrack{position:absolute;right:2px;top:7.5px;height:5px;border-radius:3px;background:#DAD6EA;transition:left .7s cubic-bezier(.3,1.3,.4,1)}
+.opt{all:unset;box-sizing:border-box;display:flex;gap:14px;align-items:center;width:100%;padding:12px 16px 12px 12px;min-height:64px;background:#FFFFFF;border:1.5px solid #E2DEF0;border-radius:22px;cursor:pointer;font-size:16px;line-height:1.45;text-align:left;transition:transform .4s cubic-bezier(.3,1.7,.5,1),background .25s,border-color .25s,border-radius .4s cubic-bezier(.3,1.5,.5,1),opacity .3s}
+.opt:active{transform:scale(.97)}
+.opt.sel{background:#E3DEFF;border-color:#4433D1;border-radius:32px}
+.badge{flex:none;width:38px;height:38px;display:grid;place-items:center;border-radius:13px;background:#EEEBFA;color:#4433D1;font-weight:800;font-family:'Bricolage Grotesque',system-ui,sans-serif;transition:border-radius .45s cubic-bezier(.3,1.6,.5,1),background .25s,color .25s,transform .45s cubic-bezier(.3,1.6,.5,1)}
+.opt.sel .badge{border-radius:50%;background:#4433D1;color:#FFFFFF;transform:rotate(-8deg) scale(1.06)}
+.opt.wrong{background:#FFF5F4;border-color:#F0C9C4;color:#857A79;cursor:default}
+.opt.wrong .txt,.opt.wrong .code{text-decoration:line-through}
+.opt.wrong .badge{background:#FFDAD6;color:#B3261E}
+.opt.shake{animation:shake .55s cubic-bezier(.36,.07,.19,.97)}
+@keyframes shake{10%,90%{transform:translateX(-2px)}20%,80%{transform:translateX(4px)}30%,50%,70%{transform:translateX(-9px)}40%,60%{transform:translateX(9px)}}
+.opt.ok{background:#D3F4DD;border-color:#1E7A45;border-radius:34px;cursor:default;animation:pop .7s cubic-bezier(.3,1.8,.5,1)}
+.opt.ok .badge{background:#1E7A45;color:#FFFFFF;border-radius:50%}
+@keyframes pop{35%{transform:scale(1.045)}}
+.opt.dim{opacity:.45;cursor:default}
+.sheet{border-radius:28px;padding:18px 18px 16px;display:flex;flex-direction:column;gap:8px;animation:sheetIn .6s cubic-bezier(.2,1.3,.4,1) both}
+@keyframes sheetIn{from{transform:translateY(120%);opacity:0}}
+.burst{animation:burst .8s cubic-bezier(.3,1.8,.5,1) both}
+@keyframes burst{from{transform:scale(0) rotate(-90deg)}}
+.main{all:unset;box-sizing:border-box;width:100%;height:56px;border-radius:28px;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:700;font-size:17px;cursor:pointer;text-decoration:none;transition:transform .35s cubic-bezier(.3,1.7,.5,1),border-radius .35s,background .25s}
+.main:active{transform:scale(.97);border-radius:18px}
+.main:disabled{background:#E6E3EF !important;color:#8E8BA0 !important;cursor:default;transform:none}
+a:focus-visible,button:focus-visible{outline:3px solid #8C7CFF;outline-offset:2px}
+</style>
+<div class="root">
+  <header style="display: flex; align-items: center; gap: 8px; padding: 14px 8px 6px">
+    <a class="iconbtn" href="#" data-go="A-home" aria-label="Chiqish"><svg width="24" height="24" viewBox="0 0 24 24" class="ic"><path d="M6 6l12 12M18 6L6 18"/></svg></a>
+    <div class="wbox">
+      <div class="wtrack" data-slot="track"></div>
+      <div class="wclip" data-slot="clip"><svg width="200" height="20" viewBox="0 0 200 20"><path class="wave" data-wave="200" style="fill: none; stroke: #4433D1; stroke-width: 5; stroke-linecap: round"/></svg></div>
+    </div>
+    <span class="disp" data-slot="counter" style="font-weight: 700; font-size: 15px; min-width: 40px; text-align: right"></span>
+    <button class="iconbtn" aria-label="Savoldagi xatoni xabar qilish"><svg width="22" height="22" viewBox="0 0 24 24" class="ic"><path d="M5 21V4h12l-2 4 2 4H5"/></svg></button>
+  </header>
+  <main style="flex: 1; min-height: 0; overflow-y: auto; padding: 10px 20px 16px; display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; gap: 8px">
+      <span style="font-size: 12px; font-weight: 700; padding: 5px 10px; border-radius: 10px; background: #E3DEFF; color: #1A0F6B">Tushuncha</span>
+      <span style="font-size: 12px; font-weight: 700; padding: 5px 10px; border-radius: 10px; background: #FFFFFF; color: #57556A; border: 1px solid #E2DEF0">Kotlin tili · Junior</span>
+    </div>
+    <h1 class="disp" data-slot="prompt" style="margin: 0 0 6px; font-size: 22px; font-weight: 700; line-height: 1.35; letter-spacing: -0.2px"></h1>
+    <div data-slot="opts" style="display: flex; flex-direction: column; gap: 14px"></div>
+  </main>
+  <footer data-slot="foot" style="padding: 8px 16px 20px; display: flex; flex-direction: column; gap: 12px"></footer>
+</div>
+</template>
+
+<template id="tpl-A-result">
+<style>
+:host{display:block}
+.root{width:390px;height:844px;background:#F6F4FD;color:#1C1B22;font-family:'Figtree',system-ui,sans-serif;display:flex;flex-direction:column;overflow:hidden;position:relative}
+.disp{font-family:'Bricolage Grotesque','Figtree',system-ui,sans-serif}
+.rise{animation:rise .8s cubic-bezier(.2,1.3,.4,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(30px) scale(.94)}}
+.spin{transform-origin:110px 110px;animation:spin 18s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.grow{animation:grow .9s cubic-bezier(.2,1.5,.4,1) both}
+@keyframes grow{from{transform:scale(.3);opacity:0}}
+.ring{animation:ring 1.5s cubic-bezier(.3,1.1,.4,1) .35s both}
+@keyframes ring{from{stroke-dashoffset:465}}
+.count{counter-reset:n var(--n);animation:cnt 1.5s cubic-bezier(.3,1,.4,1) .35s both}
+.count::before{content:counter(n)}
+@keyframes cnt{from{--n:0}to{--n:5}}
+.delta{transform-origin:left;animation:dgrow .8s cubic-bezier(.3,1.4,.4,1) 1.3s both}
+@keyframes dgrow{from{transform:scaleX(0)}}
+.piece{position:absolute;top:-24px;border-radius:3px;animation:fall linear both}
+@keyframes fall{0%{transform:translateY(0) rotate(0)}100%{transform:translateY(900px) rotate(var(--r));opacity:.2}}
+.main{all:unset;box-sizing:border-box;width:100%;height:56px;border-radius:28px;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:700;font-size:17px;cursor:pointer;text-decoration:none;transition:transform .35s cubic-bezier(.3,1.7,.5,1),border-radius .35s}
+.main:active{transform:scale(.97);border-radius:18px}
+.replaybtn{all:unset;cursor:pointer;border-radius:50%;display:block;position:relative;width:220px;height:220px}
+a:focus-visible,button:focus-visible{outline:3px solid #8C7CFF;outline-offset:2px}
+</style>
+<div class="root">
+  <div data-slot="confetti" style="position: absolute; inset: 0; pointer-events: none; overflow: hidden"></div>
+  <main style="flex: 1; display: flex; flex-direction: column; align-items: center; padding: 36px 20px 0; gap: 8px">
+    <span class="rise" style="font-size: 14px; color: #57556A">Kotlin tili · sessiya yakunlandi</span>
+    <span class="disp rise" style="font-size: 34px; font-weight: 800; letter-spacing: -0.6px; animation-delay: 0.06s">Zo'r natija!</span>
+    <button class="replaybtn" data-act="replay" aria-label="Animatsiyani qayta ko'rsatish">
+      <svg class="grow" width="220" height="220" viewBox="0 0 220 220">
+        <path class="spin" data-cookie="110,110,100,12,0.06" style="fill: #E3DEFF"/>
+        <circle cx="110" cy="110" r="74" style="fill: #FFFFFF"/>
+        <circle cx="110" cy="110" r="74" style="fill: none; stroke: #ECE9FA; stroke-width: 12"/>
+        <circle class="ring" cx="110" cy="110" r="74" transform="rotate(-90 110 110)" style="fill: none; stroke: #4433D1; stroke-width: 12; stroke-linecap: round; stroke-dasharray: 465; stroke-dashoffset: 77.5"/>
+      </svg>
+      <span class="disp" style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center">
+        <span class="count" style="font-size: 56px; font-weight: 800; color: #1A0F6B"></span><span style="font-size: 28px; font-weight: 700; color: #57556A; margin-top: 14px">&nbsp;/ 6</span>
+      </span>
+    </button>
+    <div data-slot="stats" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; width: 100%; margin-top: 10px"></div>
+    <section class="rise" style="width: 100%; box-sizing: border-box; background: #FFFFFF; border-radius: 24px; padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; animation-delay: 0.9s">
+      <div style="display: flex; justify-content: space-between; font-size: 14px">
+        <span style="font-weight: 600">Tayyorlik</span>
+        <span><span style="color: #57556A">50% </span><span class="disp" style="font-weight: 800; color: #1E7A45">→ 54%</span></span>
+      </div>
+      <div style="height: 10px; border-radius: 5px; background: #ECE9FA; display: flex; overflow: hidden">
+        <div style="width: 50%; background: #4433D1"></div>
+        <div class="delta" style="width: 4%; background: #2FB66A"></div>
+      </div>
+    </section>
+  </main>
+  <footer style="padding: 12px 16px 20px; display: flex; flex-direction: column; gap: 10px">
+    <a class="main" href="#" data-go="A-session" style="background: #4433D1; color: #FFFFFF">Yana mashq</a>
+    <a class="main" href="#" data-go="A-home" style="background: transparent; color: #2E21A8; border: 1.5px solid #CFC9EA">Bosh sahifa</a>
+  </footer>
+</div>
+</template>
+
+<!-- ============================== B: Terminal ============================== -->
+<template id="tpl-B-home">
+<style>
+:host{display:block}
+.root{width:390px;height:844px;background-color:#0A0D13;background-image:radial-gradient(rgba(139,152,173,0.13) 1px,transparent 1px);background-size:18px 18px;color:#E6EDF3;font-family:'Geist',system-ui,sans-serif;display:flex;flex-direction:column;overflow:hidden;position:relative}
+.mono{font-family:'Geist Mono',ui-monospace,monospace}
+.ic{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.glass{background:rgba(10,13,19,0.72);-webkit-backdrop-filter:blur(16px) saturate(140%);backdrop-filter:blur(16px) saturate(140%)}
+.caret::after{content:'';display:inline-block;width:8px;height:16px;background:#3DDC97;margin-left:4px;vertical-align:-2px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.card{background:#121722;border:1px solid #263043;border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.in{animation:in .6s cubic-bezier(.2,.9,.3,1) both}
+@keyframes in{from{opacity:0;transform:translateY(14px)}}
+.count{counter-reset:n var(--n);animation:cnt 1.2s cubic-bezier(.3,1,.4,1) .2s both}
+.count::before{content:counter(n)}
+@keyframes cnt{from{--n:0}to{--n:50}}
+.seg{flex:1;height:14px;border-radius:3px;background:#1A2130}
+.seg.on{animation:lit .3s ease-out both}
+@keyframes lit{from{background:#1A2130;box-shadow:none}to{background:#3DDC97;box-shadow:0 0 10px rgba(61,220,151,0.55)}}
+.cell{width:14px;height:14px;border-radius:3px;animation:cellin .4s ease-out both}
+@keyframes cellin{from{opacity:0;transform:scale(.3)}}
+.iconbtn{all:unset;width:44px;height:44px;border-radius:12px;display:grid;place-items:center;cursor:pointer;color:#8B98AD;transition:background .2s,color .2s}
+.iconbtn:hover{background:#1A2130;color:#E6EDF3}
+.row{display:flex;justify-content:space-between;align-items:center;font-size:14px;padding:6px 0;border-bottom:1px dashed #263043}
+.btn{all:unset;box-sizing:border-box;height:44px;padding:0 16px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:600;font-size:14px;cursor:pointer;text-decoration:none;transition:transform .15s,box-shadow .2s}
+.btn:active{transform:scale(.96)}
+.tool{all:unset;width:48px;height:48px;border-radius:24px;display:grid;place-items:center;color:#8B98AD;cursor:pointer;transition:background .2s,color .2s}
+.tool.on{color:#E6EDF3;background:#1A2130}
+.go{animation:glow 2.4s ease-in-out infinite}
+@keyframes glow{50%{box-shadow:0 0 22px 2px rgba(61,220,151,0.35)}}
+a:focus-visible,button:focus-visible{outline:2px solid #3DDC97;outline-offset:2px}
+</style>
+<div class="root">
+  <div style="flex: 1; min-height: 0; overflow-y: auto; padding-bottom: 110px">
+    <header class="glass" style="position: sticky; top: 0; z-index: 2; display: flex; align-items: center; justify-content: space-between; padding: 16px 12px 12px 20px; border-bottom: 1px solid rgba(38,48,67,0.7)">
+      <div style="display: flex; flex-direction: column; gap: 3px">
+        <span class="mono caret" style="font-size: 17px; font-weight: 700">devsuhbat</span>
+        <span class="mono" style="font-size: 12px; color: #8B98AD">~/android-kotlin/junior</span>
+      </div>
+      <button class="iconbtn" aria-label="Sozlamalar"><svg width="22" height="22" viewBox="0 0 24 24" class="ic"><path d="M20 7h-9M14 17H5"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></svg></button>
+    </header>
+    <div style="padding: 16px; display: flex; flex-direction: column; gap: 12px">
+      <section class="in" style="padding: 8px 4px 4px; display: flex; flex-direction: column; gap: 10px">
+        <span class="mono" style="font-size: 12px; color: #8B98AD">// tayyorlik</span>
+        <div style="display: flex; align-items: baseline; gap: 10px">
+          <span class="mono" style="font-size: 72px; font-weight: 700; line-height: 0.9; letter-spacing: -3px; color: #3DDC97; text-shadow: 0 0 28px rgba(61,220,151,0.35)"><span class="count"></span>%</span>
+          <span style="font-size: 14px; color: #8B98AD; line-height: 1.35">60 / 120 savol<br>o'zlashtirilgan</span>
+        </div>
+        <div data-slot="segs" style="display: flex; gap: 3px"></div>
+      </section>
+      <section class="card in" style="animation-delay: 0.1s">
+        <div style="display: flex; justify-content: space-between; align-items: center">
+          <span style="font-weight: 600">Faollik</span>
+          <span class="mono" style="display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: #FFB547; background: rgba(255,181,71,0.1); border: 1px solid rgba(255,181,71,0.3); padding: 4px 10px; border-radius: 99px">
+            <svg width="14" height="14" viewBox="0 0 24 24" class="ic"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+            5 kunlik seriya
+          </span>
+        </div>
+        <div data-slot="cells" style="display: grid; grid-template-rows: repeat(7, 14px); grid-auto-flow: column; grid-auto-columns: 14px; gap: 4px"></div>
+        <div class="mono" style="display: flex; justify-content: space-between; font-size: 11px; color: #8B98AD">
+          <span>18 hafta</span>
+          <span style="display: inline-flex; align-items: center; gap: 4px">kam
+            <span style="width: 10px; height: 10px; border-radius: 2px; background: #1A2130"></span>
+            <span style="width: 10px; height: 10px; border-radius: 2px; background: #0F4A33"></span>
+            <span style="width: 10px; height: 10px; border-radius: 2px; background: #178257"></span>
+            <span style="width: 10px; height: 10px; border-radius: 2px; background: #3DDC97"></span>
+          ko'p</span>
+        </div>
+      </section>
+      <section class="card in" style="animation-delay: 0.2s">
+        <div style="display: flex; justify-content: space-between; align-items: center">
+          <span class="mono" style="font-size: 13px; color: #8B98AD">$ xatolar --due</span>
+          <span class="mono" style="font-size: 13px; font-weight: 700; color: #FF6B6B">8 ta</span>
+        </div>
+        <div style="display: flex; flex-direction: column">
+          <div class="row"><span>Coroutines va Flow</span><span class="mono" style="color: #FFB547">3</span></div>
+          <div class="row"><span>Jetpack Compose</span><span class="mono" style="color: #FFB547">2</span></div>
+          <div class="row"><span>Kotlin tili</span><span class="mono" style="color: #FFB547">2</span></div>
+          <div class="row" style="border-bottom: none"><span>Ma'lumot qatlami</span><span class="mono" style="color: #FFB547">1</span></div>
+        </div>
+        <button class="btn" style="background: #1A2130; color: #E6EDF3; border: 1px solid #263043">Takrorlash <svg width="18" height="18" viewBox="0 0 24 24" class="ic"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+      </section>
+      <section class="card in" style="animation-delay: 0.3s; flex-direction: row; align-items: center">
+        <div style="flex: 1; display: flex; flex-direction: column; gap: 4px">
+          <span style="font-weight: 600">Mock interview</span>
+          <span class="mono" style="font-size: 12px; color: #8B98AD">25 savol · 30:00 · oxirgi 19/25</span>
+        </div>
+        <button class="btn" style="background: rgba(61,220,151,0.12); color: #3DDC97; border: 1px solid rgba(61,220,151,0.35)">Boshlash</button>
+      </section>
+    </div>
+  </div>
+  <nav class="glass" style="position: absolute; left: 50%; bottom: 22px; transform: translateX(-50%); display: flex; align-items: center; gap: 4px; padding: 6px; border-radius: 30px; border: 1px solid #263043; box-shadow: 0 12px 32px rgba(0,0,0,0.5)">
+    <button class="tool on" aria-label="Bosh sahifa"><svg width="22" height="22" viewBox="0 0 24 24" class="ic"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg></button>
+    <button class="tool" aria-label="Mavzular"><svg width="22" height="22" viewBox="0 0 24 24" class="ic"><path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/></svg></button>
+    <button class="tool" aria-label="Statistika"><svg width="22" height="22" viewBox="0 0 24 24" class="ic"><path d="M4 20V10M10 20V4M16 20v-7M21 20H3"/></svg></button>
+    <a class="btn go" href="#" data-go="B-session" style="height: 48px; border-radius: 24px; padding: 0 20px; background: #3DDC97; color: #04170E; font-weight: 700"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M7 4.5v15l12-7.5z" style="fill: currentColor"/></svg>Mashq</a>
+  </nav>
+</div>
+</template>
+
+<template id="tpl-B-session">
+<style>
+:host{display:block}
+.root{width:390px;height:844px;background:#0A0D13;color:#E6EDF3;font-family:'Geist',system-ui,sans-serif;display:flex;flex-direction:column;overflow:hidden}
+.mono{font-family:'Geist Mono',ui-monospace,monospace}
+.ic{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.code{font-family:'Geist Mono',ui-monospace,monospace;font-size:.86em;color:#3DDC97;background:rgba(61,220,151,0.1);padding:1px 5px;border-radius:5px}
+.iconbtn{all:unset;flex:none;width:44px;height:44px;border-radius:12px;display:grid;place-items:center;cursor:pointer;color:#8B98AD;transition:background .2s,color .2s}
+.iconbtn:hover{background:#1A2130;color:#E6EDF3}
+.pseg{flex:1;height:4px;border-radius:2px;background:#1A2130;transition:background .4s,box-shadow .4s}
+.pseg.on{background:#3DDC97;box-shadow:0 0 8px rgba(61,220,151,0.6)}
+.pseg.cur{background:linear-gradient(90deg,#3DDC97 0 40%,#1A2130 40%);animation:cur 1.4s ease-in-out infinite}
+@keyframes cur{50%{opacity:.55}}
+.opt{all:unset;box-sizing:border-box;display:flex;gap:12px;align-items:flex-start;width:100%;padding:14px;min-height:60px;background:#121722;border:1px solid #263043;border-radius:12px;cursor:pointer;font-size:15.5px;line-height:1.5;text-align:left;transition:border-color .2s,box-shadow .25s,background .2s,opacity .3s,transform .15s}
+.opt:hover{border-color:#3A4760}
+.opt:active{transform:scale(.985)}
+.key{flex:none;font-family:'Geist Mono',ui-monospace,monospace;font-size:13px;font-weight:700;color:#8B98AD;width:30px;height:26px;border-radius:6px;border:1px solid #263043;display:grid;place-items:center;transition:all .2s}
+.opt.sel{border-color:#3DDC97;box-shadow:0 0 0 1px #3DDC97,0 0 24px rgba(61,220,151,0.18);background:#0F1A17}
+.opt.sel .key{color:#04170E;background:#3DDC97;border-color:#3DDC97}
+.opt.wrong{border-color:rgba(255,107,107,0.45);background:#1A1215;color:#8B98AD;cursor:default}
+.opt.wrong .txt,.opt.wrong .code{text-decoration:line-through;text-decoration-color:#FF6B6B}
+.opt.wrong .key{color:#FF6B6B;border-color:rgba(255,107,107,0.45)}
+.opt.shake{animation:glitch .5s steps(2,end)}
+@keyframes glitch{0%{transform:translate(0)}15%{transform:translate(-7px,1px);filter:drop-shadow(3px 0 0 rgba(255,107,107,.8))}30%{transform:translate(6px,-1px);filter:drop-shadow(-3px 0 0 rgba(108,182,255,.8))}45%{transform:translate(-5px,0)}60%{transform:translate(4px,1px);filter:drop-shadow(2px 0 0 rgba(255,107,107,.6))}80%{transform:translate(-2px,0)}100%{transform:translate(0);filter:none}}
+.opt.ok{border-color:#3DDC97;background:#0F1A17;box-shadow:0 0 0 1px #3DDC97,0 0 32px rgba(61,220,151,0.28);cursor:default;animation:okpulse .9s ease-out}
+.opt.ok .key{color:#04170E;background:#3DDC97;border-color:#3DDC97}
+@keyframes okpulse{0%{box-shadow:0 0 0 1px #3DDC97,0 0 0 0 rgba(61,220,151,.6)}100%{box-shadow:0 0 0 1px #3DDC97,0 0 0 18px rgba(61,220,151,0)}}
+.opt.dim{opacity:.4;cursor:default}
+.term{border-radius:12px;border:1px solid;padding:12px 14px;display:flex;flex-direction:column;gap:8px;font-size:14.5px;line-height:1.5;animation:termin .45s cubic-bezier(.2,.9,.3,1) both;position:relative;overflow:hidden}
+@keyframes termin{from{opacity:0;transform:translateY(16px);clip-path:inset(0 0 100% 0)}to{clip-path:inset(0 0 0 0)}}
+.term::after{content:'';position:absolute;left:0;right:0;height:40%;top:-40%;background:linear-gradient(180deg,transparent,rgba(255,255,255,0.05),transparent);animation:scan 2.6s linear infinite}
+@keyframes scan{to{top:120%}}
+.tag{font-family:'Geist Mono',ui-monospace,monospace;font-size:12px;font-weight:700;padding:2px 8px;border-radius:5px}
+.main{all:unset;box-sizing:border-box;width:100%;height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:10px;font-weight:700;font-size:16px;cursor:pointer;text-decoration:none;transition:transform .15s,box-shadow .2s,background .2s}
+.main:active{transform:scale(.98)}
+.main:disabled{background:#1A2130 !important;color:#5B677C !important;cursor:default;box-shadow:none !important}
+.kbd{font-family:'Geist Mono',ui-monospace,monospace;font-size:11px;padding:2px 6px;border-radius:4px;background:rgba(4,23,14,0.18)}
+a:focus-visible,button:focus-visible{outline:2px solid #3DDC97;outline-offset:2px}
+</style>
+<div class="root">
+  <header style="display: flex; align-items: center; gap: 10px; padding: 14px 10px 10px">
+    <a class="iconbtn" href="#" data-go="B-home" aria-label="Chiqish"><svg width="22" height="22" viewBox="0 0 24 24" class="ic"><path d="M6 6l12 12M18 6L6 18"/></svg></a>
+    <div data-slot="segs" style="flex: 1; display: flex; gap: 4px"></div>
+    <span class="mono" data-slot="counter" style="font-size: 13px; font-weight: 700; color: #8B98AD; min-width: 44px; text-align: right"></span>
+    <button class="iconbtn" aria-label="Savoldagi xatoni xabar qilish"><svg width="20" height="20" viewBox="0 0 24 24" class="ic"><path d="M5 21V4h12l-2 4 2 4H5"/></svg></button>
+  </header>
+  <main style="flex: 1; min-height: 0; overflow-y: auto; padding: 12px 18px 16px; display: flex; flex-direction: column; gap: 12px">
+    <span class="mono" style="font-size: 12px; color: #8B98AD"># tushuncha · kotlin · junior</span>
+    <h1 data-slot="prompt" style="margin: 0 0 6px; font-size: 21px; font-weight: 600; line-height: 1.4; letter-spacing: -0.2px"></h1>
+    <div data-slot="opts" style="display: flex; flex-direction: column; gap: 12px"></div>
+  </main>
+  <footer data-slot="foot" style="padding: 8px 16px 20px; display: flex; flex-direction: column; gap: 12px"></footer>
+</div>
+</template>
+
+<template id="tpl-B-result">
+<style>
+:host{display:block}
+.root{width:390px;height:844px;background-color:#0A0D13;background-image:radial-gradient(rgba(139,152,173,0.13) 1px,transparent 1px);background-size:18px 18px;color:#E6EDF3;font-family:'Geist',system-ui,sans-serif;display:flex;flex-direction:column;overflow:hidden;position:relative}
+.mono{font-family:'Geist Mono',ui-monospace,monospace}
+.line{white-space:nowrap;overflow:hidden;font-family:'Geist Mono',ui-monospace,monospace;font-size:14px;line-height:1.9;animation:type .7s steps(34,end) both}
+@keyframes type{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+.count{counter-reset:n var(--n);animation:cnt 1.1s steps(5,end) 1.7s both}
+.count::before{content:counter(n)}
+@keyframes cnt{from{--n:0}to{--n:5}}
+.big{animation:bigin .6s cubic-bezier(.2,1.4,.4,1) 1.6s both}
+@keyframes bigin{from{opacity:0;transform:scale(.8);filter:blur(8px)}}
+.seg{flex:1;height:18px;border-radius:4px;background:#1A2130}
+.seg.on{animation:lit .25s ease-out both}
+.seg.re{animation:litre .25s ease-out both}
+@keyframes lit{to{background:#3DDC97;box-shadow:0 0 12px rgba(61,220,151,0.55)}}
+@keyframes litre{to{background:#FFB547;box-shadow:0 0 12px rgba(255,181,71,0.45)}}
+.spark{position:absolute;bottom:-12px;width:6px;height:6px;background:#3DDC97;animation:rise linear both}
+@keyframes rise{0%{transform:translateY(0);opacity:0}10%{opacity:1}100%{transform:translateY(-860px);opacity:0}}
+.main{all:unset;box-sizing:border-box;width:100%;height:52px;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:700;font-size:16px;cursor:pointer;text-decoration:none;transition:transform .15s}
+.main:active{transform:scale(.98)}
+.replaybtn{all:unset;cursor:pointer;display:flex;flex-direction:column;gap:12px;border-radius:12px}
+a:focus-visible,button:focus-visible{outline:2px solid #3DDC97;outline-offset:2px}
+</style>
+<div class="root">
+  <div data-slot="sparks" style="position: absolute; inset: 0; pointer-events: none; overflow: hidden"></div>
+  <main style="flex: 1; padding: 40px 22px 0; display: flex; flex-direction: column; gap: 22px; position: relative">
+    <div style="display: flex; flex-direction: column">
+      <span class="line" style="color: #8B98AD; animation-delay: 0.1s">$ devsuhbat sessiya --natija</span>
+      <span class="line" style="animation-delay: 0.6s"><span style="color: #3DDC97">[ok]</span> 6 ta savol yakunlandi</span>
+      <span class="line" style="animation-delay: 0.9s"><span style="color: #3DDC97">[ok]</span> 5 tasi birinchi urinishda</span>
+      <span class="line" style="animation-delay: 1.2s"><span style="color: #FFB547">[re]</span> 1 tasi qayta ishlangan</span>
+    </div>
+    <button class="replaybtn" data-act="replay" aria-label="Animatsiyani qayta ko'rsatish">
+      <span class="mono big" style="font-size: 112px; font-weight: 700; line-height: 0.95; letter-spacing: -6px; color: #3DDC97; text-shadow: 0 0 40px rgba(61,220,151,0.4)"><span class="count"></span><span style="color: #3A4760">/6</span></span>
+      <span data-slot="segs" style="display: flex; gap: 6px; width: 346px"></span>
+    </button>
+    <section style="background: #121722; border: 1px solid #263043; border-radius: 14px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px">
+      <div style="display: flex; justify-content: space-between; align-items: baseline">
+        <span class="mono" style="font-size: 12px; color: #8B98AD">// tayyorlik</span>
+        <span class="mono" style="font-size: 15px"><span style="color: #8B98AD">50% </span><span style="color: #3DDC97; font-weight: 700">→ 54%</span></span>
+      </div>
+      <div style="height: 6px; border-radius: 3px; background: #1A2130; display: flex; overflow: hidden">
+        <div style="width: 50%; background: #178257"></div>
+        <div style="width: 4%; background: #3DDC97; box-shadow: 0 0 10px #3DDC97"></div>
+      </div>
+      <span style="font-size: 13px; color: #8B98AD">Eng bo'sh mavzu: Komponentlar va lifecycle (20%)</span>
+    </section>
+  </main>
+  <footer style="padding: 12px 16px 20px; display: flex; flex-direction: column; gap: 10px; position: relative">
+    <a class="main" href="#" data-go="B-session" style="background: #3DDC97; color: #04170E">Yana mashq</a>
+    <a class="main" href="#" data-go="B-home" style="background: #121722; color: #E6EDF3; border: 1px solid #263043">Bosh sahifa</a>
+  </footer>
+</div>
+</template>
+
+<!-- ============================== C: Tactile ============================== -->
+<template id="tpl-C-home">
+<style>
+:host{display:block}
+.root{width:390px;height:844px;background:#F4F6FB;color:#16161D;font-family:'Lexend',system-ui,sans-serif;display:flex;flex-direction:column;overflow:hidden;position:relative}
+.ic{fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.card{border:2px solid #16161D;border-radius:22px;box-shadow:0 4px 0 #16161D;padding:16px;display:flex;flex-direction:column;gap:10px;box-sizing:border-box}
+.pop{animation:pop .7s cubic-bezier(.2,1.6,.4,1) both}
+@keyframes pop{from{opacity:0;transform:translateY(24px) scale(.9) rotate(-2deg)}}
+.day{width:36px;height:36px;border-radius:50%;border:2px solid #16161D;display:grid;place-items:center;box-sizing:border-box}
+.day.done{background:#16161D;color:#FFCB2B;animation:pop .5s cubic-bezier(.2,1.8,.4,1) both}
+.day.today{background:#FFFFFF;animation:bob 1.2s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-4px)}}
+.day.future{background:rgba(255,255,255,0.55);border-style:dashed}
+.chunk{height:16px;border-radius:8px;border:2px solid #16161D;background:#FFFFFF;overflow:hidden;box-sizing:border-box}
+.chunkfill{height:100%;border-radius:6px;background-image:repeating-linear-gradient(-45deg,rgba(255,255,255,0.28) 0 8px,transparent 8px 16px);background-size:22.6px 22.6px;transform-origin:left;animation:grow 1s cubic-bezier(.3,1.3,.4,1) .4s both,stripes 1s linear infinite}
+@keyframes grow{from{transform:scaleX(0)}}
+@keyframes stripes{to{background-position:22.6px 0}}
+.btn3d{all:unset;box-sizing:border-box;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:800;cursor:pointer;text-decoration:none;border:2px solid #16161D;border-radius:16px;transition:transform .08s,box-shadow .08s}
+.btn3d:active{transform:translateY(3px);box-shadow:0 0 0 #16161D !important}
+.iconbtn{all:unset;width:44px;height:44px;border-radius:14px;display:grid;place-items:center;cursor:pointer;border:2px solid #16161D;background:#FFFFFF;box-shadow:0 3px 0 #16161D;transition:transform .08s,box-shadow .08s;box-sizing:border-box}
+.iconbtn:active{transform:translateY(3px);box-shadow:0 0 0 #16161D}
+.nav{height:72px;flex:none;background:#FFFFFF;border-top:2px solid #16161D;display:flex;justify-content:space-around;align-items:center}
+.navitem{all:unset;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:12px;font-weight:600;color:#4B4B57;cursor:pointer;width:88px}
+.navitem.on{color:#2563EB}
+.wiggle{animation:wiggle 2.4s ease-in-out infinite;transform-origin:50% 80%}
+@keyframes wiggle{0%,80%,100%{transform:rotate(0)}85%{transform:rotate(-12deg)}90%{transform:rotate(10deg)}95%{transform:rotate(-6deg)}}
+a:focus-visible,button:focus-visible{outline:3px solid #2563EB;outline-offset:3px}
+</style>
+<div class="root">
+  <header style="display: flex; align-items: center; gap: 12px; padding: 18px 16px 12px">
+    <div style="width: 46px; height: 46px; border-radius: 14px; border: 2px solid #16161D; background: #2563EB; color: #FFFFFF; display: grid; place-items: center; box-sizing: border-box"><svg width="24" height="24" viewBox="0 0 24 24" class="ic"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/></svg></div>
+    <div style="flex: 1; display: flex; flex-direction: column">
+      <span style="font-weight: 700; font-size: 17px">Android (Kotlin)</span>
+      <span style="font-size: 13px; color: #4B4B57">Junior daraja</span>
+    </div>
+    <button class="iconbtn" aria-label="Sozlamalar"><svg width="22" height="22" viewBox="0 0 24 24" class="ic"><path d="M20 7h-9M14 17H5"/><circle cx="17" cy="17" r="3"/><circle cx="7" cy="7" r="3"/></svg></button>
+  </header>
+  <main style="flex: 1; min-height: 0; overflow-y: auto; padding: 4px 16px 20px; display: flex; flex-direction: column; gap: 16px">
+    <section class="card pop" style="background: #FFCB2B">
+      <div style="display: flex; align-items: center; gap: 10px">
+        <svg class="wiggle" width="38" height="38" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z" style="fill: #FF6B57; stroke: #16161D; stroke-width: 1.8; stroke-linejoin: round"/></svg>
+        <div style="display: flex; flex-direction: column">
+          <span style="font-size: 24px; font-weight: 800; line-height: 1.1">5 kunlik seriya!</span>
+          <span style="font-size: 13px">Bugun ham davom ettiring</span>
+        </div>
+      </div>
+      <div data-slot="week" style="display: flex; justify-content: space-between; padding-top: 4px"></div>
+      <div style="display: flex; flex-direction: column; gap: 6px; padding-top: 2px">
+        <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600"><span>Bugungi maqsad</span><span>6 / 10 savol</span></div>
+        <div class="chunk"><div class="chunkfill" style="width: 60%; background-color: #1FA463"></div></div>
+      </div>
+    </section>
+    <section class="card pop" style="background: #FFFFFF; animation-delay: 0.08s">
+      <div style="display: flex; justify-content: space-between; align-items: flex-end">
+        <div style="display: flex; flex-direction: column">
+          <span style="font-size: 14px; font-weight: 600; color: #4B4B57">Tayyorlik</span>
+          <span style="font-size: 44px; font-weight: 800; line-height: 1; color: #2563EB">50%</span>
+        </div>
+        <span style="font-size: 13px; color: #4B4B57; text-align: right">60 / 120 savol<br>o'zlashtirilgan</span>
+      </div>
+      <div class="chunk" style="height: 20px"><div class="chunkfill" style="width: 50%; background-color: #2563EB"></div></div>
+    </section>
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+      <section class="card pop" style="background: #FF6B57; animation-delay: 0.16s; gap: 6px">
+        <span style="font-size: 36px; font-weight: 800; line-height: 1">8</span>
+        <span style="font-size: 14px; font-weight: 600; line-height: 1.25">xato takrorlashni kutmoqda</span>
+        <button class="btn3d" style="height: 40px; margin-top: 6px; background: #FFFFFF; font-size: 14px; box-shadow: 0 3px 0 #16161D">Takrorlash</button>
+      </section>
+      <section class="card pop" style="background: #DDE7FF; animation-delay: 0.22s; gap: 6px">
+        <span style="font-size: 36px; font-weight: 800; line-height: 1">19<span style="font-size: 18px">/25</span></span>
+        <span style="font-size: 14px; font-weight: 600; line-height: 1.25">oxirgi mock interview</span>
+        <button class="btn3d" style="height: 40px; margin-top: 6px; background: #FFFFFF; font-size: 14px; box-shadow: 0 3px 0 #16161D">Mock</button>
+      </section>
+    </div>
+    <a class="btn3d pop" href="#" data-go="C-session" style="flex: none; height: 60px; background: #2563EB; color: #FFFFFF; font-size: 18px; letter-spacing: 0.5px; box-shadow: 0 5px 0 #16161D; animation-delay: 0.3s">MASHQNI BOSHLASH <svg width="22" height="22" viewBox="0 0 24 24" class="ic" style="stroke-width: 2.8"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+  </main>
+  <nav class="nav">
+    <button class="navitem on"><svg width="26" height="26" viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z" style="fill: #2563EB; stroke: #16161D; stroke-width: 1.8; stroke-linejoin: round"/></svg>Bosh</button>
+    <button class="navitem"><svg width="26" height="26" viewBox="0 0 24 24" class="ic"><path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/></svg>Mavzular</button>
+    <button class="navitem"><svg width="26" height="26" viewBox="0 0 24 24" class="ic"><path d="M4 20V10M10 20V4M16 20v-7M21 20H3"/></svg>Statistika</button>
+  </nav>
+</div>
+</template>
+
+<template id="tpl-C-session">
+<style>
+:host{display:block}
+.root{width:390px;height:844px;background:#F4F6FB;color:#16161D;font-family:'Lexend',system-ui,sans-serif;display:flex;flex-direction:column;overflow:hidden}
+.ic{fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.code{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:.84em;font-weight:700;background:#16161D;color:#FFCB2B;padding:1px 6px;border-radius:6px}
+.iconbtn{all:unset;flex:none;width:44px;height:44px;border-radius:14px;display:grid;place-items:center;cursor:pointer;color:#4B4B57}
+.iconbtn:hover{background:#E6EAF4}
+.track{flex:1;height:18px;border-radius:9px;background:#E1E6F0;border:2px solid #16161D;overflow:hidden;box-sizing:border-box}
+.trackfill{height:100%;border-radius:7px;background:#1FA463;box-shadow:inset 0 4px 0 rgba(255,255,255,0.35);transition:width .7s cubic-bezier(.3,1.5,.4,1)}
+.opt{all:unset;box-sizing:border-box;display:flex;gap:12px;align-items:center;width:100%;padding:12px 14px;min-height:62px;background:#FFFFFF;border:2px solid #CDD4E3;border-radius:18px;box-shadow:0 4px 0 #CDD4E3;cursor:pointer;font-size:16px;line-height:1.45;text-align:left;transition:transform .08s,box-shadow .08s,border-color .15s,background .15s,opacity .3s}
+.opt:active{transform:translateY(4px);box-shadow:0 0 0 #CDD4E3}
+.letter{flex:none;width:34px;height:34px;border-radius:10px;border:2px solid #CDD4E3;display:grid;place-items:center;font-weight:800;font-size:15px;color:#4B4B57;box-sizing:border-box;transition:all .15s}
+.opt.sel{border-color:#2563EB;background:#EAF1FF;box-shadow:0 4px 0 #1E3FA8}
+.opt.sel .letter{border-color:#2563EB;background:#2563EB;color:#FFFFFF}
+.opt.wrong{border-color:#FF6B57;background:#FFF0EE;box-shadow:0 4px 0 #C9412F;color:#7A6A68;cursor:default}
+.opt.wrong .txt,.opt.wrong .code{text-decoration:line-through}
+.opt.wrong .letter{border-color:#FF6B57;background:#FF6B57;color:#FFFFFF}
+.opt.shake{animation:wobble .6s cubic-bezier(.36,.07,.19,.97)}
+@keyframes wobble{15%{transform:translateX(-10px) rotate(-3deg)}30%{transform:translateX(8px) rotate(2.5deg)}45%{transform:translateX(-6px) rotate(-1.5deg)}60%{transform:translateX(4px) rotate(1deg)}75%{transform:translateX(-2px)}}
+.opt.ok{border-color:#1FA463;background:#E3F8EC;box-shadow:0 4px 0 #13774A;cursor:default;animation:jump .7s cubic-bezier(.3,1.8,.5,1)}
+.opt.ok .letter{border-color:#1FA463;background:#1FA463;color:#FFFFFF}
+@keyframes jump{30%{transform:translateY(-10px) scale(1.03)}60%{transform:translateY(0) scale(.99)}}
+.opt.dim{opacity:.45;cursor:default}
+.panel{border-top:2px solid #16161D;padding:18px 16px 20px;display:flex;flex-direction:column;gap:12px;transition:background .25s;background:#FFFFFF}
+.slide{animation:slide .5s cubic-bezier(.2,1.4,.4,1) both;display:flex;flex-direction:column;gap:6px}
+@keyframes slide{from{opacity:0;transform:translateY(40px)}}
+.btn3d{all:unset;box-sizing:border-box;width:100%;height:58px;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:800;font-size:17px;letter-spacing:.5px;cursor:pointer;text-decoration:none;border:2px solid #16161D;border-radius:16px;box-shadow:0 4px 0 #16161D;transition:transform .08s,box-shadow .08s}
+.btn3d:active{transform:translateY(4px);box-shadow:0 0 0 #16161D}
+.btn3d:disabled{background:#E1E6F0 !important;color:#8A90A0 !important;border-color:#B9C0CF;box-shadow:0 4px 0 #B9C0CF;cursor:default;transform:none}
+.stamp{animation:stamp .55s cubic-bezier(.3,1.9,.5,1) both}
+@keyframes stamp{from{transform:scale(2.2) rotate(-20deg);opacity:0}}
+a:focus-visible,button:focus-visible{outline:3px solid #2563EB;outline-offset:3px}
+</style>
+<div class="root">
+  <header style="display: flex; align-items: center; gap: 10px; padding: 16px 10px 8px">
+    <a class="iconbtn" href="#" data-go="C-home" aria-label="Chiqish"><svg width="24" height="24" viewBox="0 0 24 24" class="ic" style="stroke-width: 2.8"><path d="M6 6l12 12M18 6L6 18"/></svg></a>
+    <div class="track"><div class="trackfill" data-slot="fill"></div></div>
+    <span data-slot="counter" style="font-weight: 800; font-size: 15px; min-width: 38px; text-align: right"></span>
+    <button class="iconbtn" aria-label="Savoldagi xatoni xabar qilish"><svg width="22" height="22" viewBox="0 0 24 24" class="ic"><path d="M5 21V4h12l-2 4 2 4H5"/></svg></button>
+  </header>
+  <main style="flex: 1; min-height: 0; overflow-y: auto; padding: 14px 18px 18px; display: flex; flex-direction: column; gap: 14px">
+    <span style="align-self: flex-start; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 8px; border: 2px solid #16161D; background: #FFCB2B">TUSHUNCHA</span>
+    <h1 data-slot="prompt" style="margin: 0 0 4px; font-size: 22px; font-weight: 700; line-height: 1.4"></h1>
+    <div data-slot="opts" style="display: flex; flex-direction: column; gap: 14px"></div>
+  </main>
+  <footer class="panel" data-slot="foot"></footer>
+</div>
+</template>
+
+<template id="tpl-C-result">
+<style>
+:host{display:block}
+.root{width:390px;height:844px;background:#F4F6FB;color:#16161D;font-family:'Lexend',system-ui,sans-serif;display:flex;flex-direction:column;overflow:hidden;position:relative}
+.badge{animation:badge .9s cubic-bezier(.2,1.7,.4,1) .2s both}
+@keyframes badge{from{transform:scale(0) rotate(-120deg)}}
+.spin{transform-origin:120px 120px;animation:spin 20s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.count{counter-reset:n var(--n);animation:cnt 1s cubic-bezier(.3,1,.4,1) .5s both}
+.count::before{content:counter(n)}
+@keyframes cnt{from{--n:0}to{--n:5}}
+.title{animation:title .6s cubic-bezier(.2,1.6,.4,1) .7s both}
+@keyframes title{from{opacity:0;transform:scale(.6)}}
+.sticker{border:2px solid #16161D;border-radius:18px;box-shadow:0 4px 0 #16161D;padding:12px;display:flex;flex-direction:column;gap:2px;animation:stick .6s cubic-bezier(.2,1.8,.4,1) both}
+@keyframes stick{from{opacity:0;transform:translateY(30px) rotate(0) scale(.7)}}
+.chunk{height:20px;border-radius:10px;border:2px solid #16161D;background:#FFFFFF;overflow:hidden;box-sizing:border-box;display:flex}
+.delta{transform-origin:left;animation:grow .7s cubic-bezier(.3,1.5,.4,1) 1.4s both}
+@keyframes grow{from{transform:scaleX(0)}}
+.piece{position:absolute;top:-30px;border:1.5px solid #16161D;animation:fall cubic-bezier(.3,.2,.6,1) both}
+@keyframes fall{0%{transform:translateY(0) rotate(0)}100%{transform:translateY(900px) rotate(var(--r))}}
+.btn3d{all:unset;box-sizing:border-box;width:100%;height:58px;display:flex;align-items:center;justify-content:center;gap:8px;font-weight:800;font-size:17px;letter-spacing:.5px;cursor:pointer;text-decoration:none;border:2px solid #16161D;border-radius:16px;box-shadow:0 4px 0 #16161D;transition:transform .08s,box-shadow .08s}
+.btn3d:active{transform:translateY(4px);box-shadow:0 0 0 #16161D}
+.replaybtn{all:unset;cursor:pointer;border-radius:50%;display:block;position:relative;width:240px;height:240px}
+a:focus-visible,button:focus-visible{outline:3px solid #2563EB;outline-offset:3px}
+</style>
+<div class="root">
+  <div data-slot="confetti" style="position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 2"></div>
+  <main style="flex: 1; display: flex; flex-direction: column; align-items: center; padding: 28px 18px 0; gap: 14px">
+    <button class="replaybtn" data-act="replay" aria-label="Animatsiyani qayta ko'rsatish">
+      <svg class="badge" width="240" height="240" viewBox="0 0 240 240">
+        <path class="spin" data-star="120,120,112,92,14" style="fill: #FFCB2B; stroke: #16161D; stroke-width: 3; stroke-linejoin: round"/>
+        <circle cx="120" cy="120" r="70" style="fill: #FFFFFF; stroke: #16161D; stroke-width: 3"/>
+      </svg>
+      <span style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center">
+        <span class="count" style="font-size: 60px; font-weight: 800; line-height: 1"></span><span style="font-size: 28px; font-weight: 800; color: #4B4B57; margin-top: 18px">/6</span>
+      </span>
+    </button>
+    <span class="title" style="font-size: 30px; font-weight: 800; margin-top: -10px">Zo'r ish!</span>
+    <span style="font-size: 14px; color: #4B4B57; margin-top: -10px">Kotlin tili · sessiya yakunlandi</span>
+    <div data-slot="stats" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; width: 100%; padding-top: 4px"></div>
+    <section style="width: 100%; box-sizing: border-box; background: #FFFFFF; border: 2px solid #16161D; border-radius: 18px; box-shadow: 0 4px 0 #16161D; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px">
+      <div style="display: flex; justify-content: space-between; font-size: 14px; font-weight: 700">
+        <span>Tayyorlik</span>
+        <span>50% <span style="color: #13774A">→ 54%</span></span>
+      </div>
+      <div class="chunk">
+        <div style="width: 50%; background: #2563EB"></div>
+        <div class="delta" style="width: 4%; background: #1FA463"></div>
+      </div>
+    </section>
+  </main>
+  <footer style="padding: 12px 16px 22px; display: flex; flex-direction: column; gap: 12px">
+    <a class="btn3d" href="#" data-go="C-session" style="background: #2563EB; color: #FFFFFF">YANA MASHQ</a>
+    <a class="btn3d" href="#" data-go="C-home" style="background: #FFFFFF; color: #16161D">BOSH SAHIFA</a>
+  </footer>
+</div>
+</template>
+
+<script>
+(function () {
+  'use strict';
+
+  // ---------- shared data: the real question android.kotlin.009 ----------
+  const PROMPT = "`data class` oddiy klassga nisbatan nimani qo'shimcha beradi?";
+  const OPTS = [
+    { id: 'c', text: "Klassni avtomatik `Serializable` qiladi", hint: "Serializatsiya uchun alohida interfeys yoki annotatsiya kerak." },
+    { id: 'd', text: "Klassdan faqat bitta nusxa (singleton) yaratilishini kompilyator darajasida ta'minlaydi", hint: "Singleton uchun `object` kalit so'zi ishlatiladi." },
+    { id: 'a', text: "`equals`, `hashCode`, `toString`, `copy` va `componentN` ni generatsiya qiladi", correct: true },
+    { id: 'b', text: "Obyektni avtomatik ravishda o'zgarmas (immutable) qiladi", hint: "Data class'da `var` xususiyatlar ham bo'lishi mumkin; o'zgarmaslik kafolatlanmaydi." },
+  ];
+  const EXPL = "Kompilyator asosiy konstruktordagi xususiyatlar asosida taqqoslash, xesh, matn ko'rinishi, nusxalash (`copy`) va destrukturizatsiya (`componentN`) funksiyalarini yozib beradi.";
+  const TOTAL = 6;
+
+  // ---------- helpers ----------
+  const esc = (s) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const parts = (s) => s.split('`').map((t, i) => (t ? '<span class="' + (i % 2 ? 'code' : 'txt') + '">' + esc(t) + '</span>' : '')).join('');
+  const rnd = (i, k) => { const x = Math.sin(i * 12.9898 + k * 78.233) * 43758.5453; return x - Math.floor(x); };
+  const buzz = (p) => { try { if (navigator.vibrate) navigator.vibrate(p); } catch (e) { /* not supported */ } };
+  const ICON_X = '<svg width="18" height="18" viewBox="0 0 24 24" style="fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+  const ICON_CHECK = '<svg width="20" height="20" viewBox="0 0 24 24" style="fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;stroke-linejoin:round"><path d="M5 12.5l4.5 4.5L19 7"/></svg>';
+  const ICON_ARROW = '<svg width="20" height="20" viewBox="0 0 24 24" style="fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+
+  function cookiePath(cx, cy, R, n, a) {
+    let d = '';
+    for (let i = 0; i <= 160; i++) {
+      const t = i / 160 * Math.PI * 2;
+      const r = R * (1 + a * Math.cos(n * t));
+      d += (i ? 'L' : 'M') + (cx + r * Math.cos(t)).toFixed(1) + ' ' + (cy + r * Math.sin(t)).toFixed(1);
+    }
+    return d + 'Z';
+  }
+  function starPath(cx, cy, ro, ri, n) {
+    let d = '';
+    for (let i = 0; i < n * 2; i++) {
+      const t = i / (n * 2) * Math.PI * 2 - Math.PI / 2;
+      const r = i % 2 ? ri : ro;
+      d += (i ? 'L' : 'M') + (cx + r * Math.cos(t)).toFixed(1) + ' ' + (cy + r * Math.sin(t)).toFixed(1);
+    }
+    return d + 'Z';
+  }
+  function wavePath(w) {
+    let d = '';
+    for (let x = -16; x <= w + 16; x += 2) d += (x === -16 ? 'M' : 'L') + x + ' ' + (10 + 3.2 * Math.sin(x / 16 * Math.PI * 2)).toFixed(2);
+    return d;
+  }
+  const nums = (s) => s.split(',').map(Number);
+
+  // ---------- shared practice-session logic; each direction supplies its own look ----------
+  function session(root, v) {
+    const st = { sel: null, wrong: [], last: null, done: false, shakeId: null, n: 5 };
+    const box = root.querySelector('[data-slot=opts]');
+    const foot = root.querySelector('[data-slot=foot]');
+    let footKey = '';
+    root.querySelector('[data-slot=prompt]').innerHTML = parts(PROMPT);
+    box.innerHTML = OPTS.map((o) => '<button class="opt" data-id="' + o.id + '"><span class="' + v.badgeCls + '"></span><span>' + parts(o.text) + '</span></button>').join('');
+
+    box.addEventListener('click', (e) => {
+      const b = e.target.closest('.opt');
+      if (!b) return;
+      const id = b.dataset.id;
+      if (st.wrong.includes(id) || st.done) return;
+      buzz(8);
+      st.sel = id; st.shakeId = null;
+      update();
+    });
+    foot.addEventListener('click', (e) => {
+      const a = e.target.closest('[data-act]');
+      if (!a) return;
+      if (a.dataset.act === 'check') check();
+      if (a.dataset.act === 'next') next();
+    });
+
+    function check() {
+      if (!st.sel || st.done) return;
+      const o = OPTS.find((x) => x.id === st.sel);
+      if (o.correct) { buzz(v.okBuzz); st.done = true; st.last = null; }
+      else { buzz([35, 50, 35]); st.wrong.push(o.id); st.last = o.id; st.sel = null; st.shakeId = o.id; }
+      update();
+    }
+    function next() {
+      Object.assign(st, { sel: null, wrong: [], last: null, done: false, shakeId: null, n: Math.min(st.n + 1, TOTAL) });
+      box.querySelectorAll('.opt').forEach((b) => { b.className = 'opt'; });
+      update();
+    }
+    function update() {
+      OPTS.forEach((o, i) => {
+        const b = box.querySelector('[data-id="' + o.id + '"]');
+        const w = st.wrong.includes(o.id);
+        const ok = st.done && o.correct;
+        let cls = 'opt';
+        if (st.sel === o.id) cls += ' sel';
+        if (w) cls += ' wrong';
+        if (w && st.shakeId === o.id) cls += ' shake';
+        if (ok) cls += ' ok';
+        if (st.done && !o.correct) cls += ' dim';
+        if (b.className !== cls) b.className = cls;
+        b.disabled = w || st.done;
+        const badge = v.badge(i, w, ok);
+        if (b.firstElementChild.dataset.v !== badge) { b.firstElementChild.innerHTML = badge; b.firstElementChild.dataset.v = badge; }
+      });
+      const lw = st.last ? OPTS.find((x) => x.id === st.last) : null;
+      const doneCount = st.n - 1 + (st.done ? 1 : 0);
+      v.progress(root, st, doneCount);
+      const key = (st.done ? 'ok' : '') + '|' + (lw && !st.done ? lw.id : '') + '|' + st.n;
+      if (key !== footKey) { footKey = key; foot.innerHTML = v.foot(st, st.done ? null : lw); }
+      const cb = foot.querySelector('[data-act=check]');
+      if (cb) cb.disabled = !st.sel;
+      if (v.after) v.after(root, st, st.done ? null : lw);
+    }
+    update();
+  }
+
+  // ---------- per-screen setup ----------
+  const INIT = {
+    'A-home'(root) {
+      const week = root.querySelector('[data-slot=week]');
+      week.innerHTML = [0, 1, 2, 3, 4, 5, 6].map((i) => {
+        if (i < 5) return '<span class="dot" style="background:#F07A2B;animation:rise .5s cubic-bezier(.2,1.6,.4,1) ' + (0.3 + i * 0.06).toFixed(2) + 's both"></span>';
+        if (i === 5) return '<span class="dot today" style="background:#FFFFFF"></span>';
+        return '<span class="dot" style="background:rgba(74,29,0,0.12)"></span>';
+      }).join('');
+      const weak = [['Komponentlar va lifecycle', 20], ['Jetpack Compose', 25], ['Coroutines va Flow', 25]];
+      root.querySelector('[data-slot=weak]').insertAdjacentHTML('beforeend', weak.map((t, i) =>
+        '<div style="display:flex;flex-direction:column;gap:6px"><div style="display:flex;justify-content:space-between;font-size:14px"><span>' + t[0] + '</span><span style="font-weight:700;color:#57556A">' + t[1] + '%</span></div>' +
+        '<div class="bar"><div class="fill" style="width:' + t[1] + '%;animation-delay:' + (0.5 + i * 0.1).toFixed(1) + 's"></div></div></div>').join(''));
+    },
+    'A-session'(root) {
+      root.querySelector('[data-wave]').setAttribute('d', wavePath(200));
+      const clip = root.querySelector('[data-slot=clip]');
+      const track = root.querySelector('[data-slot=track]');
+      const okShape = cookiePath(70, 70, 62, 9, 0.08);
+      session(root, {
+        badgeCls: 'badge', okBuzz: 20,
+        badge: (i, w, ok) => (w ? ICON_X : ok ? '<span class="burst" style="display:grid">' + ICON_CHECK + '</span>' : 'ABCD'[i]),
+        progress(r, st, done) {
+          const full = r.querySelector('.wbox').clientWidth || 200;
+          const cw = Math.max(6, Math.round(full * done / TOTAL));
+          clip.style.width = cw + 'px';
+          track.style.left = Math.min(full - 4, cw + 10) + 'px';
+          r.querySelector('[data-slot=counter]').textContent = st.n + ' / ' + TOTAL;
+        },
+        foot(st, lw) {
+          let h = '';
+          if (lw) h += '<section class="sheet" style="background:#FFDAD6;color:#410E0B"><div style="display:flex;align-items:center;gap:10px"><span style="width:34px;height:34px;border-radius:12px;background:#FFFFFF;color:#B3261E;display:grid;place-items:center"><svg width="20" height="20" viewBox="0 0 24 24" style="fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.7V16h8v-1.3A7 7 0 0 0 12 2z"/></svg></span><span class="disp" style="font-size:18px;font-weight:700">Bu emas. Yana urinib ko\'ring</span></div>' +
+            '<span style="font-size:14px;text-decoration:line-through;opacity:.75">' + parts(lw.text) + '</span><span style="font-size:15px;line-height:1.45">' + parts(lw.hint) + '</span></section>';
+          if (st.done) h += '<section class="sheet" style="background:#D3F4DD;color:#0B3D20"><div style="display:flex;align-items:center;gap:10px"><svg class="burst" width="36" height="36" viewBox="0 0 140 140"><path d="' + okShape + '" style="fill:#1E7A45"/><path d="M44 72l18 18 34-38" style="fill:none;stroke:#FFFFFF;stroke-width:12;stroke-linecap:round;stroke-linejoin:round"/></svg><span class="disp" style="font-size:18px;font-weight:700">To\'g\'ri!</span></div>' +
+            '<span style="font-size:15px;line-height:1.45">' + parts(EXPL) + '</span></section>';
+          if (!st.done) h += '<button class="main" data-act="check" style="background:#4433D1;color:#FFFFFF">Tekshirish</button>';
+          else if (st.n < TOTAL) h += '<button class="main" data-act="next" style="background:#1E7A45;color:#FFFFFF">Keyingi savol ' + ICON_ARROW + '</button>';
+          else h += '<a class="main" href="#" data-go="A-result" style="background:#1E7A45;color:#FFFFFF">Natijani ko\'rish ' + ICON_ARROW + '</a>';
+          return h;
+        },
+      });
+    },
+    'A-result'(root) {
+      const colors = ['#4433D1', '#F07A2B', '#2FB66A', '#8C7CFF', '#FFC83D'];
+      let c = '';
+      for (let i = 0; i < 40; i++) {
+        c += '<span class="piece" style="left:' + (rnd(i, 1) * 100).toFixed(1) + '%;width:' + (6 + rnd(i, 2) * 6).toFixed(0) + 'px;height:' + (10 + rnd(i, 3) * 8).toFixed(0) + 'px;background:' + colors[i % 5] + ';--r:' + (rnd(i, 4) * 720 - 360).toFixed(0) + 'deg;animation-duration:' + (2.2 + rnd(i, 5) * 1.4).toFixed(2) + 's;animation-delay:' + (0.5 + rnd(i, 6) * 0.7).toFixed(2) + 's"></span>';
+      }
+      root.querySelector('[data-slot=confetti]').innerHTML = c;
+      const base = 'border-radius:20px;padding:14px 12px;display:flex;flex-direction:column;gap:2px;';
+      root.querySelector('[data-slot=stats]').innerHTML = [
+        ['6', 'savol', 'background:#FFFFFF;animation-delay:.55s'],
+        ['5', 'birinchi urinishda', 'background:#D3F4DD;color:#0B3D20;animation-delay:.65s'],
+        ['1', 'qayta ishlangan', 'background:#FFE6D2;color:#4A1D00;animation-delay:.75s'],
+      ].map((s) => '<div class="rise" style="' + base + s[2] + '"><span class="disp" style="font-size:26px;font-weight:800">' + s[0] + '</span><span style="font-size:12px;line-height:1.3;opacity:.85">' + s[1] + '</span></div>').join('');
+    },
+    'B-home'(root) {
+      let s = '';
+      for (let i = 0; i < 20; i++) s += i < 10 ? '<span class="seg on" style="animation-delay:' + (0.3 + i * 0.07).toFixed(2) + 's"></span>' : '<span class="seg"></span>';
+      root.querySelector('[data-slot=segs]').innerHTML = s;
+      const palette = ['#1A2130', '#0F4A33', '#178257', '#26B477', '#3DDC97'];
+      const total = 18 * 7;
+      const today = total - 2;
+      let c = '';
+      for (let i = 0; i < total; i++) {
+        const r = rnd(i, 0);
+        const recency = i / total;
+        let lvl = r < 0.45 - recency * 0.3 ? 0 : Math.min(4, Math.floor(r * 3 + recency * 2));
+        if (i > today) lvl = -1;
+        else if (i > today - 5) lvl = Math.max(2, lvl);
+        else if (i === today - 5) lvl = 0;
+        const bg = lvl < 0 ? 'transparent;border:1px dashed #263043;box-sizing:border-box' : palette[lvl];
+        c += '<span class="cell" style="background:' + bg + ';animation-delay:' + (Math.floor(i / 7) * 0.025).toFixed(3) + 's' + (i === today ? ';outline:1.5px solid #E6EDF3;outline-offset:1px' : '') + '"></span>';
+      }
+      root.querySelector('[data-slot=cells]').innerHTML = c;
+    },
+    'B-session'(root) {
+      const pad = (x) => (x < 10 ? '0' : '') + x;
+      session(root, {
+        badgeCls: 'key', okBuzz: 20,
+        badge: (i, w, ok) => (w ? 'x' : ok ? 'ok' : 'abcd'[i]),
+        progress(r, st, done) {
+          let s = '';
+          for (let i = 0; i < TOTAL; i++) s += '<span class="pseg' + (i < done ? ' on' : i === done ? ' cur' : '') + '"></span>';
+          r.querySelector('[data-slot=segs]').innerHTML = s;
+          r.querySelector('[data-slot=counter]').textContent = pad(st.n) + '/' + pad(TOTAL);
+        },
+        foot(st, lw) {
+          let h = '';
+          if (lw) h += '<section class="term" style="background:#160F12;border-color:rgba(255,107,107,0.4)"><div style="display:flex;align-items:center;gap:8px"><span class="tag" style="background:rgba(255,107,107,0.15);color:#FF6B6B">error</span><span style="font-weight:600">variant noto\'g\'ri, yana urinib ko\'ring</span></div>' +
+            '<span class="mono" style="font-size:12.5px;color:#8B98AD;text-decoration:line-through">--&gt; ' + esc(lw.text.replace(/`/g, '')) + '</span>' +
+            '<span><span class="mono" style="color:#6CB6FF;font-size:13px">= maslahat: </span>' + parts(lw.hint) + '</span></section>';
+          if (st.done) h += '<section class="term" style="background:#0C1814;border-color:rgba(61,220,151,0.4)"><div style="display:flex;align-items:center;gap:8px"><span class="tag" style="background:rgba(61,220,151,0.15);color:#3DDC97">ok</span><span style="font-weight:600">to\'g\'ri javob</span></div><span style="color:#C9D4DF">' + parts(EXPL) + '</span></section>';
+          if (!st.done) h += '<button class="main" data-act="check" style="background:#3DDC97;color:#04170E;box-shadow:0 0 24px rgba(61,220,151,0.25)">Tekshirish</button>';
+          else if (st.n < TOTAL) h += '<button class="main" data-act="next" style="background:#3DDC97;color:#04170E">Keyingi savol <span class="kbd">→</span></button>';
+          else h += '<a class="main" href="#" data-go="B-result" style="background:#3DDC97;color:#04170E">Natijani ko\'rish <span class="kbd">→</span></a>';
+          return h;
+        },
+      });
+    },
+    'B-result'(root) {
+      let s = '';
+      for (let i = 0; i < 6; i++) s += '<span class="seg ' + (i < 5 ? 'on' : 're') + '" style="animation-delay:' + (1.8 + i * 0.12).toFixed(2) + 's"></span>';
+      root.querySelector('[data-slot=segs]').innerHTML = s;
+      let p = '';
+      for (let i = 0; i < 22; i++) {
+        const sz = 3 + Math.round(rnd(i, 2) * 4);
+        p += '<span class="spark" style="left:' + (rnd(i, 1) * 100).toFixed(1) + '%;width:' + sz + 'px;height:' + sz + 'px;opacity:.8;animation-duration:' + (3 + rnd(i, 3) * 3).toFixed(2) + 's;animation-delay:' + (1.8 + rnd(i, 4) * 2).toFixed(2) + 's' + (rnd(i, 5) > 0.75 ? ';background:#FFB547' : '') + '"></span>';
+      }
+      root.querySelector('[data-slot=sparks]').innerHTML = p;
+    },
+    'C-home'(root) {
+      const labels = ['Du', 'Se', 'Ch', 'Pa', 'Ju', 'Sh', 'Ya'];
+      root.querySelector('[data-slot=week]').innerHTML = labels.map((l, i) => {
+        let day;
+        if (i < 5) day = '<span class="day done" style="animation-delay:' + (0.25 + i * 0.07).toFixed(2) + 's"><svg width="16" height="16" viewBox="0 0 24 24" style="fill:none;stroke:currentColor;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span>';
+        else if (i === 5) day = '<span class="day today"></span>';
+        else day = '<span class="day future"></span>';
+        return '<div style="display:flex;flex-direction:column;align-items:center;gap:4px">' + day + '<span style="font-size:11px;font-weight:700">' + l + '</span></div>';
+      }).join('');
+    },
+    'C-session'(root) {
+      const stamp = (bg, icon) => '<span class="stamp" style="width:36px;height:36px;border-radius:50%;background:' + bg + ';border:2px solid #16161D;color:#FFFFFF;display:grid;place-items:center;box-sizing:border-box">' + icon + '</span>';
+      session(root, {
+        badgeCls: 'letter', okBuzz: [15, 40, 25],
+        badge: (i) => 'ABCD'[i],
+        progress(r, st, done) {
+          r.querySelector('[data-slot=fill]').style.width = Math.round(done / TOTAL * 100) + '%';
+          r.querySelector('[data-slot=counter]').textContent = st.n + '/' + TOTAL;
+        },
+        foot(st, lw) {
+          let h = '';
+          if (lw) h += '<div class="slide" style="color:#7A1E12"><div style="display:flex;align-items:center;gap:10px">' + stamp('#FF6B57', ICON_X) + '<span style="font-size:20px;font-weight:800">Deyarli! Yana urinib ko\'ring</span></div><span style="font-size:15px;line-height:1.45;color:#4A1A12">' + parts(lw.hint) + '</span></div>';
+          if (st.done) h += '<div class="slide" style="color:#0D5734"><div style="display:flex;align-items:center;gap:10px">' + stamp('#1FA463', ICON_CHECK) + '<span style="font-size:20px;font-weight:800">Ajoyib! To\'g\'ri javob</span></div><span style="font-size:15px;line-height:1.45;color:#12402A">' + parts(EXPL) + '</span></div>';
+          if (!st.done) h += '<button class="btn3d" data-act="check" style="background:#2563EB;color:#FFFFFF">TEKSHIRISH</button>';
+          else if (st.n < TOTAL) h += '<button class="btn3d" data-act="next" style="background:#1FA463;color:#FFFFFF">DAVOM ETISH</button>';
+          else h += '<a class="btn3d" href="#" data-go="C-result" style="background:#1FA463;color:#FFFFFF">NATIJANI KO\'RISH</a>';
+          return h;
+        },
+        after(r, st, lw) {
+          r.querySelector('[data-slot=foot]').style.background = st.done ? '#C9F2DA' : lw ? '#FFD9D2' : '#FFFFFF';
+        },
+      });
+    },
+    'C-result'(root) {
+      const colors = ['#2563EB', '#FFCB2B', '#FF6B57', '#1FA463', '#FFFFFF'];
+      let c = '';
+      for (let i = 0; i < 34; i++) {
+        const round = rnd(i, 7) > 0.6;
+        const w = 8 + Math.round(rnd(i, 2) * 6);
+        c += '<span class="piece" style="left:' + (rnd(i, 1) * 100).toFixed(1) + '%;width:' + w + 'px;height:' + (round ? w : w + 6) + 'px;border-radius:' + (round ? '50%' : '3px') + ';background:' + colors[i % 5] + ';--r:' + (rnd(i, 4) * 900 - 450).toFixed(0) + 'deg;animation-duration:' + (2 + rnd(i, 5) * 1.5).toFixed(2) + 's;animation-delay:' + (0.6 + rnd(i, 6) * 0.8).toFixed(2) + 's"></span>';
+      }
+      root.querySelector('[data-slot=confetti]').innerHTML = c;
+      root.querySelector('[data-slot=stats]').innerHTML = [
+        ['6', 'savol', 'background:#DDE7FF;transform:rotate(-3deg);animation-delay:.9s'],
+        ['5', 'birinchi urinishda', 'background:#C9F2DA;transform:rotate(2deg);animation-delay:1s'],
+        ['1', 'qayta ishlangan', 'background:#FFE08A;transform:rotate(-1.5deg);animation-delay:1.1s'],
+      ].map((s) => '<div class="sticker" style="' + s[2] + '"><span style="font-size:28px;font-weight:800;line-height:1.1">' + s[0] + '</span><span style="font-size:12px;font-weight:600;line-height:1.25">' + s[1] + '</span></div>').join('');
+    },
+  };
+
+  // ---------- mounting, replay and navigation between screens ----------
+  const phones = {};
+  document.querySelectorAll('.phone').forEach((el) => { phones[el.dataset.screen] = el; });
+
+  function mount(id) {
+    const host = phones[id];
+    const root = host.shadowRoot || host.attachShadow({ mode: 'open' });
+    // Hidden scrollbars, as on a phone.
+    root.innerHTML = '<style>*{scrollbar-width:none}::-webkit-scrollbar{display:none}</style>';
+    root.appendChild(document.getElementById('tpl-' + id).content.cloneNode(true));
+    root.querySelectorAll('[data-cookie]').forEach((p) => p.setAttribute('d', cookiePath.apply(null, nums(p.dataset.cookie))));
+    root.querySelectorAll('[data-star]').forEach((p) => p.setAttribute('d', starPath.apply(null, nums(p.dataset.star))));
+    if (!host.dataset.wired) {
+      host.dataset.wired = '1';
+      root.addEventListener('click', (e) => {
+        const go = e.target.closest('[data-go]');
+        if (go) { e.preventDefault(); goTo(go.dataset.go); return; }
+        const rp = e.target.closest('[data-act=replay]');
+        if (rp) { buzz(15); mount(id); }
+      });
+    }
+    INIT[id](root);
+    host.dataset.mounted = '1';
+  }
+
+  function goTo(id) {
+    const host = phones[id];
+    host.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    mount(id);
+    host.classList.add('flash');
+    setTimeout(() => host.classList.remove('flash'), 900);
+  }
+
+  document.querySelectorAll('[data-replay]').forEach((b) => b.addEventListener('click', () => mount(b.dataset.replay)));
+
+  // Mount each screen when it scrolls into view, so its entrance animation is actually seen.
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => {
+        if (en.isIntersecting && !en.target.dataset.mounted) { mount(en.target.dataset.screen); io.unobserve(en.target); }
+      });
+    }, { threshold: 0.35 });
+    Object.values(phones).forEach((el) => io.observe(el));
+  } else {
+    Object.keys(phones).forEach(mount);
+  }
+})();
+</script>
+</body>
+</html>
