@@ -190,6 +190,7 @@ class ContentAssetsTest {
         "go.arch", "go.concurrency", "go.data", "go.lang", "go.types", "go.web",
         "php.arch", "php.async", "php.eloquent", "php.lang", "php.laravel", "php.oop",
         "net.arch", "net.aspnet", "net.async", "net.csharp", "net.data", "net.types",
+        "ios.arch", "ios.concurrency", "ios.data", "ios.swift", "ios.swiftui", "ios.ui",
     )
 
     /**

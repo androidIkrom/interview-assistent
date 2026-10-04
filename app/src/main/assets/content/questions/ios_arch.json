@@ -8,12 +8,12 @@
       "kind": "concept",
       "prompt": "Swift'da ARC (Automatic Reference Counting) qanday ishlaydi?",
       "options": [
-        { "id": "a", "text": "Har bir class ob'ektining kuchli (strong) havolalar soni hisoblanadi: yangi kuchli havola — +1, havola yo'qolsa — −1; son 0 ga tushganda ob'ekt darhol bo'shatiladi va `deinit` chaqiriladi. Kompilyator retain/release'ni o'zi qo'yadi; GC kabi fon yig'uvchi yo'q", "correct": true },
-        { "id": "b", "text": "ARC — Java'dagi kabi vaqti-vaqti bilan ishlaydigan garbage collector", "hint": "ARC deterministik: hisob 0 bo'lganda darhol bo'shatadi, alohida yig'ish bosqichi yo'q." },
+        { "id": "a", "text": "Class ob'ektining kuchli havolalari sanaladi; son 0 ga tushganda ob'ekt darhol bo'shatiladi va `deinit` chaqiriladi", "correct": true },
+        { "id": "b", "text": "ARC — Java'dagi kabi vaqti-vaqti bilan fon thread'da ishlaydigan va yetib bo'lmaydigan ob'ektlarni yig'adigan garbage collector", "hint": "ARC deterministik: hisob 0 bo'lganda darhol bo'shatadi, alohida yig'ish bosqichi yo'q." },
         { "id": "c", "text": "ARC struct va enum'larni ham hisoblaydi", "hint": "ARC class (reference type) ob'ektlari uchun; value type'lar nusxalanadi (ichidagi class havolalari bundan mustasno)." },
         { "id": "d", "text": "ARC retain cycle'larni avtomatik aniqlab bo'shatadi", "hint": "Aniqlamaydi — o'zaro kuchli havolalar hech qachon 0 ga tushmaydi; `weak`/`unowned` bilan uzish kerak." }
       ],
-      "explanation": "ARC'ning afzalligi — bashorat qilinadigan xotira va pauzalarsiz ishlash; kamchiligi — retain cycle'lar dasturchining mas'uliyati. `deinit`ga `print` qo'yish — ekran yopilganda ob'ekt bo'shatilayotganini tekshirishning oddiy usuli.",
+      "explanation": "Yangi kuchli havola — +1, yo'qolsa — −1; retain/release'ni kompilyator o'zi qo'yadi, GC kabi fon yig'uvchi yo'q. ARC'ning afzalligi — bashorat qilinadigan xotira va pauzalarsiz ishlash; kamchiligi — retain cycle'lar dasturchining mas'uliyati. `deinit`ga `print` qo'yish — ekran yopilganda ob'ekt bo'shatilayotganini tekshirishning oddiy usuli.",
       "reviewed": false
     },
     {
@@ -23,12 +23,12 @@
       "kind": "concept",
       "prompt": "\"Massive View Controller\" muammosi nima va MVVM uni qanday yengillashtiradi?",
       "options": [
-        { "id": "a", "text": "Klassik MVC'da view controller UI, tarmoq, parsing, validatsiya, navigatsiya — hammasini o'z ichiga oladi va minglab qatorga o'sadi, testlash qiyin. MVVM'da view model ekran holati va logikani UI'siz saqlaydi (unit test oson), view controller/view faqat holatni ko'rsatadi va hodisalarni uzatadi; tarmoq va saqlash — alohida servislar", "correct": true },
+        { "id": "a", "text": "VC UI, tarmoq, parsing va navigatsiyani o'zida yig'ib o'sadi; MVVM holat va logikani UI'siz view model'ga oladi", "correct": true },
         { "id": "b", "text": "View controller'da juda ko'p subview borligi", "hint": "Muammo UI elementlari soni emas — mas'uliyatlar aralashganligi." },
-        { "id": "c", "text": "MVVM'da view model `UIView` va `UIViewController`ni bevosita boshqaradi", "hint": "View model UIKit'ni bilmasligi kerak — shunda u testlanadi va qayta ishlatiladi." },
+        { "id": "c", "text": "MVVM'da view model `UIView` va `UIViewController`ni bevosita boshqaradi, subview'larni o'zi yaratadi va ekranga joylashtiradi", "hint": "View model UIKit'ni bilmasligi kerak — shunda u testlanadi va qayta ishlatiladi." },
         { "id": "d", "text": "MVVM faqat SwiftUI bilan ishlaydi", "hint": "UIKit'da ham keng ishlatiladi — bog'lash Combine, closure yoki delegate orqali." }
       ],
-      "explanation": "Qo'shimcha ajratish: navigatsiya — Coordinator, ma'lumot — Repository, biznes qoidalar — UseCase/servis. Har ekran uchun bir xil tuzilma yangi dasturchiga kodni tez tushunishga yordam beradi.",
+      "explanation": "Klassik MVC'da VC minglab qatorga yetadi va testlash qiyin. MVVM'da view model'ni unit test qilish oson, view faqat holatni ko'rsatadi; tarmoq va saqlash — alohida servislar. Qo'shimcha ajratish: navigatsiya — Coordinator, ma'lumot — Repository, biznes qoidalar — UseCase/servis. Har ekran uchun bir xil tuzilma yangi dasturchiga kodni tez tushunishga yordam beradi.",
       "reviewed": false
     },
     {
@@ -54,12 +54,12 @@
       "kind": "concept",
       "prompt": "`weak` va `unowned` havolalar qanday farqlanadi?",
       "options": [
-        { "id": "a", "text": "Ikkalasi hisoblagichni oshirmaydi. `weak` — har doim Optional `var`, ob'ekt bo'shatilganda avtomatik `nil` bo'ladi — xavfsiz. `unowned` — Optional emas, ob'ekt havoladan oldin bo'shatilmasligi kafolatlangan bo'lsagina (masalan, bola ob'ekt otasiga); bo'shatilgan ob'ektga murojaat — crash", "correct": true },
-        { "id": "b", "text": "`unowned` `weak`dan xavfsizroq, chunki nil bo'lmaydi", "hint": "Nil bo'lmagani uchun aynan xavfli: ob'ekt yo'q bo'lsa kirish crash beradi." },
+        { "id": "a", "text": "Ikkalasi hisoblagichni oshirmaydi; `weak` — Optional, bo'shatilganda `nil` bo'ladi; `unowned` — Optional emas, kech murojaat crash", "correct": true },
+        { "id": "b", "text": "`unowned` `weak`dan xavfsizroq, chunki u hech qachon nil bo'lmaydi va ob'ekt bo'shatilgach ham undagi qiymat xotirada saqlanib qoladi", "hint": "Nil bo'lmagani uchun aynan xavfli: ob'ekt yo'q bo'lsa kirish crash beradi." },
         { "id": "c", "text": "`weak` havola ob'ektni xotirada ushlab turadi", "hint": "Ushlab turmaydi — ob'ekt boshqa kuchli havolalar tugashi bilan bo'shatiladi." },
         { "id": "d", "text": "`weak` struct'larga ham qo'llanadi", "hint": "Faqat class (reference type) instansiyalari uchun." }
       ],
-      "explanation": "Amalda closure'larda deyarli doim `[weak self]` — ekran yopilib, so'rov keyin qaytsa ham xavfsiz. `unowned` — umrlar aniq bog'langan joylar (masalan, `Customer` → `CreditCard`ning `unowned let customer`). Ishonch bo'lmasa — `weak`.",
+      "explanation": "`unowned` faqat ob'ekt havoladan oldin bo'shatilmasligi kafolatlanganda (masalan, bola ob'ekt otasiga); aks holda xavfsiz tanlov — `weak`. Amalda closure'larda deyarli doim `[weak self]` — ekran yopilib, so'rov keyin qaytsa ham xavfsiz. `unowned` — umrlar aniq bog'langan joylar (masalan, `Customer` → `CreditCard`ning `unowned let customer`). Ishonch bo'lmasa — `weak`.",
       "reviewed": false
     },
     {
@@ -85,12 +85,12 @@
       "kind": "concept",
       "prompt": "MVVM, TCA va VIPER arxitekturalaridan birini tanlashda qanday mezonlarga tayaniladi?",
       "options": [
-        { "id": "a", "text": "Jamoa hajmi va tajribasi, ilova murakkabligi, testlash talablari va UI framework: MVVM — oddiy, keng tarqalgan, SwiftUI/UIKit'ga mos; TCA — bir yo'nalishli ma'lumot oqimi, holat va effektlarni qat'iy boshqarish, kuchli testlash, lekin o'rganish egri chizig'i va tashqi bog'liqlik; VIPER — UIKit davridagi qat'iy qatlamlar, ko'p boilerplate. Muhimi — butun loyihada izchillik", "correct": true },
+        { "id": "a", "text": "Jamoa tajribasi, ilova murakkabligi, testlash talablari va UI framework; tanlangan arxitektura butun loyihada izchil bo'lsin", "correct": true },
         { "id": "b", "text": "Har doim VIPER — eng ko'p qatlamli arxitektura eng yaxshisi", "hint": "Qatlamlar soni sifat emas: kichik ekranlar uchun ortiqcha fayllar va boilerplate." },
         { "id": "c", "text": "Har ekran uchun alohida arxitektura tanlash ma'qul", "hint": "Aralash arxitektura kodni tushunishni qiyinlashtiradi; izchillik muhim." },
-        { "id": "d", "text": "Arxitektura faqat UI uchun ahamiyatli, test va jamoaga ta'sir qilmaydi", "hint": "Arxitektura testlanuvchanlik, parallel ishlash va onboarding'ga bevosita ta'sir qiladi." }
+        { "id": "d", "text": "Arxitektura faqat UI uchun ahamiyatli — u testlash, jamoa hajmi va kodni qo'llab-quvvatlash qulayligiga deyarli hech ta'sir qilmaydi", "hint": "Arxitektura testlanuvchanlik, parallel ishlash va onboarding'ga bevosita ta'sir qiladi." }
       ],
-      "explanation": "Suhbatda kutiladigan javob — \"eng yaxshi\" emas, trade-off'larni tushuntirish va o'z tajribangizdan misol. TCA'ning so'nggi versiyalari Swift Observation bilan ishlaydi. Arxitekturani ilova o'sishi bilan bosqichma-bosqich o'zgartirish mumkin.",
+      "explanation": "MVVM — oddiy, keng tarqalgan; TCA — bir yo'nalishli oqim va kuchli testlash, lekin o'rganish qiyin va tashqi bog'liqlik; VIPER — UIKit davridagi qat'iy qatlamlar, ko'p boilerplate. Suhbatda kutiladigan javob — \"eng yaxshi\" emas, trade-off'larni tushuntirish va o'z tajribangizdan misol. TCA'ning so'nggi versiyalari Swift Observation bilan ishlaydi. Arxitekturani ilova o'sishi bilan bosqichma-bosqich o'zgartirish mumkin.",
       "reviewed": false
     },
     {
@@ -115,12 +115,12 @@
       "kind": "concept",
       "prompt": "Ilova ishga tushish vaqti (cold launch) 3 soniya. Qanday optimallashtiriladi?",
       "options": [
-        { "id": "a", "text": "O'lchash (Instruments → App Launch, MetricKit, Organizer), so'ng: pre-main bosqichini kamaytirish — dynamic framework'lar sonini qisqartirish yoki static linking; `didFinishLaunching`da faqat birinchi ekran uchun zarur ishni qoldirish, SDK'lar (analytics, reklama) va og'ir sozlashlarni kechiktirish yoki fon thread'ga; birinchi ekranni keshdan darhol ko'rsatib, tarmoq ma'lumotini keyin yangilash", "correct": true },
-        { "id": "b", "text": "`didFinishLaunching`da barcha servislarni oldindan ishga tushirish — keyin tezroq ishlaydi", "hint": "Foydalanuvchi birinchi ekranni ko'rguncha har bir sinxron sozlash kutiladi." },
+        { "id": "a", "text": "O'lchash (Instruments, MetricKit), dynamic framework'larni kamaytirish, launch'dagi og'ir ishni kechiktirish", "correct": true },
+        { "id": "b", "text": "`didFinishLaunching`da barcha servis va SDK'larni oldindan sinxron ishga tushirish — keyinchalik ilova ancha tezroq ishlaydi", "hint": "Foydalanuvchi birinchi ekranni ko'rguncha har bir sinxron sozlash kutiladi." },
         { "id": "c", "text": "Splash screen'ni uzoqroq ko'rsatish", "hint": "Kutish vaqtini yashiradi, kamaytirmaydi; tizim watchdog'i juda sekin launch'ni o'ldiradi." },
         { "id": "d", "text": "Launch vaqti faqat qurilma tezligiga bog'liq — dasturchi ta'sir qila olmaydi", "hint": "Linking, initializer'lar va birinchi ekran ishi — to'liq dasturchi nazoratida." }
       ],
-      "explanation": "Maqsad — birinchi kadr ~400 ms atrofida (Apple tavsiyasi). Warm va cold launch'ni alohida o'lchang. Statik initializer'lar va `+load` metodlari pre-main'ni sekinlashtiradi. Regressiyalarning oldini olish — CI'da launch metrikasini kuzatish (XCTest `XCTApplicationLaunchMetric`).",
+      "explanation": "`didFinishLaunching`da faqat birinchi ekran uchun zarur ish qolsin; SDK'lar va og'ir sozlash — keyinroq yoki fon thread'da; birinchi ekran keshdan darhol ko'rsatiladi. Maqsad — birinchi kadr ~400 ms atrofida (Apple tavsiyasi). Warm va cold launch'ni alohida o'lchang. Statik initializer'lar va `+load` metodlari pre-main'ni sekinlashtiradi. Regressiyalarning oldini olish — CI'da launch metrikasini kuzatish (XCTest `XCTApplicationLaunchMetric`).",
       "reviewed": false
     }
   ]
