@@ -1,6 +1,10 @@
 package uz.devsuhbat.ui.settings
 
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
@@ -20,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import java.io.IOException
 import java.time.LocalDate
 import kotlinx.coroutines.launch
@@ -29,7 +34,13 @@ import uz.devsuhbat.R
 import uz.devsuhbat.data.Backup
 import uz.devsuhbat.data.BackupCodec
 import uz.devsuhbat.data.BackupError
+import uz.devsuhbat.data.forDevice
 import uz.devsuhbat.reminder.ReminderScheduler
+
+private fun notificationsAllowed(context: Context): Boolean =
+    Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
+        ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) ==
+        PackageManager.PERMISSION_GRANTED
 
 /** "Export progress" and "Import progress" rows; results are reported through [onMessage]. */
 @Composable
@@ -92,15 +103,16 @@ fun BackupRows(container: AppContainer, onMessage: (Int) -> Unit) {
                 TextButton(onClick = {
                     pending = null
                     scope.launch {
+                        val settings = backup.settings?.forDevice(notificationsAllowed(context))
                         withContext(container.io) {
                             val content = container.content
                             val known = content.catalog()?.topics.orEmpty()
                                 .flatMap { topic -> content.questions(topic.id) }
                                 .mapTo(HashSet()) { it.id }
                             container.progress.restore(backup, known)
-                            backup.settings?.let { container.settings.restore(it) }
+                            settings?.let { container.settings.restore(it) }
                         }
-                        backup.settings?.let { ReminderScheduler.apply(context, it.reminderEnabled, it.reminderMinutes) }
+                        settings?.let { ReminderScheduler.apply(context, it.reminderEnabled, it.reminderMinutes) }
                         onMessage(R.string.backup_imported)
                     }
                 }) { Text(stringResource(R.string.backup_import_action)) }

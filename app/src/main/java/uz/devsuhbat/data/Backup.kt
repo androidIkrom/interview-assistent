@@ -31,6 +31,13 @@ data class BackupSettings(
     val reminderMinutes: Int,
 )
 
+/**
+ * Settings to apply on this device. A reminder restored without the notification permission
+ * could never fire, so it is turned off; the user can turn it on again and grant the permission.
+ */
+fun BackupSettings.forDevice(notificationsAllowed: Boolean): BackupSettings =
+    if (reminderEnabled && !notificationsAllowed) copy(reminderEnabled = false) else this
+
 @Serializable
 data class BackupQuestionState(
     val questionId: String,
