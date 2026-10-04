@@ -8,12 +8,12 @@
       "kind": "concept",
       "prompt": "Yaxshi test case qanday qismlardan iborat?",
       "options": [
-        { "id": "a", "text": "ID, aniq sarlavha, oldingi shartlar (precondition: foydalanuvchi, ma'lumot, muhit), raqamlangan qadamlar, test ma'lumotlari, har qadam yoki oxir uchun kutilgan natija, prioritet va bog'liq talab. Har bir test case bitta narsani tekshiradi va boshqa odam uni bir xil bajarishi mumkin", "correct": true },
+        { "id": "a", "text": "ID, sarlavha, precondition, raqamlangan qadamlar, test ma'lumotlari, kutilgan natija, prioritet va bog'liq talab", "correct": true },
         { "id": "b", "text": "Faqat sarlavha — qadamlarni tester o'zi o'ylab topadi", "hint": "Unda natijani takrorlash va boshqa testerga topshirish imkonsiz; bu ko'proq checklist bandi." },
         { "id": "c", "text": "Faqat qadamlar — kutilgan natija kerak emas", "hint": "Kutilgan natijasiz test o'tdi yoki yiqildi deb hukm qilib bo'lmaydi." },
-        { "id": "d", "text": "Bitta test case iloji boricha ko'p funksiyani qamrashi kerak", "hint": "Uzun, aralash test case yiqilganda nima buzilganini aniqlash qiyin." }
+        { "id": "d", "text": "Bitta test case iloji boricha ko'p funksiyani qamrashi kerak — shunda test case'lar soni kamayadi va ularni yuritish ancha oson", "hint": "Uzun, aralash test case yiqilganda nima buzilganini aniqlash qiyin." }
       ],
-      "explanation": "Kutilgan natija aniq va tekshiriladigan bo'lishi kerak: \"Muvaffaqiyatli\" emas, \"Profil sahifasi ochiladi, yuqorida 'Salom, Ali' yozuvi\". Test case'lar talablar bilan bog'langan bo'lsa, talab o'zgarganda qaysi testlarni yangilash kerakligi ko'rinadi.",
+      "explanation": "Precondition — foydalanuvchi, ma'lumot, muhit. Har test case bitta narsani tekshiradi va boshqa odam uni bir xil bajara oladi. Kutilgan natija aniq va tekshiriladigan bo'lishi kerak: \"Muvaffaqiyatli\" emas, \"Profil sahifasi ochiladi, yuqorida 'Salom, Ali' yozuvi\". Test case'lar talablar bilan bog'langan bo'lsa, talab o'zgarganda qaysi testlarni yangilash kerakligi ko'rinadi.",
       "reviewed": false
     },
     {
@@ -23,12 +23,12 @@
       "kind": "concept",
       "prompt": "Bug report'da albatta nimalar bo'lishi kerak?",
       "options": [
-        { "id": "a", "text": "Qisqa, aniq sarlavha (nima, qayerda, qachon); muhit (build/versiya, qurilma, OS, brauzer); takrorlash qadamlari; haqiqiy natija va kutilgan natija; severity/priority; dalillar (skrinshot, video, log, so'rov/javob); takrorlanish chastotasi", "correct": true },
+        { "id": "a", "text": "Aniq sarlavha, muhit, takrorlash qadamlari, haqiqiy va kutilgan natija, severity/priority va dalillar", "correct": true },
         { "id": "b", "text": "Faqat \"Ishlamayapti\" degan sarlavha va skrinshot", "hint": "Dasturchi nima qilganingizni, qayerda va qaysi versiyada ekanini bilmaydi — takrorlay olmaydi." },
-        { "id": "c", "text": "Tester'ning xato sababi haqidagi taxmini va kodni qanday tuzatish kerakligi", "hint": "Taxmin qo'shimcha bo'lishi mumkin, lekin asosiysi — faktlar: qadamlar, natijalar, muhit." },
+        { "id": "c", "text": "Tester'ning xato sababi haqidagi taxmini va kodni qanday tuzatish kerakligi — qolgan tafsilotlarni dasturchi o'zi topadi", "hint": "Taxmin qo'shimcha bo'lishi mumkin, lekin asosiysi — faktlar: qadamlar, natijalar, muhit." },
         { "id": "d", "text": "Bir report'da topilgan barcha xatolar ro'yxati", "hint": "Bir report — bir bug: aks holda kuzatish, tuzatish va retest chalkashadi." }
       ],
-      "explanation": "Yaxshi sarlavha: \"[Android 14] Savatdan oxirgi mahsulot o'chirilganda ilova yopilib qoladi\". Qadamlar minimal bo'lishi kerak — keraksiz qadamlarni olib tashlang. Dasturchi bug'ni o'qib, savol bermasdan takrorlay olsa — report yaxshi.",
+      "explanation": "Sarlavha — nima, qayerda, qachon; muhit — build, qurilma, OS, brauzer; dalillar — skrinshot, video, log, so'rov/javob; takrorlanish chastotasi ham. Yaxshi sarlavha: \"[Android 14] Savatdan oxirgi mahsulot o'chirilganda ilova yopilib qoladi\". Qadamlar minimal bo'lishi kerak — keraksiz qadamlarni olib tashlang. Dasturchi bug'ni o'qib, savol bermasdan takrorlay olsa — report yaxshi.",
       "reviewed": false
     },
     {
@@ -38,12 +38,12 @@
       "kind": "concept",
       "prompt": "Severity va priority qanday farqlanadi?",
       "options": [
-        { "id": "a", "text": "Severity — bug tizimga qanchalik jiddiy ta'sir qiladi (texnik og'irlik: crash, ma'lumot yo'qolishi, kosmetik); odatda QA belgilaydi. Priority — qanchalik tez tuzatilishi kerak (biznes muhimligi, muddat); odatda mahsulot egasi/menejer belgilaydi. Ular mustaqil: high severity + low priority yoki aksincha bo'lishi mumkin", "correct": true },
+        { "id": "a", "text": "Severity — texnik og'irlik (odatda QA); priority — tuzatish shoshilinchligi (odatda PO); ular mustaqil", "correct": true },
         { "id": "b", "text": "Ikkalasi bir xil — bitta maydon yetarli", "hint": "Kam ishlatiladigan sahifadagi crash va bosh sahifadagi logotip xatosini solishtiring." },
-        { "id": "c", "text": "Severity yuqori bo'lsa, priority ham doim yuqori", "hint": "Deyarli hech kim ishlatmaydigan eski hisobotdagi crash — high severity, lekin low priority bo'lishi mumkin." },
+        { "id": "c", "text": "Severity yuqori bo'lsa, priority ham doim yuqori bo'ladi — ular bitta shkalaning ikki nomi va har doim birga o'zgaradi", "hint": "Deyarli hech kim ishlatmaydigan eski hisobotdagi crash — high severity, lekin low priority bo'lishi mumkin." },
         { "id": "d", "text": "Priority'ni dasturchi o'zi xohlagancha belgilaydi", "hint": "Priority — biznes qarori; jamoa va mahsulot egasi kelishadi." }
       ],
-      "explanation": "Severity darajalari: blocker/critical, major, minor, trivial. Priority: P1 (darhol), P2 (shu reliz), P3 (keyinroq). Triage uchrashuvida ikkalasi birga ko'rib chiqiladi.",
+      "explanation": "Severity: crash, ma'lumot yo'qolishi, kosmetik; priority: biznes muhimligi va muddat. High severity + low priority yoki aksincha bo'lishi mumkin. Severity darajalari: blocker/critical, major, minor, trivial. Priority: P1 (darhol), P2 (shu reliz), P3 (keyinroq). Triage uchrashuvida ikkalasi birga ko'rib chiqiladi.",
       "reviewed": false
     },
     {
@@ -53,12 +53,12 @@
       "kind": "concept",
       "prompt": "Bug hayot siklining (lifecycle) odatiy ketma-ketligi qaysi?",
       "options": [
-        { "id": "a", "text": "New → (triage) Open/Assigned → In Progress → Fixed/Resolved → Retest (QA) → Closed; retest muvaffaqiyatsiz bo'lsa → Reopened. Muqobil holatlar: Rejected/Not a bug, Duplicate, Deferred (keyinroq), Cannot reproduce", "correct": true },
-        { "id": "b", "text": "New → Closed — dasturchi tuzatgach darhol yopadi", "hint": "Tuzatishni QA retest qilib tasdiqlamaguncha bug yopilmaydi." },
+        { "id": "a", "text": "New → Open/Assigned → In Progress → Fixed → Retest → Closed; retest yiqilsa — Reopened", "correct": true },
+        { "id": "b", "text": "New → Closed — dasturchi tuzatgach bug'ni o'zi darhol yopadi, QA qayta tekshirishi shart emas", "hint": "Tuzatishni QA retest qilib tasdiqlamaguncha bug yopilmaydi." },
         { "id": "c", "text": "Reopened holati yo'q — yangi bug ochiladi", "hint": "Xuddi o'sha muammo saqlansa, tarixni yo'qotmaslik uchun eski bug qayta ochiladi." },
         { "id": "d", "text": "Deferred — bug tuzatilgan degani", "hint": "Deferred — keyingi relizga qoldirilgan, tuzatilmagan." }
       ],
-      "explanation": "Aniq holatlar va kim o'tkazishi jamoada kelishilgan bo'lishi kerak (Jira workflow). \"Reopened\" soni — tuzatish sifati ko'rsatkichi. \"Cannot reproduce\" bilan yopishdan oldin qo'shimcha ma'lumot (log, muhit) so'raladi.",
+      "explanation": "Triage New'dan keyin bo'ladi. Muqobil holatlar: Rejected/Not a bug, Duplicate, Deferred (keyinroq), Cannot reproduce. Aniq holatlar va kim o'tkazishi jamoada kelishilgan bo'lishi kerak (Jira workflow). \"Reopened\" soni — tuzatish sifati ko'rsatkichi. \"Cannot reproduce\" bilan yopishdan oldin qo'shimcha ma'lumot (log, muhit) so'raladi.",
       "reviewed": false
     },
     {
@@ -68,12 +68,12 @@
       "kind": "concept",
       "prompt": "Test plan, test case va checklist qanday farqlanadi?",
       "options": [
-        { "id": "a", "text": "Test plan — testlash strategiyasi hujjati: qamrov (nima testlanadi va nima yo'q), yondashuv, muhitlar, resurslar, jadval, riskler, kirish/chiqish mezonlari. Test case — bitta tekshiruv uchun batafsil qadamlar va kutilgan natija. Checklist — tekshiriladigan narsalar ro'yxati, qadamlarsiz — tajribali tester uchun tez va moslashuvchan", "correct": true },
-        { "id": "b", "text": "Test plan — barcha test case'lar ro'yxati", "hint": "Test plan qanday, nima va qachon testlanishini belgilaydi; test case'lar alohida artefakt." },
+        { "id": "a", "text": "Test plan — strategiya hujjati; test case — bitta tekshiruv qadamlari; checklist — qadamsiz tekshiruvlar ro'yxati", "correct": true },
+        { "id": "b", "text": "Test plan — loyihadagi barcha test case'larning to'liq ro'yxati, ular bajariladigan tartib va har birining natijasi", "hint": "Test plan qanday, nima va qachon testlanishini belgilaydi; test case'lar alohida artefakt." },
         { "id": "c", "text": "Checklist test case'dan batafsilroq", "hint": "Aksincha — checklist qisqa bandlardan iborat." },
         { "id": "d", "text": "Agile jamoada hech qanday test hujjati kerak emas", "hint": "Hujjatlar yengillashadi (checklist, acceptance criteria), lekin yo'qolmaydi." }
       ],
-      "explanation": "Tanlov kontekstga bog'liq: tartibga solingan sohalar (bank, tibbiyot) batafsil test case talab qiladi; tez o'zgaruvchan startapda checklist va exploratory sessiyalar samaraliroq. Muhimi — hujjat foydalanilishi va yangilanib turishi.",
+      "explanation": "Test plan: qamrov (nima testlanadi va nima yo'q), yondashuv, muhitlar, resurslar, jadval, riskler, kirish/chiqish mezonlari. Checklist tajribali tester uchun tez va moslashuvchan. Tanlov kontekstga bog'liq: tartibga solingan sohalar (bank, tibbiyot) batafsil test case talab qiladi; tez o'zgaruvchan startapda checklist va exploratory sessiyalar samaraliroq. Muhimi — hujjat foydalanilishi va yangilanib turishi.",
       "reviewed": false
     },
     {
@@ -99,12 +99,12 @@
       "kind": "concept",
       "prompt": "Requirements Traceability Matrix (RTM) nima uchun kerak?",
       "options": [
-        { "id": "a", "text": "Talablarni ularni tekshiradigan test case'lar va topilgan bug'lar bilan bog'laydigan jadval: har talab testlar bilan qoplanganini ko'rsatadi (bo'shliqlarni topish), talab o'zgarganda qaysi testlarga ta'sir qilishini aniqlaydi, auditda qamrov dalili bo'ladi", "correct": true },
-        { "id": "b", "text": "Bug'larni dasturchilar o'rtasida taqsimlash jadvali", "hint": "RTM — talab ↔ test bog'lanishi, ish taqsimoti emas." },
+        { "id": "a", "text": "Talablarni test case va bug'lar bilan bog'laydi: qamrov bo'shliqlari, o'zgarish ta'siri va audit dalili", "correct": true },
+        { "id": "b", "text": "Bug'larni dasturchilar o'rtasida taqsimlash jadvali — kim qaysi xatoni qachongacha tuzatishi kerakligini ko'rsatadi", "hint": "RTM — talab ↔ test bog'lanishi, ish taqsimoti emas." },
         { "id": "c", "text": "Faqat test natijalari ro'yxati", "hint": "Natijalar kiritilishi mumkin, lekin asosiy maqsad — talablar qamrovini ko'rsatish." },
         { "id": "d", "text": "Faqat Waterfall loyihalarida mavjud bo'lishi mumkin", "hint": "Agile'da ham user story ↔ test bog'lanishi (masalan, Jira + TestRail/Xray) xuddi shu vazifani bajaradi." }
       ],
-      "explanation": "Forward traceability — talabdan testgacha (hammasi testlanganmi?); backward — testdan talabgacha (keraksiz testlar bormi?). Test boshqaruv vositalari bog'lanishlarni avtomatik saqlaydi.",
+      "explanation": "Har talab testlar bilan qoplanganini ko'rsatadi; talab o'zgarganda qaysi testlarga ta'sir qilishini aniqlaydi. Forward traceability — talabdan testgacha (hammasi testlanganmi?); backward — testdan talabgacha (keraksiz testlar bormi?). Test boshqaruv vositalari bog'lanishlarni avtomatik saqlaydi.",
       "reviewed": false
     },
     {
@@ -114,12 +114,12 @@
       "kind": "concept",
       "prompt": "Dasturchi bug'ni \"Cannot reproduce\" deb qaytardi, lekin siz uni testda ko'rgansiz. To'g'ri harakat qaysi?",
       "options": [
-        { "id": "a", "text": "Farqni topish: muhit (build, sozlamalar, feature flag), test ma'lumotlari, foydalanuvchi roli, ketma-ketlik va vaqtni solishtirish; bug'ni yana takrorlab video, log, so'rov ID va aniq vaqtni qo'shish; kerak bo'lsa dasturchi bilan birga takrorlash. Takrorlanish chastotasini (masalan, 2/10) yozish", "correct": true },
-        { "id": "b", "text": "Bug'ni darhol yopish — dasturchi takrorlay olmasa, bug yo'q", "hint": "Muhitga bog'liq yoki vaqti-vaqti bilan bo'ladigan bug'lar haqiqiy va ko'pincha eng xavflisi." },
+        { "id": "a", "text": "Farqni topish (muhit, ma'lumot, rol, ketma-ketlik), dalil qo'shish va kerak bo'lsa dasturchi bilan birga takrorlash", "correct": true },
+        { "id": "b", "text": "Bug'ni darhol yopish — dasturchi o'z muhitida takrorlay olmasa, demak bug yo'q yoki u allaqachon o'zi tuzalib ketgan", "hint": "Muhitga bog'liq yoki vaqti-vaqti bilan bo'ladigan bug'lar haqiqiy va ko'pincha eng xavflisi." },
         { "id": "c", "text": "Aynan shu matn bilan yangi bug ochish", "hint": "Dublikat yaratadi va yangi ma'lumot qo'shmaydi." },
         { "id": "d", "text": "Menejerga shikoyat qilish", "hint": "Avval faktlarni to'plang va hamkorlikda takrorlashga harakat qiling." }
       ],
-      "explanation": "Intermittent bug'lar ko'pincha race condition, kesh, vaqt zonasi, tarmoq kechikishi yoki ma'lum ma'lumot holatiga bog'liq. Kuzatuvchanlik (log'lar, trace ID) bunday holatlarda eng kuchli dalil.",
+      "explanation": "Muhit — build, sozlamalar, feature flag; dalillar — video, log, so'rov ID va aniq vaqt. Takrorlanish chastotasini (masalan, 2/10) yozish. Intermittent bug'lar ko'pincha race condition, kesh, vaqt zonasi, tarmoq kechikishi yoki ma'lum ma'lumot holatiga bog'liq. Kuzatuvchanlik (log'lar, trace ID) bunday holatlarda eng kuchli dalil.",
       "reviewed": false
     },
     {
@@ -144,12 +144,12 @@
       "kind": "concept",
       "prompt": "Acceptance criteria'ni Gherkin (Given/When/Then) formatida yozishning foydasi nima?",
       "options": [
-        { "id": "a", "text": "Biznes, dasturchi va QA uchun umumiy, aniq til: holat (Given), harakat (When) va tekshiriladigan natija (Then) — noaniqlikni kamaytiradi va chegaraviy holatlarni muhokamaga chiqaradi. Stsenariylar to'g'ridan-to'g'ri test sifatida ishlatilishi va BDD vositalari (Cucumber, SpecFlow) orqali avtomatlashtirilishi mumkin", "correct": true },
+        { "id": "a", "text": "Hamma uchun umumiy, aniq til: Given — holat, When — harakat, Then — natija; stsenariylar test bo'la oladi", "correct": true },
         { "id": "b", "text": "Gherkin — faqat dasturchilar uchun dasturlash tili", "hint": "Tabiiy tilga yaqin format — biznes vakillari ham o'qiydi va yozadi." },
         { "id": "c", "text": "Gherkin bilan yozilgan har stsenariy albatta avtomatlashtirilishi shart", "hint": "Aniq talab sifatida ham qimmatli; avtomatlashtirish ixtiyoriy." },
-        { "id": "d", "text": "Bitta stsenariyda o'nlab When/Then qadamlarini zanjirlash yaxshi amaliyot", "hint": "Uzun stsenariylar o'qilmaydi va mo'rt; bitta stsenariy — bitta xulq." }
+        { "id": "d", "text": "Bitta stsenariyda o'nlab When/Then qadamlarini zanjirlash yaxshi amaliyot — shunda butun oqim bitta joyda ko'rinadi", "hint": "Uzun stsenariylar o'qilmaydi va mo'rt; bitta stsenariy — bitta xulq." }
       ],
-      "explanation": "Misol: Given savatda 200 000 so'mlik mahsulot / When foydalanuvchi \"YANGI10\" promokodini kiritadi / Then jami 180 000 so'm ko'rsatiladi. Yaxshi stsenariy UI tafsilotlari (\"tugmani bosadi\") emas, biznes xulqini tasvirlaydi.",
+      "explanation": "Noaniqlikni kamaytiradi va chegaraviy holatlarni muhokamaga chiqaradi; BDD vositalari (Cucumber, SpecFlow) orqali avtomatlashtirilishi mumkin. Misol: Given savatda 200 000 so'mlik mahsulot / When foydalanuvchi \"YANGI10\" promokodini kiritadi / Then jami 180 000 so'm ko'rsatiladi. Yaxshi stsenariy UI tafsilotlari (\"tugmani bosadi\") emas, biznes xulqini tasvirlaydi.",
       "reviewed": false
     },
     {
@@ -175,12 +175,12 @@
       "kind": "concept",
       "prompt": "Reliz oldidan rahbariyatga sifat holati haqida hisobot tayyorlayapsiz. Qanday hisobot foydali?",
       "options": [
-        { "id": "a", "text": "Qisqa xulosa va tavsiya (reliz uchun tayyor / shartlar bilan / tayyor emas) birinchi o'rinda; asosiy biznes oqimlar va risklar bo'yicha holat; ochiq muhim bug'lar ta'siri va workaround'lar bilan; testlanmagan yoki qisman testlangan sohalar va sababi; trendlar (yangi topilayotgan bug'lar kamayyaptimi). Raqamlar kontekst bilan, qaror uchun kerakli ma'lumot", "correct": true },
-        { "id": "b", "text": "Bajarilgan test case'lar soni — 2 345 ta, shundan 2 300 tasi o'tdi", "hint": "Kontekstsiz raqam: muvaffaqiyatsiz 45 ta to'lov oqimidami yoki kosmetikami — rahbariyat bilolmaydi." },
+        { "id": "a", "text": "Avval xulosa va tavsiya (tayyor / shartli / tayyor emas), so'ng risklar, muhim bug'lar va testlanmagan sohalar", "correct": true },
+        { "id": "b", "text": "Bajarilgan test case'lar soni — 2 345 ta, shundan 2 300 tasi o'tdi; bu raqamlar rahbariyatga qaror uchun yetarli", "hint": "Kontekstsiz raqam: muvaffaqiyatsiz 45 ta to'lov oqimidami yoki kosmetikami — rahbariyat bilolmaydi." },
         { "id": "c", "text": "Barcha bug'larning to'liq ro'yxati, 30 sahifa", "hint": "Qaror qabul qiluvchiga xulosa va risklar kerak; tafsilotlar ilovada." },
         { "id": "d", "text": "Faqat \"Hammasi yaxshi\" — ortiqcha tafsilot chalg'itadi", "hint": "Ma'lum risklarni yashirish — reliz qaroriga ishonchsiz asos." }
       ],
-      "explanation": "QA'ning roli — \"darvozabon\" emas, risk haqida shaffof ma'lumot beruvchi. Test qamrovini talablar/risklar bo'yicha ko'rsatish (\"to'lov: 100%, hisobotlar: 60% — vaqt yetmadi\") test case sonlaridan ancha ko'p narsa aytadi.",
+      "explanation": "Asosiy biznes oqimlar holati, bug'lar ta'siri va workaround'lar, trendlar (yangi bug'lar kamayyaptimi). Raqamlar kontekst bilan, qaror uchun kerakli ma'lumot. QA'ning roli — \"darvozabon\" emas, risk haqida shaffof ma'lumot beruvchi. Test qamrovini talablar/risklar bo'yicha ko'rsatish (\"to'lov: 100%, hisobotlar: 60% — vaqt yetmadi\") test case sonlaridan ancha ko'p narsa aytadi.",
       "reviewed": false
     }
   ]

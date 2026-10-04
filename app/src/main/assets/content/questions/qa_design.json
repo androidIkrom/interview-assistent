@@ -8,12 +8,12 @@
       "kind": "concept",
       "prompt": "Ekvivalent bo'linish (equivalence partitioning) texnikasi nima?",
       "options": [
-        { "id": "a", "text": "Kirish qiymatlarini tizim bir xil ishlov beradigan guruhlarga (sinflarga) bo'lish va har sinfdan bitta vakil qiymat bilan testlash: agar bitta qiymat ishlasa, shu sinfdagi boshqalari ham shunday ishlaydi deb faraz qilinadi. Yaroqli va yaroqsiz sinflar alohida aniqlanadi", "correct": true },
-        { "id": "b", "text": "Har bir mumkin bo'lgan qiymatni alohida testlash", "hint": "Bu exhaustive testing — amalda imkonsiz; texnika aynan testlar sonini kamaytiradi." },
+        { "id": "a", "text": "Kirishlarni bir xil ishlov beriladigan sinflarga bo'lish va har sinfdan bitta vakil qiymat bilan testlash", "correct": true },
+        { "id": "b", "text": "Har bir mumkin bo'lgan qiymatni alohida testlash — shunda birorta ham xato e'tibordan chetda qolmasligi kafolatlanadi", "hint": "Bu exhaustive testing — amalda imkonsiz; texnika aynan testlar sonini kamaytiradi." },
         { "id": "c", "text": "Testlarni testerlar o'rtasida teng taqsimlash", "hint": "Gap qiymatlarni guruhlash haqida, ish taqsimoti emas." },
         { "id": "d", "text": "Faqat yaroqli qiymatlarni testlash", "hint": "Yaroqsiz sinflar (manfiy son, bo'sh qiymat, harf) ham alohida testlanadi." }
       ],
-      "explanation": "Misol: yosh maydoni 18–60 — sinflar: <18 (yaroqsiz), 18–60 (yaroqli), >60 (yaroqsiz), son emas (yaroqsiz). 4 ta test minglab qiymat o'rnini bosadi. Odatda chegaraviy qiymatlar tahlili bilan birga ishlatiladi.",
+      "explanation": "Faraz: bitta qiymat ishlasa, shu sinfdagi boshqalari ham shunday ishlaydi. Yaroqli va yaroqsiz sinflar alohida aniqlanadi. Misol: yosh maydoni 18–60 — sinflar: <18 (yaroqsiz), 18–60 (yaroqli), >60 (yaroqsiz), son emas (yaroqsiz). 4 ta test minglab qiymat o'rnini bosadi. Odatda chegaraviy qiymatlar tahlili bilan birga ishlatiladi.",
       "reviewed": false
     },
     {
@@ -39,12 +39,12 @@
       "kind": "concept",
       "prompt": "Pozitiv va negativ testlar qanday farqlanadi?",
       "options": [
-        { "id": "a", "text": "Pozitiv test — tizim to'g'ri, kutilgan kirish bilan to'g'ri ishlashini tekshiradi (to'g'ri login va parol). Negativ test — noto'g'ri, kutilmagan yoki chegaradan tashqari kirishda tizim o'zini to'g'ri tutishini: tushunarli xato xabari, ma'lumot buzilmasligi, crash yo'qligi (noto'g'ri parol, bo'sh maydon, juda uzun matn)", "correct": true },
+        { "id": "a", "text": "Pozitiv — to'g'ri kirishda to'g'ri ishlash; negativ — noto'g'ri kirishda tushunarli xato, crash va buzilishsiz", "correct": true },
         { "id": "b", "text": "Pozitiv test — o'tgan test, negativ — yiqilgan test", "hint": "Gap natija haqida emas, kirish turi haqida: negativ test ham muvaffaqiyatli o'tishi mumkin." },
-        { "id": "c", "text": "Negativ testlar kerak emas — foydalanuvchilar to'g'ri ma'lumot kiritadi", "hint": "Real foydalanuvchilar xato qiladi, hujumchilar esa ataylab noto'g'ri kirish yuboradi." },
+        { "id": "c", "text": "Negativ testlar kerak emas — foydalanuvchilar odatda to'g'ri ma'lumot kiritadi, xato kiritishni esa frontend o'zi to'xtatadi", "hint": "Real foydalanuvchilar xato qiladi, hujumchilar esa ataylab noto'g'ri kirish yuboradi." },
         { "id": "d", "text": "Negativ test — tizimni buzish uchun yuklama testi", "hint": "Yuklama — performance testlash; negativ — noto'g'ri kirishga javobni tekshirish." }
       ],
-      "explanation": "Negativ holatlar ro'yxati: bo'sh qiymat, faqat probel, maksimal uzunlikdan oshish, maxsus belgilar va emoji, noto'g'ri format, SQL/HTML in'ektsiya satrlari, ikki marta bosish. Ko'p jiddiy bug'lar aynan negativ yo'llarda.",
+      "explanation": "Pozitiv misol: to'g'ri login va parol. Negativ misol: noto'g'ri parol, bo'sh maydon, juda uzun matn — ma'lumot buzilmasligi kerak. Negativ holatlar ro'yxati: bo'sh qiymat, faqat probel, maksimal uzunlikdan oshish, maxsus belgilar va emoji, noto'g'ri format, SQL/HTML in'ektsiya satrlari, ikki marta bosish. Ko'p jiddiy bug'lar aynan negativ yo'llarda.",
       "reviewed": false
     },
     {
@@ -54,12 +54,12 @@
       "kind": "concept",
       "prompt": "Error guessing (xatoni taxmin qilish) texnikasi nimaga asoslanadi?",
       "options": [
-        { "id": "a", "text": "Tester tajribasi va bilimiga: o'xshash tizimlarda qayerda xato ko'p bo'lgani, tipik dasturchi xatolari (nol, bo'sh ro'yxat, null, vaqt zonasi, ikki marta yuborish, maxsus belgilar) asosida taxminiy xavfli holatlarni testlash. Formal texnikalarni to'ldiradi", "correct": true },
+        { "id": "a", "text": "Tester tajribasiga: tipik xatolar (nol, null, bo'sh ro'yxat, vaqt zonasi, ikki marta yuborish) bo'yicha taxmin", "correct": true },
         { "id": "b", "text": "Tasodifiy qiymatlarni generatsiya qilishga", "hint": "Tasodif emas — tajriba asosida maqsadli tanlov." },
         { "id": "c", "text": "Faqat talablar hujjatiga", "hint": "Talablarda yozilmagan, lekin tez-tez uchraydigan xato manbalari — texnikaning kuchi." },
-        { "id": "d", "text": "U formal texnikalarni to'liq almashtiradi", "hint": "Tester tajribasiga bog'liq va tizimli qamrovni kafolatlamaydi — shuning uchun to'ldiruvchi." }
+        { "id": "d", "text": "U formal texnikalarni to'liq almashtiradi, chunki tajribali tester barcha xavfli holatlarni oldindan bilib, aniq topa oladi", "hint": "Tester tajribasiga bog'liq va tizimli qamrovni kafolatlamaydi — shuning uchun to'ldiruvchi." }
       ],
-      "explanation": "Error guessing'ni tizimli qilish: jamoa \"xato katalogi\" (production bug'lari, retrospektivalar) yuritish. Misol: savatga mahsulot qo'shib, boshqa tab'da uni o'chirib, birinchi tab'da to'lov qilish.",
+      "explanation": "O'xshash tizimlarda xato ko'p bo'lgan joylar va maxsus belgilar ham hisobga olinadi. Formal texnikalarni to'ldiradi. Error guessing'ni tizimli qilish: jamoa \"xato katalogi\" (production bug'lari, retrospektivalar) yuritish. Misol: savatga mahsulot qo'shib, boshqa tab'da uni o'chirib, birinchi tab'da to'lov qilish.",
       "reviewed": false
     },
     {
@@ -84,12 +84,12 @@
       "kind": "concept",
       "prompt": "Buyurtma holatlari: Yaratildi → To'landi → Yuborildi → Yetkazildi; Yaratildi va To'landi holatidan Bekor qilindi'ga o'tish mumkin. State transition texnikasi bo'yicha qaysi test ayniqsa muhim (va ko'pincha unutiladi)?",
       "options": [
-        { "id": "a", "text": "Ruxsat etilmagan o'tishlarni tekshirish: masalan, \"Yuborildi\" holatidagi buyurtmani bekor qilishga yoki \"Yetkazildi\"dan \"To'landi\"ga qaytarishga urinish — tizim rad etishi va holat o'zgarmasligi kerak (API orqali ham)", "correct": true },
-        { "id": "b", "text": "Faqat to'liq muvaffaqiyatli yo'l: Yaratildi → … → Yetkazildi", "hint": "Asosiy yo'l kerak, lekin texnikaning kuchi — barcha o'tishlar va ayniqsa noto'g'rilarini qamrash." },
+        { "id": "a", "text": "Ruxsat etilmagan o'tishlarni tekshirish: \"Yuborildi\"ni bekor qilish yoki orqaga qaytarish rad etilishi kerak", "correct": true },
+        { "id": "b", "text": "Faqat to'liq muvaffaqiyatli yo'l: Yaratildi → … → Yetkazildi — qolgan o'tishlarni tizim interfeysi o'zi to'sib qo'yadi", "hint": "Asosiy yo'l kerak, lekin texnikaning kuchi — barcha o'tishlar va ayniqsa noto'g'rilarini qamrash." },
         { "id": "c", "text": "Har holatda sahifa dizaynini tekshirish", "hint": "Bu UI testi; state transition holatlar o'rtasidagi o'tishlar mantiqiga qaratilgan." },
         { "id": "d", "text": "Faqat \"Bekor qilindi\" holatini bitta test bilan", "hint": "Bekor qilishga ikki joydan ruxsat bor va boshqa joylardan yo'q — har biri alohida tekshiriladi." }
       ],
-      "explanation": "Holatlar jadvali (holat × hodisa) barcha juftliklarni ko'rsatadi: bo'sh kataklar — noto'g'ri o'tishlar, ularni testlash kerak. Ko'p bug'lar UI'da tugma yashirilgan, lekin API to'g'ridan-to'g'ri chaqirilganda o'tish ruxsat etilgan holatda topiladi.",
+      "explanation": "Masalan, \"Yetkazildi\"dan \"To'landi\"ga qaytarishga urinish; holat o'zgarmasligi kerak, API orqali ham. Holatlar jadvali (holat × hodisa) barcha juftliklarni ko'rsatadi: bo'sh kataklar — noto'g'ri o'tishlar, ularni testlash kerak. Ko'p bug'lar UI'da tugma yashirilgan, lekin API to'g'ridan-to'g'ri chaqirilganda o'tish ruxsat etilgan holatda topiladi.",
       "reviewed": false
     },
     {
@@ -99,12 +99,12 @@
       "kind": "concept",
       "prompt": "Pairwise (all-pairs) testlash qachon foydali?",
       "options": [
-        { "id": "a", "text": "Ko'p parametrli konfiguratsiyalarda (brauzer × OS × til × to'lov turi): barcha kombinatsiyalar juda ko'p bo'lsa, har parametr qiymatlari juftligi kamida bir marta uchraydigan kichik to'plam tanlanadi. Asos — ko'p xatolar bitta parametr yoki ikki parametr o'zaro ta'siridan kelib chiqadi", "correct": true },
+        { "id": "a", "text": "Ko'p parametrli konfiguratsiyalarda: har qiymatlar juftligi kamida bir marta uchraydigan kichik to'plam", "correct": true },
         { "id": "b", "text": "Ikki tester bir xil testni birga bajarganda", "hint": "Bu pair testing; pairwise — kombinatorik test dizayn texnikasi." },
         { "id": "c", "text": "Faqat ikkita parametr bo'lganda", "hint": "Ikki parametrda pairwise = to'liq kombinatsiya; foydasi ko'p parametrda." },
-        { "id": "d", "text": "Uch va undan ko'p parametr o'zaro ta'siridagi xatolarni kafolatlab topadi", "hint": "Faqat juftliklar kafolatlanadi; yuqori darajadagi o'zaro ta'sir uchun n-wise yoki risk asosida qo'shimcha testlar." }
+        { "id": "d", "text": "Uch va undan ko'p parametr o'zaro ta'siridagi xatolarni ham kafolatlab topadi, shuning uchun to'liq kombinatsiyalar kerak emas", "hint": "Faqat juftliklar kafolatlanadi; yuqori darajadagi o'zaro ta'sir uchun n-wise yoki risk asosida qo'shimcha testlar." }
       ],
-      "explanation": "Misol: 4 parametr × 3 qiymat = 81 kombinatsiya; pairwise bilan ~9–10 test. Vositalar: PICT, AllPairs. Ma'lum xavfli kombinatsiyalarni (masalan, Safari + Apple Pay) qo'lda qo'shish kerak.",
+      "explanation": "Masalan, brauzer × OS × til × to'lov turi. Asos — ko'p xatolar bitta parametr yoki ikki parametr o'zaro ta'siridan kelib chiqadi. Misol: 4 parametr × 3 qiymat = 81 kombinatsiya; pairwise bilan ~9–10 test. Vositalar: PICT, AllPairs. Ma'lum xavfli kombinatsiyalarni (masalan, Safari + Apple Pay) qo'lda qo'shish kerak.",
       "reviewed": false
     },
     {
@@ -145,12 +145,12 @@
       "kind": "concept",
       "prompt": "Talab: \"3 marta noto'g'ri parol kiritilsa, hisob 15 daqiqaga bloklanadi.\" Qaysi test to'plami eng to'liq?",
       "options": [
-        { "id": "a", "text": "State transition + BVA: 2 noto'g'ri urinish → hali kirish mumkin; 3-urinish → blok; blok paytida to'g'ri parol ham rad etiladi; 14:59 va 15:00 dan keyingi holat; muvaffaqiyatli kirish hisoblagichni nolga tushiradimi; boshqa qurilma/IP'dan urinishlar umumiy hisoblanadimi; xabar matni hisob mavjudligini oshkor qilmasligi", "correct": true },
-        { "id": "b", "text": "3 marta noto'g'ri parol kiritib, blok xabarini ko'rish — yetarli", "hint": "Bu bitta o'tish; oldingi holatlar, blokdan chiqish va hisoblagichni tiklash tekshirilmagan." },
+        { "id": "a", "text": "State transition + BVA: 2 va 3 urinish, blokda to'g'ri parol, 14:59/15:00 chegarasi, hisoblagich nolga tushishi", "correct": true },
+        { "id": "b", "text": "3 marta noto'g'ri parol kiritib, blok xabarini ko'rish — yetarli, chunki talabda faqat shu bitta holat aniq tasvirlangan", "hint": "Bu bitta o'tish; oldingi holatlar, blokdan chiqish va hisoblagichni tiklash tekshirilmagan." },
         { "id": "c", "text": "100 marta noto'g'ri parol kiritish", "hint": "Chegara 3 — qiziqarli nuqtalar 2, 3 va blok muddati chegaralari." },
         { "id": "d", "text": "Faqat to'g'ri parol bilan kirishni tekshirish", "hint": "Talab aynan noto'g'ri urinishlar xulqi haqida." }
       ],
-      "explanation": "Vaqtga bog'liq testlarda 15 daqiqa kutish o'rniga test muhitida soatni boshqarish yoki konfiguratsiya qilinadigan muddat so'rash. Xavfsizlik nuqtai nazaridan: blok — brute-force'ga qarshi, lekin hujumchi boshqa foydalanuvchilarni ataylab bloklashi mumkin (DoS) — buni ham muhokama qiling.",
+      "explanation": "Yana: boshqa qurilma/IP'dan urinishlar umumiy hisoblanadimi; xabar matni hisob mavjudligini oshkor qilmasligi. Vaqtga bog'liq testlarda 15 daqiqa kutish o'rniga test muhitida soatni boshqarish yoki konfiguratsiya qilinadigan muddat so'rash. Xavfsizlik nuqtai nazaridan: blok — brute-force'ga qarshi, lekin hujumchi boshqa foydalanuvchilarni ataylab bloklashi mumkin (DoS) — buni ham muhokama qiling.",
       "reviewed": false
     },
     {
@@ -176,12 +176,12 @@
       "kind": "concept",
       "prompt": "Jamoa \"kod qamrovi (code coverage) 90% — demak sifat yaxshi\" deb hisoblaydi. Senior QA sifatida qanday javob berasiz?",
       "options": [
-        { "id": "a", "text": "Coverage faqat qaysi kod qatorlari testlar paytida bajarilganini ko'rsatadi — natija tekshirilganini, talablar va chegaraviy holatlar qamralganini emas. Assert'siz test ham coverage beradi; yozilmagan funksionallik (yetishmayotgan validatsiya) umuman ko'rinmaydi. Coverage — bo'shliqlarni topish vositasi, maqsad emas; uni talab/risk qamrovi va mutation testing bilan to'ldirish kerak", "correct": true },
+        { "id": "a", "text": "Coverage faqat bajarilgan qatorlarni ko'rsatadi, natija tekshirilganini emas — u bo'shliq topish vositasi, maqsad emas", "correct": true },
         { "id": "b", "text": "Rozi bo'lish — 90% coverage sifat kafolati", "hint": "Testlar kodni bajarishi va uni tekshirishi turli narsalar." },
         { "id": "c", "text": "Coverage foydasiz — uni o'lchashni to'xtatish kerak", "hint": "Testlanmagan kodni topish uchun foydali signal; muammo — uni yagona maqsad qilishda." },
-        { "id": "d", "text": "100% coverage'ga erishilsa, manual testlash kerak bo'lmaydi", "hint": "Usability, integratsiya, real muhit va talablardagi xatolar coverage bilan o'lchanmaydi." }
+        { "id": "d", "text": "100% coverage'ga erishilsa, manual testlash kerak bo'lmaydi — barcha kod qatorlari tekshirilgan bo'ladi va xato qolmaydi", "hint": "Usability, integratsiya, real muhit va talablardagi xatolar coverage bilan o'lchanmaydi." }
       ],
-      "explanation": "Mutation testing (Stryker, PIT) kodga kichik o'zgarishlar kiritadi va testlar ularni ushlaydimi tekshiradi — test sifatining yaxshiroq o'lchovi. Metrika maqsadga aylansa, uni aldash boshlanadi (Goodhart qonuni).",
+      "explanation": "Assert'siz test ham coverage beradi; yozilmagan funksionallik (yetishmayotgan validatsiya) umuman ko'rinmaydi. Uni talab/risk qamrovi va mutation testing bilan to'ldirish kerak. Mutation testing (Stryker, PIT) kodga kichik o'zgarishlar kiritadi va testlar ularni ushlaydimi tekshiradi — test sifatining yaxshiroq o'lchovi. Metrika maqsadga aylansa, uni aldash boshlanadi (Goodhart qonuni).",
       "reviewed": false
     },
     {

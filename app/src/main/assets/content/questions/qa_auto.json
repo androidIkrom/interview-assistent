@@ -8,12 +8,12 @@
       "kind": "concept",
       "prompt": "Qaysi testlar avtomatlashtirish uchun eng yaxshi nomzod?",
       "options": [
-        { "id": "a", "text": "Tez-tez takrorlanadigan va barqaror funksiyalarni tekshiradigan testlar: regression, smoke, ko'p ma'lumot kombinatsiyali testlar, API testlari, kritik biznes oqimlari. Bir martalik, tez o'zgaruvchi UI, usability va exploratory tekshiruvlar odatda manual qoladi", "correct": true },
+        { "id": "a", "text": "Tez-tez takrorlanadigan, barqaror testlar: regression, smoke, API, ko'p ma'lumotli va kritik oqimlar", "correct": true },
         { "id": "b", "text": "Barcha testlar — manual testlash kerak emas", "hint": "Usability, vizual taassurot va exploratory testlash inson fikrlashini talab qiladi; ba'zi testlarni avtomatlashtirish qimmatga tushadi." },
         { "id": "c", "text": "Faqat bir marta bajariladigan testlar", "hint": "Avtomatlashtirish xarajati takroriy bajarishda o'zini oqlaydi." },
-        { "id": "d", "text": "Dizayni har sprintda o'zgaradigan yangi ekranlar", "hint": "Tez o'zgaruvchi UI'da avtotestlarni doimiy qayta yozishga to'g'ri keladi — avval barqarorlashsin." }
+        { "id": "d", "text": "Dizayni har sprintda o'zgaradigan yangi ekranlar — ularni avtomatlashtirsa, har o'zgarishni tekshirish ancha tezlashadi", "hint": "Tez o'zgaruvchi UI'da avtotestlarni doimiy qayta yozishga to'g'ri keladi — avval barqarorlashsin." }
       ],
-      "explanation": "Savol: \"Bu testni necha marta bajaramiz va avtomatik variantni qo'llab-quvvatlash qancha turadi?\" Avtomatlashtirish manual testerni almashtirmaydi — uni takroriy ishdan ozod qilib, murakkab tekshiruvlarga vaqt beradi.",
+      "explanation": "Bir martalik, tez o'zgaruvchi UI, usability va exploratory tekshiruvlar odatda manual qoladi. Savol: \"Bu testni necha marta bajaramiz va avtomatik variantni qo'llab-quvvatlash qancha turadi?\" Avtomatlashtirish manual testerni almashtirmaydi — uni takroriy ishdan ozod qilib, murakkab tekshiruvlarga vaqt beradi.",
       "reviewed": false
     },
     {
@@ -23,12 +23,12 @@
       "kind": "concept",
       "prompt": "Selenium WebDriver va Playwright qanday farqlanadi?",
       "options": [
-        { "id": "a", "text": "Selenium — eski va keng tarqalgan standart (W3C WebDriver protokoli), ko'p til va brauzer, Grid bilan masshtablash; kutishlarni ko'proq qo'lda boshqarish kerak. Playwright — zamonaviy framework: avtomatik kutish (auto-wait), tarmoqni ushlash (mock), trace viewer, parallel ishga tushirish va Chromium/Firefox/WebKit tayyor holda", "correct": true },
+        { "id": "a", "text": "Selenium — eski W3C WebDriver standarti, ko'p til va Grid; Playwright — auto-wait, tarmoq mock, trace viewer", "correct": true },
         { "id": "b", "text": "Playwright faqat mobil ilovalar uchun", "hint": "Playwright — veb brauzerlar uchun; mobil native ilovalar uchun Appium, Espresso, XCUITest." },
-        { "id": "c", "text": "Selenium faqat Java bilan ishlaydi", "hint": "Java, Python, C#, JavaScript va boshqa tillar uchun binding'lar bor." },
+        { "id": "c", "text": "Selenium faqat Java bilan ishlaydi, Playwright esa faqat JavaScript bilan — shuning uchun tanlov faqat dasturlash tiliga bog'liq", "hint": "Java, Python, C#, JavaScript va boshqa tillar uchun binding'lar bor." },
         { "id": "d", "text": "Ikkalasi ham faqat API testlash vositasi", "hint": "Ikkalasi asosan brauzer UI avtomatlashtirish uchun (Playwright'da API so'rovlari ham bor)." }
       ],
-      "explanation": "Tanlov mezonlari: jamoa tili, mavjud infratuzilma, kerakli brauzerlar, CI tezligi. Cypress — yana bir mashhur variant (JS, brauzer ichida ishlaydi). Muhimi — vositadan ko'ra test dizayni va arxitekturasi.",
+      "explanation": "Selenium'da kutishlarni ko'proq qo'lda boshqarish kerak; Playwright parallel ishga tushirish va Chromium/Firefox/WebKit'ni tayyor holda beradi. Tanlov mezonlari: jamoa tili, mavjud infratuzilma, kerakli brauzerlar, CI tezligi. Cypress — yana bir mashhur variant (JS, brauzer ichida ishlaydi). Muhimi — vositadan ko'ra test dizayni va arxitekturasi.",
       "reviewed": false
     },
     {
@@ -38,12 +38,12 @@
       "kind": "concept",
       "prompt": "UI avtotestlarda qaysi locator strategiyasi eng barqaror?",
       "options": [
-        { "id": "a", "text": "Test uchun maxsus atributlar (`data-testid=\"login-submit\"`) yoki foydalanuvchiga ko'rinadigan rol va nom (`getByRole('button', { name: 'Kirish' })`) — dizayn va DOM tuzilmasi o'zgarganda ham ishlaydi", "correct": true },
-        { "id": "b", "text": "To'liq absolyut XPath: `/html/body/div[2]/div/form/div[3]/button`", "hint": "Har qanday tartib o'zgarishida buziladi — eng mo'rt variant." },
+        { "id": "a", "text": "Maxsus test atributlari (`data-testid`) yoki ko'rinadigan rol va nom (`getByRole('button', { name: 'Kirish' })`)", "correct": true },
+        { "id": "b", "text": "To'liq absolyut XPath: `/html/body/div[2]/div/form/div[3]/button` — u elementni sahifada aniq va yagona tarzda ko'rsatadi", "hint": "Har qanday tartib o'zgarishida buziladi — eng mo'rt variant." },
         { "id": "c", "text": "Avtomatik generatsiya qilingan CSS klasslar (`.css-1x2y3z`)", "hint": "Build'dan build'ga o'zgaradi — testlar tasodifan buziladi." },
         { "id": "d", "text": "Element koordinatalari bo'yicha bosish", "hint": "Ekran o'lchami, shrift yoki layout o'zgarsa, noto'g'ri joy bosiladi." }
       ],
-      "explanation": "Dasturchilar bilan kelishuv: `data-testid` atributlarini qo'shish arzon va testlarni ancha barqaror qiladi. Rol bo'yicha locator'lar qo'shimcha foyda beradi — accessibility muammolarini ham ko'rsatadi.",
+      "explanation": "Bunday locator'lar dizayn va DOM tuzilmasi o'zgarganda ham ishlaydi; masalan, `data-testid=\"login-submit\"`. Dasturchilar bilan kelishuv: `data-testid` atributlarini qo'shish arzon va testlarni ancha barqaror qiladi. Rol bo'yicha locator'lar qo'shimcha foyda beradi — accessibility muammolarini ham ko'rsatadi.",
       "reviewed": false
     },
     {
@@ -53,12 +53,12 @@
       "kind": "concept",
       "prompt": "Page Object Model (POM) nima va qanday muammoni hal qiladi?",
       "options": [
-        { "id": "a", "text": "Har sahifa yoki komponent uchun klass: locator'lar va foydalanuvchi harakatlari (`login(email, password)`) shu klassda, testlar esa faqat bu metodlarni chaqirib, natijani tekshiradi. UI o'zgarsa bitta joy tuzatiladi; testlar biznes tilida o'qiladi va takrorlanish kamayadi", "correct": true },
+        { "id": "a", "text": "Har sahifa uchun klass: locator'lar va harakatlar (`login(email, password)`) shu yerda, testlar faqat ularni chaqiradi", "correct": true },
         { "id": "b", "text": "Har testda locator'larni to'g'ridan-to'g'ri yozish uslubi", "hint": "Aynan buning oldini oladi — locator'lar bir joyga yig'iladi." },
-        { "id": "c", "text": "Page Object ichida assert'lar va test logikasi bo'lishi kerak", "hint": "Odatda page object — harakatlar va holatni olish; tekshiruvlar testda (mas'uliyatlar ajratilgan)." },
+        { "id": "c", "text": "Page Object ichida assert'lar va test logikasi ham bo'lishi kerak — shunda testlarning o'zi deyarli bo'sh va qisqa qoladi", "hint": "Odatda page object — harakatlar va holatni olish; tekshiruvlar testda (mas'uliyatlar ajratilgan)." },
         { "id": "d", "text": "POM faqat Selenium bilan ishlaydi", "hint": "Pattern — vositadan mustaqil: Playwright, Cypress, Appium bilan ham." }
       ],
-      "explanation": "Kattaroq loyihalarda: komponent obyektlar (header, modal), fluent metodlar (`loginPage.login(u).openProfile()`), Screenplay pattern. Page object'ni juda katta qilmang — sahifa bo'limlariga bo'ling.",
+      "explanation": "UI o'zgarsa bitta joy tuzatiladi; testlar biznes tilida o'qiladi va takrorlanish kamayadi. Kattaroq loyihalarda: komponent obyektlar (header, modal), fluent metodlar (`loginPage.login(u).openProfile()`), Screenplay pattern. Page object'ni juda katta qilmang — sahifa bo'limlariga bo'ling.",
       "reviewed": false
     },
     {
@@ -84,12 +84,12 @@
       "kind": "concept",
       "prompt": "Avtotestlar nega bir-biridan mustaqil (izolyatsiyalangan) bo'lishi kerak?",
       "options": [
-        { "id": "a", "text": "Har test o'z precondition'ini o'zi tayyorlasa (ma'lumot, login holati) — istalgan tartibda va parallel ishlaydi, bitta test yiqilsa boshqalari zanjir bo'lib yiqilmaydi, xato sababi aniq ko'rinadi va testni alohida qayta ishga tushirish mumkin", "correct": true },
+        { "id": "a", "text": "Har test precondition'ini o'zi tayyorlaydi: istalgan tartibda va parallel ishlaydi, yiqilish zanjir bo'lmaydi", "correct": true },
         { "id": "b", "text": "Mustaqillik muhim emas — oldingi test yaratgan ma'lumotdan foydalanish tezroq", "hint": "Bog'liq testlar parallel ishlamaydi va bitta xato o'nlab \"soxta\" yiqilishga olib keladi." },
         { "id": "c", "text": "Mustaqillik uchun har testda UI orqali ro'yxatdan o'tish shart", "hint": "Tayyorgarlikni tezroq yo'l bilan — API yoki DB orqali qilish mumkin; UI faqat testlanayotgan qism uchun." },
-        { "id": "d", "text": "Testlar har doim alifbo tartibida ishga tushadi, shuning uchun bog'liqlik xavfsiz", "hint": "Tartib framework va parallellik sozlamalariga bog'liq — unga tayanish mo'rt." }
+        { "id": "d", "text": "Testlar har doim alifbo tartibida ishga tushadi, shuning uchun ular o'rtasidagi bog'liqlik xavfsiz va hech qachon muammo bermaydi", "hint": "Tartib framework va parallellik sozlamalariga bog'liq — unga tayanish mo'rt." }
       ],
-      "explanation": "Tezlashtirish: login holatini bir marta saqlab qayta ishlatish (Playwright `storageState`), ma'lumotni API orqali yaratish. Har test oxirida tozalash yoki izolyatsiyalangan ma'lumot (noyob nomlar) — keyingi testlarga ta'sir qilmaslik uchun.",
+      "explanation": "Xato sababi aniq ko'rinadi va testni alohida qayta ishga tushirish mumkin; precondition — ma'lumot, login holati. Tezlashtirish: login holatini bir marta saqlab qayta ishlatish (Playwright `storageState`), ma'lumotni API orqali yaratish. Har test oxirida tozalash yoki izolyatsiyalangan ma'lumot (noyob nomlar) — keyingi testlarga ta'sir qilmaslik uchun.",
       "reviewed": false
     },
     {
@@ -115,12 +115,12 @@
       "kind": "concept",
       "prompt": "800 ta UI avtotest CI'da 90 daqiqa ishlaydi va dasturchilar natijani kutmay merge qilmoqda. Qanday yaxshilanadi?",
       "options": [
-        { "id": "a", "text": "Bosqichlash: har PR'da tez to'plam (unit + API + kritik UI smoke, 10 daqiqagacha), to'liq regression — kechasi yoki merge'dan keyin; parallel ishga tushirish va sharding; tekshiruvlarni pastki darajaga (API, komponent) ko'chirish; UI orqali emas, API orqali precondition tayyorlash; natijalar va artefaktlar (trace, video) CI hisobotida", "correct": true },
+        { "id": "a", "text": "Bosqichlash: har PR'da tez to'plam (unit, API, UI smoke), to'liq regression kechasi; parallel va sharding", "correct": true },
         { "id": "b", "text": "Barcha UI testlarni o'chirish", "hint": "Kritik foydalanuvchi oqimlari uchun bir nechta E2E test kerak bo'lib qoladi." },
         { "id": "c", "text": "Testlarni faqat reliz oldidan, oyiga bir marta ishga tushirish", "hint": "Xatolar kech topiladi va qaysi o'zgarish sabab bo'lganini aniqlash qiyinlashadi." },
-        { "id": "d", "text": "CI'da testlarni ketma-ket, bitta mashinada ishga tushirish barqarorroq", "hint": "Barqarorlik izolyatsiyadan keladi; ketma-ketlik faqat vaqtni oshiradi." }
+        { "id": "d", "text": "CI'da testlarni ketma-ket, bitta mashinada ishga tushirish barqarorroq — 90 daqiqa esa katta loyiha uchun normal vaqt", "hint": "Barqarorlik izolyatsiyadan keladi; ketma-ketlik faqat vaqtni oshiradi." }
       ],
-      "explanation": "Maqsad — tez fikr-mulohaza: PR'dagi tekshiruv 10–15 daqiqadan oshsa, jamoa uni chetlab o'tishni boshlaydi. Testlarga teglar (`@smoke`, `@regression`) va o'zgargan kodga ta'sir qiladigan testlarni tanlash (test impact analysis) ham yordam beradi.",
+      "explanation": "Tez to'plam — 10 daqiqagacha. Tekshiruvlarni pastki darajaga (API, komponent) ko'chirish, precondition'ni API orqali tayyorlash; trace va video CI hisobotida. Maqsad — tez fikr-mulohaza: PR'dagi tekshiruv 10–15 daqiqadan oshsa, jamoa uni chetlab o'tishni boshlaydi. Testlarga teglar (`@smoke`, `@regression`) va o'zgargan kodga ta'sir qiladigan testlarni tanlash (test impact analysis) ham yordam beradi.",
       "reviewed": false
     },
     {
@@ -130,12 +130,12 @@
       "kind": "concept",
       "prompt": "Rahbariyat \"avtomatlashtirish bizga nima beradi va qancha turadi?\" deb so'radi. ROI'ni qanday asoslaysiz?",
       "options": [
-        { "id": "a", "text": "Xarajat: yozish + qo'llab-quvvatlash (UI o'zgarishlari, flaky testlar) + infratuzilma; foyda: manual regression soatlari tejalishi × relizlar chastotasi, tezroq fikr-mulohaza (reliz sikli qisqarishi), production'ga o'tgan bug'lar kamayishi. Hozirgi holatni o'lchab, eng ko'p takrorlanadigan va riskli oqimlardan boshlash, natijani metrikalar bilan ko'rsatish", "correct": true },
-        { "id": "b", "text": "Test case'larning 100% ini avtomatlashtirish maqsadi — shunda manual tester kerak bo'lmaydi", "hint": "100% avtomatlashtirish odatda iqtisodiy jihatdan foydasiz va qo'llab-quvvatlash xarajati portlaydi." },
+        { "id": "a", "text": "Xarajat (yozish, qo'llab-quvvatlash, infratuzilma) va foydani (tejalgan soatlar, kam bug) o'lchab solishtirish", "correct": true },
+        { "id": "b", "text": "Test case'larning 100% ini avtomatlashtirish maqsadi — shunda manual tester kerak bo'lmaydi va xarajat ham keskin kamayadi", "hint": "100% avtomatlashtirish odatda iqtisodiy jihatdan foydasiz va qo'llab-quvvatlash xarajati portlaydi." },
         { "id": "c", "text": "ROI'ni faqat yozilgan avtotestlar soni bilan o'lchash", "hint": "Testlar soni qiymat emas; tejalgan vaqt, tezlik va sifat ta'siri muhim." },
         { "id": "d", "text": "Avtomatlashtirish birinchi oydayoq o'zini oqlaydi", "hint": "Dastlabki investitsiya katta; foyda ko'p sonli takroriy bajarishlarda to'planadi." }
       ],
-      "explanation": "Oddiy hisob: regression 40 soat manual × har 2 haftada reliz = oyiga 80 soat; avtomatlashtirish 300 soat + oyiga 20 soat qo'llab-quvvatlash → ~5 oyda qoplanadi, keyin har oy foyda. Ko'rinmas foyda — tez-tez reliz qilish imkoniyati va dasturchilarning ishonchi.",
+      "explanation": "Foyda: manual regression soatlari × relizlar chastotasi, qisqa reliz sikli, production'ga o'tgan bug'lar kamayishi. Eng ko'p takrorlanadigan va riskli oqimlardan boshlab, natijani metrikalar bilan ko'rsatish. Oddiy hisob: regression 40 soat manual × har 2 haftada reliz = oyiga 80 soat; avtomatlashtirish 300 soat + oyiga 20 soat qo'llab-quvvatlash → ~5 oyda qoplanadi, keyin har oy foyda. Ko'rinmas foyda — tez-tez reliz qilish imkoniyati va dasturchilarning ishonchi.",
       "reviewed": false
     },
     {

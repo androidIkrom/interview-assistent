@@ -8,12 +8,12 @@
       "kind": "concept",
       "prompt": "Verification va validation qanday farqlanadi?",
       "options": [
-        { "id": "a", "text": "Verification — \"mahsulotni to'g'ri qurayapmizmi?\": ish natijasi talab va spetsifikatsiyaga mosligini tekshirish (review, inspeksiya, testlar). Validation — \"to'g'ri mahsulotni qurayapmizmi?\": mahsulot foydalanuvchining haqiqiy ehtiyojini qondirishini tekshirish (UAT, foydalanuvchi bilan sinov)", "correct": true },
-        { "id": "b", "text": "Verification — kodni ishga tushirib testlash, validation — hujjatlarni o'qish", "hint": "Verification statik usullarni ham o'z ichiga oladi; validation esa ko'pincha ishlaydigan mahsulot ustida." },
+        { "id": "a", "text": "Verification — \"to'g'ri quryapmizmi?\" (spetsifikatsiyaga moslik); validation — \"to'g'ri narsanimi?\" (haqiqiy ehtiyoj)", "correct": true },
+        { "id": "b", "text": "Verification — kodni ishga tushirib testlash, validation esa faqat talab va dizayn hujjatlarini o'qib, ularni rasman tasdiqlash", "hint": "Verification statik usullarni ham o'z ichiga oladi; validation esa ko'pincha ishlaydigan mahsulot ustida." },
         { "id": "c", "text": "Ikkalasi bir xil — sinonimlar", "hint": "Spetsifikatsiyaga moslik va foydalanuvchi ehtiyojiga moslik — turli savollar: spetsifikatsiyaning o'zi xato bo'lishi mumkin." },
         { "id": "d", "text": "Validation faqat dasturchilar, verification faqat mijoz tomonidan bajariladi", "hint": "Rollar bilan emas, tekshiruv maqsadi bilan farqlanadi." }
       ],
-      "explanation": "Misol: tugma spetsifikatsiyadagi kabi ko'k va o'ng burchakda — verification o'tdi; lekin foydalanuvchilar uni topa olmayapti — validation o'tmadi. Ikkalasi ham kerak: talablar xato bo'lsa, ularga mukammal mos mahsulot ham foydasiz.",
+      "explanation": "Verification: review, inspeksiya, testlar; validation: UAT, foydalanuvchi bilan sinov. Misol: tugma spetsifikatsiyadagi kabi ko'k va o'ng burchakda — verification o'tdi; lekin foydalanuvchilar uni topa olmayapti — validation o'tmadi. Ikkalasi ham kerak: talablar xato bo'lsa, ularga mukammal mos mahsulot ham foydasiz.",
       "reviewed": false
     },
     {
@@ -23,12 +23,12 @@
       "kind": "concept",
       "prompt": "Testlash darajalari (test levels) qaysilar va ular nimani tekshiradi?",
       "options": [
-        { "id": "a", "text": "Unit — alohida funksiya/klass (odatda dasturchi); integration — modullar yoki servislar o'zaro ishlashi (API, DB); system — butun tizim talablarga mosligi; acceptance — biznes yoki foydalanuvchi qabul qilishi (UAT)", "correct": true },
+        { "id": "a", "text": "Unit — funksiya/klass; integration — modullar o'zaro; system — butun tizim; acceptance — biznes qabuli (UAT)", "correct": true },
         { "id": "b", "text": "Smoke, sanity, regression — testlash darajalari", "hint": "Bular test turlari (maqsad bo'yicha), darajalar esa tizimning qaysi qismi tekshirilishi bo'yicha." },
         { "id": "c", "text": "Faqat ikki daraja bor: manual va avtomatik", "hint": "Bu bajarish usuli; daraja — test ob'ekti hajmi (unit dan butun tizimgacha)." },
-        { "id": "d", "text": "Acceptance testing har doim unit testlardan oldin bajariladi", "hint": "Odatda kichikdan kattaga: unit → integration → system → acceptance." }
+        { "id": "d", "text": "Acceptance testing har doim unit testlardan oldin bajariladi, chunki avval biznes qabul qilishi va keyin kod tekshirilishi kerak", "hint": "Odatda kichikdan kattaga: unit → integration → system → acceptance." }
       ],
-      "explanation": "Har daraja turli xatolarni topadi: unit — logika xatolari, integration — interfeys va ma'lumot formati nomuvofiqligi, system — oxiridan oxirigacha oqim va non-functional talablar. Xatoni qanchalik pastki darajada topsangiz, tuzatish shunchalik arzon.",
+      "explanation": "Unit'ni odatda dasturchi yozadi; integration — API, DB bilan o'zaro ishlash; system — talablarga moslik. Har daraja turli xatolarni topadi: unit — logika xatolari, integration — interfeys va ma'lumot formati nomuvofiqligi, system — oxiridan oxirigacha oqim va non-functional talablar. Xatoni qanchalik pastki darajada topsangiz, tuzatish shunchalik arzon.",
       "reviewed": false
     },
     {
@@ -38,12 +38,12 @@
       "kind": "concept",
       "prompt": "Smoke, sanity va regression testlar qanday farqlanadi?",
       "options": [
-        { "id": "a", "text": "Smoke — yangi build'ning asosiy funksiyalari umuman ishlayaptimi (keng, yuzaki; o'tmasa chuqur testlash boshlanmaydi). Sanity — aniq tuzatish yoki kichik o'zgarish ishlayotganini tez tekshirish (tor, chuqurroq). Regression — o'zgarishlar avval ishlagan funksiyalarni buzmaganini tekshirish (keng, ko'pincha avtomatlashtirilgan)", "correct": true },
-        { "id": "b", "text": "Smoke — eng uzun va to'liq test to'plami", "hint": "Smoke — qisqa, tez \"build yashashga qodirmi?\" tekshiruvi." },
+        { "id": "a", "text": "Smoke — build umuman ishlaydimi (keng, yuzaki); sanity — aniq tuzatish (tor); regression — eski funksiyalar buzilmadimi", "correct": true },
+        { "id": "b", "text": "Smoke — eng uzun va to'liq test to'plami: u har bir funksiyani barcha mumkin bo'lgan ma'lumotlar bilan batafsil tekshiradi", "hint": "Smoke — qisqa, tez \"build yashashga qodirmi?\" tekshiruvi." },
         { "id": "c", "text": "Regression faqat yangi funksiyani tekshiradi", "hint": "Regression aynan eski funksiyalar buzilmaganini tekshiradi." },
         { "id": "d", "text": "Sanity va regression bir xil narsa", "hint": "Sanity — tor va tez, o'zgarish atrofida; regression — keng qamrovli." }
       ],
-      "explanation": "Tipik oqim: yangi build → smoke (10–15 daqiqa) → o'tsa, yangi funksiyalar testi + tuzatilgan bug'lar sanity → reliz oldidan regression. Regression to'plami vaqt o'tishi bilan o'sadi — shuning uchun avtomatlashtirish va prioritetlash kerak.",
+      "explanation": "Smoke o'tmasa chuqur testlash boshlanmaydi; sanity tez va chuqurroq; regression keng va ko'pincha avtomatlashtirilgan. Tipik oqim: yangi build → smoke (10–15 daqiqa) → o'tsa, yangi funksiyalar testi + tuzatilgan bug'lar sanity → reliz oldidan regression. Regression to'plami vaqt o'tishi bilan o'sadi — shuning uchun avtomatlashtirish va prioritetlash kerak.",
       "reviewed": false
     },
     {
@@ -53,12 +53,12 @@
       "kind": "concept",
       "prompt": "Functional va non-functional testlash qanday farqlanadi?",
       "options": [
-        { "id": "a", "text": "Functional — tizim nima qilishini tekshiradi (login, buyurtma berish, hisob-kitob talablarga mos ishlashi). Non-functional — qanday darajada ishlashini: performance, yuklama, xavfsizlik, usability, ishonchlilik, moslik (qurilma, brauzer), accessibility", "correct": true },
-        { "id": "b", "text": "Non-functional — ishlamaydigan funksiyalarni testlash", "hint": "\"Non-functional\" — funksiyadan tashqari sifat xususiyatlari, buzuq funksiya emas." },
+        { "id": "a", "text": "Functional — tizim nima qilishi (login, buyurtma); non-functional — qanday ishlashi (tezlik, xavfsizlik, usability)", "correct": true },
+        { "id": "b", "text": "Non-functional — hali ishlamaydigan yoki o'chirib qo'yilgan funksiyalarni testlash, ular tayyor bo'lganda esa functional bo'ladi", "hint": "\"Non-functional\" — funksiyadan tashqari sifat xususiyatlari, buzuq funksiya emas." },
         { "id": "c", "text": "Functional testlar faqat avtomatik bajariladi", "hint": "Ikkala turi ham manual yoki avtomatik bo'lishi mumkin." },
         { "id": "d", "text": "Xavfsizlik testi — functional test turi", "hint": "Odatda non-functional (sifat xususiyati) deb tasniflanadi, garchi ba'zi xavfsizlik talablari funksional bo'lsa ham." }
       ],
-      "explanation": "Non-functional talablar ko'pincha yozilmay qoladi (\"sahifa tez ochilsin\") — QA ularni o'lchanadigan qilishga yordam beradi: \"95% so'rovlar 500 ms dan tez, 1000 foydalanuvchida\". ISO 25010 sifat modeli xususiyatlar ro'yxati uchun yaxshi manba.",
+      "explanation": "Non-functional'ga yuklama, ishonchlilik, moslik (qurilma, brauzer) va accessibility ham kiradi. Non-functional talablar ko'pincha yozilmay qoladi (\"sahifa tez ochilsin\") — QA ularni o'lchanadigan qilishga yordam beradi: \"95% so'rovlar 500 ms dan tez, 1000 foydalanuvchida\". ISO 25010 sifat modeli xususiyatlar ro'yxati uchun yaxshi manba.",
       "reviewed": false
     },
     {
@@ -68,12 +68,12 @@
       "kind": "concept",
       "prompt": "SDLC va STLC nima va ular qanday bog'liq?",
       "options": [
-        { "id": "a", "text": "SDLC — dasturiy ta'minot ishlab chiqish hayot sikli (talablar, dizayn, ishlab chiqish, testlash, deploy, qo'llab-quvvatlash). STLC — uning ichidagi testlash sikli: talablar tahlili, test rejalash, test case/data tayyorlash, muhitni sozlash, bajarish, yopish (hisobot). STLC faoliyatlari SDLC bilan parallel, talablar bosqichidan boshlanadi", "correct": true },
-        { "id": "b", "text": "STLC faqat ishlab chiqish tugagandan keyin boshlanadi", "hint": "Talablar tahlili va test rejalash ishlab chiqish bilan parallel — erta boshlash xatolarni arzonroq topadi." },
+        { "id": "a", "text": "SDLC — ishlab chiqish hayot sikli; STLC — uning ichidagi testlash sikli, talablar bosqichidan parallel boshlanadi", "correct": true },
+        { "id": "b", "text": "STLC faqat ishlab chiqish to'liq tugagandan keyin boshlanadi, chunki testlash uchun avval tayyor kod bo'lishi kerak", "hint": "Talablar tahlili va test rejalash ishlab chiqish bilan parallel — erta boshlash xatolarni arzonroq topadi." },
         { "id": "c", "text": "SDLC — faqat Waterfall modeli uchun", "hint": "Agile, V-model, Spiral — barchasi SDLC modellari." },
         { "id": "d", "text": "STLC va SDLC bir-biriga bog'liq emas", "hint": "STLC — SDLC'ning tarkibiy qismi." }
       ],
-      "explanation": "V-model har ishlab chiqish bosqichiga test darajasini moslaydi (talablar ↔ acceptance, arxitektura ↔ integration). Agile'da STLC har sprint ichida qisqa sikllar sifatida takrorlanadi.",
+      "explanation": "SDLC: talablar, dizayn, ishlab chiqish, testlash, deploy, qo'llab-quvvatlash. STLC: talablar tahlili, rejalash, test case/data, muhit, bajarish, yopish (hisobot). V-model har ishlab chiqish bosqichiga test darajasini moslaydi (talablar ↔ acceptance, arxitektura ↔ integration). Agile'da STLC har sprint ichida qisqa sikllar sifatida takrorlanadi.",
       "reviewed": false
     },
     {
@@ -96,12 +96,12 @@
       "kind": "concept",
       "prompt": "\"Pesticide paradox\" nima va unga qarshi nima qilinadi?",
       "options": [
-        { "id": "a", "text": "Bir xil testlar qayta-qayta bajarilsa, ular vaqt o'tib yangi xatolarni topmay qo'yadi — xatolar testlar tegmaydigan joylarda qoladi. Qarshi: test to'plamini muntazam ko'rib chiqish va yangilash, yangi ma'lumotlar va stsenariylar, exploratory sessiyalar, o'zgargan joylarga yangi testlar", "correct": true },
+        { "id": "a", "text": "Bir xil testlar vaqt o'tib yangi xato topmay qo'yadi; qarshi — testlarni yangilash, yangi ma'lumot va exploratory", "correct": true },
         { "id": "b", "text": "Ko'p test yozish dasturni sekinlashtiradi", "hint": "Paradoks testlar samaradorligi pasayishi haqida, ishlash tezligi emas." },
         { "id": "c", "text": "Xatolar odatda bir necha modulda to'planadi", "hint": "Bu boshqa tamoyil — defect clustering." },
-        { "id": "d", "text": "Regression testlarni butunlay to'xtatish kerakligini anglatadi", "hint": "Regression kerak; gap ularni yangilab, boshqa usullar bilan to'ldirishda." }
+        { "id": "d", "text": "Regression testlarni butunlay to'xtatish kerakligini anglatadi, chunki ular bir muddatdan keyin hech qanday foyda bermaydi", "hint": "Regression kerak; gap ularni yangilab, boshqa usullar bilan to'ldirishda." }
       ],
-      "explanation": "Avtomatlashtirilgan regression ham pesticide paradox'ga tushadi: \"hamma testlar yashil\" degani \"xato yo'q\" degani emas. Production'dan kelgan bug'larni tahlil qilib, ular nega testdan o'tib ketganini so'rash — to'plamni yangilashning eng yaxshi manbasi.",
+      "explanation": "Xatolar testlar tegmaydigan joylarda qoladi. To'plamni muntazam ko'rib chiqish, yangi stsenariylar va o'zgargan joylarga yangi testlar qo'shish. Avtomatlashtirilgan regression ham pesticide paradox'ga tushadi: \"hamma testlar yashil\" degani \"xato yo'q\" degani emas. Production'dan kelgan bug'larni tahlil qilib, ular nega testdan o'tib ketganini so'rash — to'plamni yangilashning eng yaxshi manbasi.",
       "reviewed": false
     },
     {
@@ -111,12 +111,12 @@
       "kind": "concept",
       "prompt": "Black box, white box va grey box testlash qanday farqlanadi?",
       "options": [
-        { "id": "a", "text": "Black box — ichki tuzilmani bilmasdan, kirish va chiqish (talablar) bo'yicha testlash; white box — kod tuzilmasini bilib (tarmoqlar, yo'llar, coverage) testlash; grey box — qisman ichki bilim bilan (masalan, DB sxemasi yoki API arxitekturasini bilib, UI/API orqali testlash)", "correct": true },
-        { "id": "b", "text": "White box — faqat UI orqali, black box — faqat kod orqali", "hint": "Aksincha: white box ichki kodni biladi, black box esa faqat tashqi xulqni ko'radi." },
+        { "id": "a", "text": "Black box — ichini bilmasdan; white box — kod tuzilmasini bilib; grey box — qisman ichki bilim bilan", "correct": true },
+        { "id": "b", "text": "White box — faqat UI orqali, black box esa faqat manba kodini o'qish va unit testlar yozish orqali bajariladi", "hint": "Aksincha: white box ichki kodni biladi, black box esa faqat tashqi xulqni ko'radi." },
         { "id": "c", "text": "Grey box — muvaffaqiyatsiz testlar uchun nom", "hint": "Grey box — bilim darajasi, natija emas." },
         { "id": "d", "text": "QA muhandisi faqat black box testlay oladi", "hint": "Ko'p QA'lar log, DB va API'ni bilib grey box testlaydi; avtomatlashtiruvchilar white box elementlardan ham foydalanadi." }
       ],
-      "explanation": "Black box texnikalari: ekvivalent bo'linish, chegaraviy qiymatlar, decision table, state transition. White box: statement/branch coverage, path testing. Grey box amaliyoti — UI'da amal bajarib, DB'da natijani SQL bilan tekshirish.",
+      "explanation": "Black box talablar (kirish va chiqish) bo'yicha; white box tarmoqlar, yo'llar, coverage bo'yicha; grey box — masalan, DB sxemasini bilib UI/API orqali testlash. Black box texnikalari: ekvivalent bo'linish, chegaraviy qiymatlar, decision table, state transition. White box: statement/branch coverage, path testing. Grey box amaliyoti — UI'da amal bajarib, DB'da natijani SQL bilan tekshirish.",
       "reviewed": false
     },
     {
@@ -126,12 +126,12 @@
       "kind": "concept",
       "prompt": "Retesting va regression testing qanday farqlanadi?",
       "options": [
-        { "id": "a", "text": "Retesting (confirmation testing) — tuzatilgan aniq bug'ni o'sha qadamlar bilan qayta tekshirib, haqiqatan tuzatilganini tasdiqlash. Regression — tuzatish yoki o'zgarish boshqa, avval ishlagan joylarni buzmaganini tekshirish. Bug yopishda ikkalasi ham kerak: avval retest, keyin atrofidagi regression", "correct": true },
+        { "id": "a", "text": "Retesting — aniq tuzatilgan bug'ni qayta tekshirish; regression — tuzatish boshqa joylarni buzmaganini tekshirish", "correct": true },
         { "id": "b", "text": "Retesting — barcha testlarni boshidan qayta bajarish", "hint": "Retesting aniq bug va uning stsenariysiga qaratilgan, butun to'plamga emas." },
         { "id": "c", "text": "Regression faqat bug tuzatilmaganda bajariladi", "hint": "Regression har o'zgarishdan keyin — tuzatish muvaffaqiyatli bo'lsa ham." },
-        { "id": "d", "text": "Retesting avtomatlashtirilishi shart, regression esa faqat manual", "hint": "Bajarish usuli ta'rifga kirmaydi; regression odatda avtomatlashtirishga eng mos nomzod." }
+        { "id": "d", "text": "Retesting avtomatlashtirilishi shart, regression esa faqat manual bajariladi, chunki uni avtomatlashtirib bo'lmaydi", "hint": "Bajarish usuli ta'rifga kirmaydi; regression odatda avtomatlashtirishga eng mos nomzod." }
       ],
-      "explanation": "Yaxshi amaliyot: tuzatilgan bug uchun avtomatik test qo'shish — u keyingi regression to'plamiga kiradi va bug qaytib kelmaydi. Bug'ni yopishdan oldin u qaysi build/versiyada tekshirilganini yozib qo'ying.",
+      "explanation": "Retesting — confirmation testing, o'sha qadamlar bilan. Bug yopishda ikkalasi ham kerak: avval retest, keyin atrofidagi regression. Yaxshi amaliyot: tuzatilgan bug uchun avtomatik test qo'shish — u keyingi regression to'plamiga kiradi va bug qaytib kelmaydi. Bug'ni yopishdan oldin u qaysi build/versiyada tekshirilganini yozib qo'ying.",
       "reviewed": false
     },
     {
@@ -157,12 +157,12 @@
       "kind": "concept",
       "prompt": "Statik testlash nima va u nima uchun foydali?",
       "options": [
-        { "id": "a", "text": "Kodni ishga tushirmasdan tekshirish: talablar, dizayn va test hujjatlarini review qilish, kod review, statik analiz (linter, SonarQube). Foydasi — xatolarni eng erta va arzon bosqichda topish: noaniq yoki qarama-qarshi talab kod yozilishidan oldin tuzatiladi", "correct": true },
-        { "id": "b", "text": "Bir xil test ma'lumotlari bilan qayta-qayta test o'tkazish", "hint": "Statik — dasturni bajarmasdan tekshirish." },
+        { "id": "a", "text": "Kodni ishga tushirmasdan tekshirish: talab va dizayn review, kod review, statik analiz — xato eng erta topiladi", "correct": true },
+        { "id": "b", "text": "Bir xil test ma'lumotlari bilan bir xil testlarni qayta-qayta o'tkazish — natijalar o'zgarmas (statik) bo'lishini tekshirish uchun", "hint": "Statik — dasturni bajarmasdan tekshirish." },
         { "id": "c", "text": "Faqat dasturchilar uchun — QA'ga aloqasi yo'q", "hint": "Talablar va user story review — QA'ning eng qimmatli hissalaridan biri." },
         { "id": "d", "text": "Statik testlash dinamik testlashni keraksiz qiladi", "hint": "Ular turli xatolarni topadi — runtime xulqini baribir ishlaydigan tizimda tekshirish kerak." }
       ],
-      "explanation": "Talablar review'ida savollar: o'lchanadigan qabul mezonlari bormi, chegaraviy holatlar (bo'sh, maksimal, xato) tavsiflanganmi, qarama-qarshiliklar bormi. \"3 amigos\" (biznes, dev, QA) uchrashuvi — Agile'dagi statik testlashning bir shakli.",
+      "explanation": "Statik analiz — linter, SonarQube. Noaniq yoki qarama-qarshi talab kod yozilishidan oldin, eng arzon bosqichda tuzatiladi. Talablar review'ida savollar: o'lchanadigan qabul mezonlari bormi, chegaraviy holatlar (bo'sh, maksimal, xato) tavsiflanganmi, qarama-qarshiliklar bormi. \"3 amigos\" (biznes, dev, QA) uchrashuvi — Agile'dagi statik testlashning bir shakli.",
       "reviewed": false
     },
     {
