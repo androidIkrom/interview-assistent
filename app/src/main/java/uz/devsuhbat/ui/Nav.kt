@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.List
+import androidx.compose.material.icons.rounded.BarChart
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -45,12 +46,14 @@ import uz.devsuhbat.ui.mock.MockScreen
 import uz.devsuhbat.ui.onboarding.OnboardingScreen
 import uz.devsuhbat.ui.session.SessionScreen
 import uz.devsuhbat.ui.settings.SettingsScreen
+import uz.devsuhbat.ui.stats.StatsScreen
 import uz.devsuhbat.ui.topics.TopicsScreen
 
 object Routes {
     const val ONBOARDING = "onboarding"
     const val HOME = "home"
     const val TOPICS = "topics"
+    const val STATS = "stats"
     const val SETTINGS = "settings"
     const val MOCK = "mock"
 
@@ -74,6 +77,7 @@ private class Tab(val route: String, val icon: ImageVector, val label: Int)
 private val tabs = listOf(
     Tab(Routes.HOME, Icons.Rounded.Home, R.string.nav_home),
     Tab(Routes.TOPICS, Icons.AutoMirrored.Rounded.List, R.string.nav_topics),
+    Tab(Routes.STATS, Icons.Rounded.BarChart, R.string.nav_stats),
 )
 
 /** Switches tabs the standard way: one copy of each tab, each keeping its own state. */
@@ -181,6 +185,15 @@ fun DevSuhbatNavHost(container: AppContainer, startDestination: String) {
                     )
                 }
             }
+            composable(Routes.STATS) {
+                BarRoom(Routes.STATS, barHeight) {
+                    StatsScreen(
+                        container = container,
+                        onTopic = { topicId -> nav.navigate(Routes.session(topicId)) },
+                        onMock = { nav.navigate(Routes.MOCK) },
+                    )
+                }
+            }
             composable(Routes.MOCK) {
                 MockScreen(
                     container = container,
@@ -205,11 +218,9 @@ fun DevSuhbatNavHost(container: AppContainer, startDestination: String) {
                     container = container,
                     topicId = entry.arguments?.getString(Routes.TOPIC_ID) ?: Routes.MIXED,
                     onExit = { nav.popBackStack() },
-                    // Back to where the session was opened from: the topic list, or Home for a mistakes session.
+                    // Back to the tab the session was opened from; Home when it came from elsewhere.
                     onAgain = {
-                        if (!nav.popBackStack(Routes.TOPICS, inclusive = false)) {
-                            nav.popBackStack(Routes.HOME, inclusive = false)
-                        }
+                        nav.popBackStack(sessionReturnRoute(nav.previousBackStackEntry?.destination?.route), inclusive = false)
                     },
                     onHome = { nav.popBackStack(Routes.HOME, inclusive = false) },
                 )

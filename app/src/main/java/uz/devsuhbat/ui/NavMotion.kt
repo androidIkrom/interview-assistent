@@ -4,7 +4,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 /** Destinations reachable from the bottom navigation bar, in bar order. */
-val TOP_LEVEL_ROUTES: List<String> = listOf(Routes.HOME, Routes.TOPICS)
+val TOP_LEVEL_ROUTES: List<String> = listOf(Routes.HOME, Routes.TOPICS, Routes.STATS)
 
 fun isTopLevel(route: String?): Boolean = route in TOP_LEVEL_ROUTES
 
@@ -13,6 +13,10 @@ fun isTopLevel(route: String?): Boolean = route in TOP_LEVEL_ROUTES
  * height at once instead of jumping when the sliding bar finally lets go of its space.
  */
 fun contentBottomPadding(route: String?, barHeight: Dp): Dp = if (isTopLevel(route)) barHeight else 0.dp
+
+/** Where "Yana mashq" and Back lead from a finished session: the tab it was opened from, otherwise Home. */
+fun sessionReturnRoute(previousRoute: String?): String =
+    if (previousRoute != null && isTopLevel(previousRoute)) previousRoute else Routes.HOME
 
 enum class NavMotion { FADE, SLIDE }
 

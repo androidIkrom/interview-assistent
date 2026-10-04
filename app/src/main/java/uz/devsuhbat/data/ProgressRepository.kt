@@ -71,6 +71,12 @@ class ProgressRepository(
             row?.let { MockSummary(correct = it.firstTryCorrect, total = it.total) }
         }
 
+    /** The last [limit] mock interviews of [fieldId], oldest first. */
+    fun mockHistory(fieldId: String, limit: Int = 10): Flow<List<MockSummary>> =
+        dao.observeRecentSessions(SessionMode.MOCK.name, fieldId, limit).map { rows ->
+            rows.reversed().map { MockSummary(correct = it.firstTryCorrect, total = it.total) }
+        }
+
     /** The local calendar day each finished session started on, one entry per session, oldest first. */
     fun sessionDays(): Flow<List<Long>> = dao.observeSessions().map { rows ->
         rows.map { Instant.ofEpochMilli(it.startedAt).atZone(clock.zone).toLocalDate().toEpochDay() }

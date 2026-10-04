@@ -73,6 +73,9 @@ interface ProgressDao {
     @Query("SELECT * FROM session_log ORDER BY startedAt")
     fun observeSessions(): Flow<List<SessionLogEntity>>
 
+    @Query("SELECT * FROM session_log WHERE mode = :mode AND fieldId = :fieldId ORDER BY startedAt DESC LIMIT :limit")
+    fun observeRecentSessions(mode: String, fieldId: String, limit: Int): Flow<List<SessionLogEntity>>
+
     @Query("SELECT MAX(finishedAt) FROM session_log")
     suspend fun lastFinishedAt(): Long?
 

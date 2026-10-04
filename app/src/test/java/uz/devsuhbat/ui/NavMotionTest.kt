@@ -33,4 +33,21 @@ class NavMotionTest {
         assertEquals(80.dp, contentBottomPadding(Routes.HOME, barHeight = 80.dp))
         assertEquals(0.dp, contentBottomPadding(Routes.SESSION, barHeight = 80.dp))
     }
+
+    @Test
+    fun statsIsATab() {
+        assertTrue(isTopLevel(Routes.STATS))
+        assertEquals(NavMotion.FADE, navMotion(Routes.STATS, Routes.HOME))
+        assertEquals(80.dp, contentBottomPadding(Routes.STATS, barHeight = 80.dp))
+    }
+
+    @Test
+    fun aSessionReturnsToTheTabItWasOpenedFrom() {
+        assertEquals(Routes.STATS, sessionReturnRoute(Routes.STATS))
+        assertEquals(Routes.TOPICS, sessionReturnRoute(Routes.TOPICS))
+        assertEquals(Routes.HOME, sessionReturnRoute(Routes.HOME))
+        // Opened from somewhere else, e.g. the mistakes session after a mock: back to Home.
+        assertEquals(Routes.HOME, sessionReturnRoute(Routes.MOCK))
+        assertEquals(Routes.HOME, sessionReturnRoute(null))
+    }
 }

@@ -185,4 +185,18 @@ class ProgressRepositoryTest {
 
         assertEquals(listOf(today, today + 1), repository.sessionDays().first())
     }
+
+    @Test
+    fun mockHistoryIsTheFieldsLastTenOldestFirst() = runTest {
+        fun mock(correct: Int) = MockResult((1..25).map { MockAnswer("q.$it", "a.x", correct = it <= correct) })
+        val start = Instant.parse("2026-09-01T05:00:00Z")
+        (1..12).forEach { n -> repository.recordMock("android", Level.JUNIOR, start.plusSeconds(3600L * n), mock(n)) }
+        repository.recordMock("ios", Level.JUNIOR, start.plusSeconds(3600L * 20), mock(20))
+        repository.logSession(SessionMode.PRACTICE, "android", Level.JUNIOR, start.plusSeconds(3600L * 21), SessionResult(10, 9, 1))
+
+        val history = repository.mockHistory("android").first()
+
+        assertEquals((3..12).toList(), history.map { it.correct })
+        assertEquals(25, history.first().total)
+    }
 }
